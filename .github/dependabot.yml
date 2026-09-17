@@ -21,6 +21,28 @@ updates:
       menores:
         update-types: [minor, patch]
 
+    # As duas exceções abaixo não são preguiça: são versões que o
+    # `eslint-config-next` ainda não suporta, confirmadas com o CI vermelho nos
+    # PRs #4 e #5. Sem estas linhas, o Dependabot reabre-as todas as semanas e
+    # o repositório passa a ter dois PRs permanentemente vermelhos — que é a
+    # forma mais rápida de as pessoas deixarem de olhar para os PRs do bot.
+    #
+    # ⚠️ São para tirar daqui, não para ficar. Rever quando o
+    # `eslint-config-next` subir de versão — é ele que arrasta as duas.
+    ignore:
+      # ESLint 10 parte o `eslint-plugin-react` que vem dentro do
+      # `eslint-config-next`:
+      #   TypeError: Error while loading rule 'react/display-name':
+      #   contextOrFilename.getFilename is not a function
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+
+      # O `typescript-eslint` recusa-se a arrancar em TS 7.0, de propósito:
+      #   Error: typescript-eslint does not support TS 7.0.
+      # Tracking: https://github.com/typescript-eslint/typescript-eslint/issues/10940
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+
   # As próprias actions do CI são dependências como as outras — e correm com
   # acesso ao repositório.
   - package-ecosystem: github-actions

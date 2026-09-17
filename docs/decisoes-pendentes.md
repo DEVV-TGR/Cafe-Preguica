@@ -92,12 +92,52 @@ acordo. Mudar é `gh repo edit --visibility private` e não toca no código.
 
 ---
 
-## 5. Domínio — **por decidir**
+## 5. Domínio — **existe, e está partido**
 
-O `NEXT_PUBLIC_SITE_URL` não está definido, e por isso o site assume
-`https://cafe-preguica.vercel.app`. É o que sai hoje no `sitemap.xml`, no
-`robots.txt` e nas imagens de partilha.
+⚠️ **`cafepreguica.pt` já é do cliente.** Está registado na Amen e está impresso
+no rodapé do menu que a casa entrega às mesas. Mas hoje:
+
+- **Não tem site.** Responde com a página de cortesia da Amen. Quem lê o menu e
+  escreve o endereço não encontra nada.
+- **O HTTPS está partido.** O certificado servido não corresponde ao domínio, e
+  o browser recusa a ligação com um aviso de segurança.
+
+É o candidato natural a `NEXT_PUBLIC_SITE_URL` e resolve-se apontando o DNS para
+a Vercel — mas é conversa a ter com quem tem a conta na Amen, e convém saber se
+o cliente sabe que o endereço impresso não leva a lado nenhum.
+
+Enquanto não estiver resolvido, o `NEXT_PUBLIC_SITE_URL` não está definido e o
+site assume `https://cafe-preguica.vercel.app`. É o que sai hoje no
+`sitemap.xml`, no `robots.txt` e nas imagens de partilha.
 
 ⚠️ Enquanto isto não estiver resolvido, **cuidado com a indexação**: o
 `robots.txt` deixa indexar tudo, e é a demonstração que o Google apanha. Tirar
 de lá depois demora. Ver a lista *Antes de publicar* no README.
+
+
+---
+
+## 6. Vídeo — **não há, e faz falta**
+
+A página inicial não tem um único acto de rolagem sobre vídeo, e a razão é
+simples: **não existe um clipe da casa**. Tudo o que há são 19 fotografias.
+
+Um bar faz-se de movimento — o gelo a cair, a lima a ser espremida, o copo a
+encher. Dez segundos de telemóvel, filmados ao balcão numa noite qualquer, dariam
+para o acto mais forte que a página pode ter: a imagem a avançar debaixo da roda
+do rato, ao ritmo de quem rola.
+
+Custa uma ida lá com o telemóvel. É provavelmente o melhor retorno por hora de
+trabalho que este site ainda tem por gastar.
+
+---
+
+## 7. Fotografias — **derivadas do Instagram**
+
+As imagens em `public/casa/` foram descarregadas do perfil público da casa, a
+1080 px de largura. São fotografias do próprio negócio e é o próprio negócio que
+as vai publicar, por isso não há problema de origem — mas há de qualidade: 1080 px
+é o tecto do que o Instagram serve, e o Instagram já as comprimiu uma vez.
+
+Com os ficheiros originais, a página pode ter fotografias maiores e um primeiro
+acto com imagem em vez de só tipografia.

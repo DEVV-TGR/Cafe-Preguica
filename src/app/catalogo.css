@@ -1,0 +1,422 @@
+/* ===========================================================================
+   A PÁGINA INICIAL — gramática de catálogo
+
+   Objectos numa colecção que se percorre. Rótulos de museu, não texto de venda.
+   A gramática está em `scrollcraft/builds/preguica-inicio/BRIEF.md` e nas
+   referências da skill; o que interessa aqui é a consequência prática:
+
+   **Todos os objectos levam o mesmo esquema de rótulo, sem excepção.** Nome,
+   composição em factos, e um dado (preço, horário, número). É o esquema que
+   faz disto uma colecção em vez de uma grelha de cartões, e por isso não há
+   um objecto "especial" com um rótulo diferente.
+
+   ⚠️ Nada aqui redefine `.sc-stage`, `.sc-copy` nem nenhum `[data-sc-*]`.
+   Esses são o mecanismo e vivem em `catalogo-motor.css`.
+   =========================================================================== */
+
+/* ---------------------------------------------------- o movimento de assinatura
+   A preguiça que se atrasa. A lógica está em `components/catalogo/Preguica.tsx`;
+   aqui só vive a forma. Ela escreve `--y`, `--balanco` e `--esticao`. */
+
+.pg-preguica {
+  position: fixed;
+  top: 0;
+  right: clamp(0.25rem, 2vw, 3rem);
+  z-index: 30;
+  pointer-events: none;
+  width: var(--pg-preguica-w, 64px);
+}
+
+.pg-preguica__fio {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  /* Altura fixa e `scaleY` por cima: animar `height` obrigava o browser a
+     refazer o layout a cada frame. Uma transformação não toca no layout. */
+  height: 100vh;
+  transform-origin: top center;
+  transform: translateX(-50%) scaleY(calc(var(--fio, 0px) / 100vh));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklab, var(--color-ouro) 55%, transparent)
+  );
+}
+
+.pg-preguica__corpo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* `--y` é o que o loop escreve. A rotação sai do balanço e o alongamento do
+     esticão; as duas numa transformação só, para não haver duas camadas. */
+  transform: translateY(calc(var(--y, 0px) - 18%)) rotate(var(--balanco, 0deg))
+    scaleY(var(--esticao, 1));
+  transform-origin: 30% 12%;
+  will-change: transform;
+}
+
+.pg-preguica__corpo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Uma sombra com desvio e desfocagem, não um halo colorido a zero — ver a
+     lista de recusas do `taste.md`. Serve para ela se descolar das fotografias
+     escuras por baixo. */
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.55));
+}
+
+@media (min-width: 48rem) {
+  .pg-preguica {
+    --pg-preguica-w: 108px;
+  }
+}
+
+/* ------------------------------------------------------------------ a barra
+   A navegação desta gramática é um **índice de objectos que salta**, não um
+   menu de páginas. Diz o que a colecção tem e leva lá. */
+
+.pg-barra {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem clamp(1rem, 4vw, 3rem);
+  background: color-mix(in oklab, var(--color-canvas) 86%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-linha);
+}
+
+.pg-barra__marca {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.pg-indice {
+  display: none;
+  gap: 1.1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.pg-indice a:hover,
+.pg-indice a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+@media (min-width: 60rem) {
+  .pg-indice {
+    display: flex;
+  }
+}
+
+/* A acção, uma só, com o mesmo rótulo em toda a página. */
+.pg-acao {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-acao:hover,
+.pg-acao:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ------------------------------------------------------------- o rótulo
+   O esquema. Igual em todos os objectos, e é isso que o torna uma colecção. */
+
+.pg-rotulo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 34ch;
+}
+
+.pg-rotulo__nome {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4.4vw, 3.2rem);
+  line-height: 1.04;
+  /* O tracking aperta à medida que o corpo cresce: correcção óptica, não
+     decoração. */
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.pg-rotulo__facto {
+  color: var(--color-tinta-suave);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.pg-rotulo__dado {
+  margin-top: 0.15rem;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+/* ------------------------------------------------------------- os objectos */
+
+.pg-objeto {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  /* Apertado em cima e generoso nos limites entre objectos, não um valor
+     repetido — o ritmo vem do contraste. Desceu de 9vh depois de ver nos
+     screenshots que a metade de baixo da página era mais preto do que coisas. */
+  padding-block: clamp(2.5rem, 6.5vh, 5.5rem);
+  padding-inline: clamp(1rem, 5vw, 4rem);
+  /* Espaço à direita para a preguiça não passar por cima do texto. */
+  padding-inline-end: clamp(5rem, 12vw, 10rem);
+}
+
+@media (min-width: 52rem) {
+  .pg-objeto--duplo {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pg-objeto--trailing .pg-rotulo {
+    order: 2;
+  }
+}
+
+.pg-objeto figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.pg-objeto img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ----------------------------------------------------------------- o carril
+   O pico da página. `pan` é a espinha desta gramática, e o motor mede o
+   `scrollWidth` e viaja exactamente o excesso.
+
+   ⚠️ O primeiro e o último item do carril são o cabeçalho e a nota de fecho,
+   e não é enfeite: sem eles o carril podia ficar **mais estreito que o ecrã**
+   num monitor grande, viajar zero, e transformar três alturas de rolagem numa
+   imagem parada. A verificação está em `verificar-carril` no README. */
+
+.pg-carril {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+  padding-inline: clamp(1rem, 5vw, 4rem);
+}
+
+.pg-carril__item {
+  flex: 0 0 auto;
+  width: clamp(15rem, 62vw, 23rem);
+}
+
+.pg-carril__abertura,
+.pg-carril__fecho {
+  flex: 0 0 auto;
+  width: clamp(16rem, 70vw, 26rem);
+  align-self: center;
+}
+
+.pg-carril__item figure {
+  margin: 0 0 1rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--color-superficie);
+}
+
+.pg-carril__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ------------------------------------------------------- o seletor de sabores
+   O único sítio da página que responde ao ponteiro em vez da rolagem. */
+
+.pg-sabores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 44ch;
+}
+
+.pg-sabor {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  color: var(--color-tinta-suave);
+  background: none;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+}
+
+.pg-sabor:hover {
+  color: var(--color-tinta);
+  border-color: color-mix(in oklab, var(--color-ouro) 45%, transparent);
+}
+
+.pg-sabor[aria-pressed="true"] {
+  background: var(--color-ouro);
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.pg-sabor-escolhido {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-ouro-claro);
+}
+
+/* ------------------------------------------------------------------- a placa
+   O fecho. Tipografado **exactamente como um rótulo**, para o pedido ler como
+   parte da colecção e não como um banner colado no fim. */
+
+.pg-placa {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 52ch;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 5vw, 3rem);
+  border: 1px solid var(--color-linha);
+  background: var(--color-superficie);
+}
+
+.pg-placa dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.pg-placa dt {
+  color: var(--color-tinta-suave);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  align-self: baseline;
+}
+
+.pg-placa dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-placa__telefone {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  color: var(--color-ouro-claro);
+  letter-spacing: -0.01em;
+}
+
+.pg-nota {
+  font-size: 0.82rem;
+  color: var(--color-tinta-suave);
+  max-width: 46ch;
+}
+
+/* ------------------------------------------------------- movimento reduzido
+   O motor já faz o essencial: com a preferência ligada devolve o carril como
+   uma região de rolagem horizontal normal, para os cocktails não ficarem
+   inalcançáveis. É o chão dele, e o próprio comentário do motor diz que uma
+   build que prefira redesenhar o carril como grelha o pode fazer.
+
+   ⚠️ **Esta faz, e a razão foi medida.** Sem isto, a secção do carril mantinha
+   os 3,4 ecrãs de altura que o movimento precisa — e sem movimento nenhum para
+   os preencher. A verificação acusou-o com todas as letras:
+
+     DEAD SCROLL between: 26% -> 31% (pan > pan), 31% -> 37%, ... 48% -> 53%
+
+   Ou seja: metade da página a rolar sobre uma imagem parada. Quem liga
+   "reduzir movimento" fá-lo muitas vezes por enjoo ou por vertigem, e obrigar
+   essa pessoa a arrastar um carril de lado para ver o conteúdo é trocar um
+   problema por outro.
+
+   Aqui o carril passa a quebrar em linhas e a secção encolhe até ao conteúdo. A
+   página fica a ler-se de cima a baixo, na ordem do documento, sem nada
+   escondido e sem um único gesto novo para aprender. */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sc-act="pan"] {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  [data-sc-act="pan"] [data-sc-stage] {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .pg-carril {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  /* Em grelha, a abertura e o fecho deixam de ser "mais um cartão" e voltam a
+     ser o que são: o título da secção e a nota final. */
+  .pg-carril__abertura,
+  .pg-carril__fecho {
+    flex-basis: 100%;
+    max-width: 52ch;
+  }
+}
+
+/* ------------------------------------------------- correcções vistas a olho
+   Duas coisas que só apareceram nos screenshots, e nenhuma delas seria apanhada
+   por um relatório automático. */
+
+/* 1 · A barra é `sticky`, portanto um salto do índice punha o título do objecto
+       **por baixo dela**. O `scroll-margin-top` reserva a altura da barra no
+       destino do salto. Sem isto, carregar em "Os cocktails" levava a um ecrã
+       onde a primeira linha estava tapada. */
+[id="casa"],
+[id="carril"],
+[id="sabores"],
+[id="porta"] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* 2 · No telemóvel, o horário em duas colunas dava sete linhas de "Segunda
+       15:30–" partidas a meio. Abaixo de 30rem passa a uma coluna, com o rótulo
+       por cima — que é como se lê um horário em papel de qualquer maneira. */
+@media (max-width: 30rem) {
+  .pg-placa dl {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .pg-placa dt {
+    margin-top: 0.75rem;
+  }
+
+  .pg-placa dt:first-of-type {
+    margin-top: 0;
+  }
+}

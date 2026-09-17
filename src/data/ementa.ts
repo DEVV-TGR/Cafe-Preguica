@@ -30,18 +30,32 @@ export const CARTA_CONFIRMADA: boolean = dados.confirmada;
 
 /**
  * A ordem do enum **é** a ordem em que as secções saem na página — mudar uma
- * linha de sítio aqui muda o site. Está pela ordem do dia: começa no
- * pequeno-almoço e acaba no que se bebe ao fim da tarde.
+ * linha de sítio aqui muda o site.
+ *
+ * Não é a ordem do menu impresso, e é de propósito: come-se primeiro, bebe-se
+ * depois, e **o Cocktail Preguiça vem à frente dos clássicos** por ser o que dá
+ * nome à casa. No papel ele está no verso porque o verso é onde cabia a lista
+ * dos sabores; aqui não há verso.
  */
 export const CATEGORIAS = [
-  "pequenos-almocos",
+  "tostas-e-snacks",
+  "tabuas",
+  "tacas",
+  "sobremesas",
+  "cocktail-preguica",
+  "cocktails-classicos",
+  "cocktails-special",
+  "mocktails",
+  "sangrias-e-espumantes",
+  "gin",
+  "whisky",
+  "shots",
+  "licores",
+  "cervejas",
+  "vinhos",
   "cafetaria",
-  "padaria-pastelaria",
-  "salgados",
-  "sandes-e-tostas",
-  "pratos-do-dia",
-  "bebidas-frias",
-  "cervejas-e-vinhos",
+  "chas",
+  "aguas-e-refrigerantes",
 ] as const;
 
 export type Categoria = (typeof CATEGORIAS)[number];
@@ -55,11 +69,18 @@ export type Categoria = (typeof CATEGORIAS)[number];
  * descrição aqui dá erro, e a falta dela nas outras categorias também.
  */
 const SEM_DESCRICAO: readonly Categoria[] = [
+  "tostas-e-snacks",
+  "tacas",
+  "sobremesas",
+  "gin",
+  "whisky",
+  "shots",
+  "licores",
+  "cervejas",
+  "vinhos",
   "cafetaria",
-  "padaria-pastelaria",
-  "salgados",
-  "bebidas-frias",
-  "cervejas-e-vinhos",
+  "chas",
+  "aguas-e-refrigerantes",
 ];
 
 /**
@@ -112,6 +133,20 @@ const EsquemaArtigo = z
       .positive("tem de ser maior que zero")
       .multipleOf(0.01, "no máximo duas casas decimais")
       .nullable(),
+    /**
+     * O segundo preço, e existe por um motivo só: **as tostas vendem-se em pão
+     * saloio e em pão de forma, a preços diferentes.** No menu impresso são duas
+     * colunas de números à volta do mesmo nome.
+     *
+     * Fica `null` em tudo o resto. O que cada coluna quer dizer não vive aqui —
+     * vive em `METADADOS`, por categoria, porque é uma propriedade da secção e
+     * não de cada artigo.
+     */
+    precoSecundario: z
+      .number()
+      .positive("tem de ser maior que zero")
+      .multipleOf(0.01, "no máximo duas casas decimais")
+      .nullable(),
     alergenios: z.array(z.enum(ALERGENIOS)),
   })
   .superRefine((artigo, ctx) => {
@@ -130,6 +165,26 @@ const EsquemaArtigo = z
         code: "custom",
         path: ["descricao"],
         message: `a categoria "${artigo.categoria}" leva descrição nas duas línguas`,
+      });
+    }
+
+    /* Um segundo preço fora das tostas é quase de certeza um engano de quem
+       copiou a linha de cima para criar a seguinte — e passaria despercebido,
+       porque a página simplesmente mostraria dois números sem dizer de quê. */
+    if (artigo.precoSecundario !== null && artigo.categoria !== "tostas-e-snacks") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["precoSecundario"],
+        message: `só a categoria "tostas-e-snacks" tem dois preços; aqui tem de ser null`,
+      });
+    }
+
+    /* E um segundo preço sem o primeiro não quer dizer nada. */
+    if (artigo.precoSecundario !== null && artigo.preco === null) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["preco"],
+        message: "há segundo preço mas não há primeiro",
       });
     }
   });
@@ -192,3 +247,55 @@ export function porCategoria(): { categoria: Categoria; artigos: Artigo[] }[] {
 export function temAlergeniosDeclarados(): boolean {
   return artigos.some((artigo) => artigo.alergenios.length > 0);
 }
+
+/**
+ * Os catorze sabores do Cocktail Preguiça e do Unicórnio.
+ *
+ * ⚠️ **Não são catorze artigos da ementa, e é de propósito.** A casa vende duas
+ * bebidas — uma com álcool a 5,00 €, outra sem a 1,70 € — e o sabor escolhe-se
+ * depois, ao balcão. Pô-los como artigos dava vinte e oito entradas na carta
+ * para duas bebidas, e vinte e oito sítios para o preço ficar desactualizado.
+ *
+ * A ordem é a do menu impresso, que lê em duas colunas: a coluna da esquerda
+ * primeiro, depois a da direita. O `surpresa` vem à cabeça porque é assim que
+ * está no papel, e porque é o que a casa quer que se peça.
+ */
+export const SABORES = [
+  "surpresa",
+  "limao",
+  "manga",
+  "frutos-vermelhos",
+  "caramelo",
+  "menta",
+  "ananas",
+  "pessego",
+  "morango",
+  "fumado",
+  "laranja",
+  "coco",
+  "framboesa",
+  "maracuja",
+] as const;
+
+export type Sabor = (typeof SABORES)[number];
+
+/**
+ * O que é próprio de cada secção e não de cada artigo: a dose em que se serve, e
+ * o que querem dizer as duas colunas de preço das tostas.
+ *
+ * Vive aqui e não nas mensagens porque **é facto, não texto** — `5 cl` é `5 cl`
+ * em português e em inglês. O que muda com a língua são os nomes das secções, e
+ * esses estão em `messages/`.
+ *
+ * As categorias que não aparecem aqui não têm nada de especial a dizer, e o
+ * `Partial` é o que deixa isso ser verdade sem obrigar a escrever `undefined`
+ * dezoito vezes.
+ */
+export const METADADOS: Partial<
+  Record<Categoria, { dose?: string; colunas?: [string, string] }>
+> = {
+  "tostas-e-snacks": { colunas: ["Pão saloio", "Pão de forma"] },
+  gin: { dose: "5 cl" },
+  whisky: { dose: "5 cl" },
+  shots: { dose: "3 cl" },
+};

@@ -30,5 +30,13 @@ npm-debug.log*
 yarn-debug.log*
 
 # material em bruto (fotografias originais, PDFs da carta, logótipos)
-# entra aqui e não no git: são ficheiros grandes que se reprocessam
+# entra aqui e não no git: são ficheiros grandes que se reprocessam com
+# `npm run fotos`. O que se versiona é o resultado, em public/.
 /originais
+/fotos
+
+# verificação do scrollcraft: screenshots e scripts descartáveis do `shoot.mjs`.
+# São dezenas de MB por corrida e refazem-se a qualquer momento contra o site a
+# correr. O que se versiona do scrollcraft é o BRIEF e o registo de impressões
+# digitais, que são decisões e não saída de ferramenta.
+/scrollcraft/lab

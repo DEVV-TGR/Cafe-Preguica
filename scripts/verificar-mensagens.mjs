@@ -1,16 +1,37 @@
 /**
- * Compara as chaves de `messages/pt.json` e `messages/en.json`.
+ * Duas verificações sobre as traduções, e a segunda existe por causa de um erro
+ * a sério que a primeira deixou passar.
  *
- * Existe porque uma chave em falta no `next-intl` **não parte o build**: em
- * produção a página renderiza com o nome da chave à vista — `ementa.categorias.
- * salgados` no meio da carta — e só se descobre quando alguém abre o site na
- * outra língua, que costuma ser o cliente.
+ * ## 1. As duas línguas têm as mesmas chaves
  *
- * Aqui descobre-se no CI, antes do merge.
+ * Uma chave em falta no `next-intl` **não parte o build**: em produção a página
+ * renderiza com o nome da chave à vista — `ementa.categorias.tostas-e-snacks` no
+ * meio da carta — e só se descobre quando alguém abre o site na outra língua,
+ * que costuma ser o cliente.
+ *
+ * ## 2. Os dados têm tradução
+ *
+ * ⚠️ **A verificação 1 não chega, e isto não é teoria.** Quando as categorias da
+ * ementa mudaram de um café de pequenos-almoços para um bar de cocktails, os
+ * ficheiros de mensagens ficaram para trás — e o teste passou, porque as chaves
+ * antigas estavam igualmente presentes nas duas línguas. **Ambas estavam
+ * igualmente erradas.** A carta foi para o ar a escrever
+ * `ementa.categorias.tostas-e-snacks` por cima da secção.
+ *
+ * Por isso a segunda verificação não compara as línguas uma com a outra:
+ * compara-as com os **dados**. Cada categoria que existe em `ementa.json` tem de
+ * ter nome nas duas línguas, e cada sabor declarado em `ementa.ts` também.
  */
 import { readFileSync } from "node:fs";
 
-const caminhos = ["messages/pt.json", "messages/en.json"];
+const linguas = ["pt", "en"];
+const msgs = Object.fromEntries(
+  linguas.map((l) => [l, JSON.parse(readFileSync(`messages/${l}.json`, "utf8"))]),
+);
+
+const problemas = [];
+
+/* ---------------------------------------------------------- 1. paridade -- */
 
 /** Achata o objeto em `a.b.c`, para comparar folhas e não ramos. */
 function chaves(objeto, prefixo = "") {
@@ -21,18 +42,53 @@ function chaves(objeto, prefixo = "") {
   );
 }
 
-const [pt, en] = caminhos.map((caminho) =>
-  chaves(JSON.parse(readFileSync(caminho, "utf8"))).sort(),
-);
+const pt = chaves(msgs.pt).sort();
+const en = chaves(msgs.en).sort();
+for (const c of pt.filter((c) => !en.includes(c))) problemas.push(`falta em en.json: ${c}`);
+for (const c of en.filter((c) => !pt.includes(c))) problemas.push(`falta em pt.json: ${c}`);
 
-const soEmPt = pt.filter((chave) => !en.includes(chave));
-const soEmEn = en.filter((chave) => !pt.includes(chave));
+/* ------------------------------------------------- 2. os dados traduzidos -- */
 
-if (soEmPt.length === 0 && soEmEn.length === 0) {
-  console.log(`✓ ${pt.length} chaves, iguais nas duas línguas`);
+/** Segue o caminho `a.b.c` dentro de um objeto; devolve `undefined` se faltar. */
+const ler = (obj, caminho) =>
+  caminho.split(".").reduce((o, k) => (o == null ? undefined : o[k]), obj);
+
+function exigir(caminho, contexto) {
+  for (const l of linguas) {
+    const v = ler(msgs[l], caminho);
+    if (typeof v !== "string" || v.trim() === "") {
+      problemas.push(`${l}.json não traduz ${contexto}: falta ${caminho}`);
+    }
+  }
+}
+
+/* As categorias que a carta usa mesmo — lidas do JSON dos dados, não de uma
+   lista escrita à mão que voltaria a ficar para trás pela mesma razão. */
+const ementa = JSON.parse(readFileSync("src/data/ementa.json", "utf8"));
+const categorias = [...new Set(ementa.artigos.map((a) => a.categoria))];
+for (const c of categorias) exigir(`ementa.categorias.${c}`, `a categoria "${c}"`);
+
+/* Os sabores vivem em `ementa.ts` e não no JSON. Ler o TypeScript com uma
+   expressão regular é feio, e é menos feio do que manter a lista em dois sítios:
+   um `SABORES` novo sem tradução volta a pôr o nome da chave no ecrã. */
+const fonte = readFileSync("src/data/ementa.ts", "utf8");
+const bloco = fonte.match(/export const SABORES = \[([\s\S]*?)\] as const;/);
+if (!bloco) {
+  problemas.push("não encontrei o SABORES em src/data/ementa.ts — o padrão mudou?");
+} else {
+  const sabores = [...bloco[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  for (const s of sabores) exigir(`inicio.sabores.lista.${s}`, `o sabor "${s}"`);
+}
+
+/* ------------------------------------------------------------- relatório -- */
+
+if (problemas.length === 0) {
+  console.log(
+    `✓ ${pt.length} chaves iguais nas duas línguas · ` +
+      `${categorias.length} categorias e os sabores todos traduzidos`,
+  );
   process.exit(0);
 }
 
-for (const chave of soEmPt) console.error(`✖ falta em en.json: ${chave}`);
-for (const chave of soEmEn) console.error(`✖ falta em pt.json: ${chave}`);
+for (const p of problemas) console.error(`✖ ${p}`);
 process.exit(1);

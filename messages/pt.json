@@ -22,7 +22,8 @@
       "sexta": "Sexta",
       "sabado": "Sábado",
       "domingo": "Domingo"
-    }
+    },
+    "dose": "Dose"
   },
   "metadata": {
     "inicio": {
@@ -51,10 +52,85 @@
     }
   },
   "inicio": {
-    "titulo": "Café Preguiça",
-    "subtitulo": "Estrutura do site. O conteúdo e o desenho entram depois.",
-    "verEmenta": "Ver a ementa",
-    "verContactos": "Contactos"
+    "acao": "Reservar · 229 730 873",
+    "indice": {
+      "cocktail": "O cocktail",
+      "casa": "A casa",
+      "carril": "Os cocktails",
+      "sabores": "Os sabores",
+      "partilhar": "Para partilhar",
+      "gente": "Os Preguiçosos",
+      "porta": "A porta"
+    },
+    "cocktail": {
+      "nome": "Cocktail Preguiça",
+      "facto": "Gin, vodka e rum. O sabor escolhe-se ao balcão, de entre catorze.",
+      "dado": "5,00 €",
+      "alt": "Um cocktail claro numa taça alta, ao lado de um coco, sobre uma mesa de madeira escura."
+    },
+    "casa": {
+      "nome": "A casa",
+      "facto": "Madeira maciça, granito à vista e um quadro de ardósia. Uma sala em Ermesinde onde toda a gente se conhece.",
+      "dado": "Segunda a sábado",
+      "alt": "Três pessoas a rir à volta de uma mesa de madeira, com canecas de cobre e o nome da casa escrito a giz na parede.",
+      "alt2": "Alguém a segurar o menu preto e dourado da casa, diante de uma parede de blocos de granito."
+    },
+    "carril": {
+      "nome": "Vinte e quatro cocktails",
+      "facto": "Nove clássicos, dez special's e cinco sem álcool. Feitos ao balcão, um a um.",
+      "dado": "Desde 4,20 €",
+      "ilustrativa": "As fotografias são da casa. Onde o cocktail não se identifica ao certo, o rótulo diz apenas o que se sabe.",
+      "fechoNome": "E ainda a carta toda",
+      "fechoFacto": "Gin, whisky, shots, sangrias em garrafão, cervejas, chás e a cafetaria.",
+      "fechoDado": "Ver a ementa",
+      "balcaoNome": "Ao balcão",
+      "balcaoFacto": "Lima espremida à mão, sobre o copo. Todos são feitos à frente de quem os bebe.",
+      "balcaoAlt": "Uma mão a espremer meia lima por cima de um copo alto com gelo."
+    },
+    "sabores": {
+      "nome": "Catorze sabores",
+      "facto": "Os mesmos para o Cocktail Preguiça e para o Unicórnio, que é o mesmo copo sem álcool.",
+      "dado": "5,00 € · sem álcool 1,70 €",
+      "lista": {
+        "surpresa": "Surpresa",
+        "limao": "Limão",
+        "manga": "Manga",
+        "frutos-vermelhos": "Frutos vermelhos",
+        "caramelo": "Caramelo",
+        "menta": "Menta",
+        "ananas": "Ananás",
+        "pessego": "Pêssego",
+        "morango": "Morango",
+        "fumado": "Fumado",
+        "laranja": "Laranja",
+        "coco": "Coco",
+        "framboesa": "Framboesa",
+        "maracuja": "Maracujá"
+      }
+    },
+    "partilhar": {
+      "nome": "Para partilhar",
+      "facto": "Tábuas de fuet, queijo da ilha e presunto. Preguiçinhas, que são vinte e quatro tostinhas com chouriço e queijo.",
+      "dado": "5,80 € a 13,50 €",
+      "alt": "Uma travessa redonda com tostinhas, batata frita e tabasco, sobre madeira.",
+      "alt2": "Uma tosta com compota ao lado de um chocolate quente com chantilly."
+    },
+    "gente": {
+      "nome": "Os Preguiçosos",
+      "facto": "É como a casa trata quem lá vai. Também há masterclasses de cocktails, com inscrição e lugares contados.",
+      "dado": "4,6 em 5 · 1053 avaliações no Google",
+      "alt": "Uma pessoa a sorrir com duas canecas de cobre, diante do quadro de ardósia da casa."
+    },
+    "porta": {
+      "nome": "A porta",
+      "facto": "Ermesinde, Valongo. Fecha ao domingo.",
+      "morada": "Morada",
+      "horario": "Horário",
+      "telefone": "Telefone",
+      "direcoes": "Como chegar",
+      "ateLogo": "Até logo.",
+      "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir."
+    }
   },
   "ementa": {
     "titulo": "Ementa",
@@ -62,15 +138,27 @@
     "avisoProvisoria": "Carta provisória. Os artigos e preços desta página são de demonstração e ainda não foram confirmados com a casa.",
     "avisoAlergenios": "Informação sobre alergénios disponível no balcão. Peça-nos antes de pedir.",
     "categorias": {
-      "pequenos-almocos": "Pequenos-almoços",
-      "cafetaria": "Cafetaria",
-      "padaria-pastelaria": "Padaria e pastelaria",
-      "salgados": "Salgados",
-      "sandes-e-tostas": "Sandes e tostas",
-      "pratos-do-dia": "Pratos do dia",
-      "bebidas-frias": "Bebidas frias",
-      "cervejas-e-vinhos": "Cervejas e vinhos"
-    }
+      "tostas-e-snacks": "Tostas & snacks",
+      "tabuas": "Tábuas",
+      "tacas": "Taças",
+      "sobremesas": "Sobremesas",
+      "cocktail-preguica": "Cocktail Preguiça & Unicórnio",
+      "cocktails-classicos": "Cocktails clássicos",
+      "cocktails-special": "Special's",
+      "mocktails": "Mocktails, sem álcool",
+      "sangrias-e-espumantes": "Sangrias & espumantes",
+      "gin": "Gin",
+      "whisky": "Whisky",
+      "shots": "Shots",
+      "licores": "Licores & digestivos",
+      "cervejas": "Cervejas",
+      "vinhos": "Vinhos",
+      "cafetaria": "Cafetaria & bebidas quentes",
+      "chas": "Chás",
+      "aguas-e-refrigerantes": "Águas & refrigerantes"
+    },
+    "colunaPreco": "Pão saloio",
+    "colunaPrecoAlt": "Pão de forma"
   },
   "contactos": {
     "titulo": "Contactos",

@@ -1,32 +1,49 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Instrument_Sans } from "next/font/google";
+import { Fraunces, Geist } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Cabecalho } from "@/components/Cabecalho";
-import { Rodape } from "@/components/Rodape";
 import { DadosEstruturados } from "@/components/DadosEstruturados";
-import { routing, type Locale } from "@/i18n/routing";
+import { routing } from "@/i18n/routing";
 import { URL_SITE } from "@/lib/site";
 import "../globals.css";
 
 /**
- * ⚠️ **A fonte é provisória.** Não há manual de marca do Café Preguiça; a
- * Instrument Sans está aqui por ser neutra e legível, não por ser a escolha
- * certa. Quando a identidade estiver decidida, troca-se aqui — e só aqui, porque
- * o resto do site vai buscar a variável CSS.
+ * As duas famílias, e porquê estas.
  *
- * `next/font` descarrega-a no `build` e serve-a do próprio domínio. É isso que
+ * O `taste.md` da skill avisa que "serif não é sinónimo de premium" e que só se
+ * usa uma quando a marca a nomeia. **Esta marca nomeia-a**: os cabeçalhos do
+ * menu impresso — "TOSTAS & SNACK'S", "COCKTAILS", "VINHO & SANGRIA" — são uma
+ * serifada de display, e o logótipo é um manuscrito. Não é gosto meu, está no
+ * papel que a casa manda imprimir.
+ *
+ * A **Fraunces** entrou por causa dos eixos `SOFT` e `WONK`: amaciam as
+ * terminações e entortam as diagonais de propósito. É o que separa esta serifada
+ * de uma Didone de luxo — e o `BRIEF.md`, resposta 1, diz "de bairro, o premium
+ * vem do à-vontade, não do luxo". Uma serifada de contraste alto dava
+ * exactamente a coutada que a resposta recusa.
+ *
+ * A **Geist** carrega o texto corrido. O `taste.md` desaconselha a Inter por ser
+ * a cara mais usada em páginas geradas e ler como uma não-decisão.
+ *
+ * ⚠️ **Nenhuma das duas é a letra do logótipo**, que é manuscrita e vive como
+ * imagem em `public/marca/`. Se um dia aparecer a fonte original da marca,
+ * troca-se a display aqui e muda em todo o lado.
+ *
+ * `next/font` descarrega-as no `build` e serve-as do próprio domínio. É isso que
  * permite ao `font-src 'self'` da CSP ser tão fechado, e é também o que evita um
  * pedido ao Google com o IP de cada visitante — que é o que um `<link>` para o
  * Google Fonts faz, e que obrigaria a falar de cookies de terceiros na página de
- * privacidade.
- *
- * As duas variáveis apontam hoje para a mesma família de propósito: sem
- * identidade definida, um display diferente seria uma escolha estética a fingir
- * de estrutura. A separação fica feita para quando houver.
+ * privacidade. O passo do CI que recusa recursos de terceiros vigia isto.
  */
-const corpo = Instrument_Sans({
+const display = Fraunces({
+  subsets: ["latin"],
+  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--fonte-display",
+  display: "swap",
+});
+
+const corpo = Geist({
   subsets: ["latin"],
   variable: "--fonte-corpo",
   display: "swap",
@@ -73,7 +90,7 @@ export default async function LayoutIdioma({
   const nav = await getTranslations({ locale, namespace: "nav" });
 
   return (
-    <html lang={locale} className={`${corpo.variable}`}>
+    <html lang={locale} className={`${display.variable} ${corpo.variable}`}>
       <body>
         <NextIntlClientProvider>
           {/* Primeiro tabulador da página: quem navega por teclado salta o
@@ -84,11 +101,12 @@ export default async function LayoutIdioma({
           >
             {nav("saltarParaConteudo")}
           </a>
-          <Cabecalho locale={locale as Locale} />
-          <main id="conteudo" className="mx-auto max-w-3xl px-4 py-10">
-            {children}
-          </main>
-          <Rodape />
+          {/* Sem cabeçalho nem invólucro aqui: **cada página diz o que é.**
+              As de leitura chamam `<Pagina>`, que traz o cabeçalho do site e a
+              coluna legível; a inicial é um catálogo de margem a margem, com a
+              sua própria navegação, e seria estragada por um invólucro comum.
+              Ver `components/Pagina.tsx`. */}
+          {children}
         </NextIntlClientProvider>
         <DadosEstruturados descricao={t("descricao")} />
       </body>

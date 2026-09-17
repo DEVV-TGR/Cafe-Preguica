@@ -44,6 +44,21 @@ const Esquema = z.object({
   telefone: z.string().min(9).nullable(),
   email: z.email().nullable(),
   /**
+   * ⚠️ **O horário abaixo não foi confirmado pela casa.**
+   *
+   * Foi recolhido de fontes públicas, e as fontes **não concordam**: umas dizem
+   * que abre às 15h00, outras às 15h30, outras às 16h00. O que está no
+   * `cafe.json` é o mais reportado.
+   *
+   * Com esta bandeira a `false`, a página de contactos escreve por baixo da
+   * tabela que o horário está sujeito a confirmação e que convém ligar antes de
+   * vir. **O dado aparece, mas o site não promete o que não sabe** — mandar
+   * alguém a uma porta fechada é o erro que mais custa neste negócio.
+   *
+   * Passa a `true` quando o cliente responder, e o aviso desaparece sozinho.
+   */
+  horarioConfirmado: z.boolean(),
+  /**
    * `null` no objeto inteiro significa **ainda não confirmado** e esconde a
    * secção; `null` num dia significa **encerrado nesse dia**. São duas coisas
    * diferentes e é de propósito que se distinguem: a primeira é uma falha

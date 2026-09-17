@@ -1,0 +1,40 @@
+{
+  "name": "cafe-preguica",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site do Café Preguiça — base do projeto",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "tipos": "tsc --noEmit",
+    "mensagens": "node scripts/verificar-mensagens.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "next-intl": "^4.13.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "_comentario_allowScripts": "Um pacote pode correr código arbitrário na máquina de quem faz npm install, e é o vetor de ataque mais usado contra cadeias de dependências de JavaScript. O npm bloqueia esses scripts por omissão; esta lista é a decisão explícita de os manter bloqueados. Os tres estao a false porque o build e os testes passam sem eles — confirmado a correr npm ci seguido de npm run build com node_modules apagado. Se um dia algo deixar de funcionar, o que se poe a true e so o pacote que falhou, depois de se perceber o que o script dele faz.",
+  "allowScripts": {
+    "unrs-resolver@1.12.2": false,
+    "@parcel/watcher@2.6.0": false,
+    "@swc/core@1.16.2": false
+  }
+}

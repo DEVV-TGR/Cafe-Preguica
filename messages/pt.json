@@ -1,0 +1,125 @@
+{
+  "marca": {
+    "nome": "Café Preguiça"
+  },
+  "nav": {
+    "saltarParaConteudo": "Saltar para o conteúdo",
+    "inicio": "Início",
+    "ementa": "Ementa",
+    "contactos": "Contactos",
+    "sobre": "A casa",
+    "mudarIdioma": "English"
+  },
+  "comum": {
+    "porConfirmar": "Por confirmar",
+    "encerrado": "Encerrado",
+    "precoPorConfirmar": "—",
+    "dias": {
+      "segunda": "Segunda",
+      "terca": "Terça",
+      "quarta": "Quarta",
+      "quinta": "Quinta",
+      "sexta": "Sexta",
+      "sabado": "Sábado",
+      "domingo": "Domingo"
+    }
+  },
+  "metadata": {
+    "inicio": {
+      "titulo": "Café Preguiça",
+      "descricao": "Café Preguiça — pequenos-almoços, cafetaria e petiscos."
+    },
+    "ementa": {
+      "titulo": "Ementa",
+      "descricao": "A carta do Café Preguiça: pequenos-almoços, cafetaria, salgados, sandes e bebidas."
+    },
+    "contactos": {
+      "titulo": "Contactos",
+      "descricao": "Onde estamos, a que horas abrimos e como falar connosco."
+    },
+    "sobre": {
+      "titulo": "A casa",
+      "descricao": "Quem somos e o que se come no Café Preguiça."
+    },
+    "privacidade": {
+      "titulo": "Privacidade",
+      "descricao": "Que dados este site recolhe — e porque é que a resposta é nenhuns."
+    },
+    "cookies": {
+      "titulo": "Cookies",
+      "descricao": "Este site não usa cookies. Esta página explica porquê."
+    }
+  },
+  "inicio": {
+    "titulo": "Café Preguiça",
+    "subtitulo": "Estrutura do site. O conteúdo e o desenho entram depois.",
+    "verEmenta": "Ver a ementa",
+    "verContactos": "Contactos"
+  },
+  "ementa": {
+    "titulo": "Ementa",
+    "introducao": "A carta da casa.",
+    "avisoProvisoria": "Carta provisória. Os artigos e preços desta página são de demonstração e ainda não foram confirmados com a casa.",
+    "avisoAlergenios": "Informação sobre alergénios disponível no balcão. Peça-nos antes de pedir.",
+    "categorias": {
+      "pequenos-almocos": "Pequenos-almoços",
+      "cafetaria": "Cafetaria",
+      "padaria-pastelaria": "Padaria e pastelaria",
+      "salgados": "Salgados",
+      "sandes-e-tostas": "Sandes e tostas",
+      "pratos-do-dia": "Pratos do dia",
+      "bebidas-frias": "Bebidas frias",
+      "cervejas-e-vinhos": "Cervejas e vinhos"
+    }
+  },
+  "contactos": {
+    "titulo": "Contactos",
+    "morada": "Morada",
+    "telefone": "Telefone",
+    "email": "Email",
+    "horario": "Horário",
+    "direcoes": "Como chegar",
+    "ligar": "Ligar",
+    "semDados": "Estes dados ainda não foram confirmados com a casa. Aparecem aqui assim que o forem."
+  },
+  "sobre": {
+    "titulo": "A casa",
+    "porEscrever": "Texto por escrever. Entra aqui depois da conversa com o cliente."
+  },
+  "privacidade": {
+    "titulo": "Privacidade",
+    "atualizado": "Última atualização: rascunho, por rever antes de publicar.",
+    "recolha": {
+      "titulo": "Que dados recolhemos",
+      "texto": "Nenhuns. Este site não tem formulários, não tem contas e não guarda nada sobre quem o visita."
+    },
+    "terceiros": {
+      "titulo": "Serviços de terceiros",
+      "texto": "Não há. As fontes e as imagens são servidas por este domínio, não há mapa embebido nem botões de redes sociais que carreguem código de fora. As ligações para o Google Maps e para as redes sociais são links normais: só são seguidos se carregar neles."
+    },
+    "alojamento": {
+      "titulo": "Alojamento",
+      "texto": "O site é alojado pela Vercel, que regista pedidos ao servidor para o poder servir e proteger. Esses registos são da plataforma e não são usados por nós para identificar ninguém."
+    },
+    "contacto": {
+      "titulo": "Dúvidas",
+      "texto": "Fale connosco pelos contactos da casa."
+    }
+  },
+  "cookies": {
+    "titulo": "Cookies",
+    "texto": "Este site não usa cookies. Não há cookies de análise, de publicidade nem de sessão, e por isso não há banner de consentimento — não haveria nada para consentir.",
+    "verificar": "Não é preciso acreditar em nós: abra as ferramentas de programador do navegador, separador Aplicação, e veja a lista de cookies deste domínio vazia."
+  },
+  "rodape": {
+    "direitos": "Todos os direitos reservados.",
+    "feitoPor": "Site por",
+    "privacidade": "Privacidade",
+    "cookies": "Cookies"
+  },
+  "naoEncontrada": {
+    "titulo": "Página não encontrada",
+    "texto": "A página que procura não existe ou mudou de sítio.",
+    "voltar": "Voltar ao início"
+  }
+}

@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/**
+ * Os tokens do site — cores, fontes, medidas.
+ *
+ * Estão aqui e não espalhados pelas classes de propósito: quando a identidade
+ * do Café Preguiça estiver decidida, muda-se este bloco e muda o site inteiro.
+ * É o gancho onde a estética se encosta depois.
+ *
+ * ⚠️ Os valores de agora são deliberadamente neutros — cinzentos e um preto que
+ * não é preto. Não são a paleta da casa; são a ausência dela, para que ninguém
+ * confunda o andaime com uma proposta de desenho.
+ */
+@theme {
+  --color-tinta: #1a1a1a;
+  --color-papel: #fafaf9;
+  --color-suave: #6b6b6b;
+  --color-linha: #e5e5e3;
+
+  --font-corpo: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
+  /* Enquanto não houver display próprio, cai no corpo — e não na fonte do
+     sistema, que era uma terceira família a entrar sem ninguém a escolher. */
+  --font-display: var(--fonte-display, var(--fonte-corpo)), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-corpo);
+}
+
+/* Quem tiver o sistema em "reduzir movimento" não leva animação nenhuma. Fica
+   aqui, à cabeça, para valer também para o que se acrescentar depois — uma
+   animação nova nasce a respeitar a preferência em vez de ter de se lembrar
+   dela. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,172 @@
+# Corre a cada push e em cada PR contra `main`. A Vercel faz o seu próprio build
+# no deploy; isto corre antes, para que um PR vermelho se veja no GitHub e não
+# só depois de estar em produção.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Um push novo no mesmo branch cancela a corrida anterior em vez de a deixar a
+# ocupar fila para um estado que já não interessa a ninguém.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Sem isto, o token do job vem com permissões de escrita. Nenhum destes passos
+# escreve no repositório.
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      # `ci` e não `install`: instala exactamente o que está no lock e falha se o
+      # `package.json` e o lock divergirem, em vez de os reconciliar em silêncio.
+      # Os scripts de instalação dos pacotes ficam bloqueados — ver o comentário
+      # `_comentario_allowScripts` no `package.json`.
+      - name: Instalar
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tipos
+        run: npm run tipos
+
+      # Uma chave em falta no `next-intl` não parte o build: aparece o nome da
+      # chave no meio da página, na outra língua, e quem descobre é o cliente.
+      - name: As duas línguas têm as mesmas chaves
+        run: npm run mensagens
+
+      # É isto que mantém o `npm audit` a zero ao longo do tempo, em vez de ser
+      # um número que alguém pôs a zero uma vez e nunca mais olhou.
+      - name: Vulnerabilidades
+        run: npm audit --audit-level=high
+
+      # O build é também o que valida `src/data/*.json` com o `zod`: um preço
+      # escrito como texto rebenta aqui, a dizer qual é o artigo.
+      - name: Build
+        run: npm run build
+
+      # Teste de fumo: o site arranca mesmo e as páginas respondem. Apanha o erro
+      # de runtime que passa por um build verde.
+      - name: Arrancar o site
+        run: |
+          set -euo pipefail
+          npm start &
+          echo $! > .servidor.pid
+
+          for _ in $(seq 1 60); do
+            if curl -sf --max-time 2 -o /dev/null http://localhost:3000/; then
+              echo "o site respondeu"
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "::error::o site não arrancou em 60s"
+          exit 1
+
+      # A lista cresce à medida que as páginas entram. As rotas portuguesas não
+      # levam prefixo e as inglesas levam `/en` — é o `localePrefix: "as-needed"`
+      # de `src/i18n/routing.ts`, e se alguém lhe mexer isto fica vermelho.
+      - name: As páginas respondem
+        run: |
+          set -euo pipefail
+
+          verificar() {
+            local caminho="$1" esperado="$2" obtido
+            obtido=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:3000${caminho}")
+            if [ "$obtido" != "$esperado" ]; then
+              echo "::error::${caminho} devolveu ${obtido}, esperava ${esperado}"
+              return 1
+            fi
+            echo "✓ ${caminho} → ${obtido}"
+          }
+
+          verificar /                 200
+          verificar /ementa           200
+          verificar /contactos        200
+          verificar /sobre            200
+          verificar /privacidade      200
+          verificar /cookies          200
+          verificar /en               200
+          verificar /en/ementa        200
+          verificar /en/contactos     200
+          verificar /sitemap.xml      200
+          verificar /robots.txt       200
+          verificar /uma-rota-que-nao-existe 404
+
+      # Os cabeçalhos de segurança são configuração, e configuração parte-se sem
+      # ninguém dar por isso. Aqui, parte-se com o CI vermelho.
+      - name: Os cabeçalhos de segurança estão lá
+        run: |
+          set -euo pipefail
+          cabecalhos=$(curl -s -D - -o /dev/null http://localhost:3000/ | tr 'A-Z' 'a-z')
+
+          for cabecalho in \
+            "content-security-policy" \
+            "x-frame-options" \
+            "x-content-type-options" \
+            "referrer-policy" \
+            "permissions-policy" \
+            "strict-transport-security"
+          do
+            if ! grep -q "^${cabecalho}:" <<< "$cabecalhos"; then
+              echo "::error::falta o cabeçalho ${cabecalho}"
+              exit 1
+            fi
+            echo "✓ ${cabecalho}"
+          done
+
+          # Em produção não pode haver `unsafe-eval` — só o `dev` o usa.
+          if grep -q "unsafe-eval" <<< "$cabecalhos"; then
+            echo "::error::a CSP de produção traz 'unsafe-eval'"
+            exit 1
+          fi
+          echo "✓ a CSP não traz 'unsafe-eval'"
+
+      # O site não carrega nada de fora, e é isso que torna verdadeira a página
+      # de cookies. Se alguém acrescentar um script, uma fonte ou um iframe de
+      # terceiros, é aqui que se vê — antes de a página passar a mentir.
+      - name: O site não carrega nada de fora
+        run: |
+          set -euo pipefail
+          html=$(curl -s http://localhost:3000/)
+
+          # Só conta o que o browser **carrega** sozinho: qualquer `src` e os
+          # `href` dos `<link>` cujo `rel` provoca um pedido. Um `<a href>` para
+          # o Maps ou para a DevPlus é um link normal — só é seguido se alguém
+          # carregar nele, e por isso não entra aqui.
+          externos=$(
+            {
+              grep -oE 'src="https?://[^"]*"' <<< "$html" || true
+              grep -oE '<link[^>]*rel="(stylesheet|preload|preconnect|dns-prefetch|modulepreload|icon)"[^>]*>' <<< "$html" \
+                | grep -oE 'href="https?://[^"]*"' || true
+            } | sort -u
+          )
+
+          if [ -n "$externos" ]; then
+            echo "::error::a página carrega recursos de terceiros:"
+            echo "$externos"
+            exit 1
+          fi
+          echo "✓ nenhum recurso de terceiros no HTML"
+
+      - name: Desligar o site
+        if: always()
+        run: kill "$(cat .servidor.pid)" || true

@@ -1,0 +1,29 @@
+# Atualizações automáticas das dependências.
+#
+# É a peça que faz par com o `npm audit --audit-level=high` do CI: sem ela, o
+# audit a zero é uma fotografia do dia em que alguém o pôs a zero. Com ela, uma
+# vulnerabilidade nova chega como PR e o CI diz logo se a correção parte o site.
+#
+# Semanal e não diário de propósito: num site deste tamanho, um PR por dia é
+# ruído que se aprende a ignorar, e uma dependência ignorada é pior do que uma
+# dependência antiga.
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # As atualizações pequenas vêm num PR só. O que interessa rever uma a uma
+      # são as major, que ficam de fora deste grupo.
+      menores:
+        update-types: [minor, patch]
+
+  # As próprias actions do CI são dependências como as outras — e correm com
+  # acesso ao repositório.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

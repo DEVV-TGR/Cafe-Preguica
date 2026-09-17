@@ -1,0 +1,125 @@
+{
+  "marca": {
+    "nome": "Café Preguiça"
+  },
+  "nav": {
+    "saltarParaConteudo": "Skip to content",
+    "inicio": "Home",
+    "ementa": "Menu",
+    "contactos": "Contact",
+    "sobre": "The place",
+    "mudarIdioma": "Português"
+  },
+  "comum": {
+    "porConfirmar": "To be confirmed",
+    "encerrado": "Closed",
+    "precoPorConfirmar": "—",
+    "dias": {
+      "segunda": "Monday",
+      "terca": "Tuesday",
+      "quarta": "Wednesday",
+      "quinta": "Thursday",
+      "sexta": "Friday",
+      "sabado": "Saturday",
+      "domingo": "Sunday"
+    }
+  },
+  "metadata": {
+    "inicio": {
+      "titulo": "Café Preguiça",
+      "descricao": "Café Preguiça — breakfast, coffee and snacks."
+    },
+    "ementa": {
+      "titulo": "Menu",
+      "descricao": "The Café Preguiça menu: breakfast, coffee, savouries, sandwiches and drinks."
+    },
+    "contactos": {
+      "titulo": "Contact",
+      "descricao": "Where we are, when we open and how to reach us."
+    },
+    "sobre": {
+      "titulo": "The place",
+      "descricao": "Who we are and what you will find at Café Preguiça."
+    },
+    "privacidade": {
+      "titulo": "Privacy",
+      "descricao": "What data this site collects — and why the answer is none."
+    },
+    "cookies": {
+      "titulo": "Cookies",
+      "descricao": "This site uses no cookies. This page explains why."
+    }
+  },
+  "inicio": {
+    "titulo": "Café Preguiça",
+    "subtitulo": "Site structure. Content and design come later.",
+    "verEmenta": "See the menu",
+    "verContactos": "Contact"
+  },
+  "ementa": {
+    "titulo": "Menu",
+    "introducao": "What the house serves.",
+    "avisoProvisoria": "Draft menu. The items and prices on this page are placeholders and have not been confirmed with the house.",
+    "avisoAlergenios": "Allergen information is available at the counter. Please ask before ordering.",
+    "categorias": {
+      "pequenos-almocos": "Breakfast",
+      "cafetaria": "Coffee and tea",
+      "padaria-pastelaria": "Bakery and pastries",
+      "salgados": "Savouries",
+      "sandes-e-tostas": "Sandwiches and toasties",
+      "pratos-do-dia": "Dishes of the day",
+      "bebidas-frias": "Cold drinks",
+      "cervejas-e-vinhos": "Beer and wine"
+    }
+  },
+  "contactos": {
+    "titulo": "Contact",
+    "morada": "Address",
+    "telefone": "Phone",
+    "email": "Email",
+    "horario": "Opening hours",
+    "direcoes": "Get directions",
+    "ligar": "Call",
+    "semDados": "These details have not been confirmed with the house yet. They will appear here as soon as they are."
+  },
+  "sobre": {
+    "titulo": "The place",
+    "porEscrever": "Copy still to be written. It goes here after the conversation with the client."
+  },
+  "privacidade": {
+    "titulo": "Privacy",
+    "atualizado": "Last updated: draft, to be reviewed before publishing.",
+    "recolha": {
+      "titulo": "What data we collect",
+      "texto": "None. This site has no forms, no accounts and stores nothing about its visitors."
+    },
+    "terceiros": {
+      "titulo": "Third-party services",
+      "texto": "There are none. Fonts and images are served by this domain, there is no embedded map and no social buttons loading outside code. Links to Google Maps and to social networks are plain links: they are only followed if you click them."
+    },
+    "alojamento": {
+      "titulo": "Hosting",
+      "texto": "The site is hosted by Vercel, which logs server requests in order to serve and protect it. Those logs belong to the platform and are not used by us to identify anyone."
+    },
+    "contacto": {
+      "titulo": "Questions",
+      "texto": "Reach us through the details on the contact page."
+    }
+  },
+  "cookies": {
+    "titulo": "Cookies",
+    "texto": "This site uses no cookies. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to.",
+    "verificar": "You do not have to take our word for it: open your browser's developer tools, Application tab, and see the cookie list for this domain empty."
+  },
+  "rodape": {
+    "direitos": "All rights reserved.",
+    "feitoPor": "Site by",
+    "privacidade": "Privacy",
+    "cookies": "Cookies"
+  },
+  "naoEncontrada": {
+    "titulo": "Page not found",
+    "texto": "The page you are looking for does not exist or has moved.",
+    "voltar": "Back to home"
+  }
+}

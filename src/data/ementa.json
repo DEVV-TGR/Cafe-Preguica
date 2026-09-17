@@ -1,0 +1,210 @@
+{
+  "confirmada": false,
+  "artigos": [
+    {
+      "id": "pequeno-almoco-simples",
+      "categoria": "pequenos-almocos",
+      "nome": {
+        "pt": "Pequeno-almoço simples",
+        "en": "Simple breakfast"
+      },
+      "descricao": {
+        "pt": "Café, sumo natural e torrada com manteiga.",
+        "en": "Coffee, fresh juice and buttered toast."
+      },
+      "preco": 4.5,
+      "alergenios": []
+    },
+    {
+      "id": "pequeno-almoco-completo",
+      "categoria": "pequenos-almocos",
+      "nome": {
+        "pt": "Pequeno-almoço completo",
+        "en": "Full breakfast"
+      },
+      "descricao": {
+        "pt": "Café, sumo natural, tosta mista e uma peça de fruta.",
+        "en": "Coffee, fresh juice, ham and cheese toastie and a piece of fruit."
+      },
+      "preco": 7.0,
+      "alergenios": []
+    },
+    {
+      "id": "cafe",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Café",
+        "en": "Espresso"
+      },
+      "descricao": null,
+      "preco": 0.8,
+      "alergenios": []
+    },
+    {
+      "id": "galao",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Galão",
+        "en": "Galão (coffee with milk)"
+      },
+      "descricao": null,
+      "preco": 1.4,
+      "alergenios": []
+    },
+    {
+      "id": "cha",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Chá",
+        "en": "Tea"
+      },
+      "descricao": null,
+      "preco": 1.2,
+      "alergenios": []
+    },
+    {
+      "id": "pastel-de-nata",
+      "categoria": "padaria-pastelaria",
+      "nome": {
+        "pt": "Pastel de nata",
+        "en": "Custard tart"
+      },
+      "descricao": null,
+      "preco": 1.3,
+      "alergenios": []
+    },
+    {
+      "id": "torrada",
+      "categoria": "padaria-pastelaria",
+      "nome": {
+        "pt": "Torrada com manteiga",
+        "en": "Buttered toast"
+      },
+      "descricao": null,
+      "preco": 1.6,
+      "alergenios": []
+    },
+    {
+      "id": "rissol-de-carne",
+      "categoria": "salgados",
+      "nome": {
+        "pt": "Rissol de carne",
+        "en": "Meat rissole"
+      },
+      "descricao": null,
+      "preco": 1.5,
+      "alergenios": []
+    },
+    {
+      "id": "pastel-de-bacalhau",
+      "categoria": "salgados",
+      "nome": {
+        "pt": "Pastel de bacalhau",
+        "en": "Codfish cake"
+      },
+      "descricao": null,
+      "preco": 1.5,
+      "alergenios": []
+    },
+    {
+      "id": "tosta-mista",
+      "categoria": "sandes-e-tostas",
+      "nome": {
+        "pt": "Tosta mista",
+        "en": "Ham and cheese toastie"
+      },
+      "descricao": {
+        "pt": "Fiambre e queijo em pão de forma.",
+        "en": "Ham and cheese on sliced bread."
+      },
+      "preco": 3.2,
+      "alergenios": []
+    },
+    {
+      "id": "sande-de-queijo",
+      "categoria": "sandes-e-tostas",
+      "nome": {
+        "pt": "Sande de queijo",
+        "en": "Cheese sandwich"
+      },
+      "descricao": {
+        "pt": "Em pão da casa.",
+        "en": "On house bread."
+      },
+      "preco": 2.8,
+      "alergenios": []
+    },
+    {
+      "id": "prato-do-dia",
+      "categoria": "pratos-do-dia",
+      "nome": {
+        "pt": "Prato do dia",
+        "en": "Dish of the day"
+      },
+      "descricao": {
+        "pt": "Muda todos os dias. Pergunte ao balcão.",
+        "en": "Changes daily. Ask at the counter."
+      },
+      "preco": null,
+      "alergenios": []
+    },
+    {
+      "id": "sopa",
+      "categoria": "pratos-do-dia",
+      "nome": {
+        "pt": "Sopa",
+        "en": "Soup"
+      },
+      "descricao": {
+        "pt": "Sopa do dia, feita na casa.",
+        "en": "Soup of the day, made in house."
+      },
+      "preco": 2.0,
+      "alergenios": []
+    },
+    {
+      "id": "sumo-natural",
+      "categoria": "bebidas-frias",
+      "nome": {
+        "pt": "Sumo natural de laranja",
+        "en": "Fresh orange juice"
+      },
+      "descricao": null,
+      "preco": 2.5,
+      "alergenios": []
+    },
+    {
+      "id": "agua-50cl",
+      "categoria": "bebidas-frias",
+      "nome": {
+        "pt": "Água 50 cl",
+        "en": "Water 50 cl"
+      },
+      "descricao": null,
+      "preco": 1.0,
+      "alergenios": []
+    },
+    {
+      "id": "imperial",
+      "categoria": "cervejas-e-vinhos",
+      "nome": {
+        "pt": "Imperial",
+        "en": "Draught beer"
+      },
+      "descricao": null,
+      "preco": 1.3,
+      "alergenios": []
+    },
+    {
+      "id": "vinho-copo",
+      "categoria": "cervejas-e-vinhos",
+      "nome": {
+        "pt": "Vinho a copo",
+        "en": "Glass of wine"
+      },
+      "descricao": null,
+      "preco": 1.5,
+      "alergenios": []
+    }
+  ]
+}

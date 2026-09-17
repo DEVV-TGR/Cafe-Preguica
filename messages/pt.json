@@ -54,79 +54,66 @@
   "inicio": {
     "acao": "Reservar · 229 730 873",
     "indice": {
-      "cocktail": "O cocktail",
       "casa": "A casa",
       "carril": "Os cocktails",
-      "sabores": "Os sabores",
+      "reels": "Vídeos",
       "partilhar": "Para partilhar",
-      "gente": "Os Preguiçosos",
       "porta": "A porta"
     },
-    "cocktail": {
-      "nome": "Cocktail Preguiça",
-      "facto": "Gin, vodka e rum. O sabor escolhe-se ao balcão, de entre catorze.",
-      "dado": "5,00 €",
-      "alt": "Um cocktail claro numa taça alta, ao lado de um coco, sobre uma mesa de madeira escura."
+    "heroi": {
+      "onde": "Ermesinde · Valongo",
+      "linha": "Cocktails e petiscos. O espaço mais intimista de Ermesinde.",
+      "acao": "Ver a ementa",
+      "alt": "A fachada do Café Preguiça numa manhã de sol, com uma árvore em flor por cima do telhado."
     },
     "casa": {
       "nome": "A casa",
-      "facto": "Madeira maciça, granito à vista e um quadro de ardósia. Uma sala em Ermesinde onde toda a gente se conhece.",
-      "dado": "Segunda a sábado",
-      "alt": "Três pessoas a rir à volta de uma mesa de madeira, com canecas de cobre e o nome da casa escrito a giz na parede.",
-      "alt2": "Alguém a segurar o menu preto e dourado da casa, diante de uma parede de blocos de granito."
+      "facto": "Madeira maciça, granito à vista e o nome escrito a giz na ardósia. Uma sala pequena onde toda a gente se conhece, aberta de tarde e de noite.",
+      "dado": "R. José Joaquim Ribeiro Teles, 560",
+      "alt": "A carta da casa em cima de uma mesa de madeira, diante da parede de blocos de granito."
+    },
+    "cocktail": {
+      "alt": "Um cocktail sobre uma mesa de madeira escura."
     },
     "carril": {
       "nome": "Vinte e quatro cocktails",
       "facto": "Nove clássicos, dez special's e cinco sem álcool. Feitos ao balcão, um a um.",
       "dado": "Desde 4,20 €",
       "ilustrativa": "As fotografias são da casa. Onde o cocktail não se identifica ao certo, o rótulo diz apenas o que se sabe.",
-      "fechoNome": "E ainda a carta toda",
-      "fechoFacto": "Gin, whisky, shots, sangrias em garrafão, cervejas, chás e a cafetaria.",
-      "fechoDado": "Ver a ementa",
       "balcaoNome": "Ao balcão",
       "balcaoFacto": "Lima espremida à mão, sobre o copo. Todos são feitos à frente de quem os bebe.",
-      "balcaoAlt": "Uma mão a espremer meia lima por cima de um copo alto com gelo."
+      "balcaoAlt": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
+      "fechoNome": "E ainda a carta toda",
+      "fechoFacto": "Gin, whisky, shots, sangrias em garrafão, cervejas, chás e a cafetaria.",
+      "fechoDado": "Ver a ementa"
     },
-    "sabores": {
-      "nome": "Catorze sabores",
-      "facto": "Os mesmos para o Cocktail Preguiça e para o Unicórnio, que é o mesmo copo sem álcool.",
-      "dado": "5,00 € · sem álcool 1,70 €",
-      "lista": {
-        "surpresa": "Surpresa",
-        "limao": "Limão",
-        "manga": "Manga",
-        "frutos-vermelhos": "Frutos vermelhos",
-        "caramelo": "Caramelo",
-        "menta": "Menta",
-        "ananas": "Ananás",
-        "pessego": "Pêssego",
-        "morango": "Morango",
-        "fumado": "Fumado",
-        "laranja": "Laranja",
-        "coco": "Coco",
-        "framboesa": "Framboesa",
-        "maracuja": "Maracujá"
+    "reels": {
+      "nome": "A casa em movimento",
+      "facto": "O que se passa ao balcão, filmado por eles. Carregue para ver no Instagram.",
+      "dado": "@cafepreguica",
+      "noInstagram": "abre no Instagram",
+      "legendas": {
+        "masterclass": "Masterclass Hera × Preguiça",
+        "tosta": "Tosta com compota e chocolate quente",
+        "negroni": "Um negroni a ser servido",
+        "valentim": "São Valentim na casa",
+        "menu": "A carta, na parede de granito",
+        "lima": "Lima espremida à mão"
       }
     },
     "partilhar": {
       "nome": "Para partilhar",
-      "facto": "Tábuas de fuet, queijo da ilha e presunto. Preguiçinhas, que são vinte e quatro tostinhas com chouriço e queijo.",
-      "dado": "5,80 € a 13,50 €",
-      "alt": "Uma travessa redonda com tostinhas, batata frita e tabasco, sobre madeira.",
-      "alt2": "Uma tosta com compota ao lado de um chocolate quente com chantilly."
-    },
-    "gente": {
-      "nome": "Os Preguiçosos",
-      "facto": "É como a casa trata quem lá vai. Também há masterclasses de cocktails, com inscrição e lugares contados.",
-      "dado": "4,6 em 5 · 1053 avaliações no Google",
-      "alt": "Uma pessoa a sorrir com duas canecas de cobre, diante do quadro de ardósia da casa."
+      "facto": "O que se come com as mãos, no meio da mesa, enquanto a conversa não acaba.",
+      "dado": "Desde 1,70 €",
+      "altTabua": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
+      "altTosta": "Uma tosta com compota de morango ao lado de um chocolate quente com chantilly e um pau de canela.",
+      "factoTosta": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte, por 3,60 €.",
+      "verMais": "E o resto da carta",
+      "verMaisFacto": "Tábuas, preguiçinhas, sobremesas e as taças para petiscar. Tudo com preço.",
+      "verMaisAcao": "Ver a ementa"
     },
     "porta": {
-      "nome": "A porta",
-      "facto": "Ermesinde, Valongo. Fecha ao domingo.",
-      "morada": "Morada",
-      "horario": "Horário",
-      "telefone": "Telefone",
+      "olho": "Para reservar mesa",
       "direcoes": "Como chegar",
       "ateLogo": "Até logo.",
       "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir."
@@ -158,7 +145,24 @@
       "aguas-e-refrigerantes": "Águas & refrigerantes"
     },
     "colunaPreco": "Pão saloio",
-    "colunaPrecoAlt": "Pão de forma"
+    "colunaPrecoAlt": "Pão de forma",
+    "saboresTitulo": "Escolha o sabor",
+    "sabores": {
+      "surpresa": "Surpresa",
+      "limao": "Limão",
+      "manga": "Manga",
+      "frutos-vermelhos": "Frutos vermelhos",
+      "caramelo": "Caramelo",
+      "menta": "Menta",
+      "ananas": "Ananás",
+      "pessego": "Pêssego",
+      "morango": "Morango",
+      "fumado": "Fumado",
+      "laranja": "Laranja",
+      "coco": "Coco",
+      "framboesa": "Framboesa",
+      "maracuja": "Maracujá"
+    }
   },
   "contactos": {
     "titulo": "Contactos",

@@ -25,6 +25,8 @@ import { join, parse } from "node:path";
 
 const ORIGEM = "fotos/instagram";
 const DESTINO = "public/casa";
+const ORIGEM_REELS = "fotos/reels";
+const DESTINO_REELS = "public/reels";
 
 /**
  * O nome do ficheiro é o que a página escreve no `src`, por isso diz **o que a
@@ -53,6 +55,9 @@ const NOMES = {
   "post-17": "cocktail-azul",
   "post-18": "lima-espremida",
   "post-19": "negroni-fumo",
+  /* A fachada, que o cliente mandou à parte. É a única fotografia de dia do
+     site inteiro, e é de propósito: é a primeira coisa que se vê. */
+  image: "fachada",
 };
 
 /**
@@ -65,9 +70,28 @@ const NOMES = {
  */
 const LARGURAS = [640, 1080];
 
+/**
+ * A fachada é o herói e ocupa o ecrã inteiro, portanto precisa de mais largura
+ * do que os cartões — e o original tem 2204 px, ao contrário das do Instagram.
+ */
+const LARGURAS_FACHADA = [640, 1280, 2000];
+
+/**
+ * As capas dos reels vêm em 9:16 e a **três mil e novecentos píxeis de largura**,
+ * muito acima de tudo o resto — são o material com mais qualidade que este
+ * projeto tem. As celas mostram-nas a menos de um terço da largura do ecrã, por
+ * isso 720 px chegam e sobram; guardar o original era arrastar 1,4 MB por cela.
+ *
+ * ⚠️ **O nome do ficheiro é o código do reel no Instagram**, e é isso que
+ * emparelha a capa com o vídeo em `src/data/reels.ts`. Renomear um destes
+ * ficheiros parte a ligação em silêncio: a cela passa a abrir o vídeo de outro.
+ */
+const LARGURAS_REELS = [420, 720];
+
 await mkdir(DESTINO, { recursive: true });
 
-const ficheiros = (await readdir(ORIGEM)).filter((f) => /\.jpe?g$/i.test(f));
+/* PNG além de JPEG: a fachada veio em PNG e ficava de fora em silêncio. */
+const ficheiros = (await readdir(ORIGEM)).filter((f) => /\.(jpe?g|png)$/i.test(f));
 if (ficheiros.length === 0) {
   console.error(`✖ nada em ${ORIGEM}/ — é lá que entra o material em bruto.`);
   process.exit(1);
@@ -87,9 +111,12 @@ for (const ficheiro of ficheiros.sort()) {
   const entrada = sharp(join(ORIGEM, ficheiro));
   const { width } = await entrada.metadata();
 
-  for (const largura of LARGURAS) {
+  for (const largura of nome === "fachada" ? LARGURAS_FACHADA : LARGURAS) {
     if (width < largura) continue;
-    const saida = join(DESTINO, `${nome}${largura === 1080 ? "" : `-${largura}`}.webp`);
+    /* O maior tamanho fica sem sufixo, que é o que a página escreve no `src`;
+       os outros levam a largura e entram no `srcset`. */
+    const maior = nome === "fachada" ? 2000 : 1080;
+    const saida = join(DESTINO, `${nome}${largura === maior ? "" : `-${largura}`}.webp`);
     await entrada
       .clone()
       .resize({ width: largura, withoutEnlargement: true })
@@ -100,3 +127,28 @@ for (const ficheiro of ficheiros.sort()) {
 }
 
 console.log(`✓ ${escritos} ficheiros em ${DESTINO}/`);
+
+/* ------------------------------------------------------ as capas dos reels -- */
+
+await mkdir(DESTINO_REELS, { recursive: true });
+
+let capas = 0;
+for (const ficheiro of (await readdir(ORIGEM_REELS)).filter((f) => /\.jpe?g$/i.test(f)).sort()) {
+  const codigo = parse(ficheiro).name;
+  const entrada = sharp(join(ORIGEM_REELS, ficheiro));
+
+  for (const largura of LARGURAS_REELS) {
+    const saida = join(
+      DESTINO_REELS,
+      `${codigo}${largura === 720 ? "" : `-${largura}`}.webp`,
+    );
+    await entrada
+      .clone()
+      .resize({ width: largura, withoutEnlargement: true })
+      .webp({ quality: 76 })
+      .toFile(saida);
+    capas++;
+  }
+}
+
+console.log(`✓ ${capas} ficheiros em ${DESTINO_REELS}/`);

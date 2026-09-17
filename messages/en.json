@@ -54,79 +54,66 @@
   "inicio": {
     "acao": "Book a table · 229 730 873",
     "indice": {
-      "cocktail": "The cocktail",
       "casa": "The room",
       "carril": "The cocktails",
-      "sabores": "The flavours",
+      "reels": "Videos",
       "partilhar": "To share",
-      "gente": "The Preguiçosos",
       "porta": "The door"
     },
-    "cocktail": {
-      "nome": "Cocktail Preguiça",
-      "facto": "Gin, vodka and rum. You pick the flavour at the counter, from fourteen.",
-      "dado": "€5.00",
-      "alt": "A pale cocktail in a tall glass beside a coconut, on a dark wooden table."
+    "heroi": {
+      "onde": "Ermesinde · Valongo",
+      "linha": "Cocktails and snacks. The most intimate room in Ermesinde.",
+      "acao": "See the menu",
+      "alt": "The front of Café Preguiça on a sunny morning, with a tree in blossom above the roof."
     },
     "casa": {
       "nome": "The room",
-      "facto": "Solid wood, bare granite and a chalkboard. A room in Ermesinde where everyone knows everyone.",
-      "dado": "Monday to Saturday",
-      "alt": "Three people laughing around a wooden table with copper mugs, the house name chalked on the wall behind.",
-      "alt2": "Someone holding the black and gold house menu in front of a granite block wall."
+      "facto": "Solid wood, bare granite and the name chalked on a blackboard. A small room where everyone knows everyone, open afternoons and evenings.",
+      "dado": "R. José Joaquim Ribeiro Teles, 560",
+      "alt": "The house menu standing on a wooden table, against the granite block wall."
+    },
+    "cocktail": {
+      "alt": "A cocktail on a dark wooden table."
     },
     "carril": {
       "nome": "Twenty-four cocktails",
       "facto": "Nine classics, ten specials and five without alcohol. Made at the counter, one at a time.",
       "dado": "From €4.20",
       "ilustrativa": "The photographs are the house's own. Where the cocktail cannot be identified for certain, the label says only what is known.",
-      "fechoNome": "And the rest of the list",
-      "fechoFacto": "Gin, whisky, shots, sangria by the jug, beer, tea and the coffee counter.",
-      "fechoDado": "See the menu",
       "balcaoNome": "At the counter",
       "balcaoFacto": "Lime squeezed by hand over the glass. Every one is made in front of the person drinking it.",
-      "balcaoAlt": "A hand squeezing half a lime over a tall glass of ice."
+      "balcaoAlt": "A hand squeezing half a lime over a tall glass of ice.",
+      "fechoNome": "And the rest of the list",
+      "fechoFacto": "Gin, whisky, shots, sangria by the jug, beer, tea and the coffee counter.",
+      "fechoDado": "See the menu"
     },
-    "sabores": {
-      "nome": "Fourteen flavours",
-      "facto": "The same ones for the Cocktail Preguiça and for the Unicorn, which is the same glass without the alcohol.",
-      "dado": "€5.00 · alcohol free €1.70",
-      "lista": {
-        "surpresa": "Surprise",
-        "limao": "Lemon",
-        "manga": "Mango",
-        "frutos-vermelhos": "Red berries",
-        "caramelo": "Caramel",
-        "menta": "Mint",
-        "ananas": "Pineapple",
-        "pessego": "Peach",
-        "morango": "Strawberry",
-        "fumado": "Smoked",
-        "laranja": "Orange",
-        "coco": "Coconut",
-        "framboesa": "Raspberry",
-        "maracuja": "Passion fruit"
+    "reels": {
+      "nome": "The house, moving",
+      "facto": "What happens at the counter, filmed by them. Tap to watch on Instagram.",
+      "dado": "@cafepreguica",
+      "noInstagram": "opens on Instagram",
+      "legendas": {
+        "masterclass": "Hera × Preguiça masterclass",
+        "tosta": "Toast with jam and hot chocolate",
+        "negroni": "A negroni being served",
+        "valentim": "Valentine's at the house",
+        "menu": "The menu, against the granite wall",
+        "lima": "Lime squeezed by hand"
       }
     },
     "partilhar": {
       "nome": "To share",
-      "facto": "Boards of fuet, island cheese and cured ham. Preguiçinhas, which are twenty-four little toasts with chouriço and cheese.",
-      "dado": "€5.80 to €13.50",
-      "alt": "A round platter of small toasts, crisps and tabasco, on wood.",
-      "alt2": "A toast with jam beside a hot chocolate topped with cream."
-    },
-    "gente": {
-      "nome": "The Preguiçosos",
-      "facto": "It is what the house calls the people who come. There are also cocktail masterclasses, by sign-up, with counted places.",
-      "dado": "4.6 out of 5 · 1,053 Google reviews",
-      "alt": "A person smiling with two copper mugs, in front of the house chalkboard."
+      "facto": "What you eat with your hands, in the middle of the table, while the conversation keeps going.",
+      "dado": "From €1.70",
+      "altTabua": "A round platter of small toasts with chouriço and cheese, a bowl of crisps and a bottle of tabasco, on wood.",
+      "altTosta": "Toast with strawberry jam beside a hot chocolate topped with cream and a cinnamon stick.",
+      "factoTosta": "In the photograph, next to a hot chocolate with cream — ordered separately, at €3.60.",
+      "verMais": "And the rest of the list",
+      "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
+      "verMaisAcao": "See the menu"
     },
     "porta": {
-      "nome": "The door",
-      "facto": "Ermesinde, Valongo. Closed on Sundays.",
-      "morada": "Address",
-      "horario": "Hours",
-      "telefone": "Phone",
+      "olho": "To book a table",
       "direcoes": "Get directions",
       "ateLogo": "See you soon.",
       "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come."
@@ -158,7 +145,24 @@
       "aguas-e-refrigerantes": "Water & soft drinks"
     },
     "colunaPreco": "Country bread",
-    "colunaPrecoAlt": "Sliced bread"
+    "colunaPrecoAlt": "Sliced bread",
+    "saboresTitulo": "Pick the flavour",
+    "sabores": {
+      "surpresa": "Surprise",
+      "limao": "Lemon",
+      "manga": "Mango",
+      "frutos-vermelhos": "Red berries",
+      "caramelo": "Caramel",
+      "menta": "Mint",
+      "ananas": "Pineapple",
+      "pessego": "Peach",
+      "morango": "Strawberry",
+      "fumado": "Smoked",
+      "laranja": "Orange",
+      "coco": "Coconut",
+      "framboesa": "Raspberry",
+      "maracuja": "Passion fruit"
+    }
   },
   "contactos": {
     "titulo": "Contact",

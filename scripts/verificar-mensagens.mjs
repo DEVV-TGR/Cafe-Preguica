@@ -77,7 +77,7 @@ if (!bloco) {
   problemas.push("não encontrei o SABORES em src/data/ementa.ts — o padrão mudou?");
 } else {
   const sabores = [...bloco[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
-  for (const s of sabores) exigir(`inicio.sabores.lista.${s}`, `o sabor "${s}"`);
+  for (const s of sabores) exigir(`ementa.sabores.${s}`, `o sabor "${s}"`);
 }
 
 /* ------------------------------------------------------------- relatório -- */

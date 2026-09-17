@@ -85,16 +85,24 @@
   align-items: center;
   gap: 1.5rem;
   padding: 0.75rem clamp(1rem, 4vw, 3rem);
-  background: color-mix(in oklab, var(--color-canvas) 86%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-linha);
+  background: color-mix(in oklab, var(--color-canvas) 82%, transparent);
+  backdrop-filter: blur(12px);
+  /* Um fio dourado em vez de uma linha cinzenta. É a diferença entre uma barra
+     que podia ser de qualquer site e uma que é desta casa. */
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ouro) 28%, transparent);
 }
 
 .pg-barra__marca {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.pg-barra__marca img {
+  /* O logótipo tem o nome e a preguiça lado a lado, portanto é largo e baixo:
+     a altura é que manda, não a largura. */
+  height: clamp(1.6rem, 3.6vw, 2.2rem);
+  width: auto;
 }
 
 .pg-indice {
@@ -398,9 +406,10 @@
        onde a primeira linha estava tapada. */
 [id="casa"],
 [id="carril"],
-[id="sabores"],
+[id="reels"],
+[id="partilhar"],
 [id="porta"] {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: 5.5rem;
 }
 
 /* 2 · No telemóvel, o horário em duas colunas dava sete linhas de "Segunda
@@ -419,4 +428,411 @@
   .pg-placa dt:first-of-type {
     margin-top: 0;
   }
+}
+
+
+/* ============================================================== O HERÓI ===== */
+
+.pg-heroi {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  /* O fundo é o chão da página e não preto: enquanto a fotografia carrega, o
+     que se vê é a casa e não um buraco. */
+  background: var(--color-canvas);
+}
+
+.pg-heroi__foto {
+  position: absolute;
+  inset: -6% 0;
+  z-index: 0;
+}
+
+.pg-heroi__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* ⚠️ Puxa para **baixo do meio**, não para cima. A árvore em flor está no
+     topo do original e a tentação é enquadrá-la — mas o assunto é a casa, e com
+     `35%` a fachada ficava cortada fora do ecrã num monitor largo. Assim
+     apanha-se o edifício inteiro e as flores continuam a entrar por cima. */
+  object-position: 50% 58%;
+}
+
+/**
+ * O véu.
+ *
+ * ⚠️ **Não é uma cortina sobre a fotografia toda** — é um gradiente que sobe do
+ * fundo e morre a meia altura. A alternativa fácil, escurecer a imagem inteira,
+ * dava contraste ao texto e matava o céu azul e a árvore em flor, que são a
+ * única razão para esta fotografia estar aqui.
+ */
+.pg-heroi__veu {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    var(--color-canvas) 0%,
+    color-mix(in oklab, var(--color-canvas) 88%, transparent) 22%,
+    color-mix(in oklab, var(--color-canvas) 45%, transparent) 46%,
+    transparent 68%
+  );
+}
+
+.pg-heroi__texto {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: clamp(2rem, 7vh, 5rem) clamp(1.25rem, 6vw, 5rem);
+  padding-inline-end: clamp(5rem, 14vw, 12rem);
+  max-width: 46rem;
+}
+
+.pg-heroi__marca {
+  margin: 0;
+}
+
+.pg-heroi__marca img {
+  width: clamp(16rem, 40vw, 30rem);
+  height: auto;
+  filter: drop-shadow(0 4px 24px rgb(0 0 0 / 0.6));
+}
+
+.pg-heroi__onde {
+  font-size: clamp(0.82rem, 1.4vw, 0.95rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pg-heroi__linha {
+  font-size: clamp(1.15rem, 2.8vw, 1.6rem);
+  line-height: 1.5;
+  max-width: 30ch;
+  text-wrap: pretty;
+}
+
+/* ================================================================ O BOTÃO === */
+
+/* A acção, com a mesma forma em toda a página. */
+.pg-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--color-ouro);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-botao:hover,
+.pg-botao:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ================================================================= A CASA === */
+
+.pg-casa {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+  padding-block: clamp(3.5rem, 11vh, 8rem);
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+  padding-inline-end: clamp(5rem, 12vw, 10rem);
+}
+
+/* A fotografia é **pequena** de propósito: é a casa por dentro, não o herói.
+   Uma imagem a ocupar meia página aqui competia com a fachada lá atrás. */
+.pg-casa figure {
+  margin: 0;
+  max-width: 26rem;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.pg-casa img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (min-width: 52rem) {
+  .pg-casa {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+  }
+}
+
+/* ================================================================ OS REELS == */
+
+.pg-reels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+  /* Menos margem à direita do que os outros actos: aqui não há texto corrido a
+     ser tapado pela preguiça, e as celas ganham a largura. */
+  padding-inline-end: clamp(4rem, 8vw, 7rem);
+}
+
+.pg-reels__grelha {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 60rem) {
+  .pg-reels__grelha {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.pg-reel {
+  display: block;
+  position: relative;
+}
+
+.pg-reel img {
+  width: 100%;
+  /* 9:16, que é o formato em que foram filmados. */
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  display: block;
+  border-radius: 2px;
+  transition: transform 320ms var(--sc-ease-out, ease), filter 320ms ease;
+}
+
+.pg-reel:hover img,
+.pg-reel:focus-visible img {
+  transform: translateY(-4px);
+  filter: brightness(1.08);
+}
+
+.pg-reel__legenda {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--color-tinta-suave);
+}
+
+/* ============================================================== OS PRATOS === */
+
+.pg-pratos {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+
+/**
+ * ⚠️ **A largura é o que distingue isto do carril dos cocktails.**
+ *
+ * Lá os cartões têm 23rem e vêem-se três ao mesmo tempo, porque o que interessa
+ * é a variedade. Aqui cada painel ocupa quase o ecrã inteiro, e por isso entra
+ * um, sai um, entra o seguinte — que foi o que o cliente descreveu.
+ */
+.pg-prato {
+  flex: 0 0 auto;
+  width: min(72rem, 86vw);
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: center;
+}
+
+@media (min-width: 52rem) {
+  .pg-prato {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+}
+
+.pg-prato figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--color-superficie);
+}
+
+.pg-prato img {
+  width: 100%;
+  height: auto;
+  max-height: 62vh;
+  object-fit: cover;
+  display: block;
+}
+
+.pg-prato__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 34ch;
+}
+
+.pg-prato__preco {
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1;
+  color: var(--color-ouro-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-pratos__abertura,
+.pg-pratos__fecho {
+  flex: 0 0 auto;
+  width: min(30rem, 78vw);
+}
+
+/* ================================================================ A PORTA === */
+
+.pg-porta {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(4rem, 14vh, 9rem);
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+  padding-inline-end: clamp(5rem, 12vw, 10rem);
+}
+
+/* A fachada volta, escurecida, como chão do acto. Fecha o círculo com o herói:
+   chega-se à casa, entra-se, e sai-se pela mesma porta. */
+.pg-porta__fundo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.pg-porta__fundo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  /* Aqui **pode** escurecer-se a imagem toda, ao contrário do herói: o papel
+     dela mudou. Lá era o assunto; aqui é textura por trás do telefone. */
+  opacity: 0.16;
+  filter: grayscale(0.35);
+}
+
+.pg-porta__texto {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 44rem;
+}
+
+/**
+ * O telefone é a coisa maior da página, e é de propósito: esta página existe
+ * para pôr alguém à porta do Café Preguiça, e ligar é o passo que o cliente já
+ * pede no Instagram.
+ */
+.pg-porta__telefone {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-ouro-claro);
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms ease;
+}
+
+.pg-porta__telefone:hover,
+.pg-porta__telefone:focus-visible {
+  color: var(--color-ouro);
+}
+
+.pg-porta__morada {
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+}
+
+.pg-porta__morada a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* O horário em linhas, não numa tabela de sete: dia à esquerda, horas à
+   direita, e a coluna das horas alinhada por `tabular-nums`. */
+.pg-porta__horario {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.15rem;
+  /* Estreito de propósito: com a lista larga, o dia ficava num extremo e as
+     horas no outro, e o olho tinha de atravessar meio ecrã por linha. */
+  width: min(16rem, 100%);
+  font-size: 0.92rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-porta__horario li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-porta__ate {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--color-tinta);
+}
+
+/* =============================================================== O RODAPÉ === */
+
+.pg-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding: 1.5rem clamp(1.25rem, 6vw, 5rem);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 20%, transparent);
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-rodape nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.pg-rodape a:hover,
+.pg-rodape a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+/* ===================================================== O PALCO CENTRADO ===== */
+
+/**
+ * ⚠️ **O palco do motor é um bloco de 100vh sem centragem nenhuma**, portanto o
+ * que estiver lá dentro encosta ao topo do ecrã. Era o que fazia os cartões dos
+ * cocktails ficarem colados à barra, com meio ecrã de preto por baixo.
+ *
+ * Duas linhas resolvem, e ficam aqui e não no motor porque o motor não se toca:
+ * a centragem é decisão desta página e não do mecanismo.
+ *
+ * Vale para os dois carris — os cocktails e os pratos. A secção dos reels não
+ * precisa: lá o palco é o próprio elemento, e já se centra a si próprio.
+ */
+[data-sc-act="pan"] .sc-stage,
+[data-sc-act="pan"] [data-sc-stage] {
+  display: grid;
+  align-content: center;
 }

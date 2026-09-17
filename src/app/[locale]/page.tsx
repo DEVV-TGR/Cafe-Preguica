@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
 import { cafe, DIAS, moradaCompleta, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
-import { SABORES } from "@/data/ementa";
 import { Motor } from "@/components/catalogo/Motor";
 import { Preguica } from "@/components/catalogo/Preguica";
-import { Sabores } from "@/components/catalogo/Sabores";
+import { Heroi } from "@/components/catalogo/Heroi";
+import { Reels } from "@/components/catalogo/Reels";
+import { Pratos } from "@/components/catalogo/Pratos";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
-import { Rodape } from "@/components/Rodape";
+import { Link } from "@/i18n/navigation";
 import "../catalogo-motor.css";
 import "../catalogo.css";
 
@@ -23,43 +23,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /**
  * # A página inicial — uma colecção que se percorre
  *
- * A gramática é **catálogo**, e não o editorial em capítulos do site anterior
- * do estúdio. O raciocínio inteiro, incluindo porque é que as outras sete
- * gramáticas perderam, está em `scrollcraft/builds/preguica-inicio/BRIEF.md`.
+ * A gramática é **catálogo**: objectos numa colecção, com rótulos de museu —
+ * nome, facto, dado — iguais em todos. O raciocínio está em
+ * `scrollcraft/builds/preguica-inicio/BRIEF.md`.
  *
- * O que isso obriga, e que se vê no código abaixo:
- *
- * - **Sem herói separado.** O primeiro objecto já está em vista e já está
- *   rotulado; a colecção começa no topo da página. Não há uma frase de promessa
- *   por cima de uma fotografia esticada.
- * - **Rótulos de museu.** Nome, facto, dado. Sem persuasão, e o mesmo esquema
- *   em todos — ver `components/catalogo/Objeto.tsx`.
- * - **A navegação é um índice de objectos** que salta, não um menu de páginas.
- * - **O fecho é uma placa tipografada como um rótulo**, para o pedido ler como
- *   parte da colecção e não como um banner colado no fim.
- *
- * ## Os sete actos e o que cada um faz
- *
- * A regra é nunca repetir família de dispositivo em actos seguidos, e usar pelo
- * menos quatro famílias. Estão aqui seis: `in`, `parallax`, `pan`, ponteiro,
- * `reveal` e `pin`.
+ * ## Os seis actos
  *
  * | # | Objecto | Dispositivo | Sentimento |
  * |---|---|---|---|
- * | 1 | O cocktail | `in` | recolhimento |
- * | 2 | A casa | `parallax` | reconhecimento |
+ * | 1 | O herói, a fachada | `parallax` | chegada |
+ * | 2 | A casa | `reveal` | reconhecimento |
  * | 3 | Os cocktails | `pan` ← **pico** | deslumbre |
- * | 4 | Os sabores | ponteiro | posse |
- * | 5 | Para partilhar | `reveal` | fome |
- * | 6 | Os Preguiçosos | `in` + número real | pertença |
- * | 7 | A porta | `pin` | decisão |
+ * | 4 | Os reels | `pin` | curiosidade |
+ * | 5 | Para partilhar | `pan` | fome |
+ * | 6 | A porta | `in` | decisão |
  *
- * O acto 3 leva o maior `span` da página com margem visível — 3,4 contra 1,8 do
- * segundo maior. É o pico, e o pico leva o espaço.
+ * Cinco famílias de dispositivo e nenhuma repetida em actos seguidos — os dois
+ * `pan` estão separados pelo `pin` dos reels, de propósito. E são duas leituras
+ * diferentes do mesmo dispositivo: os cocktails passam em cartões, três ou
+ * quatro ao mesmo tempo; os pratos passam em painéis à largura do ecrã, um de
+ * cada vez.
  *
- * ⚠️ **Zero actos de `scrub`**, porque não há um único clipe de vídeo da casa.
- * Não é falta: é o que faz o primeiro acto ser tipográfico e escuro em vez de
- * uma fotografia de 1080 px esticada num monitor de 27 polegadas.
+ * ## O que saiu, e porquê
+ *
+ * **Os catorze sabores** e **os Preguiçosos** foram removidos por decisão do
+ * cliente: o primeiro repetia o que o carril dos cocktails já dizia, o segundo
+ * fica em espera até haver uma ideia melhor para ele. O componente `Sabores`
+ * foi apagado em vez de ficar órfão — código que ninguém chama é código que
+ * alguém vai tentar perceber daqui a três meses.
  */
 export default async function Inicio({ params }: Props) {
   const { locale } = await params;
@@ -68,14 +59,11 @@ export default async function Inicio({ params }: Props) {
   const t = await getTranslations("inicio");
   const comum = await getTranslations("comum");
   const marca = await getTranslations("marca");
+  const rodape = await getTranslations("rodape");
 
   const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
   const direcoes = urlDirecoes();
-
-  const etiquetasSabores = Object.fromEntries(
-    SABORES.map((s) => [s, t(`sabores.lista.${s}`)]),
-  );
 
   return (
     <>
@@ -86,11 +74,15 @@ export default async function Inicio({ params }: Props) {
       <Preguica />
 
       <header className="pg-barra">
-        <span className="pg-barra__marca">{marca("nome")}</span>
+        {/* A marca desenhada, não o nome composto numa fonte qualquer. */}
+        <span className="pg-barra__marca">
+          <img src="/marca/marca.webp" width={819} height={507} alt={marca("nome")} />
+        </span>
         <nav className="pg-indice" aria-label={t("indice.carril")}>
           <a href="#casa">{t("indice.casa")}</a>
           <a href="#carril">{t("indice.carril")}</a>
-          <a href="#sabores">{t("indice.sabores")}</a>
+          <a href="#reels">{t("indice.reels")}</a>
+          <a href="#partilhar">{t("indice.partilhar")}</a>
           <a href="#porta">{t("indice.porta")}</a>
         </nav>
         {telefone && (
@@ -100,40 +92,26 @@ export default async function Inicio({ params }: Props) {
         )}
       </header>
 
-      {/* 1 · O COCKTAIL — objecto um, já em vista e já rotulado. */}
-      <section className="pg-objeto pg-objeto--duplo" data-sc-act="flow">
-        <div data-sc-in data-sc-stagger="90">
-          <Rotulo
-            nome={t("cocktail.nome")}
-            facto={t("cocktail.facto")}
-            dado={t("cocktail.dado")}
-          />
-        </div>
-        <figure data-sc-in>
-          <img
-            src="/casa/cocktail-coco.webp"
-            srcSet="/casa/cocktail-coco-640.webp 640w, /casa/cocktail-coco.webp 1080w"
-            sizes="(min-width: 52rem) 40vw, 90vw"
-            width={1080}
-            height={1440}
-            alt={t("cocktail.alt")}
-            fetchPriority="high"
-          />
-        </figure>
-      </section>
+      {/* 1 · A FACHADA */}
+      <Heroi
+        nome={marca("nome")}
+        ondeFica={t("heroi.onde")}
+        linha={t("heroi.linha")}
+        acao={t("heroi.acao")}
+        alt={t("heroi.alt")}
+      />
 
-      {/* 2 · A CASA — camadas a ritmos diferentes. */}
-      <section
-        id="casa"
-        className="pg-objeto pg-objeto--duplo pg-objeto--trailing"
-        data-sc-act="flow"
-        data-sc-drift="#120c08"
-      >
-        <figure data-sc-parallax="0.12">
+      {/* 2 · A CASA — fotografia pequena do interior, não meia página de gente. */}
+      <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
+        <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
+          {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
+              casa — a parede de granito, a madeira, a carta em cima da mesa.
+              Esteve aqui uma fotografia de três clientes a rir e estava errada
+              pela razão mais simples: não era a casa, eram pessoas nela. */}
           <img
-            src="/casa/mesa-tres.webp"
-            srcSet="/casa/mesa-tres-640.webp 640w, /casa/mesa-tres.webp 1080w"
-            sizes="(min-width: 52rem) 45vw, 90vw"
+            src="/casa/menu-mesa.webp"
+            srcSet="/casa/menu-mesa-640.webp 640w, /casa/menu-mesa.webp 1080w"
+            sizes="(min-width: 52rem) 26rem, 60vw"
             width={1080}
             height={1440}
             alt={t("casa.alt")}
@@ -145,10 +123,9 @@ export default async function Inicio({ params }: Props) {
         </div>
       </section>
 
-      {/* 3 · OS COCKTAILS — o pico. `pan` é a espinha desta gramática.
-          A abertura e o fecho são itens do carril de propósito: sem eles o
-          carril pode ficar mais estreito que o ecrã e viajar zero. */}
-      <section id="carril" data-sc-act="pan" data-sc-span="3.4" data-sc-drift="#0e0906">
+      {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado
+          ao topo: ver `.pg-carril` em `catalogo.css`. */}
+      <section id="carril" data-sc-act="pan" data-sc-span="3.6" data-sc-drift="#0e0906">
         <div data-sc-stage>
           <div className="pg-carril" data-sc-pan="0.06">
             <div className="pg-carril__abertura">
@@ -162,18 +139,8 @@ export default async function Inicio({ params }: Props) {
 
             <CartaoCarril id="negroni" foto="negroni-fumo" locale={locale} alt={t("cocktail.alt")} />
             <CartaoCarril id="blue-lagoon" foto="cocktail-azul" locale={locale} alt={t("cocktail.alt")} />
-            {/* ⚠️ **Este bloco já teve quatro cartões e passou a ter dois**, e
-                a razão só se viu ao olhar para os screenshots: quatro "Cocktail
-                Preguiça" seguidos, com a mesma descrição e o mesmo preço, lêem-se
-                como uma avaria e não como uma colecção. O rótulo continua a não
-                adivinhar o sabor a partir da cor — isso não se consegue ver numa
-                fotografia — mas dois chegam para dizer "o mesmo copo, outras
-                cores". */}
             <CartaoCarril id="cocktail-preguica" foto="cocktail-rosa" locale={locale} alt={t("cocktail.alt")} />
             <CartaoCarril id="cocktail-preguica" foto="cocktail-turquesa" locale={locale} alt={t("cocktail.alt")} />
-
-            {/* Um objecto da colecção que não é um artigo da carta: não tem preço
-                porque não se vende, vende-se o que sai dele. */}
             <CartaoCarril
               foto="lima-espremida"
               locale={locale}
@@ -185,7 +152,7 @@ export default async function Inicio({ params }: Props) {
             <div className="pg-carril__fecho">
               <Rotulo nome={t("carril.fechoNome")} facto={t("carril.fechoFacto")} />
               <p className="mt-4">
-                <Link href="/ementa" className="pg-acao">
+                <Link href="/ementa" className="pg-botao">
                   {t("carril.fechoDado")}
                 </Link>
               </p>
@@ -194,149 +161,144 @@ export default async function Inicio({ params }: Props) {
         </div>
       </section>
 
-      {/* 4 · OS SABORES — o único acto que responde ao ponteiro. */}
-      <section id="sabores" className="pg-objeto" data-sc-act="flow">
-        <div className="flex flex-col gap-8" data-sc-in data-sc-stagger="70">
-          <Rotulo
-            nome={t("sabores.nome")}
-           
-            dado={t("sabores.dado")}
-          />
-          <Sabores etiquetas={etiquetasSabores} inicial="morango" />
-        </div>
-      </section>
+      {/* 4 · OS REELS */}
+      <Reels
+        nome={t("reels.nome")}
+        facto={t("reels.facto")}
+        dado={t("reels.dado")}
+        noInstagram={t("reels.noInstagram")}
+        legendas={{
+          masterclass: t("reels.legendas.masterclass"),
+          tosta: t("reels.legendas.tosta"),
+          negroni: t("reels.legendas.negroni"),
+          valentim: t("reels.legendas.valentim"),
+          menu: t("reels.legendas.menu"),
+          lima: t("reels.legendas.lima"),
+        }}
+      />
 
-      {/* 5 · PARA PARTILHAR — limpeza por objecto. */}
-      <section
-        className="pg-objeto pg-objeto--duplo"
-        data-sc-act="flow"
-        data-sc-drift="#150e09"
-      >
-        <div data-sc-in>
-          <Rotulo
-            nome={t("partilhar.nome")}
-            facto={t("partilhar.facto")}
-            dado={t("partilhar.dado")}
-          />
-        </div>
-        <figure data-sc-reveal="left" data-sc-reveal-at="0.15 0.6">
+      {/* 5 · PARA PARTILHAR */}
+      <Pratos
+        locale={locale}
+        nome={t("partilhar.nome")}
+        facto={t("partilhar.facto")}
+        dado={t("partilhar.dado")}
+        verMais={t("partilhar.verMais")}
+        verMaisFacto={t("partilhar.verMaisFacto")}
+        verMaisAcao={t("partilhar.verMaisAcao")}
+        alts={{
+          "bocadinhos-de-pao-com-chourico": t("partilhar.altTabua"),
+          "torrada-com-compota": t("partilhar.altTosta"),
+          "torrada-com-compota-facto": t("partilhar.factoTosta"),
+        }}
+      />
+
+      {/* 6 · A PORTA — o fecho. O telefone é o que a página existe para
+          provocar, por isso é a coisa maior do ecrã. */}
+      <section id="porta" className="pg-porta" data-sc-act="flow" data-sc-drift="#0b0806">
+        <div className="pg-porta__fundo" aria-hidden="true">
           <img
-            src="/casa/tabua-partilha.webp"
-            srcSet="/casa/tabua-partilha-640.webp 640w, /casa/tabua-partilha.webp 1080w"
-            sizes="(min-width: 52rem) 45vw, 90vw"
-            width={1080}
-            height={1440}
-            alt={t("partilhar.alt")}
+            src="/casa/fachada-1280.webp"
+            width={1280}
+            height={1275}
+            alt=""
             loading="lazy"
           />
-        </figure>
-      </section>
+        </div>
 
-      {/* 6 · OS PREGUIÇOSOS — o número é real e verificável, senão não entrava. */}
-      <section
-        className="pg-objeto pg-objeto--duplo pg-objeto--trailing"
-        data-sc-act="flow"
-      >
-        {/* `parallax` e não `in`: o acto seguinte entra com `in`, e a regra é
-            nunca repetir a mesma família de dispositivo em actos seguidos. */}
-        <figure data-sc-parallax="0.1">
-          <img
-            src="/casa/canecas-ardosia.webp"
-            srcSet="/casa/canecas-ardosia-640.webp 640w, /casa/canecas-ardosia.webp 1080w"
-            sizes="(min-width: 52rem) 45vw, 90vw"
-            width={1080}
-            height={1440}
-            alt={t("gente.alt")}
-            loading="lazy"
-          />
-        </figure>
-        <div data-sc-in data-sc-stagger="80">
-          <Rotulo nome={t("gente.nome")} facto={t("gente.facto")} dado={t("gente.dado")} />
+        <div className="pg-porta__texto" data-sc-in data-sc-stagger="90">
+          <p className="pg-rotulo__dado">{t("porta.olho")}</p>
+
+          {telefone && cafe.telefone && (
+            <p>
+              <a className="pg-porta__telefone" href={`tel:${telefone}`}>
+                {cafe.telefone}
+              </a>
+            </p>
+          )}
+
+          {morada && (
+            <p className="pg-porta__morada">
+              {morada}
+              {direcoes && (
+                <>
+                  {" · "}
+                  <a href={direcoes} target="_blank" rel="noopener noreferrer">
+                    {t("porta.direcoes")}
+                  </a>
+                </>
+              )}
+            </p>
+          )}
+
+          {cafe.horarios && (
+            <ul className="pg-porta__horario">
+              {DIAS.map((dia) => {
+                const h = cafe.horarios![dia];
+                return (
+                  <li key={dia}>
+                    <span>{comum(`dias.${dia}`)}</span>
+                    <span>{h ? `${h.abre}–${h.fecha}` : comum("encerrado")}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
+          {!cafe.horarioConfirmado && (
+            <p className="pg-nota">{t("porta.horarioPorConfirmar")}</p>
+          )}
+
+          <p className="pg-porta__ate">{t("porta.ateLogo")}</p>
         </div>
       </section>
 
-      {/* 7 · A PORTA — a placa tipografada como um rótulo. É o fecho.
-          ⚠️ **Já foi um acto `pin` e deixou de o ser**, e a razão viu-se nos
-          screenshots: um acto pinado solta a placa a meio do seu percurso e
-          mostra o resto do espaço vazio, portanto a página acabava num ecrã
-          preto. Em fluxo normal a placa fica onde está e o rodapé fecha logo a
-          seguir — o fecho resolve em vez de se desvanecer. */}
-      <section id="porta" className="pg-objeto" data-sc-act="flow" data-sc-drift="#0b0806">
-        <div>
-          <div className="pg-placa" data-sc-in data-sc-stagger="80">
-            <Rotulo nome={t("porta.nome")} facto={t("porta.facto")} />
-
-            <dl>
-              {morada && (
-                <>
-                  <dt>{t("porta.morada")}</dt>
-                  <dd>
-                    {morada}
-                    {direcoes && (
-                      <>
-                        {" · "}
-                        <a
-                          href={direcoes}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline"
-                        >
-                          {t("porta.direcoes")}
-                        </a>
-                      </>
-                    )}
-                  </dd>
-                </>
-              )}
-              {cafe.horarios && (
-                <>
-                  <dt>{t("porta.horario")}</dt>
-                  <dd>
-                    {DIAS.map((dia) => {
-                      const h = cafe.horarios![dia];
-                      return (
-                        /* Dia e hora em colunas próprias: em corrida, "Segunda
-                           15:30–00:00" parte-se a meio num ecrã estreito e as
-                           horas deixam de alinhar uma debaixo da outra. */
-                        <span key={dia} className="grid grid-cols-[6.5rem_1fr]">
-                          <span>{comum(`dias.${dia}`)}</span>
-                          <span>{h ? `${h.abre}–${h.fecha}` : comum("encerrado")}</span>
-                        </span>
-                      );
-                    })}
-                  </dd>
-                </>
-              )}
-            </dl>
-
-            {/* O aviso desaparece sozinho no dia em que `horarioConfirmado`
-                passar a `true` em `cafe.json`. Ver o comentário lá. */}
-            {!cafe.horarioConfirmado && (
-              <p className="pg-nota">{t("porta.horarioPorConfirmar")}</p>
-            )}
-
-            {telefone && cafe.telefone && (
-              <p>
-                <a className="pg-placa__telefone" href={`tel:${telefone}`}>
-                  {cafe.telefone}
-                </a>
-              </p>
-            )}
-
-            <p className="pg-rotulo__dado">{t("porta.ateLogo")}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ⚠️ O rodapé está aqui e não no `layout.tsx` por uma razão que só se viu
-          nos screenshots: sem ele, **a página acabava num ecrã preto vazio.** O
-          acto pinado larga a placa e, a seguir, não havia nada — o fecho
-          desvanecia-se em vez de resolver, que é das poucas coisas que a skill
-          trata como impeditivo de publicação.
-
-          Também é o que traz de volta as ligações à privacidade e aos cookies,
-          que a página inicial perdeu ao deixar de usar o invólucro comum. */}
-      <Rodape />
+      {/* O rodapé é mínimo de propósito: "a porta" acabou de dar a morada, o
+          telefone e o horário três centímetros acima. Repeti-los aqui era ruído.
+          Fica o que a lei pede e o crédito. */}
+      <RodapeInicial
+        privacidade={rodape("privacidade")}
+        cookies={rodape("cookies")}
+        direitos={rodape("direitos")}
+        feitoPor={rodape("feitoPor")}
+        nome={marca("nome")}
+      />
     </>
+  );
+}
+
+/**
+ * O rodapé da página inicial. É diferente do `components/Rodape.tsx`, que serve
+ * as páginas de leitura e lá **tem** de repetir a morada e o telefone: quem está
+ * na página de cookies não passou por "a porta".
+ */
+function RodapeInicial({
+  privacidade,
+  cookies,
+  direitos,
+  feitoPor,
+  nome,
+}: {
+  privacidade: string;
+  cookies: string;
+  direitos: string;
+  feitoPor: string;
+  nome: string;
+}) {
+  return (
+    <footer className="pg-rodape">
+      <nav aria-label={privacidade}>
+        <Link href="/privacidade">{privacidade}</Link>
+        <Link href="/cookies">{cookies}</Link>
+      </nav>
+      <p>
+        © {new Date().getFullYear()} {nome}. {direitos} {feitoPor}{" "}
+        <a href="https://devplus.pt" target="_blank" rel="noopener noreferrer">
+          DevPlus
+        </a>
+        .
+      </p>
+    </footer>
   );
 }

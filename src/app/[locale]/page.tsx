@@ -90,8 +90,7 @@ export default async function Inicio({ params }: Props) {
         ondeFica={t("heroi.onde")}
         linha={t("heroi.linha")}
         acao={t("heroi.acao")}
-        reservar={t("heroi.reservar", { telefone: cafe.telefone ?? "" })}
-        telefone={telefone}
+        ondeEstamos={t("heroi.ondeEstamos")}
         alt={t("heroi.alt")}
       />
 

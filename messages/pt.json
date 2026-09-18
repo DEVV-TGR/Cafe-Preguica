@@ -65,7 +65,7 @@
       "linha": "Cocktails e petiscos. O espaço mais intimista de Ermesinde.",
       "acao": "Ver a ementa",
       "alt": "A fachada do Café Preguiça numa manhã de sol, com uma árvore em flor por cima do telhado.",
-      "reservar": "Reservar mesa · {telefone}"
+      "ondeEstamos": "Onde estamos"
     },
     "casa": {
       "nome": "A casa",

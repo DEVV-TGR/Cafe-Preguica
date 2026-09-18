@@ -1,0 +1,221 @@
+/* ===========================================================================
+   AS PÁGINAS DE LEITURA — privacidade, cookies, a casa, contactos, 404
+
+   A mesma casa que a ementa, numa coluna só: o olho dourado, o título na
+   Fraunces com o `WONK` ligado, fios dourados a separar e números de capítulo.
+   Os componentes estão em `components/Pagina.tsx`.
+
+   A coluna é de ~65 caracteres porque é texto corrido, e é lido — ao contrário
+   da ementa, que se percorre com os olhos à procura de um preço.
+   =========================================================================== */
+
+.lt-pagina {
+  --lt-margem: clamp(1.25rem, 5vw, 2rem);
+  max-width: calc(44rem + 2 * var(--lt-margem));
+  margin-inline: auto;
+  padding: clamp(2.5rem, 9vh, 5.5rem) var(--lt-margem) 0;
+}
+
+/* ---------------------------------------------------------------- o topo */
+
+.lt-topo {
+  padding-bottom: clamp(1.75rem, 5vh, 2.75rem);
+}
+
+.lt-olho {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.lt-titulo {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  text-wrap: balance;
+}
+
+.lt-intro {
+  margin-top: 1.1rem;
+  max-width: 40ch;
+  font-size: 1.1rem;
+  color: var(--color-tinta-suave);
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------- a ficha */
+
+.lt-ficha {
+  display: grid;
+  margin-bottom: clamp(2rem, 6vh, 3.5rem);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 35%, transparent);
+}
+
+.lt-ficha > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.8rem;
+  border-bottom: 1px solid var(--color-linha);
+}
+
+.lt-ficha dt {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.lt-ficha dd {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  white-space: nowrap;
+  color: var(--color-ouro-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+/* No ecrã largo, as três lado a lado, como os dados de um rótulo. */
+@media (min-width: 40rem) {
+  .lt-ficha {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-auto-flow: column;
+    border-bottom: 1px solid var(--color-linha);
+  }
+
+  .lt-ficha > div {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    padding: 1.1rem 1.25rem 1.2rem 0;
+    border-bottom: 0;
+  }
+
+  .lt-ficha > div + div {
+    padding-inline-start: 1.25rem;
+    border-inline-start: 1px solid var(--color-linha);
+  }
+
+  .lt-ficha dd {
+    font-size: 1.7rem;
+    white-space: normal;
+  }
+}
+
+/* ------------------------------------------------------------- as secções */
+
+/* Logo a seguir à ficha, o fio de baixo dela já separa: um segundo fio ficava
+   a fazer uma escada de linhas. */
+.lt-ficha + .lt-seccao {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.lt-seccao {
+  display: grid;
+  gap: 0.6rem;
+  padding-block: clamp(1.5rem, 4vh, 2.25rem);
+  border-top: 1px solid var(--color-linha);
+}
+
+.lt-seccao__numero {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--color-ouro);
+  font-variant-numeric: tabular-nums;
+}
+
+.lt-seccao__titulo {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 4vw, 1.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.lt-seccao__texto {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 62ch;
+  font-size: 1.02rem;
+  text-wrap: pretty;
+}
+
+.lt-seccao__texto a {
+  color: var(--color-ouro-claro);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-ouro) 50%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.lt-seccao__texto a:hover,
+.lt-seccao__texto a:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+/* O número vai para a margem no ecrã largo, como na carta impressa. */
+@media (min-width: 48rem) {
+  .lt-seccao[data-numerada] {
+    grid-template-columns: 4rem 1fr;
+    column-gap: 0;
+  }
+
+  .lt-seccao[data-numerada] .lt-seccao__numero {
+    grid-row: span 2;
+    padding-top: 0.55rem;
+  }
+}
+
+/* ---------------------------------------------------------------- o aviso */
+
+.lt-aviso {
+  margin-bottom: clamp(1.75rem, 5vh, 2.5rem);
+  padding: 0.15rem 0 0.15rem 0.9rem;
+  border-inline-start: 2px solid color-mix(in oklab, var(--color-ouro) 60%, transparent);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-tinta-suave);
+}
+
+/* -------------------------------------------------------------- a tabela
+   Para o horário de contactos: dia e horas, com as horas alinhadas. */
+
+.lt-horario {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lt-horario dt {
+  color: var(--color-tinta-suave);
+}
+
+/* ---------------------------------------------------------------- o fecho */
+
+.lt-fecho {
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+  margin-top: clamp(1rem, 4vh, 2rem);
+  padding-block: clamp(2.5rem, 8vh, 4.5rem);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 28%, transparent);
+}
+
+.lt-fecho__preguica {
+  width: 4.5rem;
+  height: auto;
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.55));
+}
+
+.lt-fecho__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}

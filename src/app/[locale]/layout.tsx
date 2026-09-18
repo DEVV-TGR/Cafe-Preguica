@@ -7,6 +7,7 @@ import { DadosEstruturados } from "@/components/DadosEstruturados";
 import { routing } from "@/i18n/routing";
 import { URL_SITE } from "@/lib/site";
 import "../globals.css";
+import "../site.css";
 
 /**
  * As duas famílias, e porquê estas.

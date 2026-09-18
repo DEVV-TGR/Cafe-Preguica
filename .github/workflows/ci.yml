@@ -167,6 +167,25 @@ jobs:
           fi
           echo "✓ nenhum recurso de terceiros no HTML"
 
+      # A página `/cookies` diz que não há nenhum. O caso que já apanhou o site
+      # foi o do `next-intl`: grava a língua num cookie a quem abre `/en` com o
+      # browser em português — ver `src/i18n/routing.ts`.
+      - name: O site não grava cookies
+        run: |
+          set -euo pipefail
+          falhou=0
+          for caminho in / /en /ementa /en/ementa /privacidade /en/cookies; do
+            for lingua in pt-PT en-GB; do
+              if curl -s -o /dev/null -D - -H "Accept-Language: ${lingua}" \
+                  "http://localhost:3000${caminho}" | grep -qi '^set-cookie:'; then
+                echo "::error::${caminho} (${lingua}) devolve Set-Cookie"
+                falhou=1
+              fi
+            done
+          done
+          [ "$falhou" = 0 ] && echo "✓ nenhuma página grava cookies"
+          exit "$falhou"
+
       - name: Desligar o site
         if: always()
         run: kill "$(cat .servidor.pid)" || true

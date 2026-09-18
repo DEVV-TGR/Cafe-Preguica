@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
-import { Pagina } from "@/components/Pagina";
+import { Aviso, Ficha, Pagina, Seccao } from "@/components/Pagina";
 
 type Props = { params: Promise<{ locale: Locale }> };
 
@@ -28,24 +28,28 @@ export default async function Privacidade({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("privacidade");
+  const meta = await getTranslations("metadata.privacidade");
 
   const seccoes = ["recolha", "terceiros", "alojamento", "contacto"] as const;
 
   return (
-    <Pagina locale={locale}>
-      <article className="flex flex-col gap-6">
-      <h1 className="font-display text-4xl font-semibold">{t("titulo")}</h1>
-      <p className="text-sm text-suave">{t("atualizado")}</p>
+    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>
+      {/* A ficha tem de dizer o mesmo que as secções. Se entrar um formulário
+          ou um serviço de terceiros, mudam as duas — ver o aviso acima. */}
+      <Ficha
+        itens={[
+          { rotulo: t("ficha.formularios"), valor: t("ficha.nenhum") },
+          { rotulo: t("ficha.cookies"), valor: t("ficha.nenhum") },
+          { rotulo: t("ficha.terceiros"), valor: t("ficha.nenhum") },
+        ]}
+      />
+      <Aviso>{t("atualizado")}</Aviso>
 
-      {seccoes.map((chave) => (
-        <section key={chave}>
-          <h2 className="font-display text-xl font-semibold">
-            {t(`${chave}.titulo`)}
-          </h2>
-          <p className="mt-2">{t(`${chave}.texto`)}</p>
-        </section>
+      {seccoes.map((chave, i) => (
+        <Seccao key={chave} numero={i + 1} titulo={t(`${chave}.titulo`)}>
+          <p>{t(`${chave}.texto`)}</p>
+        </Seccao>
       ))}
-      </article>
     </Pagina>
   );
 }

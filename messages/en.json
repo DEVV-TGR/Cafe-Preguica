@@ -34,7 +34,8 @@
       "sabado": "Saturday",
       "domingo": "Sunday"
     },
-    "dose": "Serving"
+    "dose": "Serving",
+    "olhoCasa": "Café Preguiça · Ermesinde"
   },
   "metadata": {
     "inicio": {
@@ -255,12 +256,37 @@
     "contacto": {
       "titulo": "Questions",
       "texto": "Reach us through the details on the contact page."
+    },
+    "olho": "This site and your data",
+    "ficha": {
+      "formularios": "Forms",
+      "cookies": "Cookies",
+      "terceiros": "Third-party services",
+      "nenhum": "None"
     }
   },
   "cookies": {
     "titulo": "Cookies",
-    "texto": "This site uses no cookies. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to.",
-    "verificar": "You do not have to take our word for it: open your browser's developer tools, Application tab, and see the cookie list for this domain empty."
+    "olho": "What stays in your browser",
+    "ficha": {
+      "proprios": "Cookies from this site",
+      "terceiros": "Third-party cookies",
+      "banner": "Consent banner",
+      "zero": "0",
+      "naoPreciso": "Not needed"
+    },
+    "uso": {
+      "titulo": "What we use",
+      "texto": "This site uses no cookies. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to."
+    },
+    "lingua": {
+      "titulo": "What about the language you chose?",
+      "texto": "It lives in the address, not in a cookie: the English version is under /en. It stays as you browse the site. If you type the address again without /en, the site opens in your browser's language."
+    },
+    "verificar": {
+      "titulo": "How to check",
+      "texto": "You do not have to take our word for it: open your browser's developer tools, Application tab, and see the cookie list for this domain empty."
+    }
   },
   "rodape": {
     "direitos": "All rights reserved.",
@@ -271,6 +297,11 @@
   "naoEncontrada": {
     "titulo": "Page not found",
     "texto": "The page you are looking for does not exist or has moved.",
-    "voltar": "Back to home"
+    "olho": "Error 404"
+  },
+  "leitura": {
+    "seguir": "Keep browsing",
+    "inicio": "Back to the home page",
+    "ementa": "See the menu"
   }
 }

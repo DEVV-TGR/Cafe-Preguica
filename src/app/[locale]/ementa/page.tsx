@@ -18,7 +18,7 @@ import {
 } from "@/data/ementa";
 import { BarraSite } from "@/components/BarraSite";
 import { Preguica } from "@/components/catalogo/Preguica";
-import { RodapeCatalogo } from "@/components/catalogo/RodapeCatalogo";
+import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
 import "../../catalogo.css";
@@ -113,8 +113,6 @@ export default async function Ementa({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("ementa");
   const comum = await getTranslations("comum");
-  const marca = await getTranslations("marca");
-  const rodape = await getTranslations("rodape");
 
   const capitulos = porCapitulo();
   const seccoes = capitulos.flatMap((c) => c.seccoes);
@@ -299,13 +297,7 @@ export default async function Ementa({ params }: Props) {
         </section>
       </main>
 
-      <RodapeCatalogo
-        privacidade={rodape("privacidade")}
-        cookies={rodape("cookies")}
-        direitos={rodape("direitos")}
-        feitoPor={rodape("feitoPor")}
-        nome={marca("nome")}
-      />
+      <RodapeSite />
     </>
   );
 }

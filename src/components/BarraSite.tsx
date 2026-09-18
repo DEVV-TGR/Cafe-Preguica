@@ -4,7 +4,6 @@ import type { Locale } from "@/i18n/routing";
 import { avaliacoes } from "@/data/avaliacoes";
 import { cafe, telefoneParaLigar } from "@/data/cafe";
 import { MudarIdioma } from "./MudarIdioma";
-import "../app/barra.css";
 
 /**
  * # A barra do site — a mesma em todas as páginas
@@ -19,8 +18,7 @@ import "../app/barra.css";
  * `/sobre` e `/contactos` não estão aqui de propósito: ainda estão à espera do
  * texto e dos dados do cliente, e "Onde estamos" já faz o papel de contactos.
  *
- * O CSS vem com o componente, e não em `catalogo.css`, porque as páginas de
- * leitura não carregam o catálogo.
+ * O CSS está em `app/site.css`, que o `layout.tsx` carrega para todas.
  */
 export function BarraSite({
   locale,

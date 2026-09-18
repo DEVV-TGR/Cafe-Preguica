@@ -5,8 +5,13 @@ import { Link } from "@/i18n/navigation";
  *
  * A primeira coisa que se vê é a casa, de dia, com a árvore florida por cima.
  * Por cima dela apenas quatro coisas: o logótipo, onde fica, uma linha, e os
- * dois botões — reservar (ligar) e a ementa. Mais do que isso e a fotografia deixa de ser a primeira
- * impressão para ser o fundo de um cartaz.
+ * dois botões — a ementa e "onde estamos". Mais do que isso e a fotografia
+ * deixa de ser a primeira impressão para ser o fundo de um cartaz.
+ *
+ * ⚠️ **Não há "reservar" aqui, e é de propósito.** Esteve, e ficava ao lado do
+ * "Reservar" da barra no primeiro ecrã — dois botões para a mesma coisa. A
+ * barra fica presa ao topo e leva o de reservar; o herói leva a ementa, que é
+ * o que mais se procura, e "onde estamos", que saiu da barra.
  *
  * ## A fotografia é de dia e a página é de noite
  *
@@ -30,18 +35,15 @@ export function Heroi({
   ondeFica,
   linha,
   acao,
-  reservar,
-  telefone,
+  ondeEstamos,
   alt,
   nome,
 }: {
   ondeFica: string;
   linha: string;
   acao: string;
-  /** O texto do botão de reservar, já com o número. */
-  reservar: string;
-  /** O número para o `tel:`, sem espaços. `null` esconde o botão. */
-  telefone: string | null;
+  /** O texto do botão que desce até "onde estamos", no fim da página. */
+  ondeEstamos: string;
   alt: string;
   nome: string;
 }) {
@@ -79,17 +81,16 @@ export function Heroi({
         </h1>
         <p className="pg-heroi__onde">{ondeFica}</p>
         <p className="pg-heroi__linha">{linha}</p>
-        {/* Reservar vai primeiro e cheio: é a acção que a página existe para
-            provocar. A ementa fica ao lado, contornada. */}
+        {/* A ementa vai primeiro e cheia: é o que a maioria vem procurar.
+            "Onde estamos" fica ao lado, contornado, com a seta a dizer que
+            desce na própria página em vez de abrir outra. */}
         <p className="pg-heroi__botoes">
-          {telefone && (
-            <a href={`tel:${telefone}`} className="pg-botao pg-botao--cheio">
-              {reservar}
-            </a>
-          )}
-          <Link href="/ementa" className="pg-botao">
+          <Link href="/ementa" className="pg-botao pg-botao--cheio">
             {acao}
           </Link>
+          <a href="#onde" className="pg-botao">
+            {ondeEstamos} <span aria-hidden="true">↓</span>
+          </a>
         </p>
       </div>
     </section>

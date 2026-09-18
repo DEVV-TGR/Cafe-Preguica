@@ -971,6 +971,9 @@
    do lado esquerdo. O alfinete fica a 64% da largura — o mesmo valor que
    `POSICAO_CASA` em `scripts/desenhar-mapa.mjs`, para cair em cima da casa. */
 .pg-onde {
+  /* O botão "Onde estamos" do herói salta para aqui; sem isto o topo da
+     secção ficava debaixo da barra, que é `sticky` e tem 4rem. */
+  scroll-margin-top: 4rem;
   position: relative;
   display: grid;
   border-top: 1px solid var(--color-linha);

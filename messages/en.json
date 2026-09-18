@@ -8,7 +8,15 @@
     "ementa": "Menu",
     "contactos": "Contact",
     "sobre": "The place",
-    "mudarIdioma": "Português"
+    "mudarIdioma": "Português",
+    "principal": "Main navigation",
+    "reservar": "Book a table",
+    "mudarIdiomaCurto": "PT",
+    "seccoes": {
+      "casa": "The room",
+      "carril": "The cocktails",
+      "partilhar": "To share"
+    }
   },
   "comum": {
     "porConfirmar": "To be confirmed",
@@ -52,21 +60,12 @@
     }
   },
   "inicio": {
-    "acao": "Book a table · {telefone}",
-    "indice": {
-      "casa": "The room",
-      "carril": "The cocktails",
-      "reels": "Videos",
-      "partilhar": "To share",
-      "preguicosos": "Reviews",
-      "onde": "Find us"
-    },
     "heroi": {
       "onde": "Ermesinde · Valongo",
       "linha": "Cocktails and snacks. The most intimate room in Ermesinde.",
       "acao": "See the menu",
       "alt": "The front of Café Preguiça on a sunny morning, with a tree in blossom above the roof.",
-      "reservar": "Book a table · {telefone}"
+      "ondeEstamos": "Find us"
     },
     "casa": {
       "nome": "The room",

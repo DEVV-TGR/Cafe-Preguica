@@ -48,6 +48,16 @@ export function Motor() {
     if (montado.current || !window.ScrollCraft) return;
     window.ScrollCraft.mount(document.body);
     montado.current = true;
+
+    /* Quem chega com `/#onde` (a barra, noutra página, ou um link partilhado)
+       já foi rolado pelo browser **antes** de o motor esticar os actos presos,
+       e ficava a meio da página. Depois de o motor assentar, salta-se outra vez. */
+    const alvo = decodeURIComponent(location.hash.slice(1));
+    if (alvo) {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => document.getElementById(alvo)?.scrollIntoView()),
+      );
+    }
   }, []);
 
   useEffect(() => {

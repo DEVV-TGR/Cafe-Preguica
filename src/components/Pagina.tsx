@@ -1,19 +1,17 @@
-import { Cabecalho } from "@/components/Cabecalho";
+import { BarraSite } from "@/components/BarraSite";
 import { Rodape } from "@/components/Rodape";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * O invólucro das páginas de leitura: cabeçalho do site, uma coluna de largura
+ * O invólucro das páginas de leitura: a barra do site, uma coluna de largura
  * legível, e rodapé.
  *
- * ⚠️ **A página inicial não usa isto, e é de propósito.** Ela é um catálogo que
- * se percorre de lado, com a sua própria navegação — um índice dos objectos da
- * colecção, que salta para eles — e com secções que vão de margem a margem. Se
- * herdasse este invólucro ficava com duas barras no topo, uma por cima da
- * outra, e com as fotografias presas a 48rem.
+ * ⚠️ **A inicial e a ementa não usam isto, e é de propósito.** Têm secções
+ * que vão de margem a margem, e aqui ficavam com as fotografias presas a 48rem.
+ * A barra, essa, é a mesma nas três — `BarraSite` — e é aí que se muda.
  *
  * Por isso o `layout.tsx` não embrulha nada: cada página diz o que é. As de
- * leitura chamam este componente; a inicial trata de si.
+ * leitura chamam este componente; a inicial e a ementa tratam de si.
  */
 export function Pagina({
   locale,
@@ -24,7 +22,7 @@ export function Pagina({
 }) {
   return (
     <>
-      <Cabecalho locale={locale} />
+      <BarraSite locale={locale} />
       <main id="conteudo" className="mx-auto max-w-3xl px-4 py-10">
         {children}
       </main>

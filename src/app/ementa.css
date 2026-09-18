@@ -21,58 +21,6 @@ html:has(.em-pagina) {
   scroll-behavior: smooth;
 }
 
-/* ------------------------------------------------------------ a barra
-   É a `.pg-barra` da inicial. Muda só o que ela leva: aqui o logótipo volta ao
-   início, e em vez do índice da colecção há o sítio onde se está. */
-
-.em-barra__nav {
-  display: flex;
-  gap: 1.1rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-tinta-suave);
-}
-
-.em-barra__nav a:hover,
-.em-barra__nav a:focus-visible {
-  color: var(--color-ouro-claro);
-}
-
-.em-barra__nav [aria-current="page"] {
-  color: var(--color-ouro-claro);
-}
-
-/* No telemóvel o logótipo já leva ao início; as duas palavras eram repetição
-   num sítio onde o espaço conta. */
-@media (max-width: 30rem) {
-  .em-barra__nav {
-    display: none;
-  }
-}
-
-.em-barra__idioma {
-  margin-inline-start: auto;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-}
-
-.em-barra__idioma a {
-  display: inline-block;
-  padding: 0.45rem 0.9rem;
-  border: 1px solid color-mix(in oklab, var(--color-ouro) 40%, transparent);
-  border-radius: 999px;
-  color: var(--color-ouro-claro);
-  text-decoration: none;
-  transition: background-color 220ms ease, color 220ms ease;
-}
-
-.em-barra__idioma a:hover,
-.em-barra__idioma a:focus-visible {
-  background: var(--color-ouro);
-  color: var(--color-ouro-tinta);
-}
-
 /* ------------------------------------------------------------ o índice */
 
 .em-indice {

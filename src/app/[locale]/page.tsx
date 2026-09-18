@@ -14,6 +14,7 @@ import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
 import { Link } from "@/i18n/navigation";
 import { RodapeCatalogo } from "@/components/catalogo/RodapeCatalogo";
+import { BarraSite } from "@/components/BarraSite";
 import "../catalogo-motor.css";
 import "../catalogo.css";
 
@@ -81,25 +82,7 @@ export default async function Inicio({ params }: Props) {
       <span data-sc-progress />
       <Preguica />
 
-      <header className="pg-barra">
-        {/* A marca desenhada, não o nome composto numa fonte qualquer. */}
-        <span className="pg-barra__marca">
-          <img src="/marca/marca.webp" width={819} height={507} alt={marca("nome")} />
-        </span>
-        <nav className="pg-indice" aria-label={t("indice.carril")}>
-          <a href="#casa">{t("indice.casa")}</a>
-          <a href="#carril">{t("indice.carril")}</a>
-          <a href="#reels">{t("indice.reels")}</a>
-          <a href="#partilhar">{t("indice.partilhar")}</a>
-          {avaliacoes.nota !== null && <a href="#preguicosos">{t("indice.preguicosos")}</a>}
-          <a href="#onde">{t("indice.onde")}</a>
-        </nav>
-        {telefone && (
-          <a className="pg-acao" href={`tel:${telefone}`}>
-            {t("acao", { telefone: cafe.telefone ?? "" })}
-          </a>
-        )}
-      </header>
+      <BarraSite locale={locale} atual="inicio" />
 
       {/* 1 · A FACHADA */}
       <Heroi
@@ -107,8 +90,7 @@ export default async function Inicio({ params }: Props) {
         ondeFica={t("heroi.onde")}
         linha={t("heroi.linha")}
         acao={t("heroi.acao")}
-        reservar={t("heroi.reservar", { telefone: cafe.telefone ?? "" })}
-        telefone={telefone}
+        ondeEstamos={t("heroi.ondeEstamos")}
         alt={t("heroi.alt")}
       />
 

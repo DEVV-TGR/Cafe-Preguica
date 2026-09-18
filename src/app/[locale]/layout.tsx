@@ -101,11 +101,11 @@ export default async function LayoutIdioma({
           >
             {nav("saltarParaConteudo")}
           </a>
-          {/* Sem cabeçalho nem invólucro aqui: **cada página diz o que é.**
-              As de leitura chamam `<Pagina>`, que traz o cabeçalho do site e a
-              coluna legível; a inicial é um catálogo de margem a margem, com a
-              sua própria navegação, e seria estragada por um invólucro comum.
-              Ver `components/Pagina.tsx`. */}
+          {/* Sem invólucro aqui: **cada página diz o que é.** As de leitura
+              chamam `<Pagina>`, que traz a coluna legível; a inicial e a ementa
+              vão de margem a margem e seriam estragadas por ela. A barra é a
+              mesma em todas (`BarraSite`), mas cada página a põe onde precisa —
+              a inicial, por exemplo, tem a preguiça e o motor antes dela. */}
           {children}
         </NextIntlClientProvider>
         <DadosEstruturados descricao={t("descricao")} />

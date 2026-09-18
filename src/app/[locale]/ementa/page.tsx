@@ -16,7 +16,7 @@ import {
   type Categoria,
   type Sabor,
 } from "@/data/ementa";
-import { MudarIdioma } from "@/components/MudarIdioma";
+import { BarraSite } from "@/components/BarraSite";
 import { Preguica } from "@/components/catalogo/Preguica";
 import { RodapeCatalogo } from "@/components/catalogo/RodapeCatalogo";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
@@ -45,7 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * Esta página **não usa `<Pagina>`**, e foi essa a queixa que a refez: com o
  * invólucro das páginas de leitura, carregar em "Ver a ementa" parecia abrir
  * outro site — cabeçalho diferente, coluna diferente, avisos em caixas brancas.
- * Agora usa a barra, os botões, os rótulos e o rodapé do catálogo
+ * Agora usa a barra do site (`BarraSite`, a mesma da inicial) e os botões, os
+ * rótulos e o rodapé do catálogo
  * (`catalogo.css`), e o que é só dela vive em `ementa.css`.
  *
  * ## A página não sabe nada sobre a carta
@@ -112,7 +113,6 @@ export default async function Ementa({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("ementa");
   const comum = await getTranslations("comum");
-  const nav = await getTranslations("nav");
   const marca = await getTranslations("marca");
   const rodape = await getTranslations("rodape");
 
@@ -135,18 +135,7 @@ export default async function Ementa({ params }: Props) {
         <Preguica />
       </div>
 
-      <header className="pg-barra">
-        <Link href="/" className="pg-barra__marca" aria-label={nav("inicio")}>
-          <img src="/marca/marca.webp" width={819} height={507} alt={marca("nome")} />
-        </Link>
-        <nav className="em-barra__nav" aria-label={nav("inicio")}>
-          <Link href="/">{nav("inicio")}</Link>
-          <span aria-current="page">{nav("ementa")}</span>
-        </nav>
-        <span className="em-barra__idioma">
-          <MudarIdioma locale={locale} etiqueta={nav("mudarIdioma")} />
-        </span>
-      </header>
+      <BarraSite locale={locale} atual="ementa" />
 
       <IndiceCapitulos
         etiqueta={t("indice")}

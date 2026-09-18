@@ -8,7 +8,18 @@
     "ementa": "Ementa",
     "contactos": "Contactos",
     "sobre": "A casa",
-    "mudarIdioma": "English"
+    "mudarIdioma": "English",
+    "principal": "Navegação principal",
+    "reservar": "Reservar",
+    "mudarIdiomaCurto": "EN",
+    "seccoes": {
+      "casa": "A casa",
+      "carril": "Os cocktails",
+      "reels": "Vídeos",
+      "partilhar": "Para partilhar",
+      "preguicosos": "Os Preguiçosos",
+      "onde": "Onde estamos"
+    }
   },
   "comum": {
     "porConfirmar": "Por confirmar",
@@ -52,15 +63,6 @@
     }
   },
   "inicio": {
-    "acao": "Reservar · {telefone}",
-    "indice": {
-      "casa": "A casa",
-      "carril": "Os cocktails",
-      "reels": "Vídeos",
-      "partilhar": "Para partilhar",
-      "preguicosos": "Os Preguiçosos",
-      "onde": "Onde estamos"
-    },
     "heroi": {
       "onde": "Ermesinde · Valongo",
       "linha": "Cocktails e petiscos. O espaço mais intimista de Ermesinde.",

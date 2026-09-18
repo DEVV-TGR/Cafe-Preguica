@@ -1,0 +1,139 @@
+/* ===========================================================================
+   A BARRA — igual em todas as páginas
+
+   Vive à parte de `catalogo.css` porque as páginas de leitura (sobre,
+   contactos, privacidade, cookies) usam-na e não carregam o catálogo. Quem a
+   importa é o componente `BarraSite`, e não as páginas — assim não há página
+   que a mostre sem estilo.
+   =========================================================================== */
+
+.pg-barra {
+  position: sticky;
+  top: 0;
+  /* Altura fixa porque o herói a desconta (ver `.pg-heroi`) e o índice da
+     ementa se prende logo por baixo dela (ver `.em-indice`). */
+  box-sizing: border-box;
+  height: 4rem;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.5vw, 1.5rem);
+  padding: 0.75rem clamp(1rem, 4vw, 3rem);
+  background: color-mix(in oklab, var(--color-canvas) 82%, transparent);
+  backdrop-filter: blur(12px);
+  /* Um fio dourado em vez de uma linha cinzenta. É a diferença entre uma barra
+     que podia ser de qualquer site e uma que é desta casa. */
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ouro) 28%, transparent);
+}
+
+.pg-barra__marca {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.pg-barra__marca img {
+  /* O logótipo tem o nome e a preguiça lado a lado, portanto é largo e baixo:
+     a altura é que manda, não a largura. */
+  height: clamp(1.6rem, 3.6vw, 2.2rem);
+  width: auto;
+}
+
+/* ------------------------------------------------------------- o índice
+   As secções da inicial e a ementa. No telemóvel fica só a ementa. */
+
+.pg-indice {
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-tinta-suave);
+}
+
+.pg-indice a {
+  text-decoration: none;
+}
+
+.pg-indice a:hover,
+.pg-indice a:focus-visible,
+.pg-indice [aria-current="page"] {
+  color: var(--color-ouro-claro);
+}
+
+.pg-indice__seccao {
+  display: none;
+}
+
+/* 72rem e não menos: em português o índice, o idioma e a acção pedem ~66rem, e
+   a 64rem a barra saía pela direita. */
+@media (min-width: 72rem) {
+  .pg-indice__seccao {
+    display: inline;
+  }
+}
+
+/* ---------------------------------------------------- o idioma e a acção */
+
+.pg-barra__idioma {
+  margin-inline-start: auto;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.pg-barra__idioma a,
+.pg-acao {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-barra__idioma a {
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 40%, transparent);
+  color: var(--color-ouro-claro);
+}
+
+/* A acção, uma só, com o mesmo rótulo em todas as páginas. */
+.pg-acao {
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  color: var(--color-ouro-claro);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+.pg-barra__idioma a:hover,
+.pg-barra__idioma a:focus-visible,
+.pg-acao:hover,
+.pg-acao:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* A versão curta e a comprida do mesmo texto. No telemóvel "English" e o
+   número de telefone não cabem ao lado da ementa; o `tel:` liga na mesma. */
+.pg-barra__longo {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .pg-barra__idioma .pg-barra__curto {
+    display: none;
+  }
+  .pg-barra__idioma .pg-barra__longo {
+    display: inline;
+  }
+}
+
+@media (min-width: 88rem) {
+  .pg-acao .pg-barra__curto {
+    display: none;
+  }
+  .pg-acao .pg-barra__longo {
+    display: inline;
+  }
+}

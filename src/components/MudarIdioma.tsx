@@ -19,16 +19,26 @@ import { routing, type Locale } from "@/i18n/routing";
 export function MudarIdioma({
   locale,
   etiqueta,
+  curta,
 }: {
   locale: Locale;
   etiqueta: string;
+  /** "EN" / "PT" para o telemóvel. O nome acessível continua a ser a
+      `etiqueta` inteira: um leitor de ecrã a dizer "E N" não ajuda ninguém. */
+  curta: string;
 }) {
   const caminho = usePathname();
   const outro = routing.locales.find((l) => l !== locale) ?? routing.defaultLocale;
 
   return (
-    <Link href={caminho} locale={outro} hrefLang={outro} className="underline">
-      {etiqueta}
+    <Link
+      href={caminho}
+      locale={outro}
+      hrefLang={outro}
+      aria-label={etiqueta}
+    >
+      <span className="pg-barra__curto">{curta}</span>
+      <span className="pg-barra__longo">{etiqueta}</span>
     </Link>
   );
 }

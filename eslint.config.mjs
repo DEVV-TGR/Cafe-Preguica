@@ -58,6 +58,7 @@ const eslintConfig = [
       "src/app/*/ementa/page.tsx",
       "src/components/catalogo/**",
       "src/components/ementa/**",
+      "src/components/BarraSite.tsx",
     ],
     rules: { "@next/next/no-img-element": "off" },
   },

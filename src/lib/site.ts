@@ -12,9 +12,24 @@ import { routing } from "@/i18n/routing";
  * `NEXT_PUBLIC_SITE_URL` no painel da Vercel e faz-se *redeploy* — sem isso, o
  * `sitemap.xml` anuncia ao Google o endereço da demonstração.
  */
-export const URL_SITE = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://cafe-preguica.vercel.app"
-).replace(/\/+$/, "");
+export const URL_SITE = validarUrlSite(
+  /* `||` e não `??`: a variável definida mas vazia (o que fica ao importar o
+     `.env.example` para a Vercel tal como está) conta como não definida. Com
+     `??` a string vazia passava e o `new URL("")` do `metadataBase` partia o
+     build em todas as páginas. */
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://cafe-preguica.vercel.app",
+);
+
+/** Falha no build com uma mensagem que diz o que corrigir, em vez do
+    `TypeError: Invalid URL` sem contexto que o Next mostra a meio do prerender. */
+function validarUrlSite(valor: string): string {
+  if (!URL.canParse(valor)) {
+    throw new Error(
+      `NEXT_PUBLIC_SITE_URL inválido: "${valor}". Tem de ser um endereço completo, com https:// (ex.: https://cafepreguica.pt).`,
+    );
+  }
+  return valor.replace(/\/+$/, "");
+}
 
 /** Estúdio que desenhou e desenvolveu o site, creditado no rodapé. */
 export const URL_ESTUDIO = "https://devplus.pt";

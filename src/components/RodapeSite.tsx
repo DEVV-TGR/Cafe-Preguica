@@ -52,15 +52,15 @@ export function RodapeSite({ comContactos = false }: { comContactos?: boolean })
       <nav aria-label={t("legal")}>
         <Link href="/privacidade">{t("privacidade")}</Link>
         <Link href="/cookies">{t("cookies")}</Link>
-        {/* Um link normal e não o logótipo oficial carregado de fora: uma
-            imagem de outro domínio furava a CSP e o passo do CI que recusa
-            recursos de terceiros. */}
-        <a href={URL_LIVRO_RECLAMACOES} target="_blank" rel="noopener noreferrer">
-          {t("livroReclamacoes")} <span aria-hidden="true">↗</span>
-        </a>
         {/* Obrigatório (Lei 144/2015, art. 18.º). A frase inteira no rodapé
             pesava demais; fica numa página própria, a um clique de todas. */}
         <Link href="/informacao-legal">{t("resolucaoLitigios")}</Link>
+        {/* Em último, e é o único que sai do site. Um link normal e não o
+            logótipo oficial carregado de fora: uma imagem de outro domínio
+            furava a CSP e o passo do CI que recusa recursos de terceiros. */}
+        <a href={URL_LIVRO_RECLAMACOES} target="_blank" rel="noopener noreferrer">
+          {t("livroReclamacoes")} <span aria-hidden="true">↗</span>
+        </a>
       </nav>
       <p>
         © {new Date().getFullYear()} {marca.nome}. {t("direitos")} {t("feitoPor")}{" "}

@@ -78,7 +78,6 @@ export default async function Inicio({ params }: Props) {
       {/* O motor não arranca sozinho — ver `components/catalogo/Motor.tsx`. */}
       <Motor />
 
-      <span data-sc-progress />
       <Preguica />
 
       <BarraSite locale={locale} atual="inicio" />

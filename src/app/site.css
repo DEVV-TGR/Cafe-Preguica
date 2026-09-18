@@ -194,7 +194,8 @@
 
 .pg-rodape nav {
   display: flex;
-  gap: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
 }
 
 .pg-rodape a:hover,

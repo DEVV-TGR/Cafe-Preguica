@@ -35,6 +35,13 @@ function validarUrlSite(valor: string): string {
 export const URL_ESTUDIO = "https://devplus.pt";
 
 /**
+ * O Livro de Reclamações Eletrónico. Não é opcional: quem vende a
+ * consumidores e tem site tem de lhe pôr o acesso à vista (DL 156/2005, na
+ * redação do DL 74/2017). Está no rodapé, que aparece em todas as páginas.
+ */
+export const URL_LIVRO_RECLAMACOES = "https://www.livroreclamacoes.pt/Inicio/";
+
+/**
  * As páginas fixas do site, sem prefixo de idioma. Uma página nova entra aqui e
  * aparece sozinha no sitemap, nas duas línguas.
  *

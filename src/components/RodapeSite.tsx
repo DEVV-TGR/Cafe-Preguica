@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { marca } from "@/data/marca";
 import { cafe, moradaCompleta, telefoneParaLigar } from "@/data/cafe";
-import { URL_ESTUDIO } from "@/lib/site";
+import { URL_ESTUDIO, URL_LIVRO_RECLAMACOES } from "@/lib/site";
 
 /**
  * # O rodapé do site — um só
@@ -49,9 +49,15 @@ export function RodapeSite({ comContactos = false }: { comContactos?: boolean })
           )}
         </ul>
       )}
-      <nav aria-label={t("privacidade")}>
+      <nav aria-label={t("legal")}>
         <Link href="/privacidade">{t("privacidade")}</Link>
         <Link href="/cookies">{t("cookies")}</Link>
+        {/* Um link normal e não o logótipo oficial carregado de fora: uma
+            imagem de outro domínio furava a CSP e o passo do CI que recusa
+            recursos de terceiros. */}
+        <a href={URL_LIVRO_RECLAMACOES} target="_blank" rel="noopener noreferrer">
+          {t("livroReclamacoes")} <span aria-hidden="true">↗</span>
+        </a>
       </nav>
       <p>
         © {new Date().getFullYear()} {marca.nome}. {t("direitos")} {t("feitoPor")}{" "}

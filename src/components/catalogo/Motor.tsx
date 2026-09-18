@@ -51,6 +51,26 @@ function esquecerSeccao() {
   history.replaceState(history.state, "", location.pathname + location.search);
 }
 
+/**
+ * Volta a ligar a reposição da posição, desligada no `pagehide` (ver abaixo),
+ * para as páginas seguintes a herdarem ligada.
+ *
+ * ⚠️ **Só depois do `load`.** O browser repõe a posição ao recarregar por
+ * volta do `load`, e o motor monta antes disso (~45ms). Ligada no momento de
+ * montar, o browser ainda a encontrava ligada e repunha a posição antiga —
+ * em produção, uma vez sim, outra não, conforme a rede. Localmente o `load` é
+ * instantâneo e o erro não aparecia.
+ */
+function religarReposicao(seccao: HTMLElement | null) {
+  const ligar = () =>
+    setTimeout(() => {
+      history.scrollRestoration = "auto";
+      if (!seccao) window.scrollTo(0, 0);
+    }, 0);
+  if (document.readyState === "complete") ligar();
+  else window.addEventListener("load", ligar, { once: true });
+}
+
 export function Motor() {
   const montado = useRef(false);
 
@@ -71,9 +91,7 @@ export function Motor() {
         if (seccao) seccao.scrollIntoView();
         else window.scrollTo(0, 0);
         esquecerSeccao();
-        /* Já está no sítio: a reposição volta ao normal, para as páginas
-           seguintes a herdarem ligada. Ver o `pagehide` abaixo. */
-        history.scrollRestoration = "auto";
+        religarReposicao(seccao);
       }),
     );
   }, []);

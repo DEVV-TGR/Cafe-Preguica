@@ -45,8 +45,14 @@ export function BarraSite({
 
   return (
     <header className="pg-barra">
+      {/* Na inicial o logótipo volta ao topo. `#top` não é um id nosso: o
+          HTML define-o como "o topo do documento" quando não há nenhum
+          elemento com esse id — por isso não pode haver um `id="top"` no
+          site. Nas outras páginas leva à inicial. */}
       {naInicial ? (
-        <span className="pg-barra__marca">{logotipo}</span>
+        <a href="#top" className="pg-barra__marca">
+          {logotipo}
+        </a>
       ) : (
         <Link href="/" className="pg-barra__marca">
           {logotipo}

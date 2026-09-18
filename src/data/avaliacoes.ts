@@ -45,17 +45,18 @@ const Esquema = z.object({
   citacoes: z
     .array(
       z.object({
-        /* 220 é o que cabe num cartão sem o ecrã fixo transbordar: as sete
-           têm de caber num ecrã de portátil ao mesmo tempo. */
+        /* 220 é o que cabe num cartão sem o ecrã fixo transbordar: duas por
+           coluna têm de caber num ecrã de portátil ao mesmo tempo. */
         texto: z.string().min(1).max(220, "citação longa demais; cortar com […]"),
         /** Primeiro nome e inicial do apelido — nunca o apelido inteiro. */
         autor: z.string().min(1),
         lingua: z.enum(["pt", "en", "es", "fr"]),
       }),
     )
-    /* A secção é desenhada para sete: três à chegada e quatro com a rolagem,
-       numa grelha de quatro por dois cujo oitavo lugar é o link para o Google. */
-    .max(7, "sete no máximo; a grelha tem oito lugares e o último é o link"),
+    /* A secção tem quatro lugares à volta da nota, e cada um troca uma vez
+       de citação ao longo da rolagem: oito é o que enche as duas voltas. Com
+       menos, os lugares a mais ficam simplesmente vazios na segunda volta. */
+    .max(8, "oito no máximo: quatro lugares, duas voltas"),
 });
 
 export type Avaliacoes = z.infer<typeof Esquema>;

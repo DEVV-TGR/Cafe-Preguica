@@ -95,7 +95,7 @@ export default async function Inicio({ params }: Props) {
         </nav>
         {telefone && (
           <a className="pg-acao" href={`tel:${telefone}`}>
-            {t("acao")}
+            {t("acao", { telefone: cafe.telefone ?? "" })}
           </a>
         )}
       </header>
@@ -106,6 +106,8 @@ export default async function Inicio({ params }: Props) {
         ondeFica={t("heroi.onde")}
         linha={t("heroi.linha")}
         acao={t("heroi.acao")}
+        reservar={t("heroi.reservar", { telefone: cafe.telefone ?? "" })}
+        telefone={telefone}
         alt={t("heroi.alt")}
       />
 

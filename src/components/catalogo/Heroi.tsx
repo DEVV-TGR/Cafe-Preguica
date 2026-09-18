@@ -4,8 +4,8 @@ import { Link } from "@/i18n/navigation";
  * # O herói: a fachada
  *
  * A primeira coisa que se vê é a casa, de dia, com a árvore florida por cima.
- * Por cima dela apenas quatro coisas: o logótipo, onde fica, uma linha, e o
- * botão da ementa. Mais do que isso e a fotografia deixa de ser a primeira
+ * Por cima dela apenas quatro coisas: o logótipo, onde fica, uma linha, e os
+ * dois botões — reservar (ligar) e a ementa. Mais do que isso e a fotografia deixa de ser a primeira
  * impressão para ser o fundo de um cartaz.
  *
  * ## A fotografia é de dia e a página é de noite
@@ -30,12 +30,18 @@ export function Heroi({
   ondeFica,
   linha,
   acao,
+  reservar,
+  telefone,
   alt,
   nome,
 }: {
   ondeFica: string;
   linha: string;
   acao: string;
+  /** O texto do botão de reservar, já com o número. */
+  reservar: string;
+  /** O número para o `tel:`, sem espaços. `null` esconde o botão. */
+  telefone: string | null;
   alt: string;
   nome: string;
 }) {
@@ -73,7 +79,14 @@ export function Heroi({
         </h1>
         <p className="pg-heroi__onde">{ondeFica}</p>
         <p className="pg-heroi__linha">{linha}</p>
-        <p>
+        {/* Reservar vai primeiro e cheio: é a acção que a página existe para
+            provocar. A ementa fica ao lado, contornada. */}
+        <p className="pg-heroi__botoes">
+          {telefone && (
+            <a href={`tel:${telefone}`} className="pg-botao pg-botao--cheio">
+              {reservar}
+            </a>
+          )}
           <Link href="/ementa" className="pg-botao">
             {acao}
           </Link>

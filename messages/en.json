@@ -52,7 +52,7 @@
     }
   },
   "inicio": {
-    "acao": "Book a table · 229 730 873",
+    "acao": "Book a table · {telefone}",
     "indice": {
       "casa": "The room",
       "carril": "The cocktails",
@@ -65,7 +65,8 @@
       "onde": "Ermesinde · Valongo",
       "linha": "Cocktails and snacks. The most intimate room in Ermesinde.",
       "acao": "See the menu",
-      "alt": "The front of Café Preguiça on a sunny morning, with a tree in blossom above the roof."
+      "alt": "The front of Café Preguiça on a sunny morning, with a tree in blossom above the roof.",
+      "reservar": "Book a table · {telefone}"
     },
     "casa": {
       "nome": "The room",

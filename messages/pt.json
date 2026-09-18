@@ -52,7 +52,7 @@
     }
   },
   "inicio": {
-    "acao": "Reservar · 229 730 873",
+    "acao": "Reservar · {telefone}",
     "indice": {
       "casa": "A casa",
       "carril": "Os cocktails",
@@ -65,7 +65,8 @@
       "onde": "Ermesinde · Valongo",
       "linha": "Cocktails e petiscos. O espaço mais intimista de Ermesinde.",
       "acao": "Ver a ementa",
-      "alt": "A fachada do Café Preguiça numa manhã de sol, com uma árvore em flor por cima do telhado."
+      "alt": "A fachada do Café Preguiça numa manhã de sol, com uma árvore em flor por cima do telhado.",
+      "reservar": "Reservar mesa · {telefone}"
     },
     "casa": {
       "nome": "A casa",

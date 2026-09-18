@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
-import { cafe, DIAS, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
+import { cafe, DIAS, moradaCompleta, redeDoTelefone, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
+import { marca as redes } from "@/data/marca";
 import { Motor } from "@/components/catalogo/Motor";
 import { Preguica } from "@/components/catalogo/Preguica";
 import { Heroi } from "@/components/catalogo/Heroi";
@@ -38,8 +39,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * | 3 | Os cocktails | `pan` ← **pico** | deslumbre |
  * | 4 | Os reels | `pin` | curiosidade |
  * | 5 | Para partilhar | `pan` | fome |
- * | 6 | Os Preguiçosos | `in` + `reveal` | confiança |
- * | 7 | A porta | `in` | decisão |
+ * | 6 | Os Preguiçosos | `pin` | confiança |
+ * | 7 | Onde estamos | `in` | decisão |
  *
  * Cinco famílias de dispositivo e nenhuma repetida em actos seguidos — os dois
  * `pan` estão separados pelo `pin` dos reels, de propósito. E são duas leituras
@@ -66,7 +67,9 @@ export default async function Inicio({ params }: Props) {
   const marca = await getTranslations("marca");
   const rodape = await getTranslations("rodape");
 
+  const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
+  const rede = redeDoTelefone();
   const direcoes = urlDirecoes();
 
   return (
@@ -88,7 +91,7 @@ export default async function Inicio({ params }: Props) {
           <a href="#reels">{t("indice.reels")}</a>
           <a href="#partilhar">{t("indice.partilhar")}</a>
           {avaliacoes.nota !== null && <a href="#preguicosos">{t("indice.preguicosos")}</a>}
-          <a href="#porta">{t("indice.porta")}</a>
+          <a href="#onde">{t("indice.onde")}</a>
         </nav>
         {telefone && (
           <a className="pg-acao" href={`tel:${telefone}`}>
@@ -106,9 +109,12 @@ export default async function Inicio({ params }: Props) {
         alt={t("heroi.alt")}
       />
 
-      {/* 2 · A CASA — uma faixa baixa ao lado do texto. O texto é curto, e uma
-          fotografia em retrato fazia dele uma secção de ecrã inteiro. */}
+      {/* 2 · A CASA — texto à esquerda e a fotografia ao lado, em paisagem,
+          como a porta do Damira: da altura do texto, não do ecrã. */}
       <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
+        <div data-sc-in data-sc-stagger="80">
+          <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
+        </div>
         <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
           {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
               casa — a parede de granito, a madeira, a carta em cima da mesa.
@@ -117,16 +123,13 @@ export default async function Inicio({ params }: Props) {
           <img
             src="/casa/menu-mesa.webp"
             srcSet="/casa/menu-mesa-640.webp 640w, /casa/menu-mesa.webp 1080w"
-            sizes="(min-width: 52rem) 55vw, 100vw"
+            sizes="(min-width: 52rem) 50vw, 100vw"
             width={1080}
             height={1440}
             alt={t("casa.alt")}
             loading="lazy"
           />
         </figure>
-        <div data-sc-in data-sc-stagger="80">
-          <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
-        </div>
       </section>
 
       {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado
@@ -201,7 +204,7 @@ export default async function Inicio({ params }: Props) {
         }}
       />
 
-      {/* 6 · OS PREGUIÇOSOS — as avaliações, logo antes da porta. */}
+      {/* 6 · OS PREGUIÇOSOS — as avaliações, logo antes de "onde estamos". */}
       <Preguicosos
         locale={locale}
         nome={t("preguicosos.nome")}
@@ -216,73 +219,85 @@ export default async function Inicio({ params }: Props) {
         url={direcoes}
       />
 
-      {/* 7 · A PORTA — o fecho, em duas colunas: como reservar, e onde e
-          quando. Já teve a fachada escurecida por trás e saiu: era uma
-          fotografia a fazer de textura, e o fecho lia-se como um borrão. */}
-      <section id="porta" className="pg-porta" data-sc-act="flow" data-sc-drift="#0b0806">
-        <div className="pg-porta__grelha">
-          <div className="pg-porta__coluna" data-sc-in data-sc-stagger="90">
-            <Rotulo nome={t("porta.nome")} facto={t("porta.facto")} />
+      {/* 7 · ONDE ESTAMOS — o fecho. O mapa de fundo é um SVG nosso, desenhado
+          do OpenStreetMap por `scripts/desenhar-mapa.mjs`, e não o Google
+          Maps: ver o porquê no cabeçalho desse script. */}
+      <section id="onde" className="pg-onde" data-sc-act="flow" data-sc-drift="#0b0806">
+        <div className="pg-onde__mapa">
+          <img
+            src="/mapa/ermesinde.svg"
+            width={1600}
+            height={820}
+            alt={t("onde.mapaAlt")}
+            loading="lazy"
+          />
+          <span className="pg-onde__alfinete" aria-hidden="true">
+            <img src="/marca/preguica.webp" alt="" width={325} height={286} />
+          </span>
+          {/* O crédito é condição da licença ODbL, não decoração. */}
+          <p className="pg-onde__credito">
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
+              {t("onde.credito")}
+            </a>
+          </p>
+        </div>
 
+        <div className="pg-onde__cartao" data-sc-in data-sc-stagger="70">
+          <p className="pg-onde__olho">{t("onde.olho")}</p>
+          <h2 className="pg-onde__nome">{marca("nome")}</h2>
+          {morada && <p className="pg-onde__morada">{morada}</p>}
+
+          <ul className="pg-onde__contactos">
             {telefone && cafe.telefone && (
-              <>
-                <p>
-                  <a className="pg-porta__telefone" href={`tel:${telefone}`}>
-                    {cafe.telefone}
-                  </a>
-                </p>
-                <p>
-                  <a className="pg-botao pg-botao--cheio" href={`tel:${telefone}`}>
-                    {t("porta.ligar")}
-                  </a>
-                </p>
-              </>
+              <li>
+                <a href={`tel:${telefone}`}>{cafe.telefone}</a>
+                {rede && <span className="pg-onde__custo"> ({t(`onde.chamada.${rede}`)})</span>}
+              </li>
             )}
-          </div>
-
-          <div className="pg-porta__coluna pg-porta__coluna--onde" data-sc-in data-sc-stagger="90">
-            <h3 className="pg-porta__subtitulo">{t("porta.ondeQuando")}</h3>
-
-            {cafe.morada && (
-              <address className="pg-porta__morada">
-                {cafe.morada}
-                <br />
-                {[cafe.codigoPostal, cafe.cidade].filter(Boolean).join(" ")}
-              </address>
+            {cafe.email && (
+              <li>
+                <a href={`mailto:${cafe.email}`}>{cafe.email}</a>
+              </li>
             )}
-            {direcoes && (
-              <p>
-                <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
-                  {t("porta.direcoes")}
-                </a>
-              </p>
-            )}
+          </ul>
 
-            {cafe.horarios && (
-              <ul className="pg-porta__horario">
+          {cafe.horarios && (
+            <>
+              <p className="pg-onde__olho">{t("onde.horario")}</p>
+              <ul className="pg-onde__horario">
                 {DIAS.map((dia) => {
                   const h = cafe.horarios![dia];
                   return (
                     <li key={dia}>
                       <span>{comum(`dias.${dia}`)}</span>
-                      <span>{h ? `${h.abre}–${h.fecha}` : comum("encerrado")}</span>
+                      <span>{h ? `${h.abre} – ${h.fecha}` : comum("encerrado")}</span>
                     </li>
                   );
                 })}
               </ul>
-            )}
+              {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
+              {!cafe.horarioConfirmado && (
+                <p className="pg-nota">{t("onde.horarioPorConfirmar")}</p>
+              )}
+            </>
+          )}
 
-            {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
-            {!cafe.horarioConfirmado && (
-              <p className="pg-nota">{t("porta.horarioPorConfirmar")}</p>
+          <p className="pg-onde__botoes">
+            {direcoes && (
+              <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
+                {t("onde.direcoes")} <span aria-hidden="true">↗</span>
+              </a>
             )}
-          </div>
+            {redes.instagram && (
+              <a className="pg-botao" href={redes.instagram} target="_blank" rel="noopener noreferrer">
+                Instagram <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </p>
         </div>
-
-        <p className="pg-porta__ate">{t("porta.ateLogo")}</p>
       </section>
 
-      {/* O rodapé é mínimo de propósito: "a porta" acabou de dar a morada, o
+      {/* O rodapé é mínimo de propósito: "onde estamos" acabou de dar a morada, o
           telefone e o horário três centímetros acima. Repeti-los aqui era ruído.
           Fica o que a lei pede e o crédito. */}
       <RodapeInicial
@@ -299,7 +314,7 @@ export default async function Inicio({ params }: Props) {
 /**
  * O rodapé da página inicial. É diferente do `components/Rodape.tsx`, que serve
  * as páginas de leitura e lá **tem** de repetir a morada e o telefone: quem está
- * na página de cookies não passou por "a porta".
+ * na página de cookies não passou por "onde estamos".
  */
 function RodapeInicial({
   privacidade,

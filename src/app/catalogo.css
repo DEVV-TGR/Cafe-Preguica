@@ -543,16 +543,21 @@
 
 /* ================================================================= A CASA === */
 
-/* O texto desta secção são três linhas. A fotografia é uma **faixa baixa** ao
-   lado dele, e não um retrato: em retrato a secção ocupava um ecrã inteiro
-   para dizer duas frases. A altura manda, e a largura vem atrás. */
+/* Como a porta do Damira: o texto à esquerda, a fotografia ao lado em
+   paisagem, **da altura do bloco de texto e pouco mais**. Primeiro foi um
+   retrato de ecrã inteiro, depois uma faixa baixa de mais — o ponto certo é o
+   do meio. */
 .pg-casa {
   display: grid;
-  gap: clamp(1.25rem, 3.5vw, 3rem);
+  gap: clamp(1.5rem, 4vw, 4rem);
   align-items: center;
-  padding-block: clamp(2.5rem, 7vh, 4.5rem);
+  padding-block: clamp(3.5rem, 10vh, 6.5rem);
   padding-inline: clamp(1.25rem, 6vw, 5rem);
   padding-inline-end: clamp(5rem, 12vw, 10rem);
+}
+
+.pg-casa .pg-rotulo__nome {
+  font-size: clamp(2.2rem, 5.2vw, 4rem);
 }
 
 .pg-casa figure {
@@ -563,17 +568,18 @@
 
 .pg-casa img {
   width: 100%;
-  height: clamp(10rem, 30vh, 17rem);
+  aspect-ratio: 3 / 2;
+  max-height: 62vh;
   object-fit: cover;
   /* A fotografia original é em retrato; o recorte fica na carta e na parede
      de granito por trás dela. */
-  object-position: 50% 50%;
+  object-position: 50% 45%;
   display: block;
 }
 
 @media (min-width: 52rem) {
   .pg-casa {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   }
 }
 
@@ -813,67 +819,49 @@
 
 /* ========================================================== OS PREGUIÇOSOS == */
 
+/* O palco do `pin`: um ecrã, com o título em cima e a parede de bilhetes por
+   baixo. Tem de caber tudo em 100svh — por isso as medidas usam `vh` e as
+   citações têm um tecto de 220 caracteres em `avaliacoes.ts`. */
 .pg-preguicosos {
-  display: grid;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: start;
-  padding-block: clamp(3.5rem, 10vh, 7rem);
-  padding-inline: clamp(1.25rem, 6vw, 5rem);
-  padding-inline-end: clamp(5rem, 12vw, 10rem);
-}
-
-@media (min-width: 60rem) {
-  .pg-preguicosos {
-    grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 2fr);
-  }
-  .pg-preguicosos__resumo {
-    position: sticky;
-    top: 6rem;
-  }
-}
-
-.pg-preguicosos__resumo {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.6rem;
+  justify-content: center;
+  gap: clamp(1rem, 3vh, 2rem);
+  /* Sem `height` aqui: a altura do palco é do motor (um ecrã). Um
+     `height: 100%` fazia-o crescer até à altura do acto inteiro, e os
+     bilhetes ficavam fora do ecrã com a secção vazia à vista. */
+  padding: calc(64px + clamp(0.5rem, 2vh, 1.5rem)) clamp(1.25rem, 5vw, 4rem) clamp(1rem, 3vh, 2rem);
+  padding-inline-end: clamp(4rem, 8vw, 7rem);
 }
 
-/* Sem citações, a nota fica sozinha e ao centro — não uma coluna à esquerda
-   de uma grelha que não existe. */
-.pg-preguicosos--so-nota {
-  grid-template-columns: none;
-  justify-items: center;
-  text-align: center;
-}
-
-.pg-preguicosos--so-nota .pg-preguicosos__resumo {
-  position: static;
-  align-items: center;
-}
-
-.pg-preguicosos--so-nota .pg-rotulo {
-  align-items: center;
+.pg-preguicosos__topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
 }
 
 .pg-preguicosos__nota {
   display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
-  font-family: var(--font-display);
-  line-height: 0.9;
-  font-variant-numeric: tabular-nums;
+  align-items: center;
+  gap: 1rem;
 }
 
 .pg-preguicosos__numero {
-  font-size: clamp(4rem, 11vw, 7rem);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vh, 5rem);
+  line-height: 0.9;
   letter-spacing: -0.03em;
   color: var(--color-ouro-claro);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .pg-preguicosos__de {
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  margin-left: 0.3rem;
+  font-size: 0.35em;
+  letter-spacing: 0;
   color: var(--color-tinta-suave);
 }
 
@@ -881,198 +869,341 @@
   display: inline-flex;
   gap: 0.2rem;
   color: var(--color-ouro);
-  font-size: 1.35rem;
+  font-size: 1.2rem;
 }
 
-.pg-estrelas--pequena {
-  font-size: 0.8rem;
-  gap: 0.1rem;
-}
-
-/* O mural: colunas, não linhas, para as citações de tamanhos diferentes não
-   deixarem buracos. */
 .pg-preguicosos__mural {
   margin: 0;
   padding: 0;
   list-style: none;
-  columns: 1;
-  column-gap: clamp(0.75rem, 2vw, 1.25rem);
 }
 
-@media (min-width: 40rem) {
-  .pg-preguicosos__mural {
-    columns: 2;
-  }
+/* --- ecrã largo: quatro por dois, bilhetes ligeiramente tortos --- */
+
+.pg-preguicosos__mural--largo {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
 }
 
-.pg-preguicosos__mural li {
-  break-inside: avoid;
-  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+.pg-preguicosos__mural--baralho {
+  display: none;
 }
 
-.pg-citacao {
+/* Cada bilhete com a sua inclinação, pequena: é uma parede onde alguém os
+   foi deixando, não uma grelha de cartões. O `nth-child` e não um valor
+   aleatório, para a página ser igual em todas as visitas. */
+.pg-preguicosos__mural li:nth-child(4n + 1) .pg-bilhete { rotate: -1.2deg; }
+.pg-preguicosos__mural li:nth-child(4n + 2) .pg-bilhete { rotate: 0.8deg; translate: 0 0.6rem; }
+.pg-preguicosos__mural li:nth-child(4n + 3) .pg-bilhete { rotate: -0.4deg; }
+.pg-preguicosos__mural li:nth-child(4n + 4) .pg-bilhete { rotate: 1.1deg; translate: 0 -0.4rem; }
+
+.pg-bilhete {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.9rem;
+  height: 100%;
   margin: 0;
-  padding: 1.6rem 1.4rem 1.2rem;
+  padding: clamp(1.4rem, 3vh, 1.9rem) clamp(1rem, 1.4vw, 1.4rem) clamp(0.9rem, 2vh, 1.2rem);
   border: 1px solid var(--color-linha);
   border-radius: 4px;
   background: var(--color-superficie);
+  box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.9);
 }
 
-/* As aspas grandes em ouro são o que faz disto uma citação à primeira vista,
-   antes de se ler uma palavra. */
-.pg-citacao::before {
+/* As aspas grandes em ouro fazem disto uma citação antes de se ler uma
+   palavra. */
+.pg-bilhete::before {
   content: "“";
   position: absolute;
-  top: -0.15em;
-  left: 0.9rem;
+  top: -0.12em;
+  left: 0.7rem;
   font-family: var(--font-display);
-  font-size: 4rem;
+  font-size: 3.4rem;
   line-height: 1;
   color: var(--color-ouro);
 }
 
-.pg-citacao blockquote {
+.pg-bilhete blockquote {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  line-height: 1.45;
+  font-size: min(1.02rem, 2.05vh);
+  line-height: 1.42;
   text-wrap: pretty;
 }
 
-@media (min-width: 40rem) {
-  .pg-citacao--destaque blockquote {
-    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
-  }
-}
-
-.pg-citacao figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.75rem;
-  margin-top: 1rem;
-  font-size: 0.82rem;
-}
-
-.pg-citacao__autor {
-  color: var(--color-tinta);
-}
-
-.pg-citacao__quando {
-  color: var(--color-tinta-suave);
-}
-
-/* ================================================================ A PORTA === */
-
-.pg-porta {
-  padding-block: clamp(4rem, 12vh, 7rem) clamp(2.5rem, 6vh, 4rem);
-  padding-inline: clamp(1.25rem, 6vw, 5rem);
-  padding-inline-end: clamp(5rem, 12vw, 10rem);
-  border-top: 1px solid var(--color-linha);
-}
-
-.pg-porta__grelha {
-  display: grid;
-  gap: clamp(2.5rem, 6vw, 5rem);
-}
-
-/* Duas colunas separadas pelo fio de ouro do cabeçalho: à esquerda o que se
-   faz (ligar), à direita o que se precisa de saber (onde, quando). */
-@media (min-width: 52rem) {
-  .pg-porta__grelha {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  }
-  .pg-porta__coluna--onde {
-    padding-inline-start: clamp(2rem, 4vw, 4rem);
-    border-inline-start: 1px solid color-mix(in oklab, var(--color-ouro) 45%, transparent);
-  }
-}
-
-.pg-porta__coluna {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-/**
- * O telefone é a coisa maior do fecho, e é de propósito: esta página existe
- * para pôr alguém à porta do Café Preguiça, e ligar é o passo que o cliente já
- * pede no Instagram.
- */
-.pg-porta__telefone {
-  font-family: var(--font-display);
-  font-size: clamp(2.6rem, 7vw, 4.75rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--color-ouro-claro);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  transition: color 200ms ease;
-}
-
-.pg-porta__telefone:hover,
-.pg-porta__telefone:focus-visible {
-  color: var(--color-ouro);
-}
-
-.pg-botao--cheio {
-  background: var(--color-ouro);
-  color: var(--color-ouro-tinta);
-  font-weight: 600;
-}
-
-.pg-botao--cheio:hover,
-.pg-botao--cheio:focus-visible {
-  background: var(--color-ouro-claro);
-  border-color: var(--color-ouro-claro);
-}
-
-.pg-porta__subtitulo {
-  font-size: 0.85rem;
+.pg-bilhete__autor {
+  font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-ouro);
 }
 
-.pg-porta__morada {
-  font-style: normal;
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
-  line-height: 1.3;
+/* O primeiro bilhete em ouro cheio: o olho precisa de um sítio por onde
+   começar, e é a melhor frase da parede. */
+.pg-bilhete--destaque {
+  background: var(--color-ouro);
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-tinta);
 }
 
-/* O horário em linhas, não numa tabela de sete: dia à esquerda, horas à
-   direita, e a coluna das horas alinhada por `tabular-nums`. */
-.pg-porta__horario {
-  margin: 0.5rem 0 0;
+.pg-bilhete--destaque::before,
+.pg-bilhete--destaque .pg-bilhete__autor {
+  color: var(--color-ouro-tinta);
+}
+
+.pg-bilhete--destaque blockquote {
+  font-size: min(1.2rem, 2.4vh);
+}
+
+/* O oitavo lugar da parede é a porta para as outras mil. */
+.pg-bilhete--ligacao {
+  align-items: flex-start;
+  justify-content: flex-end;
+  background: transparent;
+  border-style: dashed;
+  border-color: color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  color: var(--color-ouro-claro);
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-bilhete--ligacao::before {
+  content: none;
+}
+
+.pg-bilhete__seta {
+  font-size: 1.6em;
+  line-height: 1;
+  order: -1;
+  margin-bottom: auto;
+}
+
+.pg-bilhete--ligacao:hover,
+.pg-bilhete--ligacao:focus-visible {
+  background: color-mix(in oklab, var(--color-ouro) 14%, transparent);
+  color: var(--color-ouro);
+}
+
+/* --- telemóvel e tablet: o baralho --- */
+
+@media (max-width: 63.99rem) {
+  .pg-preguicosos {
+    justify-content: flex-start;
+    padding-inline-end: clamp(1.25rem, 5vw, 4rem);
+  }
+
+  .pg-preguicosos__mural--largo {
+    display: none;
+  }
+
+  /* Todos os bilhetes na mesma célula: cada um que entra fica por cima do
+     anterior, com outra inclinação, e o de baixo espreita pelas bordas. */
+  .pg-preguicosos__mural--baralho {
+    display: grid;
+    flex: 1;
+    align-items: start;
+    justify-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .pg-preguicosos__mural--baralho li {
+    position: relative;
+    grid-area: 1 / 1;
+    width: min(100%, 26rem);
+  }
+
+  .pg-preguicosos__mural--baralho li:nth-child(odd) .pg-bilhete { rotate: -2deg; translate: 0 0; }
+  .pg-preguicosos__mural--baralho li:nth-child(even) .pg-bilhete { rotate: 1.6deg; translate: 0 0.5rem; }
+
+  .pg-preguicosos__mural--baralho .pg-bilhete {
+    min-height: 14rem;
+  }
+
+  .pg-bilhete blockquote,
+  .pg-bilhete--destaque blockquote {
+    font-size: 1.15rem;
+  }
+}
+
+/* ========================================================== ONDE ESTAMOS == */
+
+/* O mapa de margem a margem, e o cartão com a morada e o horário por cima,
+   do lado esquerdo. O alfinete fica a 64% da largura — o mesmo valor que
+   `POSICAO_CASA` em `scripts/desenhar-mapa.mjs`, para cair em cima da casa. */
+.pg-onde {
+  position: relative;
+  display: grid;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pg-onde__mapa {
+  position: relative;
+  overflow: hidden;
+  height: clamp(18rem, 45vh, 26rem);
+  background: #0d0906;
+}
+
+.pg-onde__mapa > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* O mapa recorta-se conforme o ecrã, e o recorte centra-se na casa e não
+     no meio do desenho: com `64%` aqui, a casa cai sempre a 64% da largura
+     visível, qualquer que seja a proporção — e é aí que está o alfinete. */
+  object-position: 64% 50%;
+  display: block;
+}
+
+/* A preguiça do logótipo faz de alfinete, com um halo a pulsar devagar —
+   devagar, como tudo o que ela faz. */
+.pg-onde__alfinete {
+  position: absolute;
+  left: 64%;
+  top: 50%;
+  width: clamp(3.2rem, 5vw, 4.5rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-canvas);
+  border: 2px solid var(--color-ouro);
+  translate: -50% -50%;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  animation: pg-halo 3.2s ease-out infinite;
+}
+
+.pg-onde__alfinete img {
+  width: 78%;
+  height: auto;
+}
+
+@keyframes pg-halo {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-ouro) 50%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 1.6rem transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-onde__alfinete { animation: none; }
+}
+
+.pg-onde__credito {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__credito a:hover,
+.pg-onde__credito a:focus-visible {
+  color: var(--color-tinta);
+  text-decoration: underline;
+}
+
+.pg-onde__cartao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: var(--color-superficie);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 40%, transparent);
+}
+
+.pg-onde__olho {
+  margin-top: 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pg-onde__olho:first-child {
+  margin-top: 0;
+}
+
+.pg-onde__nome {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.pg-onde__morada {
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__contactos {
+  margin: 0.6rem 0 0;
   padding: 0;
   list-style: none;
   display: grid;
   gap: 0.2rem;
-  /* Estreito de propósito: com a lista larga, o dia ficava num extremo e as
-     horas no outro, e o olho tinha de atravessar meio ecrã por linha. */
-  width: min(17rem, 100%);
-  font-size: 0.92rem;
+  font-size: 1.05rem;
+}
+
+.pg-onde__contactos a:hover,
+.pg-onde__contactos a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+.pg-onde__custo {
+  font-size: 0.78rem;
   color: var(--color-tinta-suave);
 }
 
-.pg-porta__horario li {
+.pg-onde__horario {
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  width: min(19rem, 100%);
+  font-size: 0.95rem;
+}
+
+.pg-onde__horario li {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  padding-block: 0.2rem;
-  border-bottom: 1px dotted var(--color-linha);
+  gap: 1.5rem;
   font-variant-numeric: tabular-nums;
 }
 
-.pg-porta__ate {
-  margin-top: clamp(3rem, 8vh, 5rem);
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--color-tinta);
+.pg-onde__horario li span:first-child {
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+/* Ecrã largo: o mapa ocupa a secção inteira e o cartão flutua por cima, à
+   esquerda — como no exemplo que o cliente mandou. */
+@media (min-width: 52rem) {
+  .pg-onde__mapa {
+    grid-area: 1 / 1;
+    height: clamp(36rem, 88vh, 48rem);
+  }
+
+  .pg-onde__cartao {
+    grid-area: 1 / 1;
+    align-self: center;
+    justify-self: start;
+    z-index: 1;
+    width: min(26rem, 40vw);
+    margin-inline-start: clamp(1.5rem, 6vw, 6rem);
+    border: 1px solid color-mix(in oklab, var(--color-ouro) 35%, transparent);
+    border-radius: 6px;
+    background: color-mix(in oklab, var(--color-superficie) 94%, transparent);
+    box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.85);
+    backdrop-filter: blur(6px);
+  }
 }
 
 /* =============================================================== O RODAPÉ === */

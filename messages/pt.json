@@ -58,8 +58,8 @@
       "carril": "Os cocktails",
       "reels": "Vídeos",
       "partilhar": "Para partilhar",
-      "porta": "A porta",
-      "preguicosos": "Os Preguiçosos"
+      "preguicosos": "Os Preguiçosos",
+      "onde": "Onde estamos"
     },
     "heroi": {
       "onde": "Ermesinde · Valongo",
@@ -115,21 +115,24 @@
       "verMaisFacto": "Tábuas, preguiçinhas, sobremesas e as taças para petiscar. Tudo com preço.",
       "verMaisAcao": "Ver a ementa"
     },
-    "porta": {
-      "direcoes": "Como chegar",
-      "ateLogo": "Até logo.",
-      "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir.",
-      "nome": "Reservar mesa",
-      "facto": "As reservas fazem-se por telefone.",
-      "ligar": "Ligar agora",
-      "ondeQuando": "Onde e quando"
-    },
     "preguicosos": {
       "nome": "Os Preguiçosos",
       "facto": "É como a casa trata quem lá vai. Isto é o que eles escrevem depois.",
       "contagem": "{total} avaliações no Google",
       "estrelas": "{nota} em 5 estrelas",
       "verTodas": "Ler todas no Google"
+    },
+    "onde": {
+      "olho": "Onde estamos",
+      "horario": "Horário",
+      "direcoes": "Abrir no Google Maps",
+      "chamada": {
+        "fixa": "Chamada para a rede fixa nacional",
+        "movel": "Chamada para a rede móvel nacional"
+      },
+      "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir.",
+      "mapaAlt": "Mapa das ruas à volta do Café Preguiça, em Ermesinde, com a casa assinalada pela preguiça do logótipo.",
+      "credito": "© contribuidores do OpenStreetMap"
     }
   },
   "ementa": {

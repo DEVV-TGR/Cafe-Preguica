@@ -10,7 +10,8 @@
     "lint": "eslint",
     "tipos": "tsc --noEmit",
     "mensagens": "node scripts/verificar-mensagens.mjs",
-    "fotos": "node scripts/importar-fotos.mjs"
+    "fotos": "node scripts/importar-fotos.mjs",
+    "mapa": "node scripts/desenhar-mapa.mjs"
   },
   "dependencies": {
     "next": "16.3.5",

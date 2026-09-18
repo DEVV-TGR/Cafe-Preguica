@@ -66,18 +66,24 @@ por isso deve passar, mas convém confirmar em vez de assumir.
 
 ---
 
-## 3. Mapa na página de contactos — **não há, e é uma escolha**
+## 3. Mapa — **há, e é nosso**
 
-O botão de direções é um link normal para o Google Maps.
+A página inicial tem um mapa na secção "Onde estamos", escuro e dourado, e
+**não é o Google Maps**: é um SVG desenhado a partir do OpenStreetMap por
+`npm run mapa` (`scripts/desenhar-mapa.mjs`) e servido do próprio domínio.
+Quem visita não faz nenhum pedido a terceiros, por isso a CSP, `/cookies` e
+`/privacidade` ficam como estavam.
 
-Um `<iframe>` do Maps seria mais bonito e custa caro: exige abrir `frame-src` e
-`img-src` a domínios da Google na CSP, e passa a haver um terceiro a ver **quem
-visita o site**, mesmo quem nunca carregou no mapa. Isso arrasta consentimento
-de cookies atrás, e faz a página `/cookies` passar a mentir.
+O que se perde: o mapa não se arrasta nem faz zoom. Para isso há o botão
+"Abrir no Google Maps", que é um link normal.
 
-⚠️ Se o cliente insistir, a decisão é dele — mas tem de vir com o banner de
-consentimento e a revisão das duas páginas legais. Não é um `<iframe>` colado e
-mais nada.
+⚠️ **O crédito "© contribuidores do OpenStreetMap" tem de ficar visível** junto
+ao mapa — é condição da licença ODbL.
+
+Um `<iframe>` do Google Maps continua a ser a opção cara: exige abrir
+`frame-src` e `img-src` a domínios da Google na CSP, põe um terceiro a ver
+**quem visita o site**, e arrasta o banner de consentimento e a revisão das
+duas páginas legais. E nem sequer deixa mudar as cores.
 
 ---
 

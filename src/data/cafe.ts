@@ -129,3 +129,21 @@ export function urlDirecoes(): string | null {
 export function telefoneParaLigar(): string | null {
   return cafe.telefone ? cafe.telefone.replace(/\s+/g, "") : null;
 }
+
+/**
+ * A que rede pertence o número, para a indicação do custo da chamada.
+ *
+ * ⚠️ **Não é enfeite, é lei**: desde o Decreto-Lei n.º 59/2021 um número
+ * publicado para contacto com o consumidor tem de dizer ao lado se é chamada
+ * para a rede fixa ou móvel nacional. Deduz-se do primeiro algarismo, que é
+ * como o Plano Nacional de Numeração os distribui — `2` fixa, `9` móvel. Um
+ * `null` quer dizer que o número não é nenhum dos dois e o aviso não aparece;
+ * se isso acontecer, confirmar à mão qual é o texto certo.
+ */
+export function redeDoTelefone(): "fixa" | "movel" | null {
+  const numero = telefoneParaLigar();
+  if (!numero) return null;
+  if (numero.startsWith("2")) return "fixa";
+  if (numero.startsWith("9")) return "movel";
+  return null;
+}

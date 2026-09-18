@@ -58,8 +58,8 @@
       "carril": "The cocktails",
       "reels": "Videos",
       "partilhar": "To share",
-      "porta": "The door",
-      "preguicosos": "Reviews"
+      "preguicosos": "Reviews",
+      "onde": "Find us"
     },
     "heroi": {
       "onde": "Ermesinde · Valongo",
@@ -115,21 +115,24 @@
       "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
       "verMaisAcao": "See the menu"
     },
-    "porta": {
-      "direcoes": "Get directions",
-      "ateLogo": "See you soon.",
-      "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
-      "nome": "Book a table",
-      "facto": "Bookings are made by phone.",
-      "ligar": "Call now",
-      "ondeQuando": "Where and when"
-    },
     "preguicosos": {
       "nome": "The Preguiçosos",
       "facto": "It's what the house calls its regulars. This is what they write afterwards.",
       "contagem": "{total} reviews on Google",
       "estrelas": "{nota} out of 5 stars",
       "verTodas": "Read them all on Google"
+    },
+    "onde": {
+      "olho": "Find us",
+      "horario": "Opening hours",
+      "direcoes": "Open in Google Maps",
+      "chamada": {
+        "fixa": "Call to the Portuguese landline network",
+        "movel": "Call to the Portuguese mobile network"
+      },
+      "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
+      "mapaAlt": "Map of the streets around Café Preguiça in Ermesinde, with the house marked by the sloth from the logo.",
+      "credito": "© OpenStreetMap contributors"
     }
   },
   "ementa": {

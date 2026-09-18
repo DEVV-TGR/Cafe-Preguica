@@ -8,9 +8,19 @@ import dados from "./avaliacoes.json";
  * ## As citações são literais, ou não entram
  *
  * ⚠️ O `texto` é copiado **tal e qual** do Google: sem corrigir a ortografia,
- * sem "melhorar" a frase, sem juntar duas avaliações numa. Cortes marcam-se com
- * `…`. Uma citação editada deixa de ser de quem a escreveu — e uma inventada é
- * publicidade enganosa com o nome de um cliente por baixo.
+ * sem "melhorar" a frase, sem juntar duas avaliações numa. Um corte a meio
+ * marca-se com `[…]`; um corte no fim não se marca, desde que a frase acabe
+ * inteira. Uma citação editada deixa de ser de quem a escreveu — e uma
+ * inventada é publicidade enganosa com o nome de um cliente por baixo.
+ *
+ * ## Porque é que não há estrelas nem data em cada uma
+ *
+ * O Google mostra a data como "há um mês", que daqui a um ano é mentira, e não
+ * mostra as estrelas no texto que se copia. Pôr qualquer um dos dois era
+ * deduzir. Fica o nome, que é o que dá a cara pela frase.
+ *
+ * Só entram avaliações **sem nomes de funcionários**: quem lá trabalha não
+ * escolheu aparecer num site.
  *
  * Ficam na **língua em que foram escritas**, também na versão inglesa do site:
  * traduzir uma citação é pôr palavras na boca de alguém. O campo `lingua` vai
@@ -35,16 +45,17 @@ const Esquema = z.object({
   citacoes: z
     .array(
       z.object({
-        texto: z.string().min(1).max(320, "citação longa demais; cortar com …"),
-        /** Primeiro nome e inicial, como aparece no Google — nunca o apelido. */
+        /* 220 é o que cabe num cartão sem o ecrã fixo transbordar: as sete
+           têm de caber num ecrã de portátil ao mesmo tempo. */
+        texto: z.string().min(1).max(220, "citação longa demais; cortar com […]"),
+        /** Primeiro nome e inicial do apelido — nunca o apelido inteiro. */
         autor: z.string().min(1),
-        estrelas: z.number().int().min(1).max(5),
-        /** Mês e ano, `AAAA-MM`. */
-        data: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, "data em AAAA-MM"),
         lingua: z.enum(["pt", "en", "es", "fr"]),
       }),
     )
-    .max(6, "seis no máximo; mais do que isso é um mural, não uma escolha"),
+    /* A secção é desenhada para sete: três à chegada e quatro com a rolagem,
+       numa grelha de quatro por dois cujo oitavo lugar é o link para o Google. */
+    .max(7, "sete no máximo; a grelha tem oito lugares e o último é o link"),
 });
 
 export type Avaliacoes = z.infer<typeof Esquema>;

@@ -18,9 +18,9 @@ import dados from "./ementa.json";
  */
 
 /**
- * ⚠️ **Os artigos que lá estão são de demonstração e os preços são inventados.**
- * Servem para a estrutura se ver de pé e para o `build` ter o que validar.
- * Nenhum deles foi confirmado com a casa.
+ * ⚠️ **Os artigos foram transcritos do PDF do menu digital da casa, mas
+ * ninguém da casa os reviu.** Uma transcrição à mão de 125 linhas tem erros, e
+ * o PDF não tem data — pode já não ser o que está nas mesas.
  *
  * É isso que o `confirmada: false` no topo do JSON diz, e enquanto for `false` a
  * página da ementa mostra o aviso a dizê-lo. **Passar a `true` é uma decisão, e
@@ -59,6 +59,46 @@ export const CATEGORIAS = [
 ] as const;
 
 export type Categoria = (typeof CATEGORIAS)[number];
+
+/**
+ * Os quatro capítulos da carta, e as secções de cada um.
+ *
+ * Existem por causa de **quem lê a carta: alguém sentado à mesa, com o
+ * telemóvel, que acabou de ler o QR.** Dezoito secções num índice são dezoito
+ * botões para percorrer de lado; quatro cabem no ecrã e respondem à pergunta que
+ * a pessoa traz — "quero comer", "quero um cocktail".
+ *
+ * ⚠️ **A ordem das secções vem de `CATEGORIAS`, não daqui.** Esta lista diz só a
+ * que capítulo pertence cada uma, e a verificação logo abaixo rebenta o `build`
+ * se uma categoria nova ficar sem capítulo — senão desaparecia da carta sem
+ * erro nenhum.
+ */
+export const CAPITULOS = {
+  comer: ["tostas-e-snacks", "tabuas", "tacas", "sobremesas"],
+  cocktails: [
+    "cocktail-preguica",
+    "cocktails-classicos",
+    "cocktails-special",
+    "mocktails",
+    "sangrias-e-espumantes",
+  ],
+  garrafeira: ["gin", "whisky", "shots", "licores", "cervejas", "vinhos"],
+  "cafe-e-cha": ["cafetaria", "chas", "aguas-e-refrigerantes"],
+} as const satisfies Record<string, readonly Categoria[]>;
+
+export type Capitulo = keyof typeof CAPITULOS;
+
+{
+  const arrumadas: Categoria[] = Object.values(CAPITULOS).flat();
+  const semCapitulo = CATEGORIAS.filter((c) => !arrumadas.includes(c));
+  const repetidas = arrumadas.filter((c, i) => arrumadas.indexOf(c) !== i);
+  if (semCapitulo.length > 0 || repetidas.length > 0) {
+    throw new Error(
+      `ementa.ts: CAPITULOS tem de ter cada categoria uma vez só — ` +
+        `sem capítulo: [${semCapitulo.join(", ")}], repetidas: [${repetidas.join(", ")}]`,
+    );
+  }
+}
 
 /**
  * As categorias que são **listas de nome e preço**, sem descrição — ninguém
@@ -299,3 +339,27 @@ export const METADADOS: Partial<
   whisky: { dose: "5 cl" },
   shots: { dose: "3 cl" },
 };
+
+/**
+ * Os capítulos com as suas secções já preenchidas, pela ordem de `CATEGORIAS`,
+ * e sem os capítulos que ficarem vazios.
+ */
+export function porCapitulo(): {
+  capitulo: Capitulo;
+  seccoes: { categoria: Categoria; artigos: Artigo[] }[];
+}[] {
+  const seccoes = porCategoria();
+  return (Object.keys(CAPITULOS) as Capitulo[])
+    .map((capitulo) => ({
+      capitulo,
+      seccoes: seccoes.filter((s) =>
+        (CAPITULOS[capitulo] as readonly Categoria[]).includes(s.categoria),
+      ),
+    }))
+    .filter((c) => c.seccoes.length > 0);
+}
+
+/** Um artigo pelo `id`, para as legendas das fotografias irem buscar nome e preço à carta. */
+export function artigoPorId(id: string): Artigo | undefined {
+  return artigos.find((artigo) => artigo.id === id);
+}

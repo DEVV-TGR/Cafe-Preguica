@@ -21,6 +21,12 @@ gravidade:
       de bar muda mais do que uma de pastelaria. Enquanto
       `"confirmada": false`, a página da ementa mostra o aviso — e é isso que se
       quer até alguém conferir ao balcão.
+- [ ] **Os QR das mesas.** Apontam para `https://<domínio>/ementa`, **sem
+      `/pt`**: com `localePrefix: "as-needed"` o português não leva prefixo, e um
+      telemóvel em inglês recebe a versão inglesa sozinho. ⚠️ Só se imprimem
+      depois de o domínio definitivo estar a servir HTTPS — hoje
+      `cafepreguica.pt` está parqueado e com o certificado partido, e um QR
+      impresso em vinte mesas não se corrige com um commit.
 - [ ] **Alergénios.** `alergenios: []` nos 125 artigos. Preencher com quem está
       na cozinha, **sem deduzir das descrições**. Até lá o site mostra o aviso de
       que a informação está no balcão, que é o que o Regulamento (UE) 1169/2011

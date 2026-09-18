@@ -32,7 +32,7 @@
     },
     "ementa": {
       "titulo": "Menu",
-      "descricao": "The Café Preguiça menu: breakfast, coffee, savouries, sandwiches and drinks."
+      "descricao": "The Café Preguiça menu, in Ermesinde: cocktails, toasties, sharing boards, gin, whisky and coffee, with prices."
     },
     "contactos": {
       "titulo": "Contact",
@@ -137,9 +137,9 @@
     }
   },
   "ementa": {
-    "titulo": "Menu",
-    "introducao": "What the house serves.",
-    "avisoProvisoria": "Draft menu. The items and prices on this page are placeholders and have not been confirmed with the house.",
+    "titulo": "The menu",
+    "introducao": "Toasties and boards to share, cocktails made at the bar one at a time, and the rest of the bottles.",
+    "avisoProvisoria": "Menu transcribed from the house menu and not yet confirmed. If in doubt, ask at the bar.",
     "avisoAlergenios": "Allergen information is available at the counter. Please ask before ordering.",
     "categorias": {
       "tostas-e-snacks": "Toasties & snacks",
@@ -179,6 +179,46 @@
       "coco": "Coconut",
       "framboesa": "Raspberry",
       "maracuja": "Passion fruit"
+    },
+    "olho": "Café Preguiça · Ermesinde",
+    "contagem": "{artigos} items · {seccoes} sections",
+    "indice": "Menu chapters",
+    "naFotografia": "In the photo",
+    "capitulos": {
+      "comer": {
+        "nome": "To eat",
+        "facto": "Toasties, boards for the middle of the table, bowls to nibble and dessert."
+      },
+      "cocktails": {
+        "nome": "Cocktails",
+        "facto": "The house one, the classics, the specials, the alcohol-free ones and sangria by the jug."
+      },
+      "garrafeira": {
+        "nome": "Spirits & beer",
+        "facto": "Gin, whisky, shots, liqueurs, beers and wines."
+      },
+      "cafe-e-cha": {
+        "nome": "Coffee & tea",
+        "facto": "Coffee, hot drinks, teas, water and soft drinks."
+      }
+    },
+    "fotos": {
+      "comer": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
+      "cocktails": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
+      "garrafeira": "A hand squeezing half a lime over a tall glass with ice.",
+      "cafe-e-cha": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam."
+    },
+    "sortear": "Let the sloth choose",
+    "aRodar": "The sloth is thinking…",
+    "escolheu": "The sloth chose",
+    "escolhido": "You chose",
+    "nenhumSabor": "Tap a flavour, or let the sloth choose for you.",
+    "saboresNota": "This doesn't place the order: tell the flavour to whoever takes it.",
+    "fecho": {
+      "nome": "Questions?",
+      "facto": "If you would like to know what is in a dish or a drink, or which allergens it has, ask at the bar.",
+      "topo": "Back to top",
+      "inicio": "About the place"
     }
   },
   "contactos": {

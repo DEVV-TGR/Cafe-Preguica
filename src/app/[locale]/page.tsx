@@ -13,6 +13,7 @@ import { Preguicosos } from "@/components/catalogo/Preguicosos";
 import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
 import { Link } from "@/i18n/navigation";
+import { RodapeCatalogo } from "@/components/catalogo/RodapeCatalogo";
 import "../catalogo-motor.css";
 import "../catalogo.css";
 
@@ -302,7 +303,7 @@ export default async function Inicio({ params }: Props) {
       {/* O rodapé é mínimo de propósito: "onde estamos" acabou de dar a morada, o
           telefone e o horário três centímetros acima. Repeti-los aqui era ruído.
           Fica o que a lei pede e o crédito. */}
-      <RodapeInicial
+      <RodapeCatalogo
         privacidade={rodape("privacidade")}
         cookies={rodape("cookies")}
         direitos={rodape("direitos")}
@@ -310,40 +311,5 @@ export default async function Inicio({ params }: Props) {
         nome={marca("nome")}
       />
     </>
-  );
-}
-
-/**
- * O rodapé da página inicial. É diferente do `components/Rodape.tsx`, que serve
- * as páginas de leitura e lá **tem** de repetir a morada e o telefone: quem está
- * na página de cookies não passou por "onde estamos".
- */
-function RodapeInicial({
-  privacidade,
-  cookies,
-  direitos,
-  feitoPor,
-  nome,
-}: {
-  privacidade: string;
-  cookies: string;
-  direitos: string;
-  feitoPor: string;
-  nome: string;
-}) {
-  return (
-    <footer className="pg-rodape">
-      <nav aria-label={privacidade}>
-        <Link href="/privacidade">{privacidade}</Link>
-        <Link href="/cookies">{cookies}</Link>
-      </nav>
-      <p>
-        © {new Date().getFullYear()} {nome}. {direitos} {feitoPor}{" "}
-        <a href="https://devplus.pt" target="_blank" rel="noopener noreferrer">
-          DevPlus
-        </a>
-        .
-      </p>
-    </footer>
   );
 }

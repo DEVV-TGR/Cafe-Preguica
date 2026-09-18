@@ -39,8 +39,11 @@ const eslintConfig = [
      * `next/image` embrulha a imagem em elementos com posicionamento próprio que
      * lutam com ela.
      *
-     * ⚠️ Isto vale para esta página. Uma página nova com fotografias de tamanho
-     * desconhecido deve usar `next/image` — não alargar esta excepção.
+     * A ementa entra pela mesma razão e só por ela: usa **as mesmas fotografias
+     * de `public/casa/`**, já nas duas larguras, e a preguiça pendurada.
+     *
+     * ⚠️ Isto vale para estas duas páginas. Uma página nova com fotografias de
+     * tamanho desconhecido deve usar `next/image` — não alargar esta excepção.
      */
     /* ⚠️ O padrão do caminho não é escrito com a pasta `[locale]` à letra: nos
        globos, os parênteses rectos são uma **classe de caracteres**, por isso o
@@ -50,7 +53,12 @@ const eslintConfig = [
        a página inicial; as outras estão um nível mais abaixo.
        (E sim, uma estrela seguida de barra dentro deste comentário fechá-lo-ia
        a meio — foi o erro a seguir a este.) */
-    files: ["src/app/*/page.tsx", "src/components/catalogo/**"],
+    files: [
+      "src/app/*/page.tsx",
+      "src/app/*/ementa/page.tsx",
+      "src/components/catalogo/**",
+      "src/components/ementa/**",
+    ],
     rules: { "@next/next/no-img-element": "off" },
   },
 ];

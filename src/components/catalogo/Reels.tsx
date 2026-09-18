@@ -1,5 +1,6 @@
 import { reels, urlDoReel } from "@/data/reels";
-import { Rotulo } from "./Objeto";
+import { marca } from "@/data/marca";
+import { IconeInstagram, IconePlay, IconeReel } from "./Icones";
 
 /**
  * # Os reels: seis vídeos da casa
@@ -31,6 +32,14 @@ import { Rotulo } from "./Objeto";
  * incorporador carrega script e cookies da Meta em cada visita, obrigava a abrir
  * a CSP, e fazia a página `/cookies` passar a mentir. Assim, o terceiro só vê
  * quem carregar.
+ *
+ * ## Tem de parecer Instagram, não fotografia
+ *
+ * Na primeira versão as capas liam-se como seis fotografias de catálogo e
+ * ninguém percebia que eram vídeos nem que abriam o Instagram. Por isso cada
+ * cela leva o botão de reprodução, a etiqueta "Reel" e a legenda por cima da
+ * imagem, como no feed — e o cabeçalho leva o botão para seguir a conta.
+ * Os ícones são SVG nossos (`Icones.tsx`), não os da Meta.
  */
 export function Reels({
   nome,
@@ -38,6 +47,8 @@ export function Reels({
   dado,
   legendas,
   noInstagram,
+  seguir,
+  etiqueta,
 }: {
   nome: string;
   facto: string;
@@ -46,6 +57,10 @@ export function Reels({
   legendas: Record<string, string>;
   /** Dito em cada ligação, para quem navega por teclado saber para onde vai. */
   noInstagram: string;
+  /** O texto do botão para o perfil. */
+  seguir: string;
+  /** A etiqueta no canto de cada capa ("Reel"). */
+  etiqueta: string;
 }) {
   return (
     <section
@@ -58,9 +73,27 @@ export function Reels({
         {/* O terceiro número a `0` é o "greet": está no ecrã mal o acto entra,
             sem esperar pela rolagem. E **não leva valor de saída** — tinha um, e
             fazia o título desaparecer quando as celas ainda estavam a entrar. */}
-        <div className="pg-reels__intro" data-sc-cue="0 1 0">
-          <Rotulo nome={nome} facto={facto} dado={dado} />
-        </div>
+        <header className="pg-reels__intro" data-sc-cue="0 1 0">
+          {/* Não é o `Rotulo`: o rótulo tem 34ch de largura, e aqui o título e a
+              frase cabem numa linha cada — partidos em dois pareciam um poema. */}
+          <div className="pg-rotulo pg-rotulo--largo">
+            <h2 className="pg-rotulo__nome">{nome}</h2>
+            <p className="pg-rotulo__facto">{facto}</p>
+          </div>
+          {marca.instagram && (
+            <a
+              className="pg-botao pg-botao--instagram"
+              href={marca.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconeInstagram className="pg-icone" />
+              <span>
+                {seguir} <span className="pg-botao__conta">{dado}</span>
+              </span>
+            </a>
+          )}
+        </header>
 
         <ul className="pg-reels__grelha">
           {reels.map((reel, i) => (
@@ -95,12 +128,21 @@ export function Reels({
                   loading="lazy"
                   decoding="async"
                 />
-                <span className="pg-reel__legenda">
-                  {legendas[reel.chave]}
-                  {/* Só para leitores de ecrã: a seta visual não diz que abre
-                      noutro sítio, e um link que muda de site tem de o dizer. */}
-                  <span className="sr-only"> — {noInstagram}</span>
+                <span className="pg-reel__etiqueta" aria-hidden="true">
+                  <IconeReel className="pg-icone" />
+                  {etiqueta}
                 </span>
+                <span className="pg-reel__play" aria-hidden="true">
+                  <IconePlay className="pg-icone" />
+                </span>
+                {/* A legenda é a mesma frase do `alt`: escondida do leitor de
+                    ecrã para não a ler duas vezes, e no telemóvel sai de vez. */}
+                <span className="pg-reel__legenda" aria-hidden="true">
+                  {legendas[reel.chave]}
+                </span>
+                {/* Só para leitores de ecrã, e fora da legenda para sobreviver
+                    quando ela some: um link que muda de site tem de o dizer. */}
+                <span className="sr-only"> — {noInstagram}</span>
               </a>
             </li>
           ))}

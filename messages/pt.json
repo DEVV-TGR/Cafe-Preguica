@@ -58,7 +58,8 @@
       "carril": "Os cocktails",
       "reels": "Vídeos",
       "partilhar": "Para partilhar",
-      "porta": "A porta"
+      "porta": "A porta",
+      "preguicosos": "Os Preguiçosos"
     },
     "heroi": {
       "onde": "Ermesinde · Valongo",
@@ -89,7 +90,7 @@
     },
     "reels": {
       "nome": "A casa em movimento",
-      "facto": "O que se passa ao balcão, filmado por eles. Carregue para ver no Instagram.",
+      "facto": "O que se passa ao balcão, filmado pela casa e publicado no Instagram. Carregue num para o ver lá.",
       "dado": "@cafepreguica",
       "noInstagram": "abre no Instagram",
       "legendas": {
@@ -99,7 +100,9 @@
         "valentim": "São Valentim na casa",
         "menu": "A carta, na parede de granito",
         "lima": "Lima espremida à mão"
-      }
+      },
+      "seguir": "Seguir",
+      "etiqueta": "Reel"
     },
     "partilhar": {
       "nome": "Para partilhar",
@@ -113,10 +116,20 @@
       "verMaisAcao": "Ver a ementa"
     },
     "porta": {
-      "olho": "Para reservar mesa",
       "direcoes": "Como chegar",
       "ateLogo": "Até logo.",
-      "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir."
+      "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir.",
+      "nome": "Reservar mesa",
+      "facto": "As reservas fazem-se por telefone.",
+      "ligar": "Ligar agora",
+      "ondeQuando": "Onde e quando"
+    },
+    "preguicosos": {
+      "nome": "Os Preguiçosos",
+      "facto": "É como a casa trata quem lá vai. Isto é o que eles escrevem depois.",
+      "contagem": "{total} avaliações no Google",
+      "estrelas": "{nota} em 5 estrelas",
+      "verTodas": "Ler todas no Google"
     }
   },
   "ementa": {

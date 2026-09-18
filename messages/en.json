@@ -58,7 +58,8 @@
       "carril": "The cocktails",
       "reels": "Videos",
       "partilhar": "To share",
-      "porta": "The door"
+      "porta": "The door",
+      "preguicosos": "Reviews"
     },
     "heroi": {
       "onde": "Ermesinde · Valongo",
@@ -89,7 +90,7 @@
     },
     "reels": {
       "nome": "The house, moving",
-      "facto": "What happens at the counter, filmed by them. Tap to watch on Instagram.",
+      "facto": "What happens at the counter, filmed by the house and posted on Instagram. Tap one to watch it there.",
       "dado": "@cafepreguica",
       "noInstagram": "opens on Instagram",
       "legendas": {
@@ -99,7 +100,9 @@
         "valentim": "Valentine's at the house",
         "menu": "The menu, against the granite wall",
         "lima": "Lime squeezed by hand"
-      }
+      },
+      "seguir": "Follow",
+      "etiqueta": "Reel"
     },
     "partilhar": {
       "nome": "To share",
@@ -113,10 +116,20 @@
       "verMaisAcao": "See the menu"
     },
     "porta": {
-      "olho": "To book a table",
       "direcoes": "Get directions",
       "ateLogo": "See you soon.",
-      "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come."
+      "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
+      "nome": "Book a table",
+      "facto": "Bookings are made by phone.",
+      "ligar": "Call now",
+      "ondeQuando": "Where and when"
+    },
+    "preguicosos": {
+      "nome": "The Preguiçosos",
+      "facto": "It's what the house calls its regulars. This is what they write afterwards.",
+      "contagem": "{total} reviews on Google",
+      "estrelas": "{nota} out of 5 stars",
+      "verTodas": "Read them all on Google"
     }
   },
   "ementa": {

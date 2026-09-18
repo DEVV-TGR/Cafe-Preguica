@@ -458,7 +458,7 @@
      topo do original e a tentação é enquadrá-la — mas o assunto é a casa, e com
      `35%` a fachada ficava cortada fora do ecrã num monitor largo. Assim
      apanha-se o edifício inteiro e as flores continuam a entrar por cima. */
-  object-position: 50% 58%;
+  object-position: 50% 50%;
 }
 
 /**
@@ -543,33 +543,37 @@
 
 /* ================================================================= A CASA === */
 
+/* O texto desta secção são três linhas. A fotografia é uma **faixa baixa** ao
+   lado dele, e não um retrato: em retrato a secção ocupava um ecrã inteiro
+   para dizer duas frases. A altura manda, e a largura vem atrás. */
 .pg-casa {
   display: grid;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  gap: clamp(1.25rem, 3.5vw, 3rem);
   align-items: center;
-  padding-block: clamp(3.5rem, 11vh, 8rem);
+  padding-block: clamp(2.5rem, 7vh, 4.5rem);
   padding-inline: clamp(1.25rem, 6vw, 5rem);
   padding-inline-end: clamp(5rem, 12vw, 10rem);
 }
 
-/* A fotografia é **pequena** de propósito: é a casa por dentro, não o herói.
-   Uma imagem a ocupar meia página aqui competia com a fachada lá atrás. */
 .pg-casa figure {
   margin: 0;
-  max-width: 26rem;
   overflow: hidden;
   border-radius: 2px;
 }
 
 .pg-casa img {
   width: 100%;
-  height: auto;
+  height: clamp(10rem, 30vh, 17rem);
+  object-fit: cover;
+  /* A fotografia original é em retrato; o recorte fica na carta e na parede
+     de granito por trás dela. */
+  object-position: 50% 50%;
   display: block;
 }
 
 @media (min-width: 52rem) {
   .pg-casa {
-    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   }
 }
 
@@ -584,6 +588,36 @@
   /* Menos margem à direita do que os outros actos: aqui não há texto corrido a
      ser tapado pela preguiça, e as celas ganham a largura. */
   padding-inline-end: clamp(4rem, 8vw, 7rem);
+}
+
+/* Cabeçalho a toda a largura: título e frase à esquerda, o botão do perfil à
+   direita. */
+.pg-reels__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.pg-rotulo--largo {
+  max-width: 70ch;
+}
+
+@media (min-width: 52rem) {
+  .pg-rotulo--largo .pg-rotulo__nome {
+    white-space: nowrap;
+  }
+}
+
+.pg-icone {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+.pg-botao__conta {
+  opacity: 0.75;
 }
 
 .pg-reels__grelha {
@@ -601,9 +635,14 @@
   }
 }
 
+/* Cada cela lê-se como um reel do feed: cantos de ecrã de telemóvel, etiqueta
+   em cima, botão de reprodução ao meio e a legenda por cima da imagem. */
 .pg-reel {
   display: block;
   position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--color-linha);
 }
 
 .pg-reel img {
@@ -612,22 +651,97 @@
   aspect-ratio: 9 / 16;
   object-fit: cover;
   display: block;
-  border-radius: 2px;
-  transition: transform 320ms var(--sc-ease-out, ease), filter 320ms ease;
+  transition: transform 420ms var(--sc-ease-out, ease), filter 320ms ease;
 }
 
 .pg-reel:hover img,
 .pg-reel:focus-visible img {
-  transform: translateY(-4px);
-  filter: brightness(1.08);
+  transform: scale(1.04);
+  filter: brightness(1.1);
+}
+
+/* O degradê só em baixo, onde a legenda assenta — o resto da capa fica como
+   foi filmado. */
+.pg-reel::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.78), transparent);
+  pointer-events: none;
+}
+
+.pg-reel__etiqueta {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem 0.2rem 0.35rem;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.5);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.pg-reel__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: clamp(2.4rem, 4vw, 3.2rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.38);
+  border: 1.5px solid rgb(255 255 255 / 0.85);
+  color: #fff;
+  transform: translate(-50%, -50%);
+  transition: transform 260ms var(--sc-ease-out, ease), background-color 260ms ease;
+}
+
+.pg-reel__play .pg-icone {
+  width: 45%;
+  height: 45%;
+  margin-left: 8%;
+}
+
+.pg-reel:hover .pg-reel__play,
+.pg-reel:focus-visible .pg-reel__play {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
 }
 
 .pg-reel__legenda {
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.78rem;
-  line-height: 1.35;
-  color: var(--color-tinta-suave);
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding: 0 0.6rem 0.6rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: #fff;
+}
+
+/* No telemóvel as celas têm pouco mais de cem píxeis: a legenda por cima
+   tapava a capa toda e a etiqueta chocava com o botão. Fica só o ícone, e a
+   legenda continua no `alt` da imagem. */
+@media (max-width: 39.99rem) {
+  .pg-reel__legenda {
+    display: none;
+  }
+  .pg-reel__etiqueta {
+    padding: 0.25rem;
+    font-size: 0;
+  }
+  .pg-reel__etiqueta .pg-icone {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
 }
 
 /* ============================================================== OS PRATOS === */
@@ -697,57 +811,204 @@
   width: min(30rem, 78vw);
 }
 
-/* ================================================================ A PORTA === */
+/* ========================================================== OS PREGUIÇOSOS == */
 
-.pg-porta {
-  position: relative;
-  overflow: hidden;
-  padding-block: clamp(4rem, 14vh, 9rem);
+.pg-preguicosos {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  padding-block: clamp(3.5rem, 10vh, 7rem);
   padding-inline: clamp(1.25rem, 6vw, 5rem);
   padding-inline-end: clamp(5rem, 12vw, 10rem);
 }
 
-/* A fachada volta, escurecida, como chão do acto. Fecha o círculo com o herói:
-   chega-se à casa, entra-se, e sai-se pela mesma porta. */
-.pg-porta__fundo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+@media (min-width: 60rem) {
+  .pg-preguicosos {
+    grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 2fr);
+  }
+  .pg-preguicosos__resumo {
+    position: sticky;
+    top: 6rem;
+  }
 }
 
-.pg-porta__fundo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 40%;
-  /* Aqui **pode** escurecer-se a imagem toda, ao contrário do herói: o papel
-     dela mudou. Lá era o assunto; aqui é textura por trás do telefone. */
-  opacity: 0.16;
-  filter: grayscale(0.35);
-}
-
-.pg-porta__texto {
-  position: relative;
-  z-index: 1;
+.pg-preguicosos__resumo {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.75rem;
-  max-width: 44rem;
+  gap: 0.6rem;
+}
+
+/* Sem citações, a nota fica sozinha e ao centro — não uma coluna à esquerda
+   de uma grelha que não existe. */
+.pg-preguicosos--so-nota {
+  grid-template-columns: none;
+  justify-items: center;
+  text-align: center;
+}
+
+.pg-preguicosos--so-nota .pg-preguicosos__resumo {
+  position: static;
+  align-items: center;
+}
+
+.pg-preguicosos--so-nota .pg-rotulo {
+  align-items: center;
+}
+
+.pg-preguicosos__nota {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-preguicosos__numero {
+  font-size: clamp(4rem, 11vw, 7rem);
+  letter-spacing: -0.03em;
+  color: var(--color-ouro-claro);
+}
+
+.pg-preguicosos__de {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  color: var(--color-tinta-suave);
+}
+
+.pg-estrelas {
+  display: inline-flex;
+  gap: 0.2rem;
+  color: var(--color-ouro);
+  font-size: 1.35rem;
+}
+
+.pg-estrelas--pequena {
+  font-size: 0.8rem;
+  gap: 0.1rem;
+}
+
+/* O mural: colunas, não linhas, para as citações de tamanhos diferentes não
+   deixarem buracos. */
+.pg-preguicosos__mural {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 1;
+  column-gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+@media (min-width: 40rem) {
+  .pg-preguicosos__mural {
+    columns: 2;
+  }
+}
+
+.pg-preguicosos__mural li {
+  break-inside: avoid;
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.pg-citacao {
+  position: relative;
+  margin: 0;
+  padding: 1.6rem 1.4rem 1.2rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 4px;
+  background: var(--color-superficie);
+}
+
+/* As aspas grandes em ouro são o que faz disto uma citação à primeira vista,
+   antes de se ler uma palavra. */
+.pg-citacao::before {
+  content: "“";
+  position: absolute;
+  top: -0.15em;
+  left: 0.9rem;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--color-ouro);
+}
+
+.pg-citacao blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+@media (min-width: 40rem) {
+  .pg-citacao--destaque blockquote {
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  }
+}
+
+.pg-citacao figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.82rem;
+}
+
+.pg-citacao__autor {
+  color: var(--color-tinta);
+}
+
+.pg-citacao__quando {
+  color: var(--color-tinta-suave);
+}
+
+/* ================================================================ A PORTA === */
+
+.pg-porta {
+  padding-block: clamp(4rem, 12vh, 7rem) clamp(2.5rem, 6vh, 4rem);
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+  padding-inline-end: clamp(5rem, 12vw, 10rem);
+  border-top: 1px solid var(--color-linha);
+}
+
+.pg-porta__grelha {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 5rem);
+}
+
+/* Duas colunas separadas pelo fio de ouro do cabeçalho: à esquerda o que se
+   faz (ligar), à direita o que se precisa de saber (onde, quando). */
+@media (min-width: 52rem) {
+  .pg-porta__grelha {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+  .pg-porta__coluna--onde {
+    padding-inline-start: clamp(2rem, 4vw, 4rem);
+    border-inline-start: 1px solid color-mix(in oklab, var(--color-ouro) 45%, transparent);
+  }
+}
+
+.pg-porta__coluna {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 /**
- * O telefone é a coisa maior da página, e é de propósito: esta página existe
+ * O telefone é a coisa maior do fecho, e é de propósito: esta página existe
  * para pôr alguém à porta do Café Preguiça, e ligar é o passo que o cliente já
  * pede no Instagram.
  */
 .pg-porta__telefone {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  font-size: clamp(2.6rem, 7vw, 4.75rem);
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--color-ouro-claro);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   transition: color 200ms ease;
 }
 
@@ -756,13 +1017,30 @@
   color: var(--color-ouro);
 }
 
-.pg-porta__morada {
-  font-size: clamp(1rem, 2.2vw, 1.2rem);
+.pg-botao--cheio {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+  font-weight: 600;
 }
 
-.pg-porta__morada a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.pg-botao--cheio:hover,
+.pg-botao--cheio:focus-visible {
+  background: var(--color-ouro-claro);
+  border-color: var(--color-ouro-claro);
+}
+
+.pg-porta__subtitulo {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pg-porta__morada {
+  font-style: normal;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  line-height: 1.3;
 }
 
 /* O horário em linhas, não numa tabela de sete: dia à esquerda, horas à
@@ -772,10 +1050,10 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.15rem;
+  gap: 0.2rem;
   /* Estreito de propósito: com a lista larga, o dia ficava num extremo e as
      horas no outro, e o olho tinha de atravessar meio ecrã por linha. */
-  width: min(16rem, 100%);
+  width: min(17rem, 100%);
   font-size: 0.92rem;
   color: var(--color-tinta-suave);
 }
@@ -784,13 +1062,16 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  padding-block: 0.2rem;
+  border-bottom: 1px dotted var(--color-linha);
   font-variant-numeric: tabular-nums;
 }
 
 .pg-porta__ate {
-  margin-top: 0.75rem;
+  margin-top: clamp(3rem, 8vh, 5rem);
+  text-align: center;
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   color: var(--color-tinta);
 }
 

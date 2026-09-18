@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
-import { cafe, DIAS, moradaCompleta, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
+import { cafe, DIAS, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
 import { Motor } from "@/components/catalogo/Motor";
 import { Preguica } from "@/components/catalogo/Preguica";
 import { Heroi } from "@/components/catalogo/Heroi";
 import { Reels } from "@/components/catalogo/Reels";
 import { Pratos } from "@/components/catalogo/Pratos";
+import { Preguicosos } from "@/components/catalogo/Preguicosos";
+import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
 import { Link } from "@/i18n/navigation";
 import "../catalogo-motor.css";
@@ -36,7 +38,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * | 3 | Os cocktails | `pan` ← **pico** | deslumbre |
  * | 4 | Os reels | `pin` | curiosidade |
  * | 5 | Para partilhar | `pan` | fome |
- * | 6 | A porta | `in` | decisão |
+ * | 6 | Os Preguiçosos | `in` + `reveal` | confiança |
+ * | 7 | A porta | `in` | decisão |
  *
  * Cinco famílias de dispositivo e nenhuma repetida em actos seguidos — os dois
  * `pan` estão separados pelo `pin` dos reels, de propósito. E são duas leituras
@@ -46,11 +49,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *
  * ## O que saiu, e porquê
  *
- * **Os catorze sabores** e **os Preguiçosos** foram removidos por decisão do
- * cliente: o primeiro repetia o que o carril dos cocktails já dizia, o segundo
- * fica em espera até haver uma ideia melhor para ele. O componente `Sabores`
- * foi apagado em vez de ficar órfão — código que ninguém chama é código que
- * alguém vai tentar perceber daqui a três meses.
+ * **Os catorze sabores** foram removidos por decisão do cliente: repetiam o que
+ * o carril dos cocktails já dizia. O componente `Sabores` foi apagado em vez de
+ * ficar órfão — código que ninguém chama é código que alguém vai tentar
+ * perceber daqui a três meses.
+ *
+ * **Os Preguiçosos** saíram e voltaram com outra ideia: eram uma fotografia com
+ * um número, agora são as avaliações — a nota e o que os clientes escrevem.
  */
 export default async function Inicio({ params }: Props) {
   const { locale } = await params;
@@ -61,7 +66,6 @@ export default async function Inicio({ params }: Props) {
   const marca = await getTranslations("marca");
   const rodape = await getTranslations("rodape");
 
-  const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
   const direcoes = urlDirecoes();
 
@@ -83,6 +87,7 @@ export default async function Inicio({ params }: Props) {
           <a href="#carril">{t("indice.carril")}</a>
           <a href="#reels">{t("indice.reels")}</a>
           <a href="#partilhar">{t("indice.partilhar")}</a>
+          {avaliacoes.nota !== null && <a href="#preguicosos">{t("indice.preguicosos")}</a>}
           <a href="#porta">{t("indice.porta")}</a>
         </nav>
         {telefone && (
@@ -101,7 +106,8 @@ export default async function Inicio({ params }: Props) {
         alt={t("heroi.alt")}
       />
 
-      {/* 2 · A CASA — fotografia pequena do interior, não meia página de gente. */}
+      {/* 2 · A CASA — uma faixa baixa ao lado do texto. O texto é curto, e uma
+          fotografia em retrato fazia dele uma secção de ecrã inteiro. */}
       <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
         <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
           {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
@@ -111,7 +117,7 @@ export default async function Inicio({ params }: Props) {
           <img
             src="/casa/menu-mesa.webp"
             srcSet="/casa/menu-mesa-640.webp 640w, /casa/menu-mesa.webp 1080w"
-            sizes="(min-width: 52rem) 26rem, 60vw"
+            sizes="(min-width: 52rem) 55vw, 100vw"
             width={1080}
             height={1440}
             alt={t("casa.alt")}
@@ -167,6 +173,8 @@ export default async function Inicio({ params }: Props) {
         facto={t("reels.facto")}
         dado={t("reels.dado")}
         noInstagram={t("reels.noInstagram")}
+        seguir={t("reels.seguir")}
+        etiqueta={t("reels.etiqueta")}
         legendas={{
           masterclass: t("reels.legendas.masterclass"),
           tosta: t("reels.legendas.tosta"),
@@ -193,65 +201,85 @@ export default async function Inicio({ params }: Props) {
         }}
       />
 
-      {/* 6 · A PORTA — o fecho. O telefone é o que a página existe para
-          provocar, por isso é a coisa maior do ecrã. */}
+      {/* 6 · OS PREGUIÇOSOS — as avaliações, logo antes da porta. */}
+      <Preguicosos
+        locale={locale}
+        nome={t("preguicosos.nome")}
+        facto={t("preguicosos.facto")}
+        contagem={
+          avaliacoes.total !== null
+            ? t("preguicosos.contagem", { total: avaliacoes.total })
+            : null
+        }
+        estrelasTexto={t("preguicosos.estrelas", { nota: avaliacoes.nota ?? 0 })}
+        verTodas={t("preguicosos.verTodas")}
+        url={direcoes}
+      />
+
+      {/* 7 · A PORTA — o fecho, em duas colunas: como reservar, e onde e
+          quando. Já teve a fachada escurecida por trás e saiu: era uma
+          fotografia a fazer de textura, e o fecho lia-se como um borrão. */}
       <section id="porta" className="pg-porta" data-sc-act="flow" data-sc-drift="#0b0806">
-        <div className="pg-porta__fundo" aria-hidden="true">
-          <img
-            src="/casa/fachada-1280.webp"
-            width={1280}
-            height={1275}
-            alt=""
-            loading="lazy"
-          />
-        </div>
+        <div className="pg-porta__grelha">
+          <div className="pg-porta__coluna" data-sc-in data-sc-stagger="90">
+            <Rotulo nome={t("porta.nome")} facto={t("porta.facto")} />
 
-        <div className="pg-porta__texto" data-sc-in data-sc-stagger="90">
-          <p className="pg-rotulo__dado">{t("porta.olho")}</p>
-
-          {telefone && cafe.telefone && (
-            <p>
-              <a className="pg-porta__telefone" href={`tel:${telefone}`}>
-                {cafe.telefone}
-              </a>
-            </p>
-          )}
-
-          {morada && (
-            <p className="pg-porta__morada">
-              {morada}
-              {direcoes && (
-                <>
-                  {" · "}
-                  <a href={direcoes} target="_blank" rel="noopener noreferrer">
-                    {t("porta.direcoes")}
+            {telefone && cafe.telefone && (
+              <>
+                <p>
+                  <a className="pg-porta__telefone" href={`tel:${telefone}`}>
+                    {cafe.telefone}
                   </a>
-                </>
-              )}
-            </p>
-          )}
+                </p>
+                <p>
+                  <a className="pg-botao pg-botao--cheio" href={`tel:${telefone}`}>
+                    {t("porta.ligar")}
+                  </a>
+                </p>
+              </>
+            )}
+          </div>
 
-          {cafe.horarios && (
-            <ul className="pg-porta__horario">
-              {DIAS.map((dia) => {
-                const h = cafe.horarios![dia];
-                return (
-                  <li key={dia}>
-                    <span>{comum(`dias.${dia}`)}</span>
-                    <span>{h ? `${h.abre}–${h.fecha}` : comum("encerrado")}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          <div className="pg-porta__coluna pg-porta__coluna--onde" data-sc-in data-sc-stagger="90">
+            <h3 className="pg-porta__subtitulo">{t("porta.ondeQuando")}</h3>
 
-          {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
-          {!cafe.horarioConfirmado && (
-            <p className="pg-nota">{t("porta.horarioPorConfirmar")}</p>
-          )}
+            {cafe.morada && (
+              <address className="pg-porta__morada">
+                {cafe.morada}
+                <br />
+                {[cafe.codigoPostal, cafe.cidade].filter(Boolean).join(" ")}
+              </address>
+            )}
+            {direcoes && (
+              <p>
+                <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
+                  {t("porta.direcoes")}
+                </a>
+              </p>
+            )}
 
-          <p className="pg-porta__ate">{t("porta.ateLogo")}</p>
+            {cafe.horarios && (
+              <ul className="pg-porta__horario">
+                {DIAS.map((dia) => {
+                  const h = cafe.horarios![dia];
+                  return (
+                    <li key={dia}>
+                      <span>{comum(`dias.${dia}`)}</span>
+                      <span>{h ? `${h.abre}–${h.fecha}` : comum("encerrado")}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
+            {!cafe.horarioConfirmado && (
+              <p className="pg-nota">{t("porta.horarioPorConfirmar")}</p>
+            )}
+          </div>
         </div>
+
+        <p className="pg-porta__ate">{t("porta.ateLogo")}</p>
       </section>
 
       {/* O rodapé é mínimo de propósito: "a porta" acabou de dar a morada, o

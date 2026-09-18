@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { avaliacoes } from "@/data/avaliacoes";
 import { cafe, telefoneParaLigar } from "@/data/cafe";
 import { MudarIdioma } from "./MudarIdioma";
 
@@ -33,15 +32,10 @@ export function BarraSite({
   const telefone = telefoneParaLigar();
   const naInicial = atual === "inicio";
 
-  const seccoes = [
-    "casa",
-    "carril",
-    "reels",
-    "partilhar",
-    /* Sem nota não há secção de avaliações na inicial — ver `Preguicosos`. */
-    ...(avaliacoes.nota !== null ? (["preguicosos"] as const) : []),
-    "onde",
-  ] as const;
+  /* Só três secções, por decisão do Tomás: o que se vem ver — a casa, os
+     cocktails, a comida. Vídeos, avaliações e "onde estamos" descobrem-se a
+     descer a página; com seis links a barra era um índice, não uma barra. */
+  const seccoes = ["casa", "carril", "partilhar"] as const;
 
   const logotipo = (
     <img src="/marca/marca.webp" width={819} height={507} alt={marca("nome")} />

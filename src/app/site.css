@@ -69,9 +69,9 @@
   display: none;
 }
 
-/* 72rem e não menos: em português o índice, o idioma e a acção pedem ~66rem, e
-   a 64rem a barra saía pela direita. */
-@media (min-width: 72rem) {
+/* 58rem: com as três secções, a barra inteira — o número de telefone incluído —
+   pede ~55rem (medido). Com as seis de antes eram precisos 72rem. */
+@media (min-width: 58rem) {
   .pg-indice__seccao {
     display: inline;
   }
@@ -132,7 +132,7 @@
   }
 }
 
-@media (min-width: 88rem) {
+@media (min-width: 64rem) {
   .pg-acao .pg-barra__curto {
     display: none;
   }

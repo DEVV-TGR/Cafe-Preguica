@@ -73,9 +73,8 @@
   }
 }
 
-/* A barra (`.pg-barra`, `.pg-indice`, `.pg-acao`) vive em `barra.css`, com o
-   componente `BarraSite`: é a mesma em todas as páginas, e as de leitura não
-   carregam este ficheiro. */
+/* A barra, o botão (`.pg-botao`) e o rodapé vivem em `site.css`: são os mesmos
+   em todas as páginas, e as de leitura não carregam este ficheiro. */
 
 /* ------------------------------------------------------------- o rótulo
    O esquema. Igual em todos os objectos, e é isso que o torna uma colecção. */
@@ -450,43 +449,6 @@
   line-height: 1.5;
   max-width: 30ch;
   text-wrap: pretty;
-}
-
-/* ================================================================ O BOTÃO === */
-
-/* A acção, com a mesma forma em toda a página. */
-.pg-botao {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.4rem;
-  border: 1px solid var(--color-ouro);
-  border-radius: 999px;
-  color: var(--color-ouro-claro);
-  font-size: 0.9rem;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-  transition: background-color 220ms ease, color 220ms ease;
-}
-
-.pg-botao:hover,
-.pg-botao:focus-visible {
-  background: var(--color-ouro);
-  color: var(--color-ouro-tinta);
-}
-
-/* O botão cheio: a acção principal de cada ecrã (hoje, reservar). */
-.pg-botao--cheio {
-  background: var(--color-ouro);
-  color: var(--color-ouro-tinta);
-  font-weight: 600;
-}
-
-.pg-botao--cheio:hover,
-.pg-botao--cheio:focus-visible {
-  background: var(--color-ouro-claro);
-  border-color: var(--color-ouro-claro);
-  color: var(--color-ouro-tinta);
 }
 
 .pg-heroi__botoes {
@@ -1184,28 +1146,6 @@
 }
 
 /* =============================================================== O RODAPÉ === */
-
-.pg-rodape {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 2rem;
-  padding: 1.5rem clamp(1.25rem, 6vw, 5rem);
-  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 20%, transparent);
-  font-size: 0.8rem;
-  color: var(--color-tinta-suave);
-}
-
-.pg-rodape nav {
-  display: flex;
-  gap: 1.25rem;
-}
-
-.pg-rodape a:hover,
-.pg-rodape a:focus-visible {
-  color: var(--color-ouro-claro);
-}
 
 /* ===================================================== O PALCO CENTRADO ===== */
 

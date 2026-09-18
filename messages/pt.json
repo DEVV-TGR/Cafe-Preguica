@@ -31,7 +31,8 @@
       "sabado": "Sábado",
       "domingo": "Domingo"
     },
-    "dose": "Dose"
+    "dose": "Dose",
+    "olhoCasa": "Café Preguiça · Ermesinde"
   },
   "metadata": {
     "inicio": {
@@ -57,6 +58,10 @@
     "cookies": {
       "titulo": "Cookies",
       "descricao": "Este site não usa cookies. Esta página explica porquê."
+    },
+    "informacaoLegal": {
+      "titulo": "Resolução de litígios",
+      "descricao": "O que fazer se alguma coisa correr mal: o centro de arbitragem de consumo e o Livro de Reclamações."
     }
   },
   "inicio": {
@@ -252,22 +257,67 @@
     "contacto": {
       "titulo": "Dúvidas",
       "texto": "Fale connosco pelos contactos da casa."
+    },
+    "olho": "O site e os seus dados",
+    "ficha": {
+      "formularios": "Formulários",
+      "cookies": "Cookies",
+      "terceiros": "Serviços de terceiros",
+      "nenhum": "Nenhum"
     }
   },
   "cookies": {
     "titulo": "Cookies",
-    "texto": "Este site não usa cookies. Não há cookies de análise, de publicidade nem de sessão, e por isso não há banner de consentimento — não haveria nada para consentir.",
-    "verificar": "Não é preciso acreditar em nós: abra as ferramentas de programador do navegador, separador Aplicação, e veja a lista de cookies deste domínio vazia."
+    "olho": "O que fica no seu navegador",
+    "ficha": {
+      "proprios": "Cookies deste site",
+      "terceiros": "Cookies de terceiros",
+      "banner": "Banner de consentimento",
+      "zero": "0",
+      "naoPreciso": "Não é preciso"
+    },
+    "uso": {
+      "titulo": "O que usamos",
+      "texto": "Este site não usa cookies. Não há cookies de análise, de publicidade nem de sessão, e por isso não há banner de consentimento — não haveria nada para consentir."
+    },
+    "lingua": {
+      "titulo": "E a língua que escolheu?",
+      "texto": "Fica no endereço, e não num cookie: a versão inglesa vive em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre na língua do seu navegador."
+    },
+    "verificar": {
+      "titulo": "Como confirmar",
+      "texto": "Não é preciso acreditar em nós: abra as ferramentas de programador do navegador, separador Aplicação, e veja a lista de cookies deste domínio vazia."
+    }
+  },
+  "informacaoLegal": {
+    "olho": "Informação legal",
+    "titulo": "Resolução de litígios",
+    "litigios": {
+      "titulo": "Se tiver um problema connosco",
+      "texto": "Em caso de litígio de consumo, pode recorrer a uma entidade de resolução alternativa de litígios: <entidade>{nome}</entidade>. Mais informação no <portal>Portal do Consumidor</portal>."
+    },
+    "reclamacoes": {
+      "titulo": "Livro de Reclamações",
+      "texto": "Também pode apresentar uma reclamação no <livro>Livro de Reclamações Eletrónico</livro>."
+    }
   },
   "rodape": {
     "direitos": "Todos os direitos reservados.",
     "feitoPor": "Site por",
     "privacidade": "Privacidade",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "legal": "Informação legal",
+    "livroReclamacoes": "Livro de Reclamações",
+    "resolucaoLitigios": "Resolução de litígios"
   },
   "naoEncontrada": {
     "titulo": "Página não encontrada",
     "texto": "A página que procura não existe ou mudou de sítio.",
-    "voltar": "Voltar ao início"
+    "olho": "Erro 404"
+  },
+  "leitura": {
+    "seguir": "Continuar no site",
+    "inicio": "Voltar ao início",
+    "ementa": "Ver a ementa"
   }
 }

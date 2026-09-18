@@ -1,10 +1,13 @@
 /* ===========================================================================
-   A BARRA — igual em todas as páginas
+   O QUE É IGUAL EM TODAS AS PÁGINAS — a barra, o botão e o rodapé
 
    Vive à parte de `catalogo.css` porque as páginas de leitura (sobre,
-   contactos, privacidade, cookies) usam-na e não carregam o catálogo. Quem a
-   importa é o componente `BarraSite`, e não as páginas — assim não há página
-   que a mostre sem estilo.
+   contactos, privacidade, cookies) usam estas peças e não carregam o catálogo.
+   É importado pelo `layout.tsx`, e não pelas páginas: assim não há página que
+   as mostre sem estilo.
+
+   O prefixo continua a ser `pg-` porque nasceram na página inicial, e
+   renomeá-las era mexer em todos os ficheiros sem mudar nada no ecrã.
    =========================================================================== */
 
 .pg-barra {
@@ -135,5 +138,98 @@
   }
   .pg-acao .pg-barra__longo {
     display: inline;
+  }
+}
+
+/* ================================================================ O BOTÃO === */
+
+/* A acção, com a mesma forma em toda a página. */
+.pg-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--color-ouro);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-botao:hover,
+.pg-botao:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* O botão cheio: a acção principal de cada ecrã (hoje, reservar). */
+.pg-botao--cheio {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+  font-weight: 600;
+}
+
+.pg-botao--cheio:hover,
+.pg-botao--cheio:focus-visible {
+  background: var(--color-ouro-claro);
+  border-color: var(--color-ouro-claro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ============================================================== O RODAPÉ === */
+
+.pg-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding: 1.5rem clamp(1.25rem, 6vw, 5rem);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 20%, transparent);
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-rodape nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+}
+
+.pg-rodape a:hover,
+.pg-rodape a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+/* Só nas páginas de leitura — ver `RodapeSite`. Ocupa a linha inteira, por
+   cima dos links legais, e separa-se deles por um ponto dourado. */
+.pg-rodape__contactos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0;
+  flex-basis: 100%;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-linha);
+  color: var(--color-tinta);
+  font-size: 0.85rem;
+}
+
+.pg-rodape__contactos li:not(:last-child)::after {
+  content: "·";
+  margin-inline: 0.7rem;
+  color: var(--color-ouro);
+}
+
+/* No telemóvel, um contacto por linha: com os pontos, a linha partia e o ponto
+   ficava pendurado no fim. */
+@media (max-width: 40rem) {
+  .pg-rodape__contactos {
+    flex-direction: column;
+  }
+
+  .pg-rodape__contactos li:not(:last-child)::after {
+    content: none;
   }
 }

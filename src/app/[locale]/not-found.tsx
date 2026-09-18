@@ -1,5 +1,4 @@
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { Pagina } from "@/components/Pagina";
 import type { Locale } from "@/i18n/routing";
 
@@ -14,17 +13,6 @@ export default function NaoEncontrada() {
   const t = useTranslations("naoEncontrada");
   const locale = useLocale() as Locale;
 
-  return (
-    <Pagina locale={locale}>
-      <div className="flex flex-col gap-6">
-        <h1 className="font-display text-4xl font-semibold">{t("titulo")}</h1>
-        <p>{t("texto")}</p>
-        <p>
-          <Link href="/" className="underline">
-            {t("voltar")}
-          </Link>
-        </p>
-      </div>
-    </Pagina>
-  );
+  /* Sem botão próprio: o fecho da `Pagina` já leva ao início e à ementa. */
+  return <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={t("texto")} />;
 }

@@ -13,7 +13,7 @@ import { Preguicosos } from "@/components/catalogo/Preguicosos";
 import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
 import { Link } from "@/i18n/navigation";
-import { RodapeCatalogo } from "@/components/catalogo/RodapeCatalogo";
+import { RodapeSite } from "@/components/RodapeSite";
 import { BarraSite } from "@/components/BarraSite";
 import "../catalogo-motor.css";
 import "../catalogo.css";
@@ -67,7 +67,6 @@ export default async function Inicio({ params }: Props) {
   const t = await getTranslations("inicio");
   const comum = await getTranslations("comum");
   const marca = await getTranslations("marca");
-  const rodape = await getTranslations("rodape");
 
   const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
@@ -285,13 +284,7 @@ export default async function Inicio({ params }: Props) {
       {/* O rodapé é mínimo de propósito: "onde estamos" acabou de dar a morada, o
           telefone e o horário três centímetros acima. Repeti-los aqui era ruído.
           Fica o que a lei pede e o crédito. */}
-      <RodapeCatalogo
-        privacidade={rodape("privacidade")}
-        cookies={rodape("cookies")}
-        direitos={rodape("direitos")}
-        feitoPor={rodape("feitoPor")}
-        nome={marca("nome")}
-      />
+      <RodapeSite />
     </>
   );
 }

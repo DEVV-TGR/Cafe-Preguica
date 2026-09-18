@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
-import { Pagina } from "@/components/Pagina";
+import { Aviso, Pagina, Seccao } from "@/components/Pagina";
 import {
   cafe,
   DIAS,
@@ -43,71 +43,51 @@ export default async function Contactos({ params }: Props) {
   const temAlgumaCoisa = Boolean(morada || telefone || cafe.email || cafe.horarios);
 
   return (
-    <Pagina locale={locale}>
-      <article className="flex flex-col gap-8">
-      <h1 className="font-display text-4xl font-semibold">{t("titulo")}</h1>
-
-      {!temAlgumaCoisa && (
-        <p role="status" className="border border-linha bg-white px-4 py-3 text-sm">
-          {t("semDados")}
-        </p>
-      )}
+    <Pagina locale={locale} olho={comum("olhoCasa")} titulo={t("titulo")}>
+      {!temAlgumaCoisa && <Aviso>{t("semDados")}</Aviso>}
 
       {morada && (
-        <section>
-          <h2 className="font-display text-xl font-semibold">{t("morada")}</h2>
+        <Seccao titulo={t("morada")}>
           <p>{morada}</p>
           {direcoes && (
-            <p className="mt-2">
+            <p>
               {/* Link normal para o Maps, não um mapa embebido: assim a Google
                   só vê quem carregar aqui. Ver `docs/seguranca.md`. */}
-              <a
-                href={direcoes}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                {t("direcoes")}
+              <a href={direcoes} target="_blank" rel="noopener noreferrer">
+                {t("direcoes")} <span aria-hidden="true">↗</span>
               </a>
             </p>
           )}
-        </section>
+        </Seccao>
       )}
 
       {telefone && cafe.telefone && (
-        <section>
-          <h2 className="font-display text-xl font-semibold">{t("telefone")}</h2>
+        <Seccao titulo={t("telefone")}>
           <p>
-            <a href={`tel:${telefone}`} className="underline">
-              {cafe.telefone}
-            </a>
+            <a href={`tel:${telefone}`}>{cafe.telefone}</a>
           </p>
-        </section>
+        </Seccao>
       )}
 
       {cafe.email && (
-        <section>
-          <h2 className="font-display text-xl font-semibold">{t("email")}</h2>
+        <Seccao titulo={t("email")}>
           <p>
-            <a href={`mailto:${cafe.email}`} className="underline">
-              {cafe.email}
-            </a>
+            <a href={`mailto:${cafe.email}`}>{cafe.email}</a>
           </p>
-        </section>
+        </Seccao>
       )}
 
       {cafe.horarios && (
-        <section>
-          <h2 className="font-display text-xl font-semibold">{t("horario")}</h2>
+        <Seccao titulo={t("horario")}>
           {/* Uma lista de definição e não uma tabela: é um par dia/horas, não
               uma grelha com duas dimensões. */}
-          <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1">
+          <dl className="lt-horario">
             {DIAS.map((dia) => {
               const horario = cafe.horarios![dia];
               return (
                 <div key={dia} className="contents">
                   <dt>{comum(`dias.${dia}`)}</dt>
-                  <dd className="tabular-nums">
+                  <dd>
                     {horario
                       ? `${horario.abre}–${horario.fecha}`
                       : comum("encerrado")}
@@ -116,9 +96,8 @@ export default async function Contactos({ params }: Props) {
               );
             })}
           </dl>
-        </section>
+        </Seccao>
       )}
-      </article>
     </Pagina>
   );
 }

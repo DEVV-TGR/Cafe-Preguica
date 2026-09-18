@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
-import { Pagina } from "@/components/Pagina";
+import { Aviso, Pagina } from "@/components/Pagina";
 
 type Props = { params: Promise<{ locale: Locale }> };
 
@@ -23,13 +23,11 @@ export default async function Sobre({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("sobre");
+  const comum = await getTranslations("comum");
 
   return (
-    <Pagina locale={locale}>
-      <article className="flex flex-col gap-6">
-      <h1 className="font-display text-4xl font-semibold">{t("titulo")}</h1>
-      <p className="text-suave">{t("porEscrever")}</p>
-      </article>
+    <Pagina locale={locale} olho={comum("olhoCasa")} titulo={t("titulo")}>
+      <Aviso>{t("porEscrever")}</Aviso>
     </Pagina>
   );
 }

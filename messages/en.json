@@ -31,7 +31,8 @@
       "sabado": "Saturday",
       "domingo": "Sunday"
     },
-    "dose": "Serving"
+    "dose": "Serving",
+    "olhoCasa": "Café Preguiça · Ermesinde"
   },
   "metadata": {
     "inicio": {
@@ -57,6 +58,10 @@
     "cookies": {
       "titulo": "Cookies",
       "descricao": "This site uses no cookies. This page explains why."
+    },
+    "informacaoLegal": {
+      "titulo": "Dispute resolution",
+      "descricao": "What to do if something goes wrong: the consumer arbitration centre and the Complaints Book."
     }
   },
   "inicio": {
@@ -252,22 +257,67 @@
     "contacto": {
       "titulo": "Questions",
       "texto": "Reach us through the details on the contact page."
+    },
+    "olho": "This site and your data",
+    "ficha": {
+      "formularios": "Forms",
+      "cookies": "Cookies",
+      "terceiros": "Third-party services",
+      "nenhum": "None"
     }
   },
   "cookies": {
     "titulo": "Cookies",
-    "texto": "This site uses no cookies. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to.",
-    "verificar": "You do not have to take our word for it: open your browser's developer tools, Application tab, and see the cookie list for this domain empty."
+    "olho": "What stays in your browser",
+    "ficha": {
+      "proprios": "Cookies from this site",
+      "terceiros": "Third-party cookies",
+      "banner": "Consent banner",
+      "zero": "0",
+      "naoPreciso": "Not needed"
+    },
+    "uso": {
+      "titulo": "What we use",
+      "texto": "This site uses no cookies. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to."
+    },
+    "lingua": {
+      "titulo": "What about the language you chose?",
+      "texto": "It lives in the address, not in a cookie: the English version is under /en. It stays as you browse the site. If you type the address again without /en, the site opens in your browser's language."
+    },
+    "verificar": {
+      "titulo": "How to check",
+      "texto": "You do not have to take our word for it: open your browser's developer tools, Application tab, and see the cookie list for this domain empty."
+    }
+  },
+  "informacaoLegal": {
+    "olho": "Legal information",
+    "titulo": "Dispute resolution",
+    "litigios": {
+      "titulo": "If you have a problem with us",
+      "texto": "In the event of a consumer dispute, you may turn to an alternative dispute resolution body: <entidade>{nome}</entidade>. More information on the <portal>Portal do Consumidor</portal> (Portuguese consumer portal)."
+    },
+    "reclamacoes": {
+      "titulo": "Complaints Book",
+      "texto": "You can also file a complaint in the <livro>electronic Complaints Book</livro> (Livro de Reclamações)."
+    }
   },
   "rodape": {
     "direitos": "All rights reserved.",
     "feitoPor": "Site by",
     "privacidade": "Privacy",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "legal": "Legal information",
+    "livroReclamacoes": "Complaints Book",
+    "resolucaoLitigios": "Dispute resolution"
   },
   "naoEncontrada": {
     "titulo": "Page not found",
     "texto": "The page you are looking for does not exist or has moved.",
-    "voltar": "Back to home"
+    "olho": "Error 404"
+  },
+  "leitura": {
+    "seguir": "Keep browsing",
+    "inicio": "Back to the home page",
+    "ementa": "See the menu"
   }
 }

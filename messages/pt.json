@@ -294,7 +294,8 @@
     "privacidade": "Privacidade",
     "cookies": "Cookies",
     "legal": "Informação legal",
-    "livroReclamacoes": "Livro de Reclamações"
+    "livroReclamacoes": "Livro de Reclamações",
+    "litigios": "Em caso de litígio de consumo, pode recorrer a uma entidade de resolução alternativa de litígios: <entidade>{nome}</entidade>. Mais informação no <portal>Portal do Consumidor</portal>."
   },
   "naoEncontrada": {
     "titulo": "Página não encontrada",

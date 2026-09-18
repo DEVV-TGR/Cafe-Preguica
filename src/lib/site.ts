@@ -41,6 +41,9 @@ export const URL_ESTUDIO = "https://devplus.pt";
  */
 export const URL_LIVRO_RECLAMACOES = "https://www.livroreclamacoes.pt/Inicio/";
 
+/** O portal oficial da Direção-Geral do Consumidor, citado na linha dos litígios. */
+export const URL_PORTAL_CONSUMIDOR = "https://www.consumidor.gov.pt/";
+
 /**
  * As páginas fixas do site, sem prefixo de idioma. Uma página nova entra aqui e
  * aparece sozinha no sitemap, nas duas línguas.

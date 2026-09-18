@@ -7,12 +7,34 @@
   "email": "cafepreguica@sapo.pt",
   "horarioConfirmado": false,
   "horarios": {
-    "segunda": { "abre": "15:30", "fecha": "00:00" },
-    "terca": { "abre": "15:30", "fecha": "00:00" },
-    "quarta": { "abre": "15:30", "fecha": "00:00" },
-    "quinta": { "abre": "15:30", "fecha": "00:00" },
-    "sexta": { "abre": "15:30", "fecha": "01:00" },
-    "sabado": { "abre": "15:30", "fecha": "01:00" },
+    "segunda": {
+      "abre": "15:30",
+      "fecha": "00:00"
+    },
+    "terca": {
+      "abre": "15:30",
+      "fecha": "00:00"
+    },
+    "quarta": {
+      "abre": "15:30",
+      "fecha": "00:00"
+    },
+    "quinta": {
+      "abre": "15:30",
+      "fecha": "00:00"
+    },
+    "sexta": {
+      "abre": "15:30",
+      "fecha": "01:00"
+    },
+    "sabado": {
+      "abre": "15:30",
+      "fecha": "01:00"
+    },
     "domingo": null
+  },
+  "litigios": {
+    "nome": "CICAP – Centro de Informação de Consumo e Arbitragem do Porto",
+    "url": "https://cicap.pt/"
   }
 }

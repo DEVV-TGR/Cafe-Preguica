@@ -203,6 +203,24 @@
   color: var(--color-ouro-claro);
 }
 
+/* A linha dos litígios: a toda a largura, por baixo de tudo, mais pequena. Os
+   dois nomes levam sublinhado discreto porque, no meio de uma frase, sem ele
+   ninguém percebe que são links. */
+.pg-rodape__litigios {
+  flex-basis: 100%;
+  max-width: 90ch;
+  font-size: 0.74rem;
+  line-height: 1.55;
+  opacity: 0.85;
+  text-wrap: pretty;
+}
+
+.pg-rodape__litigios a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-ouro) 45%, transparent);
+  text-underline-offset: 0.2em;
+}
+
 /* Só nas páginas de leitura — ver `RodapeSite`. Ocupa a linha inteira, por
    cima dos links legais, e separa-se deles por um ponto dourado. */
 .pg-rodape__contactos {

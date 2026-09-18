@@ -294,7 +294,8 @@
     "privacidade": "Privacy",
     "cookies": "Cookies",
     "legal": "Legal information",
-    "livroReclamacoes": "Complaints Book"
+    "livroReclamacoes": "Complaints Book",
+    "litigios": "In the event of a consumer dispute, you may turn to an alternative dispute resolution body: <entidade>{nome}</entidade>. More information on the <portal>Portal do Consumidor</portal> (Portuguese consumer portal)."
   },
   "naoEncontrada": {
     "titulo": "Page not found",

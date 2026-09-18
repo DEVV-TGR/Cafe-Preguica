@@ -22,7 +22,8 @@
       "sexta": "Friday",
       "sabado": "Saturday",
       "domingo": "Sunday"
-    }
+    },
+    "dose": "Serving"
   },
   "metadata": {
     "inicio": {
@@ -31,7 +32,7 @@
     },
     "ementa": {
       "titulo": "Menu",
-      "descricao": "The Café Preguiça menu: breakfast, coffee, savouries, sandwiches and drinks."
+      "descricao": "The Café Preguiça menu, in Ermesinde: cocktails, toasties, sharing boards, gin, whisky and coffee, with prices."
     },
     "contactos": {
       "titulo": "Contact",
@@ -51,25 +52,173 @@
     }
   },
   "inicio": {
-    "titulo": "Café Preguiça",
-    "subtitulo": "Site structure. Content and design come later.",
-    "verEmenta": "See the menu",
-    "verContactos": "Contact"
+    "acao": "Book a table · {telefone}",
+    "indice": {
+      "casa": "The room",
+      "carril": "The cocktails",
+      "reels": "Videos",
+      "partilhar": "To share",
+      "preguicosos": "Reviews",
+      "onde": "Find us"
+    },
+    "heroi": {
+      "onde": "Ermesinde · Valongo",
+      "linha": "Cocktails and snacks. The most intimate room in Ermesinde.",
+      "acao": "See the menu",
+      "alt": "The front of Café Preguiça on a sunny morning, with a tree in blossom above the roof.",
+      "reservar": "Book a table · {telefone}"
+    },
+    "casa": {
+      "nome": "The room",
+      "facto": "Solid wood, bare granite and the name chalked on a blackboard. A small room where everyone knows everyone, open afternoons and evenings.",
+      "dado": "R. José Joaquim Ribeiro Teles, 560",
+      "alt": "The house menu standing on a wooden table, against the granite block wall."
+    },
+    "cocktail": {
+      "alt": "A cocktail on a dark wooden table."
+    },
+    "carril": {
+      "nome": "Twenty-four cocktails",
+      "facto": "Nine classics, ten specials and five without alcohol. Made at the counter, one at a time.",
+      "dado": "From €4.20",
+      "ilustrativa": "The photographs are the house's own. Where the cocktail cannot be identified for certain, the label says only what is known.",
+      "balcaoNome": "At the counter",
+      "balcaoFacto": "Lime squeezed by hand over the glass. Every one is made in front of the person drinking it.",
+      "balcaoAlt": "A hand squeezing half a lime over a tall glass of ice.",
+      "fechoNome": "And the rest of the list",
+      "fechoFacto": "Gin, whisky, shots, sangria by the jug, beer, tea and the coffee counter.",
+      "fechoDado": "See the menu"
+    },
+    "reels": {
+      "nome": "The house, moving",
+      "facto": "What happens at the counter, filmed by the house and posted on Instagram. Tap one to watch it there.",
+      "dado": "@cafepreguica",
+      "noInstagram": "opens on Instagram",
+      "legendas": {
+        "masterclass": "Hera × Preguiça masterclass",
+        "tosta": "Toast with jam and hot chocolate",
+        "negroni": "A negroni being served",
+        "valentim": "Valentine's at the house",
+        "menu": "The menu, against the granite wall",
+        "lima": "Lime squeezed by hand"
+      },
+      "seguir": "Follow",
+      "etiqueta": "Reel"
+    },
+    "partilhar": {
+      "nome": "To share",
+      "facto": "What you eat with your hands, in the middle of the table, while the conversation keeps going.",
+      "dado": "From €1.70",
+      "altTabua": "A round platter of small toasts with chouriço and cheese, a bowl of crisps and a bottle of tabasco, on wood.",
+      "altTosta": "Toast with strawberry jam beside a hot chocolate topped with cream and a cinnamon stick.",
+      "factoTosta": "In the photograph, next to a hot chocolate with cream — ordered separately, at €3.60.",
+      "verMais": "And the rest of the list",
+      "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
+      "verMaisAcao": "See the menu"
+    },
+    "preguicosos": {
+      "nome": "The Preguiçosos",
+      "facto": "It's what the house calls its regulars. This is what they write afterwards.",
+      "contagem": "{total} reviews on Google",
+      "estrelas": "{nota} out of 5 stars",
+      "verTodas": "Read them all on Google"
+    },
+    "onde": {
+      "olho": "Find us",
+      "horario": "Opening hours",
+      "direcoes": "Open in Google Maps",
+      "chamada": {
+        "fixa": "Call to the Portuguese landline network",
+        "movel": "Call to the Portuguese mobile network"
+      },
+      "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
+      "mapaAlt": "Map of the streets around Café Preguiça in Ermesinde, with the house marked by the sloth from the logo.",
+      "credito": "© OpenStreetMap contributors"
+    }
   },
   "ementa": {
-    "titulo": "Menu",
-    "introducao": "What the house serves.",
-    "avisoProvisoria": "Draft menu. The items and prices on this page are placeholders and have not been confirmed with the house.",
+    "titulo": "The menu",
+    "introducao": "Toasties and boards to share, cocktails made at the bar one at a time, and the rest of the bottles.",
+    "avisoProvisoria": "Menu transcribed from the house menu and not yet confirmed. If in doubt, ask at the bar.",
     "avisoAlergenios": "Allergen information is available at the counter. Please ask before ordering.",
     "categorias": {
-      "pequenos-almocos": "Breakfast",
-      "cafetaria": "Coffee and tea",
-      "padaria-pastelaria": "Bakery and pastries",
-      "salgados": "Savouries",
-      "sandes-e-tostas": "Sandwiches and toasties",
-      "pratos-do-dia": "Dishes of the day",
-      "bebidas-frias": "Cold drinks",
-      "cervejas-e-vinhos": "Beer and wine"
+      "tostas-e-snacks": "Toasties & snacks",
+      "tabuas": "Boards",
+      "tacas": "Bowls",
+      "sobremesas": "Desserts",
+      "cocktail-preguica": "Cocktail Preguiça & Unicorn",
+      "cocktails-classicos": "Classic cocktails",
+      "cocktails-special": "Specials",
+      "mocktails": "Mocktails, alcohol free",
+      "sangrias-e-espumantes": "Sangrias & sparkling",
+      "gin": "Gin",
+      "whisky": "Whisky",
+      "shots": "Shots",
+      "licores": "Liqueurs & digestifs",
+      "cervejas": "Beer",
+      "vinhos": "Wine",
+      "cafetaria": "Coffee & hot drinks",
+      "chas": "Tea",
+      "aguas-e-refrigerantes": "Water & soft drinks"
+    },
+    "colunaPreco": "Country bread",
+    "colunaPrecoAlt": "Sliced bread",
+    "saboresTitulo": "Pick the flavour",
+    "sabores": {
+      "surpresa": "Surprise",
+      "limao": "Lemon",
+      "manga": "Mango",
+      "frutos-vermelhos": "Red berries",
+      "caramelo": "Caramel",
+      "menta": "Mint",
+      "ananas": "Pineapple",
+      "pessego": "Peach",
+      "morango": "Strawberry",
+      "fumado": "Smoked",
+      "laranja": "Orange",
+      "coco": "Coconut",
+      "framboesa": "Raspberry",
+      "maracuja": "Passion fruit"
+    },
+    "olho": "Café Preguiça · Ermesinde",
+    "contagem": "{artigos} items · {seccoes} sections",
+    "indice": "Menu chapters",
+    "naFotografia": "In the photo",
+    "capitulos": {
+      "comer": {
+        "nome": "To eat",
+        "facto": "Toasties, boards for the middle of the table, bowls to nibble and dessert."
+      },
+      "cocktails": {
+        "nome": "Cocktails",
+        "facto": "The house one, the classics, the specials, the alcohol-free ones and sangria by the jug."
+      },
+      "garrafeira": {
+        "nome": "Spirits & beer",
+        "facto": "Gin, whisky, shots, liqueurs, beers and wines."
+      },
+      "cafe-e-cha": {
+        "nome": "Coffee & tea",
+        "facto": "Coffee, hot drinks, teas, water and soft drinks."
+      }
+    },
+    "fotos": {
+      "comer": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
+      "cocktails": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
+      "garrafeira": "A hand squeezing half a lime over a tall glass with ice.",
+      "cafe-e-cha": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam."
+    },
+    "sortear": "Let the sloth choose",
+    "aRodar": "The sloth is thinking…",
+    "escolheu": "The sloth chose",
+    "escolhido": "You chose",
+    "nenhumSabor": "Tap a flavour, or let the sloth choose for you.",
+    "saboresNota": "This doesn't place the order: tell the flavour to whoever takes it.",
+    "fecho": {
+      "nome": "Questions?",
+      "facto": "If you would like to know what is in a dish or a drink, or which allergens it has, ask at the bar.",
+      "topo": "Back to top",
+      "inicio": "About the place"
     }
   },
   "contactos": {

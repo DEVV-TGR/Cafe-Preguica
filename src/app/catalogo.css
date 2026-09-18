@@ -1,0 +1,1297 @@
+/* ===========================================================================
+   A PÁGINA INICIAL — gramática de catálogo
+
+   Objectos numa colecção que se percorre. Rótulos de museu, não texto de venda.
+   A gramática está em `scrollcraft/builds/preguica-inicio/BRIEF.md` e nas
+   referências da skill; o que interessa aqui é a consequência prática:
+
+   **Todos os objectos levam o mesmo esquema de rótulo, sem excepção.** Nome,
+   composição em factos, e um dado (preço, horário, número). É o esquema que
+   faz disto uma colecção em vez de uma grelha de cartões, e por isso não há
+   um objecto "especial" com um rótulo diferente.
+
+   ⚠️ Nada aqui redefine `.sc-stage`, `.sc-copy` nem nenhum `[data-sc-*]`.
+   Esses são o mecanismo e vivem em `catalogo-motor.css`.
+   =========================================================================== */
+
+/* ---------------------------------------------------- o movimento de assinatura
+   A preguiça que se atrasa. A lógica está em `components/catalogo/Preguica.tsx`;
+   aqui só vive a forma. Ela escreve `--y`, `--balanco` e `--esticao`. */
+
+.pg-preguica {
+  position: fixed;
+  top: 0;
+  right: clamp(0.25rem, 2vw, 3rem);
+  z-index: 30;
+  pointer-events: none;
+  width: var(--pg-preguica-w, 64px);
+}
+
+.pg-preguica__fio {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  /* Altura fixa e `scaleY` por cima: animar `height` obrigava o browser a
+     refazer o layout a cada frame. Uma transformação não toca no layout. */
+  height: 100vh;
+  transform-origin: top center;
+  transform: translateX(-50%) scaleY(calc(var(--fio, 0px) / 100vh));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklab, var(--color-ouro) 55%, transparent)
+  );
+}
+
+.pg-preguica__corpo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* `--y` é o que o loop escreve. A rotação sai do balanço e o alongamento do
+     esticão; as duas numa transformação só, para não haver duas camadas. */
+  transform: translateY(calc(var(--y, 0px) - 18%)) rotate(var(--balanco, 0deg))
+    scaleY(var(--esticao, 1));
+  transform-origin: 30% 12%;
+  will-change: transform;
+}
+
+.pg-preguica__corpo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Uma sombra com desvio e desfocagem, não um halo colorido a zero — ver a
+     lista de recusas do `taste.md`. Serve para ela se descolar das fotografias
+     escuras por baixo. */
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.55));
+}
+
+@media (min-width: 48rem) {
+  .pg-preguica {
+    --pg-preguica-w: 108px;
+  }
+}
+
+/* ------------------------------------------------------------------ a barra
+   A navegação desta gramática é um **índice de objectos que salta**, não um
+   menu de páginas. Diz o que a colecção tem e leva lá. */
+
+.pg-barra {
+  position: sticky;
+  top: 0;
+  /* Altura fixa porque o herói a desconta: ver `.pg-heroi`. */
+  box-sizing: border-box;
+  height: 4rem;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem clamp(1rem, 4vw, 3rem);
+  background: color-mix(in oklab, var(--color-canvas) 82%, transparent);
+  backdrop-filter: blur(12px);
+  /* Um fio dourado em vez de uma linha cinzenta. É a diferença entre uma barra
+     que podia ser de qualquer site e uma que é desta casa. */
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ouro) 28%, transparent);
+}
+
+.pg-barra__marca {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.pg-barra__marca img {
+  /* O logótipo tem o nome e a preguiça lado a lado, portanto é largo e baixo:
+     a altura é que manda, não a largura. */
+  height: clamp(1.6rem, 3.6vw, 2.2rem);
+  width: auto;
+}
+
+.pg-indice {
+  display: none;
+  gap: 1.1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.pg-indice a:hover,
+.pg-indice a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+@media (min-width: 60rem) {
+  .pg-indice {
+    display: flex;
+  }
+}
+
+/* A acção, uma só, com o mesmo rótulo em toda a página. */
+.pg-acao {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-acao:hover,
+.pg-acao:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ------------------------------------------------------------- o rótulo
+   O esquema. Igual em todos os objectos, e é isso que o torna uma colecção. */
+
+.pg-rotulo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 34ch;
+}
+
+.pg-rotulo__nome {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4.4vw, 3.2rem);
+  line-height: 1.04;
+  /* O tracking aperta à medida que o corpo cresce: correcção óptica, não
+     decoração. */
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.pg-rotulo__facto {
+  color: var(--color-tinta-suave);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.pg-rotulo__dado {
+  margin-top: 0.15rem;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+/* ------------------------------------------------------------- os objectos */
+
+.pg-objeto {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  /* Apertado em cima e generoso nos limites entre objectos, não um valor
+     repetido — o ritmo vem do contraste. Desceu de 9vh depois de ver nos
+     screenshots que a metade de baixo da página era mais preto do que coisas. */
+  padding-block: clamp(2.5rem, 6.5vh, 5.5rem);
+  padding-inline: clamp(1rem, 5vw, 4rem);
+  /* Espaço à direita para a preguiça não passar por cima do texto. */
+  padding-inline-end: clamp(5rem, 12vw, 10rem);
+}
+
+@media (min-width: 52rem) {
+  .pg-objeto--duplo {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pg-objeto--trailing .pg-rotulo {
+    order: 2;
+  }
+}
+
+.pg-objeto figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.pg-objeto img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ----------------------------------------------------------------- o carril
+   O pico da página. `pan` é a espinha desta gramática, e o motor mede o
+   `scrollWidth` e viaja exactamente o excesso.
+
+   ⚠️ O primeiro e o último item do carril são o cabeçalho e a nota de fecho,
+   e não é enfeite: sem eles o carril podia ficar **mais estreito que o ecrã**
+   num monitor grande, viajar zero, e transformar três alturas de rolagem numa
+   imagem parada. A verificação está em `verificar-carril` no README. */
+
+.pg-carril {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+  padding-inline: clamp(1rem, 5vw, 4rem);
+}
+
+.pg-carril__item {
+  flex: 0 0 auto;
+  width: clamp(15rem, 62vw, 23rem);
+}
+
+.pg-carril__abertura,
+.pg-carril__fecho {
+  flex: 0 0 auto;
+  width: clamp(16rem, 70vw, 26rem);
+  align-self: center;
+}
+
+.pg-carril__item figure {
+  margin: 0 0 1rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--color-superficie);
+}
+
+.pg-carril__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ------------------------------------------------------- o seletor de sabores
+   O único sítio da página que responde ao ponteiro em vez da rolagem. */
+
+.pg-sabores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 44ch;
+}
+
+.pg-sabor {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  color: var(--color-tinta-suave);
+  background: none;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+}
+
+.pg-sabor:hover {
+  color: var(--color-tinta);
+  border-color: color-mix(in oklab, var(--color-ouro) 45%, transparent);
+}
+
+.pg-sabor[aria-pressed="true"] {
+  background: var(--color-ouro);
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.pg-sabor-escolhido {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-ouro-claro);
+}
+
+/* ------------------------------------------------------------------- a placa
+   O fecho. Tipografado **exactamente como um rótulo**, para o pedido ler como
+   parte da colecção e não como um banner colado no fim. */
+
+.pg-placa {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 52ch;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 5vw, 3rem);
+  border: 1px solid var(--color-linha);
+  background: var(--color-superficie);
+}
+
+.pg-placa dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.pg-placa dt {
+  color: var(--color-tinta-suave);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  align-self: baseline;
+}
+
+.pg-placa dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-placa__telefone {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  color: var(--color-ouro-claro);
+  letter-spacing: -0.01em;
+}
+
+.pg-nota {
+  font-size: 0.82rem;
+  color: var(--color-tinta-suave);
+  max-width: 46ch;
+}
+
+/* ------------------------------------------------------- movimento reduzido
+   O motor já faz o essencial: com a preferência ligada devolve o carril como
+   uma região de rolagem horizontal normal, para os cocktails não ficarem
+   inalcançáveis. É o chão dele, e o próprio comentário do motor diz que uma
+   build que prefira redesenhar o carril como grelha o pode fazer.
+
+   ⚠️ **Esta faz, e a razão foi medida.** Sem isto, a secção do carril mantinha
+   os 3,4 ecrãs de altura que o movimento precisa — e sem movimento nenhum para
+   os preencher. A verificação acusou-o com todas as letras:
+
+     DEAD SCROLL between: 26% -> 31% (pan > pan), 31% -> 37%, ... 48% -> 53%
+
+   Ou seja: metade da página a rolar sobre uma imagem parada. Quem liga
+   "reduzir movimento" fá-lo muitas vezes por enjoo ou por vertigem, e obrigar
+   essa pessoa a arrastar um carril de lado para ver o conteúdo é trocar um
+   problema por outro.
+
+   Aqui o carril passa a quebrar em linhas e a secção encolhe até ao conteúdo. A
+   página fica a ler-se de cima a baixo, na ordem do documento, sem nada
+   escondido e sem um único gesto novo para aprender. */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sc-act="pan"] {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  [data-sc-act="pan"] [data-sc-stage] {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .pg-carril {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  /* Em grelha, a abertura e o fecho deixam de ser "mais um cartão" e voltam a
+     ser o que são: o título da secção e a nota final. */
+  .pg-carril__abertura,
+  .pg-carril__fecho {
+    flex-basis: 100%;
+    max-width: 52ch;
+  }
+}
+
+/* ------------------------------------------------- correcções vistas a olho
+   Duas coisas que só apareceram nos screenshots, e nenhuma delas seria apanhada
+   por um relatório automático. */
+
+/* 1 · A barra é `sticky`, portanto um salto do índice punha o título do objecto
+       **por baixo dela**. O `scroll-margin-top` reserva a altura da barra no
+       destino do salto. Sem isto, carregar em "Os cocktails" levava a um ecrã
+       onde a primeira linha estava tapada. */
+[id="casa"],
+[id="carril"],
+[id="reels"],
+[id="partilhar"],
+[id="porta"] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* 2 · No telemóvel, o horário em duas colunas dava sete linhas de "Segunda
+       15:30–" partidas a meio. Abaixo de 30rem passa a uma coluna, com o rótulo
+       por cima — que é como se lê um horário em papel de qualquer maneira. */
+@media (max-width: 30rem) {
+  .pg-placa dl {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .pg-placa dt {
+    margin-top: 0.75rem;
+  }
+
+  .pg-placa dt:first-of-type {
+    margin-top: 0;
+  }
+}
+
+
+/* ============================================================== O HERÓI ===== */
+
+.pg-heroi {
+  position: relative;
+  /* O ecrã **menos a barra**. A barra é `sticky` e ocupa lugar no fluxo, por
+     isso o herói começa 4rem abaixo do topo; com `100svh` inteiros, os últimos
+     4rem — onde estão os botões de reservar e da ementa — ficavam abaixo da
+     dobra. */
+  min-height: calc(100svh - 4rem);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  /* O fundo é o chão da página e não preto: enquanto a fotografia carrega, o
+     que se vê é a casa e não um buraco. */
+  background: var(--color-canvas);
+}
+
+.pg-heroi__foto {
+  position: absolute;
+  inset: -6% 0;
+  z-index: 0;
+}
+
+.pg-heroi__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* ⚠️ Puxa para **baixo do meio**, não para cima. A árvore em flor está no
+     topo do original e a tentação é enquadrá-la — mas o assunto é a casa, e com
+     `35%` a fachada ficava cortada fora do ecrã num monitor largo. Assim
+     apanha-se o edifício inteiro e as flores continuam a entrar por cima. */
+  object-position: 50% 50%;
+}
+
+/**
+ * O véu.
+ *
+ * ⚠️ **Não é uma cortina sobre a fotografia toda** — é um gradiente que sobe do
+ * fundo e morre a meia altura. A alternativa fácil, escurecer a imagem inteira,
+ * dava contraste ao texto e matava o céu azul e a árvore em flor, que são a
+ * única razão para esta fotografia estar aqui.
+ */
+.pg-heroi__veu {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    var(--color-canvas) 0%,
+    color-mix(in oklab, var(--color-canvas) 88%, transparent) 22%,
+    color-mix(in oklab, var(--color-canvas) 45%, transparent) 46%,
+    transparent 68%
+  );
+}
+
+.pg-heroi__texto {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: clamp(2rem, 7vh, 5rem) clamp(1.25rem, 6vw, 5rem);
+  padding-inline-end: clamp(5rem, 14vw, 12rem);
+  max-width: 46rem;
+}
+
+.pg-heroi__marca {
+  margin: 0;
+}
+
+.pg-heroi__marca img {
+  width: clamp(16rem, 40vw, 30rem);
+  height: auto;
+  filter: drop-shadow(0 4px 24px rgb(0 0 0 / 0.6));
+}
+
+.pg-heroi__onde {
+  font-size: clamp(0.82rem, 1.4vw, 0.95rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pg-heroi__linha {
+  font-size: clamp(1.15rem, 2.8vw, 1.6rem);
+  line-height: 1.5;
+  max-width: 30ch;
+  text-wrap: pretty;
+}
+
+/* ================================================================ O BOTÃO === */
+
+/* A acção, com a mesma forma em toda a página. */
+.pg-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--color-ouro);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.pg-botao:hover,
+.pg-botao:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* O botão cheio: a acção principal de cada ecrã (hoje, reservar). */
+.pg-botao--cheio {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+  font-weight: 600;
+}
+
+.pg-botao--cheio:hover,
+.pg-botao--cheio:focus-visible {
+  background: var(--color-ouro-claro);
+  border-color: var(--color-ouro-claro);
+  color: var(--color-ouro-tinta);
+}
+
+.pg-heroi__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ================================================================= A CASA === */
+
+/* Como a porta do Damira: o texto à esquerda, a fotografia ao lado em
+   paisagem, **da altura do bloco de texto e pouco mais**. Primeiro foi um
+   retrato de ecrã inteiro, depois uma faixa baixa de mais — o ponto certo é o
+   do meio. */
+.pg-casa {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  padding-block: clamp(3.5rem, 10vh, 6.5rem);
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+  padding-inline-end: clamp(5rem, 12vw, 10rem);
+}
+
+.pg-casa .pg-rotulo__nome {
+  font-size: clamp(2.2rem, 5.2vw, 4rem);
+}
+
+.pg-casa figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.pg-casa img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  max-height: 62vh;
+  object-fit: cover;
+  /* A fotografia original é em retrato; o recorte fica na carta e na parede
+     de granito por trás dela. */
+  object-position: 50% 45%;
+  display: block;
+}
+
+@media (min-width: 52rem) {
+  .pg-casa {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+}
+
+/* ================================================================ OS REELS == */
+
+.pg-reels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+  /* Menos margem à direita do que os outros actos: aqui não há texto corrido a
+     ser tapado pela preguiça, e as celas ganham a largura. */
+  padding-inline-end: clamp(4rem, 8vw, 7rem);
+}
+
+/* Cabeçalho a toda a largura: título e frase à esquerda, o botão do perfil à
+   direita. */
+.pg-reels__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.pg-rotulo--largo {
+  max-width: 70ch;
+}
+
+@media (min-width: 52rem) {
+  .pg-rotulo--largo .pg-rotulo__nome {
+    white-space: nowrap;
+  }
+}
+
+.pg-icone {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+.pg-botao__conta {
+  opacity: 0.75;
+}
+
+.pg-reels__grelha {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 60rem) {
+  .pg-reels__grelha {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Cada cela lê-se como um reel do feed: cantos de ecrã de telemóvel, etiqueta
+   em cima, botão de reprodução ao meio e a legenda por cima da imagem. */
+.pg-reel {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--color-linha);
+}
+
+.pg-reel img {
+  width: 100%;
+  /* 9:16, que é o formato em que foram filmados. */
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  display: block;
+  transition: transform 420ms var(--sc-ease-out, ease), filter 320ms ease;
+}
+
+.pg-reel:hover img,
+.pg-reel:focus-visible img {
+  transform: scale(1.04);
+  filter: brightness(1.1);
+}
+
+/* O degradê só em baixo, onde a legenda assenta — o resto da capa fica como
+   foi filmado. */
+.pg-reel::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.78), transparent);
+  pointer-events: none;
+}
+
+.pg-reel__etiqueta {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem 0.2rem 0.35rem;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.5);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.pg-reel__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: clamp(2.4rem, 4vw, 3.2rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.38);
+  border: 1.5px solid rgb(255 255 255 / 0.85);
+  color: #fff;
+  transform: translate(-50%, -50%);
+  transition: transform 260ms var(--sc-ease-out, ease), background-color 260ms ease;
+}
+
+.pg-reel__play .pg-icone {
+  width: 45%;
+  height: 45%;
+  margin-left: 8%;
+}
+
+.pg-reel:hover .pg-reel__play,
+.pg-reel:focus-visible .pg-reel__play {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.pg-reel__legenda {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding: 0 0.6rem 0.6rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: #fff;
+}
+
+/* No telemóvel as celas têm pouco mais de cem píxeis: a legenda por cima
+   tapava a capa toda e a etiqueta chocava com o botão. Fica só o ícone, e a
+   legenda continua no `alt` da imagem. */
+@media (max-width: 39.99rem) {
+  .pg-reel__legenda {
+    display: none;
+  }
+  .pg-reel__etiqueta {
+    padding: 0.25rem;
+    font-size: 0;
+  }
+  .pg-reel__etiqueta .pg-icone {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}
+
+/* ============================================================== OS PRATOS === */
+
+.pg-pratos {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+
+/**
+ * ⚠️ **A largura é o que distingue isto do carril dos cocktails.**
+ *
+ * Lá os cartões têm 23rem e vêem-se três ao mesmo tempo, porque o que interessa
+ * é a variedade. Aqui cada painel ocupa quase o ecrã inteiro, e por isso entra
+ * um, sai um, entra o seguinte — que foi o que o cliente descreveu.
+ */
+.pg-prato {
+  flex: 0 0 auto;
+  width: min(72rem, 86vw);
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: center;
+}
+
+@media (min-width: 52rem) {
+  .pg-prato {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+}
+
+.pg-prato figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--color-superficie);
+}
+
+.pg-prato img {
+  width: 100%;
+  height: auto;
+  max-height: 62vh;
+  object-fit: cover;
+  display: block;
+}
+
+.pg-prato__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 34ch;
+}
+
+.pg-prato__preco {
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1;
+  color: var(--color-ouro-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-pratos__abertura,
+.pg-pratos__fecho {
+  flex: 0 0 auto;
+  width: min(30rem, 78vw);
+}
+
+/* ========================================================== OS PREGUIÇOSOS == */
+
+/* O palco do `pin`: a nota ao centro e os lugares à volta, num ecrã só.
+   ⚠️ Sem `height` aqui — a altura do palco é do motor (um ecrã). Um
+   `height: 100%` fazia-o crescer até à altura do acto inteiro, e as citações
+   ficavam fora do ecrã com a secção vazia à vista. */
+.pg-preguicosos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1rem, 3vh, 1.75rem);
+  padding: calc(64px + clamp(0.5rem, 2vh, 1.5rem)) clamp(1.25rem, 5vw, 4rem) clamp(1rem, 3vh, 2rem);
+}
+
+.pg-preguicosos__centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.pg-preguicosos__titulo {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.pg-preguicosos__numero {
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 11vh, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--color-ouro-claro);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pg-preguicosos__de {
+  margin-left: 0.3rem;
+  font-size: 0.32em;
+  letter-spacing: 0;
+  color: var(--color-tinta-suave);
+}
+
+.pg-preguicosos__facto {
+  max-width: 26ch;
+  margin-block: 0.4rem 0.6rem;
+  color: var(--color-tinta-suave);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pg-estrelas {
+  display: inline-flex;
+  gap: 0.2rem;
+  color: var(--color-ouro);
+  font-size: 1.25rem;
+}
+
+.pg-preguicosos__lugares {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada lugar empilha as suas citações na mesma célula: uma sai, a seguinte
+   entra no mesmo sítio. */
+.pg-lugar {
+  display: grid;
+}
+
+.pg-lugar__vez {
+  grid-area: 1 / 1;
+  position: relative;
+}
+
+.pg-lugar__vez:nth-child(2) { z-index: 1; }
+.pg-lugar__vez:nth-child(3) { z-index: 2; }
+.pg-lugar__vez:nth-child(4) { z-index: 3; }
+
+.pg-bilhete {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.9rem;
+  height: 100%;
+  margin: 0;
+  padding: clamp(1.4rem, 3vh, 1.9rem) clamp(1.1rem, 1.5vw, 1.5rem) clamp(0.9rem, 2vh, 1.2rem);
+  border: 1px solid var(--color-linha);
+  border-radius: 4px;
+  background: var(--color-superficie);
+  box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.9);
+}
+
+/* As aspas grandes em ouro fazem disto uma citação antes de se ler uma
+   palavra. */
+.pg-bilhete::before {
+  content: "“";
+  position: absolute;
+  top: -0.12em;
+  left: 0.7rem;
+  font-family: var(--font-display);
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--color-ouro);
+}
+
+.pg-bilhete blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: min(1.08rem, 2.2vh);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.pg-bilhete__autor {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+/* A primeira citação em ouro cheio: o olho precisa de um sítio por onde
+   começar. */
+.pg-bilhete--destaque {
+  background: var(--color-ouro);
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.pg-bilhete--destaque::before,
+.pg-bilhete--destaque .pg-bilhete__autor {
+  color: var(--color-ouro-tinta);
+}
+
+/* --- ecrã largo: quatro lugares à volta da nota --- */
+
+.pg-preguicosos__lugares--estreito {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .pg-preguicosos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.8fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 1fr;
+    align-items: center;
+    column-gap: clamp(1.5rem, 3vw, 3rem);
+    row-gap: clamp(1rem, 3vh, 2rem);
+    padding-inline-end: clamp(5rem, 9vw, 8rem);
+  }
+
+  .pg-preguicosos__centro {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  /* A lista desfaz-se e os lugares passam a ser células da grelha do palco. */
+  .pg-preguicosos__lugares--largo {
+    display: contents;
+  }
+
+  /* Espalhados, não alinhados: cada lugar com a sua inclinação, a sua
+     largura e o seu desvio, como papéis deixados numa mesa. O `nth` e não
+     valores aleatórios, para a página ser igual em todas as visitas. */
+  .pg-lugar {
+    width: min(100%, 22rem);
+  }
+
+  .pg-lugar--0 { grid-column: 1; grid-row: 1; justify-self: end; align-self: end; rotate: -2.2deg; translate: 0 -0.5rem; }
+  .pg-lugar--1 { grid-column: 3; grid-row: 1; justify-self: start; align-self: start; rotate: 1.6deg; translate: 0 1.5rem; }
+  .pg-lugar--2 { grid-column: 1; grid-row: 2; justify-self: start; align-self: start; rotate: 1.2deg; translate: 0 0.75rem; }
+  .pg-lugar--3 { grid-column: 3; grid-row: 2; justify-self: end; align-self: end; rotate: -1.4deg; translate: 0 -0.5rem; }
+}
+
+/* --- telemóvel e tablet: a nota em cima, dois lugares por baixo --- */
+
+@media (max-width: 63.99rem) {
+  .pg-preguicosos {
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  /* A nota numa linha com as estrelas, para sobrar ecrã para as citações. */
+  .pg-preguicosos__centro {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1rem;
+    row-gap: 0.25rem;
+  }
+
+  .pg-preguicosos__titulo {
+    grid-column: 1 / -1;
+  }
+
+  .pg-preguicosos__numero {
+    grid-row: 2 / 4;
+    font-size: 3.2rem;
+  }
+
+  .pg-preguicosos__centro .pg-rotulo__dado {
+    margin: 0;
+    font-size: 0.72rem;
+  }
+
+  .pg-preguicosos__facto,
+  .pg-preguicosos__centro > p:last-child {
+    display: none;
+  }
+
+  .pg-preguicosos__lugares--largo {
+    display: none;
+  }
+
+  .pg-preguicosos__lugares--estreito {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .pg-lugar--0 { rotate: -1.4deg; width: 94%; }
+  .pg-lugar--1 { rotate: 1.2deg; width: 94%; justify-self: end; }
+
+  .pg-bilhete blockquote {
+    font-size: 1rem;
+  }
+}
+
+/* ========================================================== ONDE ESTAMOS == */
+
+/* O mapa de margem a margem, e o cartão com a morada e o horário por cima,
+   do lado esquerdo. O alfinete fica a 64% da largura — o mesmo valor que
+   `POSICAO_CASA` em `scripts/desenhar-mapa.mjs`, para cair em cima da casa. */
+.pg-onde {
+  position: relative;
+  display: grid;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pg-onde__mapa {
+  position: relative;
+  overflow: hidden;
+  height: clamp(18rem, 45vh, 26rem);
+  background: #0d0906;
+}
+
+.pg-onde__mapa > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* O mapa recorta-se conforme o ecrã, e o recorte centra-se na casa e não
+     no meio do desenho: com `64%` aqui, a casa cai sempre a 64% da largura
+     visível, qualquer que seja a proporção — e é aí que está o alfinete. */
+  object-position: 64% 50%;
+  display: block;
+}
+
+/* A preguiça do logótipo faz de alfinete, com um halo a pulsar devagar —
+   devagar, como tudo o que ela faz. */
+.pg-onde__alfinete {
+  position: absolute;
+  left: 64%;
+  top: 50%;
+  width: clamp(3.2rem, 5vw, 4.5rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-canvas);
+  border: 2px solid var(--color-ouro);
+  translate: -50% -50%;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  animation: pg-halo 3.2s ease-out infinite;
+}
+
+.pg-onde__alfinete img {
+  width: 78%;
+  height: auto;
+}
+
+@keyframes pg-halo {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-ouro) 50%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 1.6rem transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-onde__alfinete { animation: none; }
+}
+
+.pg-onde__credito {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__credito a:hover,
+.pg-onde__credito a:focus-visible {
+  color: var(--color-tinta);
+  text-decoration: underline;
+}
+
+.pg-onde__cartao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: var(--color-superficie);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 40%, transparent);
+}
+
+.pg-onde__olho {
+  margin-top: 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pg-onde__olho:first-child {
+  margin-top: 0;
+}
+
+.pg-onde__nome {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.pg-onde__morada {
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__contactos {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 1.05rem;
+}
+
+.pg-onde__contactos a:hover,
+.pg-onde__contactos a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+.pg-onde__custo {
+  font-size: 0.78rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__horario {
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  width: min(19rem, 100%);
+  font-size: 0.95rem;
+}
+
+.pg-onde__horario li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-onde__horario li span:first-child {
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+/* Ecrã largo: o mapa ocupa a secção inteira e o cartão flutua por cima, à
+   esquerda — como no exemplo que o cliente mandou. */
+@media (min-width: 52rem) {
+  .pg-onde__mapa {
+    grid-area: 1 / 1;
+    height: clamp(36rem, 88vh, 48rem);
+  }
+
+  .pg-onde__cartao {
+    grid-area: 1 / 1;
+    align-self: center;
+    justify-self: start;
+    z-index: 1;
+    width: min(26rem, 40vw);
+    margin-inline-start: clamp(1.5rem, 6vw, 6rem);
+    border: 1px solid color-mix(in oklab, var(--color-ouro) 35%, transparent);
+    border-radius: 6px;
+    background: color-mix(in oklab, var(--color-superficie) 94%, transparent);
+    box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.85);
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* =============================================================== O RODAPÉ === */
+
+.pg-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding: 1.5rem clamp(1.25rem, 6vw, 5rem);
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 20%, transparent);
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-rodape nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.pg-rodape a:hover,
+.pg-rodape a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+/* ===================================================== O PALCO CENTRADO ===== */
+
+/**
+ * ⚠️ **O palco do motor é um bloco de 100vh sem centragem nenhuma**, portanto o
+ * que estiver lá dentro encosta ao topo do ecrã. Era o que fazia os cartões dos
+ * cocktails ficarem colados à barra, com meio ecrã de preto por baixo.
+ *
+ * Duas linhas resolvem, e ficam aqui e não no motor porque o motor não se toca:
+ * a centragem é decisão desta página e não do mecanismo.
+ *
+ * Vale para os dois carris — os cocktails e os pratos. A secção dos reels não
+ * precisa: lá o palco é o próprio elemento, e já se centra a si próprio.
+ */
+[data-sc-act="pan"] .sc-stage,
+[data-sc-act="pan"] [data-sc-stage] {
+  display: grid;
+  align-content: center;
+}

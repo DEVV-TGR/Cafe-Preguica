@@ -2,208 +2,1605 @@
   "confirmada": false,
   "artigos": [
     {
-      "id": "pequeno-almoco-simples",
-      "categoria": "pequenos-almocos",
+      "id": "queijo-fiambre",
+      "categoria": "tostas-e-snacks",
       "nome": {
-        "pt": "Pequeno-almoço simples",
-        "en": "Simple breakfast"
+        "pt": "Queijo & fiambre",
+        "en": "Cheese & ham"
       },
-      "descricao": {
-        "pt": "Café, sumo natural e torrada com manteiga.",
-        "en": "Coffee, fresh juice and buttered toast."
+      "descricao": null,
+      "preco": 3.9,
+      "precoSecundario": 3.5,
+      "alergenios": []
+    },
+    {
+      "id": "presunto-queijo",
+      "categoria": "tostas-e-snacks",
+      "nome": {
+        "pt": "Presunto & queijo",
+        "en": "Cured ham & cheese"
       },
+      "descricao": null,
+      "preco": 4.6,
+      "precoSecundario": 3.9,
+      "alergenios": []
+    },
+    {
+      "id": "pasta-de-atum-e-queijo",
+      "categoria": "tostas-e-snacks",
+      "nome": {
+        "pt": "Pasta de atum e queijo",
+        "en": "Tuna pâté & cheese"
+      },
+      "descricao": null,
       "preco": 4.5,
+      "precoSecundario": 3.8,
       "alergenios": []
     },
     {
-      "id": "pequeno-almoco-completo",
-      "categoria": "pequenos-almocos",
+      "id": "cachorro-xl",
+      "categoria": "tostas-e-snacks",
       "nome": {
-        "pt": "Pequeno-almoço completo",
-        "en": "Full breakfast"
-      },
-      "descricao": {
-        "pt": "Café, sumo natural, tosta mista e uma peça de fruta.",
-        "en": "Coffee, fresh juice, ham and cheese toastie and a piece of fruit."
-      },
-      "preco": 7.0,
-      "alergenios": []
-    },
-    {
-      "id": "cafe",
-      "categoria": "cafetaria",
-      "nome": {
-        "pt": "Café",
-        "en": "Espresso"
+        "pt": "Cachorro XL",
+        "en": "XL hot dog"
       },
       "descricao": null,
-      "preco": 0.8,
-      "alergenios": []
-    },
-    {
-      "id": "galao",
-      "categoria": "cafetaria",
-      "nome": {
-        "pt": "Galão",
-        "en": "Galão (coffee with milk)"
-      },
-      "descricao": null,
-      "preco": 1.4,
-      "alergenios": []
-    },
-    {
-      "id": "cha",
-      "categoria": "cafetaria",
-      "nome": {
-        "pt": "Chá",
-        "en": "Tea"
-      },
-      "descricao": null,
-      "preco": 1.2,
-      "alergenios": []
-    },
-    {
-      "id": "pastel-de-nata",
-      "categoria": "padaria-pastelaria",
-      "nome": {
-        "pt": "Pastel de nata",
-        "en": "Custard tart"
-      },
-      "descricao": null,
-      "preco": 1.3,
+      "preco": 5.8,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
       "id": "torrada",
-      "categoria": "padaria-pastelaria",
+      "categoria": "tostas-e-snacks",
       "nome": {
-        "pt": "Torrada com manteiga",
-        "en": "Buttered toast"
+        "pt": "Torrada",
+        "en": "Toast"
       },
       "descricao": null,
-      "preco": 1.6,
-      "alergenios": []
-    },
-    {
-      "id": "rissol-de-carne",
-      "categoria": "salgados",
-      "nome": {
-        "pt": "Rissol de carne",
-        "en": "Meat rissole"
-      },
-      "descricao": null,
-      "preco": 1.5,
-      "alergenios": []
-    },
-    {
-      "id": "pastel-de-bacalhau",
-      "categoria": "salgados",
-      "nome": {
-        "pt": "Pastel de bacalhau",
-        "en": "Codfish cake"
-      },
-      "descricao": null,
-      "preco": 1.5,
-      "alergenios": []
-    },
-    {
-      "id": "tosta-mista",
-      "categoria": "sandes-e-tostas",
-      "nome": {
-        "pt": "Tosta mista",
-        "en": "Ham and cheese toastie"
-      },
-      "descricao": {
-        "pt": "Fiambre e queijo em pão de forma.",
-        "en": "Ham and cheese on sliced bread."
-      },
       "preco": 3.2,
+      "precoSecundario": 2.6,
       "alergenios": []
     },
     {
-      "id": "sande-de-queijo",
-      "categoria": "sandes-e-tostas",
+      "id": "torrada-com-compota",
+      "categoria": "tostas-e-snacks",
       "nome": {
-        "pt": "Sande de queijo",
-        "en": "Cheese sandwich"
+        "pt": "Torrada com compota",
+        "en": "Toast with jam"
+      },
+      "descricao": null,
+      "preco": 3.5,
+      "precoSecundario": 2.9,
+      "alergenios": []
+    },
+    {
+      "id": "tabua-mista",
+      "categoria": "tabuas",
+      "nome": {
+        "pt": "Tábua mista",
+        "en": "Mixed board"
       },
       "descricao": {
-        "pt": "Em pão da casa.",
-        "en": "On house bread."
+        "pt": "Fuet, queijo da ilha, presunto e cesto de pão. Com compota e extra presunto, 10,60 €.",
+        "en": "Fuet, island cheese, cured ham and a bread basket. With jam and extra ham, €10.60."
       },
-      "preco": 2.8,
+      "preco": 7.8,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
-      "id": "prato-do-dia",
-      "categoria": "pratos-do-dia",
+      "id": "tabua-preguica",
+      "categoria": "tabuas",
       "nome": {
-        "pt": "Prato do dia",
-        "en": "Dish of the day"
+        "pt": "Tábua Preguiça",
+        "en": "Preguiça board"
       },
       "descricao": {
-        "pt": "Muda todos os dias. Pergunte ao balcão.",
-        "en": "Changes daily. Ask at the counter."
+        "pt": "Fuet, queijo da ilha, presunto, bocadinhos de pão com chouriço e queijo, cesto de pão e crackers. Com compota e extra presunto, 15,80 €.",
+        "en": "Fuet, island cheese, cured ham, bread pieces with chouriço and cheese, bread basket and crackers. With jam and extra ham, €15.80."
       },
-      "preco": null,
+      "preco": 13.5,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
-      "id": "sopa",
-      "categoria": "pratos-do-dia",
+      "id": "preguicinhas-com-queijo",
+      "categoria": "tabuas",
       "nome": {
-        "pt": "Sopa",
-        "en": "Soup"
+        "pt": "Preguiçinhas com queijo",
+        "en": "Preguiçinhas with cheese"
       },
       "descricao": {
-        "pt": "Sopa do dia, feita na casa.",
-        "en": "Soup of the day, made in house."
+        "pt": "Vinte e quatro tostinhas com chouriço e queijo.",
+        "en": "Twenty-four little toasts with chouriço and cheese."
       },
-      "preco": 2.0,
+      "preco": 5.8,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
-      "id": "sumo-natural",
-      "categoria": "bebidas-frias",
+      "id": "bocadinhos-de-pao-com-chourico",
+      "categoria": "tabuas",
       "nome": {
-        "pt": "Sumo natural de laranja",
-        "en": "Fresh orange juice"
+        "pt": "Bocadinhos de pão com chouriço",
+        "en": "Bread pieces with chouriço"
+      },
+      "descricao": {
+        "pt": "Pedaços de pão com chouriço, taça de batata e tabasco. Com queijo, 6,20 €.",
+        "en": "Bread pieces with chouriço, a bowl of crisps and tabasco. With cheese, €6.20."
+      },
+      "preco": 5.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "amendoins-com-sal",
+      "categoria": "tacas",
+      "nome": {
+        "pt": "Amendoins com sal",
+        "en": "Salted peanuts"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "milho-frito",
+      "categoria": "tacas",
+      "nome": {
+        "pt": "Milho frito",
+        "en": "Fried corn"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "mix-milho-e-amendoins",
+      "categoria": "tacas",
+      "nome": {
+        "pt": "Mix milho e amendoins",
+        "en": "Corn and peanut mix"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "taca-grande-de-batata",
+      "categoria": "tacas",
+      "nome": {
+        "pt": "Taça grande de batata",
+        "en": "Large bowl of crisps"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "petit-gateau-com-gelado-de-baunilha",
+      "categoria": "sobremesas",
+      "nome": {
+        "pt": "Petit gateau com gelado de baunilha",
+        "en": "Petit gateau with vanilla ice cream"
+      },
+      "descricao": null,
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "affogato-al-caffe-com-gelado-e-chantilly",
+      "categoria": "sobremesas",
+      "nome": {
+        "pt": "Affogato al caffè com gelado e chantilly",
+        "en": "Affogato al caffè with ice cream and cream"
+      },
+      "descricao": null,
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "mojito",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Mojito",
+        "en": "Mojito"
+      },
+      "descricao": {
+        "pt": "Rum, hortelã, açúcar, sumo de lima e água com gás.",
+        "en": "Rum, mint, sugar, lime juice and sparkling water."
+      },
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caipirinha",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Caipirinha",
+        "en": "Caipirinha"
+      },
+      "descricao": {
+        "pt": "Cachaça, sumo de lima e açúcar.",
+        "en": "Cachaça, lime juice and sugar."
+      },
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "aperol-spritz",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Aperol Spritz",
+        "en": "Aperol Spritz"
+      },
+      "descricao": {
+        "pt": "Aperol, espumante e água com gás.",
+        "en": "Aperol, sparkling wine and sparkling water."
+      },
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "blue-lagoon",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Blue Lagoon",
+        "en": "Blue Lagoon"
+      },
+      "descricao": {
+        "pt": "Vodka, blue curaçao, sprite e goma.",
+        "en": "Vodka, blue curaçao, sprite and gum syrup."
+      },
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "hurricane",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Hurricane",
+        "en": "Hurricane"
+      },
+      "descricao": {
+        "pt": "Rum, sumo de laranja, ananás e polpa de maracujá.",
+        "en": "Rum, orange juice, pineapple and passion fruit pulp."
+      },
+      "preco": 5.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "pina-colada",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Piña Colada",
+        "en": "Piña Colada"
+      },
+      "descricao": {
+        "pt": "Rum, coco e sumo de ananás.",
+        "en": "Rum, coconut and pineapple juice."
+      },
+      "preco": 5.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "margarita",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Margarita",
+        "en": "Margarita"
+      },
+      "descricao": {
+        "pt": "Tequila, sumo de lima e triple sec.",
+        "en": "Tequila, lime juice and triple sec."
+      },
+      "preco": 5.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caipi-maracuja",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Caipi maracujá",
+        "en": "Passion fruit caipi"
+      },
+      "descricao": {
+        "pt": "Cachaça, sumo de lima e polpa de maracujá.",
+        "en": "Cachaça, lime juice and passion fruit pulp."
+      },
+      "preco": 5.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "old-fashioned",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Old Fashioned",
+        "en": "Old Fashioned"
+      },
+      "descricao": {
+        "pt": "Bourbon, angostura bitters e açúcar branco.",
+        "en": "Bourbon, angostura bitters and white sugar."
+      },
+      "preco": 5.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "mojito-melancia",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Mojito melancia",
+        "en": "Watermelon mojito"
+      },
+      "descricao": {
+        "pt": "Rum, hortelã, açúcar, polpa de melancia, sumo de lima e água com gás.",
+        "en": "Rum, mint, sugar, watermelon pulp, lime juice and sparkling water."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "preguica-mule",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Preguiça Mule",
+        "en": "Preguiça Mule"
+      },
+      "descricao": {
+        "pt": "Gin Tanqueray, gengibre fresco, pepino, ginger ale e malagueta.",
+        "en": "Tanqueray gin, fresh ginger, cucumber, ginger ale and chilli."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "mexican-mule",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Mexican Mule",
+        "en": "Mexican Mule"
+      },
+      "descricao": {
+        "pt": "Tequila, gengibre fresco, ginger ale, xarope de agave, sumo de limão e açúcar.",
+        "en": "Tequila, fresh ginger, ginger ale, agave syrup, lemon juice and sugar."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "espresso-martini",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Espresso Martini",
+        "en": "Espresso Martini"
+      },
+      "descricao": {
+        "pt": "Vodka, licor de café, triple sec e café.",
+        "en": "Vodka, coffee liqueur, triple sec and espresso."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "negroni",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Negroni",
+        "en": "Negroni"
+      },
+      "descricao": {
+        "pt": "Tanqueray, Campari e Martini Rosso.",
+        "en": "Tanqueray, Campari and Martini Rosso."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "moscow-mule",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Moscow Mule",
+        "en": "Moscow Mule"
+      },
+      "descricao": {
+        "pt": "Vodka, gengibre fresco, sumo de limão, açúcar e ginger ale.",
+        "en": "Vodka, fresh ginger, lemon juice, sugar and ginger ale."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "tequila-sunrise",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Tequila Sunrise",
+        "en": "Tequila Sunrise"
+      },
+      "descricao": {
+        "pt": "Tequila, sumo de laranja natural e xarope de romã.",
+        "en": "Tequila, fresh orange juice and grenadine."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "mongolia-m-f",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Mongolia M. F.",
+        "en": "Mongolia M. F."
+      },
+      "descricao": {
+        "pt": "Gin, vodka, rum, whisky, tequila, triple sec, sumo de ananás, sumo de laranja, xarope de romã e sumo de limão.",
+        "en": "Gin, vodka, rum, whisky, tequila, triple sec, pineapple juice, orange juice, grenadine and lemon juice."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "long-island-ice-tea",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Long Island Ice Tea",
+        "en": "Long Island Ice Tea"
+      },
+      "descricao": {
+        "pt": "Gin, vodka, rum, tequila, triple sec, sumo de limão, açúcar e cola.",
+        "en": "Gin, vodka, rum, tequila, triple sec, lemon juice, sugar and cola."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "amaretto-sour",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Amaretto Sour",
+        "en": "Amaretto Sour"
+      },
+      "descricao": {
+        "pt": "Amaretto, clara de ovo, açúcar e sumo de limão.",
+        "en": "Amaretto, egg white, sugar and lemon juice."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cocktail-preguica",
+      "categoria": "cocktail-preguica",
+      "nome": {
+        "pt": "Cocktail Preguiça",
+        "en": "Cocktail Preguiça"
+      },
+      "descricao": {
+        "pt": "Gin, vodka e rum. Escolhe-se o sabor.",
+        "en": "Gin, vodka and rum. You pick the flavour."
+      },
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "unicornio",
+      "categoria": "cocktail-preguica",
+      "nome": {
+        "pt": "Unicórnio",
+        "en": "Unicorn"
+      },
+      "descricao": {
+        "pt": "Sem álcool. Escolhe-se o sabor.",
+        "en": "Alcohol free. You pick the flavour."
+      },
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "virgin-mojito",
+      "categoria": "mocktails",
+      "nome": {
+        "pt": "Virgin Mojito",
+        "en": "Virgin Mojito"
+      },
+      "descricao": {
+        "pt": "Sumo de lima, açúcar, hortelã e ginger ale.",
+        "en": "Lime juice, sugar, mint and ginger ale."
+      },
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "virgin-pina-colada",
+      "categoria": "mocktails",
+      "nome": {
+        "pt": "Virgin Piña Colada",
+        "en": "Virgin Piña Colada"
+      },
+      "descricao": {
+        "pt": "Sumo de ananás e polpa de coco.",
+        "en": "Pineapple juice and coconut pulp."
+      },
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "virgin-hurricane",
+      "categoria": "mocktails",
+      "nome": {
+        "pt": "Virgin Hurricane",
+        "en": "Virgin Hurricane"
+      },
+      "descricao": {
+        "pt": "Sumo de laranja natural, ananás e polpa de maracujá.",
+        "en": "Fresh orange juice, pineapple and passion fruit pulp."
+      },
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "virgin-blue-lagoon",
+      "categoria": "mocktails",
+      "nome": {
+        "pt": "Virgin Blue Lagoon",
+        "en": "Virgin Blue Lagoon"
+      },
+      "descricao": {
+        "pt": "Blue curaçao, sprite, sumo de limão fresco e goma.",
+        "en": "Blue curaçao, sprite, fresh lemon juice and gum syrup."
+      },
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "shirley-temple",
+      "categoria": "mocktails",
+      "nome": {
+        "pt": "Shirley Temple",
+        "en": "Shirley Temple"
+      },
+      "descricao": {
+        "pt": "Xarope de romã, 7up e sumo de limão.",
+        "en": "Grenadine, 7up and lemon juice."
+      },
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "vinho-branco",
+      "categoria": "sangrias-e-espumantes",
+      "nome": {
+        "pt": "Vinho branco",
+        "en": "White wine"
+      },
+      "descricao": {
+        "pt": "Pepino, canela e maçã. Garrafão de 1,75 l, 19,50 €.",
+        "en": "Cucumber, cinnamon and apple. 1.75 l jug, €19.50."
+      },
+      "preco": 5.4,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "espumante-preguica",
+      "categoria": "sangrias-e-espumantes",
+      "nome": {
+        "pt": "Espumante Preguiça",
+        "en": "Preguiça sparkling"
+      },
+      "descricao": {
+        "pt": "Maracujá e hortelã. Garrafão de 1,75 l, 21,80 €.",
+        "en": "Passion fruit and mint. 1.75 l jug, €21.80."
+      },
+      "preco": 5.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "espumante-frutos-vermelhos",
+      "categoria": "sangrias-e-espumantes",
+      "nome": {
+        "pt": "Espumante frutos vermelhos",
+        "en": "Red berry sparkling"
+      },
+      "descricao": {
+        "pt": "Frutos vermelhos e canela. Garrafão de 1,75 l, 21,80 €.",
+        "en": "Red berries and cinnamon. 1.75 l jug, €21.80."
+      },
+      "preco": 5.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "espumante-melancia",
+      "categoria": "sangrias-e-espumantes",
+      "nome": {
+        "pt": "Espumante melancia",
+        "en": "Watermelon sparkling"
+      },
+      "descricao": {
+        "pt": "Hortelã e limão. Garrafão de 1,75 l, 22,80 €.",
+        "en": "Mint and lemon. 1.75 l jug, €22.80."
+      },
+      "preco": 6.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-gordon-s",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Gordon's",
+        "en": "Gordon's"
+      },
+      "descricao": null,
+      "preco": 5.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-bulldog",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Bulldog",
+        "en": "Bulldog"
+      },
+      "descricao": null,
+      "preco": 7.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-hendrick-s",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Hendrick's",
+        "en": "Hendrick's"
+      },
+      "descricao": null,
+      "preco": 8.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-beefeater",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Beefeater",
+        "en": "Beefeater"
+      },
+      "descricao": null,
+      "preco": 6.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-nordes",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Nordés",
+        "en": "Nordés"
+      },
+      "descricao": null,
+      "preco": 8.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-martin-miller-s",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Martin Miller's",
+        "en": "Martin Miller's"
+      },
+      "descricao": null,
+      "preco": 8.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-puerto-de-indias-pink",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Puerto de Indias Pink",
+        "en": "Puerto de Indias Pink"
+      },
+      "descricao": null,
+      "preco": 6.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-tanqueray",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Tanqueray",
+        "en": "Tanqueray"
+      },
+      "descricao": null,
+      "preco": 6.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-tanqueray-sevilla",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Tanqueray Sevilla",
+        "en": "Tanqueray Sevilla"
+      },
+      "descricao": null,
+      "preco": 6.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-sharish",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Sharish",
+        "en": "Sharish"
+      },
+      "descricao": null,
+      "preco": 8.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "gin-monkey-47",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Monkey 47",
+        "en": "Monkey 47"
+      },
+      "descricao": null,
+      "preco": 12.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-nikka-barrel",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Nikka Barrel",
+        "en": "Nikka Barrel"
+      },
+      "descricao": null,
+      "preco": 12.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-bushmills",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Bushmills",
+        "en": "Bushmills"
+      },
+      "descricao": null,
+      "preco": 5.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-old-parr-12-anos",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Old Parr 12 anos",
+        "en": "Old Parr 12 year"
+      },
+      "descricao": null,
+      "preco": 9.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-macallan-12-anos",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Macallan 12 anos",
+        "en": "Macallan 12 year"
+      },
+      "descricao": null,
+      "preco": 13.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-cutty-sark",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Cutty Sark",
+        "en": "Cutty Sark"
+      },
+      "descricao": null,
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-jack-daniel-s",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Jack Daniel's",
+        "en": "Jack Daniel's"
+      },
+      "descricao": null,
+      "preco": 5.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-jameson",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "Jameson",
+        "en": "Jameson"
+      },
+      "descricao": null,
+      "preco": 5.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-j-b",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "J&B",
+        "en": "J&B"
+      },
+      "descricao": null,
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-j-w-red-label",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "J. W. Red Label",
+        "en": "J. W. Red Label"
+      },
+      "descricao": null,
+      "preco": 5.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "whi-j-w-black-label",
+      "categoria": "whisky",
+      "nome": {
+        "pt": "J. W. Black Label",
+        "en": "J. W. Black Label"
+      },
+      "descricao": null,
+      "preco": 7.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "sho-whisky-ou-vodka",
+      "categoria": "shots",
+      "nome": {
+        "pt": "Whisky ou vodka",
+        "en": "Whisky or vodka"
+      },
+      "descricao": null,
+      "preco": 2.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "sho-rum-ou-tequila",
+      "categoria": "shots",
+      "nome": {
+        "pt": "Rum ou tequila",
+        "en": "Rum or tequila"
+      },
+      "descricao": null,
+      "preco": 2.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "sho-jack-daniel-s",
+      "categoria": "shots",
+      "nome": {
+        "pt": "Jack Daniel's",
+        "en": "Jack Daniel's"
+      },
+      "descricao": null,
+      "preco": 3.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "sho-amaretto",
+      "categoria": "shots",
+      "nome": {
+        "pt": "Amaretto",
+        "en": "Amaretto"
+      },
+      "descricao": null,
+      "preco": 3.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "sho-b52",
+      "categoria": "shots",
+      "nome": {
+        "pt": "B52",
+        "en": "B52"
       },
       "descricao": null,
       "preco": 2.5,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
-      "id": "agua-50cl",
-      "categoria": "bebidas-frias",
+      "id": "sho-shot-preguica",
+      "categoria": "shots",
       "nome": {
-        "pt": "Água 50 cl",
-        "en": "Water 50 cl"
+        "pt": "Shot Preguiça",
+        "en": "Shot Preguiça"
       },
       "descricao": null,
-      "preco": 1.0,
+      "preco": 2.5,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
-      "id": "imperial",
-      "categoria": "cervejas-e-vinhos",
+      "id": "sho-lollipop",
+      "categoria": "shots",
       "nome": {
-        "pt": "Imperial",
+        "pt": "Lollipop",
+        "en": "Lollipop"
+      },
+      "descricao": null,
+      "preco": 3.3,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "sho-baby-guinness",
+      "categoria": "shots",
+      "nome": {
+        "pt": "Baby Guinness",
+        "en": "Baby Guinness"
+      },
+      "descricao": null,
+      "preco": 2.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-martini-rosso",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Martini Rosso",
+        "en": "Martini Rosso"
+      },
+      "descricao": null,
+      "preco": 3.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-martini-bianco",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Martini Bianco",
+        "en": "Martini Bianco"
+      },
+      "descricao": null,
+      "preco": 3.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-licor-beirao",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Licor Beirão",
+        "en": "Licor Beirão"
+      },
+      "descricao": null,
+      "preco": 4.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-amendoa-amarga",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Amêndoa amarga",
+        "en": "Bitter almond"
+      },
+      "descricao": null,
+      "preco": 4.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-c-r-f",
+      "categoria": "licores",
+      "nome": {
+        "pt": "C.R.F.",
+        "en": "C.R.F."
+      },
+      "descricao": null,
+      "preco": 4.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-baileys",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Baileys",
+        "en": "Baileys"
+      },
+      "descricao": null,
+      "preco": 4.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-amaretto",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Amaretto",
+        "en": "Amaretto"
+      },
+      "descricao": null,
+      "preco": 4.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "lic-limoncello",
+      "categoria": "licores",
+      "nome": {
+        "pt": "Limoncello",
+        "en": "Limoncello"
+      },
+      "descricao": null,
+      "preco": 4.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-super-bock",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Super Bock",
+        "en": "Super Bock"
+      },
+      "descricao": null,
+      "preco": 1.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-stout",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Stout",
+        "en": "Stout"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-coruja-ipa",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Coruja IPA",
+        "en": "Coruja IPA"
+      },
+      "descricao": null,
+      "preco": 2.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-somersby-maca",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Somersby maçã",
+        "en": "Somersby apple"
+      },
+      "descricao": null,
+      "preco": 3.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-fino",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Fino",
         "en": "Draught beer"
       },
       "descricao": null,
-      "preco": 1.3,
+      "preco": 1.6,
+      "precoSecundario": null,
       "alergenios": []
     },
     {
-      "id": "vinho-copo",
-      "categoria": "cervejas-e-vinhos",
+      "id": "cer-fino-com-7up-ou-tango",
+      "categoria": "cervejas",
       "nome": {
-        "pt": "Vinho a copo",
-        "en": "Glass of wine"
+        "pt": "Fino com 7up ou Tango",
+        "en": "Draught with 7up or Tango"
       },
       "descricao": null,
-      "preco": 1.5,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-fino-com-favaios",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Fino com Favaios",
+        "en": "Draught with Favaios"
+      },
+      "descricao": null,
+      "preco": 2.4,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cer-principe",
+      "categoria": "cervejas",
+      "nome": {
+        "pt": "Príncipe",
+        "en": "Príncipe"
+      },
+      "descricao": null,
+      "preco": 2.3,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "vin-vinho-branco",
+      "categoria": "vinhos",
+      "nome": {
+        "pt": "Vinho branco",
+        "en": "White wine"
+      },
+      "descricao": null,
+      "preco": 3.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "vin-vinho-tinto-tons-duorum",
+      "categoria": "vinhos",
+      "nome": {
+        "pt": "Vinho tinto Tons Duorum",
+        "en": "Tons Duorum red wine"
+      },
+      "descricao": null,
+      "preco": 3.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "vin-vinho-do-porto-branco-ou-tinto",
+      "categoria": "vinhos",
+      "nome": {
+        "pt": "Vinho do Porto branco ou tinto",
+        "en": "White or red Port"
+      },
+      "descricao": null,
+      "preco": 2.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-cafe-ou-descafeinado",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Café ou descafeinado",
+        "en": "Espresso or decaf"
+      },
+      "descricao": null,
+      "preco": 1.0,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-pingo",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Pingo",
+        "en": "Espresso with a drop of milk"
+      },
+      "descricao": null,
+      "preco": 1.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-meia-de-leite-ou-galao",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Meia de leite ou galão",
+        "en": "Coffee with milk"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-capuccino",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Capuccino",
+        "en": "Capuccino"
+      },
+      "descricao": null,
+      "preco": 2.5,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-cafe-bz-bz",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Café BZ BZ",
+        "en": "Iced coffee slush"
+      },
+      "descricao": null,
+      "preco": 1.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-chocolate-quente",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Chocolate quente",
+        "en": "Hot chocolate"
+      },
+      "descricao": null,
+      "preco": 3.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-chocolate-quente-com-chantilly",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Chocolate quente com chantilly",
+        "en": "Hot chocolate with cream"
+      },
+      "descricao": null,
+      "preco": 3.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-irish-coffee",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Irish coffee",
+        "en": "Irish coffee"
+      },
+      "descricao": null,
+      "preco": 5.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-grog",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Grog",
+        "en": "Grog (rum)"
+      },
+      "descricao": null,
+      "preco": 3.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-gluehwein",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Gluehwein",
+        "en": "Mulled wine"
+      },
+      "descricao": null,
+      "preco": 3.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "caf-skiwasser",
+      "categoria": "cafetaria",
+      "nome": {
+        "pt": "Skiwasser",
+        "en": "Hot raspberry tea"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-limao-e-gengibre",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Limão e gengibre",
+        "en": "Lemon & ginger"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-frutos-vermelhos",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Frutos vermelhos",
+        "en": "Red berries"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-maca-e-canela",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Maçã e canela",
+        "en": "Apple & cinnamon"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-tilia",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Tília",
+        "en": "Linden"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-preto",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Preto",
+        "en": "Black"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-verde",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Verde",
+        "en": "Green"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-menta",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Menta",
+        "en": "Mint"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-camomila",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Camomila",
+        "en": "Camomile"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-cidreira",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Cidreira",
+        "en": "Lemon balm"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "cha-curcuma",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Curcuma",
+        "en": "Turmeric"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-agua-luso",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Água Luso",
+        "en": "Still water"
+      },
+      "descricao": null,
+      "preco": 1.2,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-pedras",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Pedras",
+        "en": "Sparkling water"
+      },
+      "descricao": null,
+      "preco": 1.6,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-pedras-limao",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Pedras limão",
+        "en": "Sparkling water, lemon"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-pedras-maracuja",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Pedras maracujá",
+        "en": "Sparkling water, passion fruit"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-agua-tonica",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Água tónica",
+        "en": "Tonic water"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-unicornio",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Unicórnio",
+        "en": "Unicorn"
+      },
+      "descricao": null,
+      "preco": 1.7,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-coca-cola",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Coca-Cola",
+        "en": "Coca-Cola"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-coca-cola-zero",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Coca-Cola zero",
+        "en": "Coke Zero"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-ginger-ale",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Ginger ale",
+        "en": "Ginger ale"
+      },
+      "descricao": null,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": []
+    },
+    {
+      "id": "agu-red-bull",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Red Bull",
+        "en": "Red Bull"
+      },
+      "descricao": null,
+      "preco": 2.9,
+      "precoSecundario": null,
       "alergenios": []
     }
   ]

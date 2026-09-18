@@ -44,6 +44,21 @@ const Esquema = z.object({
   telefone: z.string().min(9).nullable(),
   email: z.email().nullable(),
   /**
+   * ⚠️ **O horário abaixo não foi confirmado pela casa.**
+   *
+   * Foi recolhido de fontes públicas, e as fontes **não concordam**: umas dizem
+   * que abre às 15h00, outras às 15h30, outras às 16h00. O que está no
+   * `cafe.json` é o mais reportado.
+   *
+   * Com esta bandeira a `false`, a página de contactos escreve por baixo da
+   * tabela que o horário está sujeito a confirmação e que convém ligar antes de
+   * vir. **O dado aparece, mas o site não promete o que não sabe** — mandar
+   * alguém a uma porta fechada é o erro que mais custa neste negócio.
+   *
+   * Passa a `true` quando o cliente responder, e o aviso desaparece sozinho.
+   */
+  horarioConfirmado: z.boolean(),
+  /**
    * `null` no objeto inteiro significa **ainda não confirmado** e esconde a
    * secção; `null` num dia significa **encerrado nesse dia**. São duas coisas
    * diferentes e é de propósito que se distinguem: a primeira é uma falha
@@ -113,4 +128,22 @@ export function urlDirecoes(): string | null {
 /** O número sem espaços, que é o que o `href="tel:"` precisa. */
 export function telefoneParaLigar(): string | null {
   return cafe.telefone ? cafe.telefone.replace(/\s+/g, "") : null;
+}
+
+/**
+ * A que rede pertence o número, para a indicação do custo da chamada.
+ *
+ * ⚠️ **Não é enfeite, é lei**: desde o Decreto-Lei n.º 59/2021 um número
+ * publicado para contacto com o consumidor tem de dizer ao lado se é chamada
+ * para a rede fixa ou móvel nacional. Deduz-se do primeiro algarismo, que é
+ * como o Plano Nacional de Numeração os distribui — `2` fixa, `9` móvel. Um
+ * `null` quer dizer que o número não é nenhum dos dois e o aviso não aparece;
+ * se isso acontecer, confirmar à mão qual é o texto certo.
+ */
+export function redeDoTelefone(): "fixa" | "movel" | null {
+  const numero = telefoneParaLigar();
+  if (!numero) return null;
+  if (numero.startsWith("2")) return "fixa";
+  if (numero.startsWith("9")) return "movel";
+  return null;
 }

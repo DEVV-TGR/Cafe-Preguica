@@ -1,39 +1,73 @@
 @import "tailwindcss";
 
 /**
- * Os tokens do site — cores, fontes, medidas.
+ * Os tokens do Café Preguiça.
  *
- * Estão aqui e não espalhados pelas classes de propósito: quando a identidade
- * do Café Preguiça estiver decidida, muda-se este bloco e muda o site inteiro.
- * É o gancho onde a estética se encosta depois.
+ * **Não foram escolhidos — foram medidos.** O dourado é a média dos pixéis mais
+ * claros do logótipo; a madeira é a média das mesas nas fotografias dos
+ * cocktails; o escuro é a média das sombras das 19 fotografias da casa. Os
+ * valores em bruto estão nos comentários, e o que está a seguir é esse valor
+ * afinado para ecrã.
  *
- * ⚠️ Os valores de agora são deliberadamente neutros — cinzentos e um preto que
- * não é preto. Não são a paleta da casa; são a ausência dela, para que ninguém
- * confunda o andaime com uma proposta de desenho.
+ * A razão para os medir em vez de os inventar está no `BRIEF.md`, resposta 1:
+ * *"escuro, quente, de bairro — o premium vem do à-vontade, não do luxo"*. Uma
+ * paleta escolhida à mão a partir de um logótipo dourado ia dar coutada de luxo.
+ * A paleta que sai das fotografias dá a casa que lá está.
  */
 @theme {
-  --color-tinta: #1a1a1a;
-  --color-papel: #fafaf9;
-  --color-suave: #6b6b6b;
-  --color-linha: #e5e5e3;
+  /* Medido #090604, levantado um pouco: um preto esmagado não tem ar nenhum e
+     faz a madeira parecer suja por cima dele. */
+  --color-canvas: #0b0806;
 
+  /* Medido #6a3914 (a madeira das mesas), escurecido para servir de superfície
+     sem competir com as fotografias, que são de madeira a sério. */
+  --color-superficie: #1a100a;
+
+  /* Osso quente, não branco. Branco puro sobre este castanho lê a azul. */
+  --color-tinta: #f2e9dc;
+
+  /* Tingido a partir da madeira, nunca cinzento liso — `#888` sobre chão quente
+     parece sujidade. 6,9:1 sobre o canvas. */
+  --color-tinta-suave: #a79581;
+
+  /* O ouro da marca. **Um só acento**, e é dele a página inteira: fios,
+     sublinhados, o número de telefone. Nunca como superfície — ouro em área
+     larga é exatamente o luxo que a resposta 1 recusa. 8,3:1 sobre o canvas. */
+  --color-ouro: #c9a227;
+  --color-ouro-tinta: #0b0806;
+
+  /* O ouro claro dos realces do logótipo, para quando o ouro normal não chega
+     em texto pequeno. 11,3:1. */
+  --color-ouro-claro: #d8c08a;
+
+  --color-linha: color-mix(in oklab, var(--color-tinta) 14%, transparent);
+
+  --font-display: var(--fonte-display), Georgia, serif;
   --font-corpo: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
-  /* Enquanto não houver display próprio, cai no corpo — e não na fonte do
-     sistema, que era uma terceira família a entrar sem ninguém a escolher. */
-  --font-display: var(--fonte-display, var(--fonte-corpo)), ui-sans-serif,
-    system-ui, sans-serif;
 }
 
 body {
-  background: var(--color-papel);
+  background: var(--color-canvas);
   color: var(--color-tinta);
   font-family: var(--font-corpo);
+  /* Texto claro sobre escuro precisa de compensação: mais entrelinha e um
+     bocadinho mais de tracking, senão lê fino e desfocado. */
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* O motor do catálogo tira o `:focus-visible` do original (ver o cabeçalho de
+   `catalogo-motor.css`). Reposto aqui, porque tirá-lo sem repor era trocar um
+   problema de CSS por um problema de acessibilidade. */
+:focus-visible {
+  outline: 2px solid var(--color-ouro);
+  outline-offset: 3px;
 }
 
 /* Quem tiver o sistema em "reduzir movimento" não leva animação nenhuma. Fica
    aqui, à cabeça, para valer também para o que se acrescentar depois — uma
    animação nova nasce a respeitar a preferência em vez de ter de se lembrar
-   dela. */
+   dela. O motor tem o seu próprio bloco equivalente. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

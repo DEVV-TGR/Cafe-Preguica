@@ -1,0 +1,770 @@
+/* ===========================================================================
+   A EMENTA — a carta que os QR das mesas abrem
+
+   Assenta em `catalogo.css`: a barra, os botões, os rótulos, as notas e o
+   rodapé são **os mesmos da página inicial**, e é isso que faz a ementa ler
+   como a mesma casa. Aqui vive só o que é da carta.
+
+   A diferença de fundo para a página inicial: **aqui não há movimento preso à
+   rolagem.** Lá a rolagem é o passeio; aqui é para ler, com o telemóvel numa
+   mão. O que mexe é pouco e responde a um gesto — o leque do topo, o índice, o
+   jogo dos sabores — ou é uma entrada suave que não atrasa nada.
+   =========================================================================== */
+
+/* A âncora de um capítulo aterra por baixo da barra (4rem) e do índice
+   (~3rem). Sem isto o título ficava tapado pelos dois. */
+.em-pagina [id] {
+  scroll-margin-top: 8rem;
+}
+
+html:has(.em-pagina) {
+  scroll-behavior: smooth;
+}
+
+/* ------------------------------------------------------------ a barra
+   É a `.pg-barra` da inicial. Muda só o que ela leva: aqui o logótipo volta ao
+   início, e em vez do índice da colecção há o sítio onde se está. */
+
+.em-barra__nav {
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.em-barra__nav a:hover,
+.em-barra__nav a:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+.em-barra__nav [aria-current="page"] {
+  color: var(--color-ouro-claro);
+}
+
+/* No telemóvel o logótipo já leva ao início; as duas palavras eram repetição
+   num sítio onde o espaço conta. */
+@media (max-width: 30rem) {
+  .em-barra__nav {
+    display: none;
+  }
+}
+
+.em-barra__idioma {
+  margin-inline-start: auto;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.em-barra__idioma a {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 40%, transparent);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  text-decoration: none;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.em-barra__idioma a:hover,
+.em-barra__idioma a:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ------------------------------------------------------------ o índice */
+
+.em-indice {
+  position: sticky;
+  top: 4rem;
+  z-index: 24;
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding: 0.6rem clamp(1rem, 4vw, 3rem);
+  background: color-mix(in oklab, var(--color-canvas) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-linha);
+  /* A barra de deslocamento horizontal no meio do topo parecia uma avaria. O
+     índice continua a arrastar-se com o dedo e a rolar com o trackpad. */
+  scrollbar-width: none;
+}
+
+.em-indice::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .em-indice {
+    justify-content: center;
+  }
+}
+
+.em-indice a {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--color-tinta-suave);
+  white-space: nowrap;
+  transition: border-color 220ms ease, color 220ms ease, background-color 220ms ease;
+}
+
+.em-indice a:hover {
+  color: var(--color-tinta);
+  border-color: color-mix(in oklab, var(--color-ouro) 45%, transparent);
+}
+
+.em-indice a[aria-current="true"] {
+  background: var(--color-ouro);
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.em-indice__numero {
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+/* ------------------------------------------------------------ a página */
+
+.em-pagina {
+  --em-coluna: 46rem;
+  --em-margem: clamp(1rem, 5vw, 3rem);
+  padding-bottom: clamp(3rem, 8vh, 6rem);
+}
+
+/* ------------------------------------------------------------ o topo */
+
+.em-topo {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 5vh, 4.5rem) var(--em-margem) clamp(1rem, 4vh, 5rem);
+}
+
+@media (min-width: 56rem) {
+  .em-topo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.em-olho {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.em-topo__titulo {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 11vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  /* O eixo `WONK` da Fraunces entorta as diagonais — no título grande é onde
+     se nota, e é a letra do menu impresso a falar. */
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.em-topo__intro {
+  margin: 1rem 0 0.75rem;
+  max-width: 38ch;
+  color: var(--color-tinta-suave);
+  font-size: 1.05rem;
+  text-wrap: pretty;
+}
+
+.em-avisos {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  max-width: 46ch;
+}
+
+/* O aviso com o fio dourado à esquerda, como uma nota à margem da carta — não
+   uma caixa branca, que era o que fazia a página antiga parecer outro site. */
+.em-aviso {
+  padding: 0.15rem 0 0.15rem 0.9rem;
+  border-inline-start: 2px solid color-mix(in oklab, var(--color-ouro) 60%, transparent);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--color-tinta-suave);
+}
+
+/* ------------------------------------------------------------ o leque
+   Os copos balão da casa, abertos em leque como cartas em cima da mesa.
+   `--i` vai de -2 a 2: o do meio fica direito, os das pontas rodam e descem. */
+
+.em-leque {
+  /* Quanto se afasta e roda cada copo por passo do leque. No telemóvel o
+     leque fecha-se: aberto, as pontas saíam do ecrã e ele comia o fim do
+     primeiro ecrã — e quem leu o QR quer ver a carta a começar, não copos. */
+  --em-leque-passo: 26%;
+  --em-leque-rodar: 6deg;
+  --em-leque-abrir: 36%;
+  position: relative;
+  height: clamp(11rem, 44vw, 27rem);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  isolation: isolate;
+}
+
+.em-leque img {
+  position: absolute;
+  bottom: 0;
+  width: clamp(6.25rem, 25vw, 13rem);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 30%, transparent);
+  box-shadow: 0 14px 30px rgb(0 0 0 / 0.55);
+  transform-origin: 50% 120%;
+  transform: translateX(calc(var(--i) * var(--em-leque-passo)))
+    rotate(calc(var(--i) * var(--em-leque-rodar)));
+  z-index: calc(10 - var(--i) * var(--i));
+  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: em-leque-abrir 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc((var(--i) * var(--i)) * 70ms + 100ms);
+}
+
+/* Passar o rato abre mais o leque — é o único sítio da página que responde ao
+   ponteiro sem se carregar em nada. */
+@media (min-width: 56rem) {
+  .em-leque {
+    --em-leque-passo: 34%;
+    --em-leque-rodar: 9deg;
+    --em-leque-abrir: 52%;
+  }
+}
+
+@media (hover: hover) {
+  .em-leque:hover img {
+    transform: translateX(calc(var(--i) * var(--em-leque-abrir)))
+      rotate(calc(var(--i) * var(--em-leque-rodar) * 1.35))
+      translateY(calc(var(--i) * var(--i) * 2%));
+  }
+
+  .em-leque img:hover {
+    transform: translateX(calc(var(--i) * var(--em-leque-abrir)))
+      rotate(calc(var(--i) * var(--em-leque-rodar) * 1.35)) translateY(-6%);
+  }
+}
+
+@keyframes em-leque-abrir {
+  from {
+    transform: translateY(8%) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------ o capítulo */
+
+.em-capitulo {
+  padding-top: clamp(2rem, 6vh, 4rem);
+}
+
+.em-abertura {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: var(--em-margem);
+}
+
+.em-abertura__foto {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 3px;
+  aspect-ratio: 4 / 3;
+  background: var(--color-superficie);
+}
+
+@media (min-width: 48rem) {
+  .em-abertura__foto {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+.em-abertura__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* As fotografias são retratos e a faixa é paisagem: o que interessa está
+     quase sempre no meio, um pouco abaixo do centro. */
+  object-position: 50% 58%;
+}
+
+/* O véu por baixo do título: o texto claro por cima de madeira clara ficava
+   ilegível sem ele. De baixo para cima e curto, para a fotografia ficar
+   inteira. */
+.em-abertura__foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgb(11 8 6 / 0.85) 0%,
+    rgb(11 8 6 / 0.35) 38%,
+    transparent 62%
+  );
+  pointer-events: none;
+}
+
+.em-abertura__titulo {
+  position: absolute;
+  z-index: 1;
+  left: clamp(1rem, 4vw, 2.5rem);
+  bottom: clamp(0.9rem, 3vw, 2rem);
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+
+.em-abertura__titulo h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  text-shadow: 0 2px 20px rgb(0 0 0 / 0.5);
+}
+
+.em-abertura__numero {
+  font-size: clamp(0.8rem, 1.6vw, 1rem);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ouro);
+}
+
+.em-abertura__legenda {
+  position: absolute;
+  z-index: 1;
+  top: clamp(0.6rem, 2vw, 1.25rem);
+  right: clamp(0.6rem, 2vw, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  max-width: 70%;
+  padding: 0.45rem 0.75rem;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--color-canvas) 78%, transparent);
+  backdrop-filter: blur(8px);
+  font-size: 0.75rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.em-abertura__legenda span:first-child {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.em-abertura__facto {
+  max-width: var(--em-coluna);
+  margin: 1.1rem auto 0;
+  color: var(--color-tinta-suave);
+  text-wrap: pretty;
+}
+
+.em-abertura__seccoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  max-width: var(--em-coluna);
+  margin: 0.75rem auto 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.em-abertura__seccoes a {
+  color: var(--color-ouro-claro);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-ouro) 35%, transparent);
+  text-underline-offset: 0.3em;
+}
+
+.em-abertura__seccoes a:hover {
+  text-decoration-color: var(--color-ouro);
+}
+
+/* ------------------------------------------------------------ a secção */
+
+.em-seccao {
+  max-width: var(--em-coluna);
+  margin-inline: auto;
+  padding: clamp(2rem, 5vh, 3rem) var(--em-margem) 0;
+}
+
+/* A secção do Cocktail Preguiça leva o jogo ao lado: precisa de mais largura. */
+.em-seccao[data-extra] {
+  max-width: 64rem;
+}
+
+.em-seccao__cabeca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ouro) 28%, transparent);
+}
+
+.em-seccao__cabeca h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.em-seccao__dose {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+/* As duas colunas de preço das tostas. A largura é a mesma de
+   `.em-artigo__precos span`, e é isso que as alinha com os números. */
+.em-colunas {
+  margin-inline-start: auto;
+  display: flex;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.em-colunas span,
+.em-artigo__precos > span {
+  width: 5.4rem;
+  text-align: right;
+}
+
+.em-seccao__corpo {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 56rem) {
+  .em-seccao[data-extra] .em-seccao__corpo {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+}
+
+.em-lista {
+  display: grid;
+  gap: 0 2.5rem;
+}
+
+/* Onze gins numa coluna só são meio ecrã de pontinhos. No ecrã largo, duas. */
+@media (min-width: 44rem) {
+  .em-seccao[data-lista] .em-lista {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ------------------------------------------------------------ o artigo */
+
+.em-artigo {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  padding-block: 0.8rem;
+  border-bottom: 1px solid var(--color-linha);
+}
+
+.em-artigo[data-foto] {
+  padding-block: 0.9rem;
+}
+
+.em-artigo__foto {
+  flex: 0 0 auto;
+  width: 3.6rem;
+  height: 3.6rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 45%, transparent);
+}
+
+.em-artigo__texto {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Nome, pontinhos até ao preço, preço — como numa carta impressa. Os
+   pontinhos são um `flex: 1` com borda pontilhada, não caracteres: com
+   caracteres a linha partia em telemóveis estreitos. */
+.em-artigo__linha {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.em-artigo__nome {
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.em-artigo__pontos {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 1px dotted color-mix(in oklab, var(--color-ouro) 45%, transparent);
+  transform: translateY(-0.3em);
+}
+
+.em-artigo__preco,
+.em-artigo__precos {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ouro-claro);
+  white-space: nowrap;
+}
+
+.em-artigo__precos {
+  display: flex;
+}
+
+.em-artigo__descricao {
+  margin-top: 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-tinta-suave);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------ os sabores */
+
+.em-sabores {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 30%, transparent);
+  border-radius: 3px;
+  background:
+    radial-gradient(120% 80% at 20% 0%, color-mix(in oklab, var(--color-ouro) 9%, transparent), transparent 60%),
+    var(--color-superficie);
+}
+
+.em-sabores__palco {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 1.5rem);
+  min-height: 9.5rem;
+}
+
+.em-copo {
+  flex: 0 0 auto;
+  width: clamp(5.5rem, 22vw, 7.5rem);
+  height: auto;
+  overflow: visible;
+}
+
+.em-copo__vidro {
+  fill: none;
+  stroke: color-mix(in oklab, var(--color-tinta) 70%, transparent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.em-copo__liquido {
+  transform: translateY(72px);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1), fill 180ms ease;
+}
+
+.em-copo__liquido[data-cheio] {
+  transform: none;
+}
+
+.em-copo__gelo {
+  fill: rgb(255 255 255 / 0.22);
+  stroke: rgb(255 255 255 / 0.4);
+  stroke-width: 1;
+}
+
+.em-copo__palhinha {
+  stroke: #f2e9dc;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.em-copo__riscas {
+  stroke: var(--color-ouro);
+  stroke-width: 5;
+  stroke-dasharray: 6 6;
+}
+
+.em-sabores__leitura {
+  min-width: 0;
+}
+
+.em-sabores__olho {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.em-sabores__nome {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 7vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-ouro-claro);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  overflow-wrap: anywhere;
+}
+
+[data-a-rodar] .em-sabores__nome {
+  color: var(--color-tinta);
+}
+
+.em-sabores__titulo {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+/* `.pg-sabores` e `.pg-sabor` vêm de `catalogo.css`, onde ficaram quando o
+   seletor saiu da página inicial. Aqui só se acrescenta o ponto de cor. */
+.em-sabores .pg-sabor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.em-sabor__ponto {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+}
+
+.em-sabor__ponto[data-surpresa] {
+  background: conic-gradient(#e0455c, #efc53d, #5cc49a, #3f8fd8, #e0455c);
+}
+
+.em-sabores__acao .pg-botao {
+  cursor: pointer;
+}
+
+.em-sabores__acao .pg-botao:disabled {
+  cursor: progress;
+  opacity: 0.85;
+}
+
+.em-sabores__preguica {
+  width: 1.6rem;
+  height: auto;
+  margin-block: -0.3rem;
+}
+
+/* A preguiça a pensar: balança enquanto a roleta roda. */
+[data-a-rodar] .em-sabores__preguica {
+  animation: em-pensar 600ms ease-in-out infinite alternate;
+}
+
+@keyframes em-pensar {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+
+/* ------------------------------------------------------------ o fecho */
+
+.em-fecho {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  max-width: var(--em-coluna);
+  margin: clamp(3rem, 9vh, 6rem) auto 0;
+  padding-inline: var(--em-margem);
+  text-align: center;
+}
+
+.em-fecho .pg-rotulo__facto {
+  max-width: 44ch;
+}
+
+.em-fecho__preguica {
+  width: 4.5rem;
+  height: auto;
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.55));
+}
+
+.em-fecho__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+/* ------------------------------------------------------------ a preguiça
+   A de `components/catalogo/Preguica.tsx`, a mesma da inicial. Só aparece onde
+   a coluna da carta deixa margem à direita para ela descer sem tapar preços. */
+
+.em-preguica {
+  display: none;
+}
+
+@media (min-width: 80rem) {
+  .em-preguica {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------ entradas
+   As fotografias de abertura sobem e ganham nitidez ao entrar no ecrã. É CSS
+   ligado à posição na página (`animation-timeline: view()`), sem JS; onde o
+   browser não o suporta, a fotografia está simplesmente lá. */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .em-abertura__foto img {
+      animation: em-foto-entrar linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+
+    .em-seccao__cabeca {
+      animation: em-subir linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+  }
+}
+
+@keyframes em-foto-entrar {
+  from {
+    transform: scale(1.12);
+    filter: brightness(0.6);
+  }
+  to {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes em-subir {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}

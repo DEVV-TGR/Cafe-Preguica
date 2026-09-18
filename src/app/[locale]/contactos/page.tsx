@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
+import { Pagina } from "@/components/Pagina";
 import {
   cafe,
   DIAS,
@@ -42,7 +43,8 @@ export default async function Contactos({ params }: Props) {
   const temAlgumaCoisa = Boolean(morada || telefone || cafe.email || cafe.horarios);
 
   return (
-    <article className="flex flex-col gap-8">
+    <Pagina locale={locale}>
+      <article className="flex flex-col gap-8">
       <h1 className="font-display text-4xl font-semibold">{t("titulo")}</h1>
 
       {!temAlgumaCoisa && (
@@ -116,6 +118,7 @@ export default async function Contactos({ params }: Props) {
           </dl>
         </section>
       )}
-    </article>
+      </article>
+    </Pagina>
   );
 }

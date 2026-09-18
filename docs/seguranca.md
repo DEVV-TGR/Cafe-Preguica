@@ -80,8 +80,10 @@ O site não carrega **nada** de fora:
 - As fontes são descarregadas no build pelo `next/font` e servidas por este
   domínio. Um `<link>` para o Google Fonts faria um pedido à Google com o IP de
   cada visitante, a cada visita.
-- Não há mapa embebido. O botão de direções é um `<a>` normal para o Google
-  Maps: o terceiro só vê quem carregar nele.
+- Não há mapa embebido. O mapa da página inicial é um SVG desenhado a partir
+  do OpenStreetMap no momento de o gerar (`npm run mapa`) e servido deste
+  domínio. O botão de direções é um `<a>` normal para o Google Maps: o
+  terceiro só vê quem carregar nele.
 - Não há botões de redes sociais que carreguem código, não há vídeo embebido e
   não há ferramenta de estatísticas.
 

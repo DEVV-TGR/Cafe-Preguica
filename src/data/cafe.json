@@ -1,9 +1,18 @@
 {
   "nome": "Café Preguiça",
-  "morada": null,
+  "morada": "R. José Joaquim Ribeiro Teles, 560",
   "codigoPostal": null,
-  "cidade": null,
-  "telefone": null,
-  "email": null,
-  "horarios": null
+  "cidade": "Ermesinde",
+  "telefone": "229 730 873",
+  "email": "cafepreguica@sapo.pt",
+  "horarioConfirmado": false,
+  "horarios": {
+    "segunda": { "abre": "15:30", "fecha": "00:00" },
+    "terca": { "abre": "15:30", "fecha": "00:00" },
+    "quarta": { "abre": "15:30", "fecha": "00:00" },
+    "quinta": { "abre": "15:30", "fecha": "00:00" },
+    "sexta": { "abre": "15:30", "fecha": "01:00" },
+    "sabado": { "abre": "15:30", "fecha": "01:00" },
+    "domingo": null
+  }
 }

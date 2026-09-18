@@ -233,3 +233,20 @@
     content: none;
   }
 }
+
+/* ======================================================== A LINHA DE PROGRESSO
+   Ver `components/Progresso.tsx`. No topo do ecrã, por cima da barra e da
+   preguiça pendurada, e por baixo da transição (100). O ouro da marca, o
+   mesmo da preguiça. */
+
+.pg-progresso {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  height: 3px;
+  background: var(--color-ouro);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+  will-change: transform;
+}

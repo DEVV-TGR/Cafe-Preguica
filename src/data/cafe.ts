@@ -76,8 +76,9 @@ const Esquema = z.object({
     })
     .nullable(),
   /**
-   * A entidade de resolução alternativa de litígios de consumo que o rodapé
-   * indica — é obrigatório (Lei 144/2015, art. 18.º). `null` esconde a linha.
+   * A entidade de resolução alternativa de litígios de consumo, indicada em
+   * `/informacao-legal` — é obrigatório (Lei 144/2015, art. 18.º). `null`
+   * esconde a secção; a página fica, com o Livro de Reclamações.
    *
    * ⚠️ Hoje é o **CICAP**, por ser o centro competente para Valongo (está na
    * lista de municípios em cicap.pt). **Muda se a casa tiver aderido a outro

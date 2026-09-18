@@ -61,6 +61,10 @@
     "cookies": {
       "titulo": "Cookies",
       "descricao": "Este site não usa cookies. Esta página explica porquê."
+    },
+    "informacaoLegal": {
+      "titulo": "Resolução de litígios",
+      "descricao": "O que fazer se alguma coisa correr mal: o centro de arbitragem de consumo e o Livro de Reclamações."
     }
   },
   "inicio": {
@@ -288,6 +292,18 @@
       "texto": "Não é preciso acreditar em nós: abra as ferramentas de programador do navegador, separador Aplicação, e veja a lista de cookies deste domínio vazia."
     }
   },
+  "informacaoLegal": {
+    "olho": "Informação legal",
+    "titulo": "Resolução de litígios",
+    "litigios": {
+      "titulo": "Se tiver um problema connosco",
+      "texto": "Em caso de litígio de consumo, pode recorrer a uma entidade de resolução alternativa de litígios: <entidade>{nome}</entidade>. Mais informação no <portal>Portal do Consumidor</portal>."
+    },
+    "reclamacoes": {
+      "titulo": "Livro de Reclamações",
+      "texto": "Também pode apresentar uma reclamação no <livro>Livro de Reclamações Eletrónico</livro>."
+    }
+  },
   "rodape": {
     "direitos": "Todos os direitos reservados.",
     "feitoPor": "Site por",
@@ -295,7 +311,7 @@
     "cookies": "Cookies",
     "legal": "Informação legal",
     "livroReclamacoes": "Livro de Reclamações",
-    "litigios": "Em caso de litígio de consumo, pode recorrer a uma entidade de resolução alternativa de litígios: <entidade>{nome}</entidade>. Mais informação no <portal>Portal do Consumidor</portal>."
+    "resolucaoLitigios": "Resolução de litígios"
   },
   "naoEncontrada": {
     "titulo": "Página não encontrada",

@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { marca } from "@/data/marca";
 import { cafe, moradaCompleta, telefoneParaLigar } from "@/data/cafe";
-import { URL_ESTUDIO, URL_LIVRO_RECLAMACOES, URL_PORTAL_CONSUMIDOR } from "@/lib/site";
+import { URL_ESTUDIO, URL_LIVRO_RECLAMACOES } from "@/lib/site";
 
 /**
  * # O rodapé do site — um só
@@ -58,6 +58,9 @@ export function RodapeSite({ comContactos = false }: { comContactos?: boolean })
         <a href={URL_LIVRO_RECLAMACOES} target="_blank" rel="noopener noreferrer">
           {t("livroReclamacoes")} <span aria-hidden="true">↗</span>
         </a>
+        {/* Obrigatório (Lei 144/2015, art. 18.º). A frase inteira no rodapé
+            pesava demais; fica numa página própria, a um clique de todas. */}
+        <Link href="/informacao-legal">{t("resolucaoLitigios")}</Link>
       </nav>
       <p>
         © {new Date().getFullYear()} {marca.nome}. {t("direitos")} {t("feitoPor")}{" "}
@@ -66,26 +69,6 @@ export function RodapeSite({ comContactos = false }: { comContactos?: boolean })
         </a>
         .
       </p>
-      {/* Obrigatório, como o Livro de Reclamações — ver `litigios` em
-          `data/cafe.ts`. Na última linha e em letra pequena: tem de estar à
-          vista em todas as páginas, não tem de competir com a casa. */}
-      {cafe.litigios && (
-        <p className="pg-rodape__litigios">
-          {t.rich("litigios", {
-            nome: cafe.litigios.nome,
-            entidade: (texto) => (
-              <a href={cafe.litigios!.url} target="_blank" rel="noopener noreferrer">
-                {texto}
-              </a>
-            ),
-            portal: (texto) => (
-              <a href={URL_PORTAL_CONSUMIDOR} target="_blank" rel="noopener noreferrer">
-                {texto}
-              </a>
-            ),
-          })}
-        </p>
-      )}
     </footer>
   );
 }

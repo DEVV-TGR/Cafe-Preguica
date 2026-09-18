@@ -104,6 +104,7 @@ jobs:
           verificar /sobre            200
           verificar /privacidade      200
           verificar /cookies          200
+          verificar /informacao-legal 200
           verificar /en               200
           verificar /en/ementa        200
           verificar /en/contactos     200

@@ -58,6 +58,7 @@ export const ROTAS_FIXAS = [
   "/sobre",
   "/privacidade",
   "/cookies",
+  "/informacao-legal",
 ] as const;
 
 export type RotaFixa = (typeof ROTAS_FIXAS)[number];

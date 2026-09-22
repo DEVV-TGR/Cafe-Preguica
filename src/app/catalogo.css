@@ -566,11 +566,17 @@
 
 /* Um círculo por rede (`Redes.tsx`). O círculo é o próprio link: a altura é
    fixa e o espaço de cada lado é o que sobra do ícone e da borda (os `2px`),
-   por isso sem nome à vista a largura dá igual à altura. */
+   por isso a largura dá igual à altura.
+
+   A lista é a caixa de referência da legenda (`position: relative`) e mede só
+   o que os círculos medem (`fit-content`), para a legenda se encostar à fila e
+   não à largura do cartão. */
 .pg-redes {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
+  width: fit-content;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -587,11 +593,9 @@
   border-radius: 999px;
   color: var(--color-ouro-claro);
   font-size: 0.9rem;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
   transition:
-    background-color 260ms ease,
-    color 260ms ease;
+    background-color 240ms ease,
+    color 240ms ease;
 }
 
 /* Maior do que o `.pg-icone` normal: aqui o ícone está sozinho no círculo, sem
@@ -607,18 +611,36 @@
   color: var(--color-ouro-tinta);
 }
 
-/* O texto anima o `max-width`, e não o `width`, porque não se sabe quanto mede
-   (muda com a língua e com a rede). `14rem` chega para o maior com folga; se
-   fosse muito maior, o fecho parecia atrasado, porque a transição gastava tempo
-   a encolher espaço vazio. */
-.pg-rede__texto {
-  max-width: 0;
-  overflow: hidden;
+/* A legenda: por baixo da fila, sempre no mesmo sítio. As quatro estão
+   empilhadas no mesmo lugar e só a do círculo apontado se vê.
+
+   A cor é dada aqui porque a legenda está dentro do link, e o link apontado
+   passa a letra escura (é o dourado cheio): sem isto, a legenda ficava escura
+   sobre o fundo escuro.
+
+   `pointer-events: none` para as legendas escondidas não apanharem o rato por
+   cima do que estiver por baixo delas. */
+.pg-rede__legenda {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  color: var(--color-ouro-claro);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
   opacity: 0;
+  transform: translateY(-0.25rem);
+  pointer-events: none;
   transition:
-    max-width 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    margin-left 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 200ms ease;
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.pg-redes--esquerda .pg-rede__legenda {
+  left: 0;
+}
+
+.pg-redes--direita .pg-rede__legenda {
+  right: 0;
 }
 
 /* O nome de utilizador um pouco mais apagado, como estava no botão antigo. */
@@ -626,26 +648,31 @@
   opacity: 0.75;
 }
 
-/* Só abre com um rato: num ecrã tátil o primeiro toque já abre a rede, e o
-   círculo ficava aberto depois de voltar à página. O teclado abre sempre. */
+/* Ao trocar de círculo, a legenda que sai some depressa (120ms, sem atraso) e
+   a que entra espera 60ms para começar: assim quase não se sobrepõem, e nunca
+   se leem duas frases ao mesmo tempo.
+
+   Só com rato: num ecrã tátil o primeiro toque já abre a rede, e a legenda
+   ficava presa à vista depois de voltar à página. O teclado mostra-a sempre. */
 @media (hover: hover) {
-  .pg-rede:hover .pg-rede__texto {
-    max-width: 14rem;
-    margin-left: 0.5rem;
+  .pg-rede:hover .pg-rede__legenda {
     opacity: 1;
-    transition-delay: 0ms, 0ms, 80ms;
+    transform: none;
+    transition:
+      opacity 220ms ease 60ms,
+      transform 320ms cubic-bezier(0.32, 0.72, 0, 1) 60ms;
   }
 }
 
-.pg-rede:focus-visible .pg-rede__texto {
-  max-width: 14rem;
-  margin-left: 0.5rem;
+.pg-rede:focus-visible .pg-rede__legenda {
   opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pg-rede,
-  .pg-rede__texto {
+  .pg-rede__legenda,
+  .pg-rede:hover .pg-rede__legenda {
     transition: none;
   }
 }
@@ -1242,21 +1269,13 @@
   margin-top: 1.1rem;
 }
 
-/* ⚠️ O cartão é estreito: tem 344px por dentro, e a fila aberta, com os
-   círculos e a letra dos reels, mede 376px. Partia para a linha de baixo ao
-   passar o rato, e a fila toda saltava. Com círculos de 40px, menos espaço
-   entre eles e letra mais pequena, a fila aberta fica em ~335px e cabe.
-   O `nowrap` é a rede de segurança: mais vale sair uns píxeis para a margem
-   do cartão do que saltar. */
+/* A legenda das redes fica por baixo da fila e fora do fluxo, e o cartão
+   acaba logo a seguir: sem esta margem, a legenda saía pela borda de baixo.
+   O espaço fica reservado sempre, para o cartão não mudar de altura quando
+   ela aparece. */
 .pg-onde__redes {
-  flex-wrap: nowrap;
-  gap: 0.4rem;
   margin-top: 0.8rem;
-}
-
-.pg-onde__redes .pg-rede {
-  --lado: 2.5rem;
-  font-size: 0.82rem;
+  margin-bottom: 1.6rem;
 }
 
 /* Ecrã largo: o mapa ocupa a secção inteira e o cartão flutua por cima, à

@@ -81,7 +81,7 @@ export function Reels({
             <h2 className="pg-rotulo__nome">{nome}</h2>
             <p className="pg-rotulo__facto">{facto}</p>
           </div>
-          <Redes rotulo={redes} seguir={seguir} alinhar="direita" />
+          <Redes rotulo={redes} seguir={seguir} />
         </header>
 
         <ul className="pg-reels__grelha">

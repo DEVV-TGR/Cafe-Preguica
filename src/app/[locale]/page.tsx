@@ -290,12 +290,7 @@ export default async function Inicio({ params }: Props) {
               </a>
             )}
           </p>
-          <Redes
-            rotulo={comum("redes")}
-            seguir={comum("seguir")}
-            alinhar="esquerda"
-            className="pg-onde__redes"
-          />
+          <Redes rotulo={comum("redes")} seguir={comum("seguir")} className="pg-onde__redes" />
         </div>
       </section>
 

@@ -566,17 +566,11 @@
 
 /* Um círculo por rede (`Redes.tsx`). O círculo é o próprio link: a altura é
    fixa e o espaço de cada lado é o que sobra do ícone e da borda (os `2px`),
-   por isso a largura dá igual à altura.
-
-   A lista é a caixa de referência da legenda (`position: relative`) e mede só
-   o que os círculos medem (`fit-content`), para a legenda se encostar à fila e
-   não à largura do cartão. */
+   por isso fechado a largura dá igual à altura. */
 .pg-redes {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
-  width: fit-content;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -585,6 +579,8 @@
 .pg-rede {
   --lado: 2.75rem;
   --icone: 1.3em;
+  --duracao: 420ms;
+  --curva: cubic-bezier(0.32, 0.72, 0, 1);
   display: inline-flex;
   align-items: center;
   height: var(--lado);
@@ -593,9 +589,11 @@
   border-radius: 999px;
   color: var(--color-ouro-claro);
   font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
   transition:
-    background-color 240ms ease,
-    color 240ms ease;
+    background-color 300ms ease,
+    color 300ms ease;
 }
 
 /* Maior do que o `.pg-icone` normal: aqui o ícone está sozinho no círculo, sem
@@ -611,36 +609,43 @@
   color: var(--color-ouro-tinta);
 }
 
-/* A legenda: por baixo da fila, sempre no mesmo sítio. As quatro estão
-   empilhadas no mesmo lugar e só a do círculo apontado se vê.
+/* ⚠️ **A abertura anima a largura real do texto, e não um `max-width`.**
 
-   A cor é dada aqui porque a legenda está dentro do link, e o link apontado
-   passa a letra escura (é o dourado cheio): sem isto, a legenda ficava escura
-   sobre o fundo escuro.
+   Esteve com `max-width: 0 → 14rem`, e ao passar de um círculo para o do lado
+   a fila dava solavancos. O limite (224px) era maior do que o texto (~163px):
+   ao abrir, o círculo chegava cedo à largura final; ao fechar, ficava parado
+   até o `max-width` descer abaixo do texto, e só então encolhia. O que abria e
+   o que fechava andavam a ritmos diferentes, e a fila ia aos saltos.
 
-   `pointer-events: none` para as legendas escondidas não apanharem o rato por
-   cima do que estiver por baixo delas. */
-.pg-rede__legenda {
-  position: absolute;
-  top: calc(100% + 0.55rem);
-  color: var(--color-ouro-claro);
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
+   Com `grid-template-columns: 0fr → 1fr` a coluna mede sempre uma fração da
+   largura real do texto, na mesma curva à ida e à volta. O que um fecha é o
+   que o outro abre, frame a frame: a fila mantém a largura e os vizinhos
+   deslizam num movimento só, sem saltos.
+
+   (Tentou-se também tirar o texto de dentro do círculo, para nada se mexer.
+   Não era o que se queria: o texto é para estar dentro do logótipo.)
+
+   As três camadas: a grelha (`__texto`) anima; o `__corte` tem `min-width: 0`
+   e esconde o que sobra; a `__frase` leva o espaço à esquerda. Esse espaço
+   não pode estar no `__corte`: um `padding` não encolhe abaixo de si próprio,
+   e o círculo fechado ficava 8px mais largo do que alto. */
+.pg-rede__texto {
+  display: grid;
+  grid-template-columns: 0fr;
   opacity: 0;
-  transform: translateY(-0.25rem);
-  pointer-events: none;
   transition:
-    opacity 120ms ease,
-    transform 120ms ease;
+    grid-template-columns var(--duracao) var(--curva),
+    opacity 160ms ease;
 }
 
-.pg-redes--esquerda .pg-rede__legenda {
-  left: 0;
+.pg-rede__corte {
+  min-width: 0;
+  overflow: hidden;
 }
 
-.pg-redes--direita .pg-rede__legenda {
-  right: 0;
+.pg-rede__frase {
+  display: block;
+  padding-left: 0.5rem;
 }
 
 /* O nome de utilizador um pouco mais apagado, como estava no botão antigo. */
@@ -648,31 +653,31 @@
   opacity: 0.75;
 }
 
-/* Ao trocar de círculo, a legenda que sai some depressa (120ms, sem atraso) e
-   a que entra espera 60ms para começar: assim quase não se sobrepõem, e nunca
-   se leem duas frases ao mesmo tempo.
+/* Só abre com um rato: num ecrã tátil o primeiro toque já abre a rede, e o
+   círculo ficava aberto depois de voltar à página. O teclado abre sempre.
 
-   Só com rato: num ecrã tátil o primeiro toque já abre a rede, e a legenda
-   ficava presa à vista depois de voltar à página. O teclado mostra-a sempre. */
+   Ao abrir, o texto só aparece depois de haver espaço para ele (o atraso da
+   opacidade). Ao fechar, some logo: letras cortadas a meio pela borda leem-se
+   como um erro. */
 @media (hover: hover) {
-  .pg-rede:hover .pg-rede__legenda {
+  .pg-rede:hover .pg-rede__texto {
+    grid-template-columns: 1fr;
     opacity: 1;
-    transform: none;
     transition:
-      opacity 220ms ease 60ms,
-      transform 320ms cubic-bezier(0.32, 0.72, 0, 1) 60ms;
+      grid-template-columns var(--duracao) var(--curva),
+      opacity 240ms ease 140ms;
   }
 }
 
-.pg-rede:focus-visible .pg-rede__legenda {
+.pg-rede:focus-visible .pg-rede__texto {
+  grid-template-columns: 1fr;
   opacity: 1;
-  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pg-rede,
-  .pg-rede__legenda,
-  .pg-rede:hover .pg-rede__legenda {
+  .pg-rede__texto,
+  .pg-rede:hover .pg-rede__texto {
     transition: none;
   }
 }
@@ -1269,13 +1274,21 @@
   margin-top: 1.1rem;
 }
 
-/* A legenda das redes fica por baixo da fila e fora do fluxo, e o cartão
-   acaba logo a seguir: sem esta margem, a legenda saía pela borda de baixo.
-   O espaço fica reservado sempre, para o cartão não mudar de altura quando
-   ela aparece. */
+/* ⚠️ O cartão é estreito: tem 344px por dentro, e a fila aberta, com os
+   círculos e a letra dos reels, mede 376px. Partia para a linha de baixo ao
+   passar o rato, e a fila toda saltava. Com círculos de 40px, menos espaço
+   entre eles e letra mais pequena, a fila aberta fica em ~335px e cabe.
+   O `nowrap` é a rede de segurança: mais vale sair uns píxeis para a margem
+   do cartão do que saltar. */
 .pg-onde__redes {
+  flex-wrap: nowrap;
+  gap: 0.4rem;
   margin-top: 0.8rem;
-  margin-bottom: 1.6rem;
+}
+
+.pg-onde__redes .pg-rede {
+  --lado: 2.5rem;
+  font-size: 0.82rem;
 }
 
 /* Ecrã largo: o mapa ocupa a secção inteira e o cartão flutua por cima, à

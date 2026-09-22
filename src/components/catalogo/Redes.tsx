@@ -21,21 +21,15 @@ const NOMES: Record<Rede, string> = {
  * Os perfis da casa, um círculo por rede. Aparecem só as que têm link em
  * `marca.json`. Usado nos reels e em "onde estamos".
  *
- * Ao passar o rato, o círculo enche-se de dourado e por baixo da fila aparece
- * "Seguir @cafepreguica", o texto do botão do Instagram que esteve nos reels.
+ * Ao passar o rato, o círculo **abre** e passa a dizer "Seguir @cafepreguica",
+ * como o botão do Instagram que esteve nos reels antes disto, e enche-se de
+ * dourado como o `.pg-botao`. Ver `.pg-rede__texto` em `catalogo.css` para a
+ * razão de a abertura estar feita como está.
  *
- * ⚠️ **Os círculos nunca se mexem, e é de propósito.** Esteve feito com o
- * círculo a abrir para dentro da fila, com o texto lá dentro, e medido frame a
- * frame: ao passar de um para o do lado, os ícones deslizavam 150 a 170px, e em
- * metade das direções era o próprio ícone apontado que fugia do cursor. Não há
- * curva de animação que resolva isto: se um círculo cresce dentro da fila,
- * empurra os outros. Por isso a legenda vive **fora** da fila, num lugar fixo
- * (`position: absolute`), e só troca de texto.
- *
- * A legenda está dentro do link: é ela que lhe dá nome, junto com o nome da
- * rede, que não se vê porque o logótipo já o diz, mas vai para o leitor de
- * ecrã. "Seguir @cafepreguica" repetido quatro vezes não diria para onde vai
- * cada link. Escondida com `opacity`, e não com `display: none`, para ser lida.
+ * O nome da rede não se vê, porque o logótipo já o diz, mas vai para o leitor
+ * de ecrã: "Seguir @cafepreguica" repetido quatro vezes não diz para onde vai
+ * cada link. O texto recolhido também fica no HTML, e não com `display: none`,
+ * para ser lido.
  *
  * São `<a>` normais, e os ícones são desenhados em `Icones.tsx`. Nada aqui
  * carrega o que quer que seja das redes.
@@ -43,32 +37,35 @@ const NOMES: Record<Rede, string> = {
 export function Redes({
   rotulo,
   seguir,
-  alinhar,
   className = "",
 }: {
   /** Nome da lista para leitores de ecrã ("Redes da casa"). */
   rotulo: string;
   /** "Seguir", antes do nome de utilizador. */
   seguir: string;
-  /** De que lado da fila a legenda se encosta: o da borda mais próxima. */
-  alinhar: "esquerda" | "direita";
   className?: string;
 }) {
   if (perfis.length === 0) return null;
 
   return (
-    <ul className={`pg-redes pg-redes--${alinhar} ${className}`} aria-label={rotulo}>
+    <ul className={`pg-redes ${className}`} aria-label={rotulo}>
       {perfis.map(({ rede, url }) => {
         const Icone = ICONES[rede];
         return (
           <li key={rede}>
             <a className="pg-rede" href={url} target="_blank" rel="noopener noreferrer">
               <Icone className="pg-icone" />
-              <span className="pg-rede__legenda">
-                <span className="sr-only">{NOMES[rede]}: </span>
-                {seguir}{" "}
-                {/* Sem nome de utilizador (o Facebook), fica o nome da casa. */}
-                <span className="pg-rede__conta">{utilizador(rede, url) ?? marca.nome}</span>
+              <span className="sr-only">{NOMES[rede]}: </span>
+              {/* Três camadas por causa da animação: ver `.pg-rede__texto` em
+                  `catalogo.css`. */}
+              <span className="pg-rede__texto">
+                <span className="pg-rede__corte">
+                  <span className="pg-rede__frase">
+                    {seguir}{" "}
+                    {/* Sem nome de utilizador (o Facebook), fica o nome da casa. */}
+                    <span className="pg-rede__conta">{utilizador(rede, url) ?? marca.nome}</span>
+                  </span>
+                </span>
               </span>
             </a>
           </li>

@@ -476,6 +476,30 @@
   font-size: clamp(2.2rem, 5.2vw, 4rem);
 }
 
+/* A largura vem do bloco e não do parágrafo: `34ch` é o mesmo limite do
+   `.pg-rotulo`, e só dá a mesma medida na letra do bloco. No parágrafo, que tem
+   letra mais pequena, sairia mais estreito. */
+.pg-casa__texto {
+  max-width: 34ch;
+}
+
+.pg-casa__animais {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-top: 1.4rem;
+  color: var(--color-tinta-suave);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* O ícone desce um pouco para ficar alinhado com a primeira linha do texto. */
+.pg-casa__animais .pg-icone {
+  color: var(--color-ouro);
+  transform: translateY(0.15em);
+}
+
 .pg-casa figure {
   margin: 0;
   overflow: hidden;

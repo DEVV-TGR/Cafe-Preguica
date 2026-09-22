@@ -96,8 +96,16 @@ export default async function Inicio({ params }: Props) {
       {/* 2 · A CASA — texto à esquerda e a fotografia ao lado, em paisagem,
           como a porta do Damira: da altura do texto, não do ecrã. */}
       <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
-        <div data-sc-in data-sc-stagger="80">
+        <div className="pg-casa__texto" data-sc-in data-sc-stagger="80">
           <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
+          {/* Repete de propósito a linha de "Onde estamos": aqui é o feitio da
+              casa, lá é informação prática para quem vem. */}
+          {cafe.aceitaAnimais && (
+            <p className="pg-casa__animais">
+              <IconePata className="pg-icone" />
+              {t("casa.animais")}
+            </p>
+          )}
         </div>
         <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
           {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a

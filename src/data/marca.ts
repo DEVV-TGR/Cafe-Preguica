@@ -22,13 +22,11 @@ const Esquema = z.object({
   instagram: z.url().nullable(),
   facebook: z.url().nullable(),
   /**
-   * A playlist que toca no bar e que os clientes pedem. É **só um link**, e não
-   * o leitor embebido do Spotify: esse é um `<iframe>` de terceiros com cookies,
-   * e obrigava a abrir a CSP e a rever `/cookies` e `/privacidade`.
-   *
-   * Fica de fora de `redes` porque uma playlist não é um perfil da casa, e o
-   * `sameAs` dos dados estruturados só aceita perfis. `null` até o cliente
-   * mandar o link.
+   * O perfil da casa no Spotify, com as playlists que tocam no bar e que os
+   * clientes pedem. É **só um link**, e não o leitor embebido do Spotify: esse é
+   * um `<iframe>` de terceiros com cookies, e obrigava a abrir a CSP e a rever
+   * `/cookies` e `/privacidade`. Guardado sem o `?si=` da partilha, que só
+   * serve para o Spotify saber quem partilhou.
    */
   spotify: z.url().nullable(),
 });
@@ -43,6 +41,6 @@ if (!validado.success) {
 export const marca: Marca = validado.data;
 
 /** Os perfis que existem mesmo, prontos para o rodapé e para o `sameAs`. */
-export const redes: string[] = [marca.instagram, marca.facebook].filter(
+export const redes: string[] = [marca.instagram, marca.facebook, marca.spotify].filter(
   (url): url is string => url !== null,
 );

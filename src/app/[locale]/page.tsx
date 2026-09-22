@@ -288,7 +288,7 @@ export default async function Inicio({ params }: Props) {
             )}
             {redes.spotify && (
               <a className="pg-botao" href={redes.spotify} target="_blank" rel="noopener noreferrer">
-                {t("onde.playlist")} <span aria-hidden="true">↗</span>
+                Spotify <span aria-hidden="true">↗</span>
               </a>
             )}
           </p>

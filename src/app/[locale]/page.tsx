@@ -168,6 +168,7 @@ export default async function Inicio({ params }: Props) {
         facto={t("reels.facto")}
         noInstagram={t("reels.noInstagram")}
         redes={comum("redes")}
+        seguir={comum("seguir")}
         etiqueta={t("reels.etiqueta")}
         legendas={{
           masterclass: t("reels.legendas.masterclass"),
@@ -289,7 +290,7 @@ export default async function Inicio({ params }: Props) {
               </a>
             )}
           </p>
-          <Redes rotulo={comum("redes")} variante="icones" className="pg-onde__redes" />
+          <Redes rotulo={comum("redes")} seguir={comum("seguir")} className="pg-onde__redes" />
         </div>
       </section>
 

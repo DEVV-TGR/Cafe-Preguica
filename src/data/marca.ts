@@ -54,5 +54,21 @@ export const perfis: { rede: Rede; url: string }[] = (
   ["instagram", "facebook", "tiktok", "spotify"] as const
 ).flatMap((rede) => (marca[rede] ? [{ rede, url: marca[rede] }] : []));
 
+/**
+ * O nome de utilizador que se lê no próprio link: `@cafepreguica` no Instagram
+ * e no TikTok, `cafepreguica` no Spotify. Tirado do link para não haver dois
+ * sítios a dizer a mesma coisa.
+ *
+ * O Facebook dá `null`: o perfil da casa é um `profile.php?id=…`, sem nome de
+ * utilizador, e quem o mostra decide o que pôr em vez dele.
+ */
+export function utilizador(rede: Rede, url: string): string | null {
+  const caminho = new URL(url).pathname.split("/").filter(Boolean);
+  if (rede === "spotify") return caminho[1] ?? null;
+  if (rede === "facebook") return null;
+  const nome = caminho[0]?.replace(/^@/, "");
+  return nome ? `@${nome}` : null;
+}
+
 /** Os mesmos endereços, soltos, para o `sameAs` dos dados estruturados. */
 export const redes: string[] = perfis.map((p) => p.url);

@@ -47,6 +47,7 @@ export function Reels({
   legendas,
   noInstagram,
   redes,
+  seguir,
   etiqueta,
 }: {
   nome: string;
@@ -57,6 +58,8 @@ export function Reels({
   noInstagram: string;
   /** O nome da lista de redes, para leitores de ecrã. */
   redes: string;
+  /** "Seguir", no botão de cada rede. */
+  seguir: string;
   /** A etiqueta no canto de cada capa ("Reel"). */
   etiqueta: string;
 }) {
@@ -78,7 +81,7 @@ export function Reels({
             <h2 className="pg-rotulo__nome">{nome}</h2>
             <p className="pg-rotulo__facto">{facto}</p>
           </div>
-          <Redes rotulo={redes} variante="abre" />
+          <Redes rotulo={redes} seguir={seguir} />
         </header>
 
         <ul className="pg-reels__grelha">

@@ -32,7 +32,8 @@
       "domingo": "Sunday"
     },
     "dose": "Serving",
-    "olhoCasa": "Café Preguiça · Ermesinde"
+    "olhoCasa": "Café Preguiça · Ermesinde",
+    "redes": "Our social media"
   },
   "metadata": {
     "inicio": {
@@ -97,7 +98,6 @@
     "reels": {
       "nome": "The house, moving",
       "facto": "What happens at the counter, filmed by the house and posted on Instagram. Tap one to watch it there.",
-      "dado": "@cafepreguica",
       "noInstagram": "opens on Instagram",
       "legendas": {
         "masterclass": "Hera × Preguiça masterclass",
@@ -107,7 +107,6 @@
         "menu": "The menu, against the granite wall",
         "lima": "Lime squeezed by hand"
       },
-      "seguir": "Follow",
       "etiqueta": "Reel"
     },
     "partilhar": {

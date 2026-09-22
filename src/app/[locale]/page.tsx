@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
 import { cafe, DIAS, moradaCompleta, redeDoTelefone, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
-import { marca as redes } from "@/data/marca";
 import { Motor } from "@/components/catalogo/Motor";
 import { Preguica } from "@/components/catalogo/Preguica";
 import { Heroi } from "@/components/catalogo/Heroi";
@@ -13,6 +12,7 @@ import { Preguicosos } from "@/components/catalogo/Preguicosos";
 import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
 import { IconePata } from "@/components/catalogo/Icones";
+import { Redes } from "@/components/catalogo/Redes";
 import { Link } from "@/i18n/navigation";
 import { RodapeSite } from "@/components/RodapeSite";
 import { BarraSite } from "@/components/BarraSite";
@@ -166,9 +166,8 @@ export default async function Inicio({ params }: Props) {
       <Reels
         nome={t("reels.nome")}
         facto={t("reels.facto")}
-        dado={t("reels.dado")}
         noInstagram={t("reels.noInstagram")}
-        seguir={t("reels.seguir")}
+        redes={comum("redes")}
         etiqueta={t("reels.etiqueta")}
         legendas={{
           masterclass: t("reels.legendas.masterclass"),
@@ -289,17 +288,8 @@ export default async function Inicio({ params }: Props) {
                 {t("onde.direcoes")} <span aria-hidden="true">↗</span>
               </a>
             )}
-            {redes.instagram && (
-              <a className="pg-botao" href={redes.instagram} target="_blank" rel="noopener noreferrer">
-                Instagram <span aria-hidden="true">↗</span>
-              </a>
-            )}
-            {redes.spotify && (
-              <a className="pg-botao" href={redes.spotify} target="_blank" rel="noopener noreferrer">
-                Spotify <span aria-hidden="true">↗</span>
-              </a>
-            )}
           </p>
+          <Redes rotulo={comum("redes")} variante="icones" className="pg-onde__redes" />
         </div>
       </section>
 

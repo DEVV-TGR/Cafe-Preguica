@@ -32,7 +32,8 @@
       "domingo": "Domingo"
     },
     "dose": "Dose",
-    "olhoCasa": "Café Preguiça · Ermesinde"
+    "olhoCasa": "Café Preguiça · Ermesinde",
+    "redes": "As redes da casa"
   },
   "metadata": {
     "inicio": {
@@ -97,7 +98,6 @@
     "reels": {
       "nome": "A casa em movimento",
       "facto": "O que se passa ao balcão, filmado pela casa e publicado no Instagram. Carregue num para o ver lá.",
-      "dado": "@cafepreguica",
       "noInstagram": "abre no Instagram",
       "legendas": {
         "masterclass": "Masterclass Hera × Preguiça",
@@ -107,7 +107,6 @@
         "menu": "A carta, na parede de granito",
         "lima": "Lima espremida à mão"
       },
-      "seguir": "Seguir",
       "etiqueta": "Reel"
     },
     "partilhar": {

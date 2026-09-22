@@ -3,8 +3,8 @@
  *
  * ⚠️ **Não vêm de uma biblioteca nem de um CDN**, e é de propósito: o glifo do
  * Instagram servido pela Meta é um pedido a um terceiro em cada visita, e a CSP
- * e a página `/cookies` dizem que não há nenhum. Três ícones não justificam uma
- * dependência.
+ * e a página `/cookies` dizem que não há nenhum. Meia dúzia de ícones não
+ * justifica uma dependência.
  *
  * Todos são decorativos (`aria-hidden`): o texto ao lado é que diz o que o link
  * faz.
@@ -18,6 +18,36 @@ export function IconeInstagram({ className }: Props) {
       <rect x="3" y="3" width="18" height="18" rx="5" />
       <circle cx="12" cy="12" r="4.2" />
       <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** O "f" dentro de um círculo. */
+export function IconeFacebook({ className }: Props) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M15.2 7.8h-1.5c-1.2 0-2 .8-2 2V21M9.2 13.2h5.2" />
+    </svg>
+  );
+}
+
+/** A nota musical com a cauda dobrada. */
+export function IconeTiktok({ className }: Props) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M13.2 3v12a4 4 0 1 1-4-4" />
+      <path d="M13.2 3c.5 2.9 2.5 4.8 5.6 5.1" />
+    </svg>
+  );
+}
+
+/** O círculo com as três ondas, cada uma mais curta do que a de cima. */
+export function IconeSpotify({ className }: Props) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M7.4 9.6c3-1 6.6-.7 9.3.8M8 12.7c2.5-.7 5.3-.5 7.5.7M8.6 15.6c2-.5 4-.3 5.7.5" />
     </svg>
   );
 }

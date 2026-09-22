@@ -12,6 +12,7 @@ import { Pratos } from "@/components/catalogo/Pratos";
 import { Preguicosos } from "@/components/catalogo/Preguicosos";
 import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
+import { IconePata } from "@/components/catalogo/Icones";
 import { Link } from "@/i18n/navigation";
 import { RodapeSite } from "@/components/RodapeSite";
 import { BarraSite } from "@/components/BarraSite";
@@ -265,6 +266,15 @@ export default async function Inicio({ params }: Props) {
             </>
           )}
 
+          {/* Pedido do cliente. Vive aqui, e não numa secção própria, porque é
+              informação prática para quem vem: está ao pé do horário. */}
+          {cafe.aceitaAnimais && (
+            <p className="pg-onde__animais">
+              <IconePata className="pg-icone" />
+              {t("onde.animais")}
+            </p>
+          )}
+
           <p className="pg-onde__botoes">
             {direcoes && (
               <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
@@ -274,6 +284,11 @@ export default async function Inicio({ params }: Props) {
             {redes.instagram && (
               <a className="pg-botao" href={redes.instagram} target="_blank" rel="noopener noreferrer">
                 Instagram <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            {redes.spotify && (
+              <a className="pg-botao" href={redes.spotify} target="_blank" rel="noopener noreferrer">
+                {t("onde.playlist")} <span aria-hidden="true">↗</span>
               </a>
             )}
           </p>

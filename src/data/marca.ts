@@ -21,6 +21,16 @@ const Esquema = z.object({
      adivinhado leva o visitante à conta de outra pessoa. */
   instagram: z.url().nullable(),
   facebook: z.url().nullable(),
+  /**
+   * A playlist que toca no bar e que os clientes pedem. É **só um link**, e não
+   * o leitor embebido do Spotify: esse é um `<iframe>` de terceiros com cookies,
+   * e obrigava a abrir a CSP e a rever `/cookies` e `/privacidade`.
+   *
+   * Fica de fora de `redes` porque uma playlist não é um perfil da casa, e o
+   * `sameAs` dos dados estruturados só aceita perfis. `null` até o cliente
+   * mandar o link.
+   */
+  spotify: z.url().nullable(),
 });
 
 export type Marca = z.infer<typeof Esquema>;

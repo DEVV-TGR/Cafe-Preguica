@@ -22,6 +22,19 @@ export function IconeInstagram({ className }: Props) {
   );
 }
 
+/** Uma pata: a almofada grande e os quatro dedos. */
+export function IconePata({ className }: Props) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <ellipse cx="12" cy="16" rx="4.6" ry="3.8" />
+      <ellipse cx="5.6" cy="10.4" rx="1.9" ry="2.4" />
+      <ellipse cx="9.4" cy="6.4" rx="1.9" ry="2.5" />
+      <ellipse cx="14.6" cy="6.4" rx="1.9" ry="2.5" />
+      <ellipse cx="18.4" cy="10.4" rx="1.9" ry="2.4" />
+    </svg>
+  );
+}
+
 /** O símbolo dos reels: uma claquete com o triângulo de reprodução. */
 export function IconeReel({ className }: Props) {
   return (

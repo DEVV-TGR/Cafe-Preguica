@@ -1115,6 +1115,18 @@
   color: var(--color-tinta-suave);
 }
 
+.pg-onde__animais {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.pg-onde__animais .pg-icone {
+  color: var(--color-ouro);
+}
+
 .pg-onde__botoes {
   display: flex;
   flex-wrap: wrap;

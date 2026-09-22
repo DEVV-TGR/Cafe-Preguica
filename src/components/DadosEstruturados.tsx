@@ -79,6 +79,15 @@ export function DadosEstruturados({ descricao }: { descricao: string }) {
     ...(cafe.email ? { email: cafe.email } : {}),
     ...(redes.length > 0 ? { sameAs: redes } : {}),
     ...horarioEstruturado(),
+    ...(cafe.aceitaAnimais !== null
+      ? {
+          amenityFeature: {
+            "@type": "LocationFeatureSpecification",
+            name: "Pets allowed",
+            value: cafe.aceitaAnimais,
+          },
+        }
+      : {}),
     hasMenu: `${URL_SITE}/ementa`,
   };
 

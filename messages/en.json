@@ -136,6 +136,8 @@
         "movel": "Call to the Portuguese mobile network"
       },
       "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
+      "animais": "Dogs are welcome. Bring yours along.",
+      "playlist": "Our playlist",
       "mapaAlt": "Map of the streets around Café Preguiça in Ermesinde, with the house marked by the sloth from the logo.",
       "credito": "© OpenStreetMap contributors"
     }

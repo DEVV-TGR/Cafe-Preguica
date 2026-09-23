@@ -89,7 +89,7 @@ function chaveDoDia(): string {
   vale o que valer, e é por isso que o limite por IP é o terceiro da lista e não
   o primeiro.
 */
-async function origem(): Promise<string> {
+export async function origem(): Promise<string> {
   const cabecalhos = await headers();
   return (
     cabecalhos.get("x-forwarded-for")?.split(",")[0]?.trim() ||

@@ -219,3 +219,23 @@
   justify-content: center;
   gap: 0.6rem;
 }
+
+/* O botão de uma página que pede uma acção — hoje, só a confirmação da
+   newsletter. */
+.lt-accao {
+  margin-top: 1.5rem;
+}
+
+.lt-accao .pg-botao {
+  cursor: pointer;
+}
+
+.lt-accao .pg-botao:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.lt-accao__erro {
+  margin-top: 1rem;
+  color: var(--color-ouro-claro);
+}

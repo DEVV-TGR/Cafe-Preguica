@@ -15,13 +15,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * Política de privacidade.
  *
  * ⚠️ **É um rascunho e não substitui parecer jurídico.** O que aqui está é
- * verdade sobre o site tal como ele é hoje — sem formulários, sem análise, sem
- * terceiros — e é isso que a torna curta.
+ * verdade sobre o site tal como ele é hoje — sem análise, sem terceiros no
+ * browser, e com um formulário só: o da newsletter — e é isso que a torna curta.
  *
- * **Esta página tem de ser relida no dia em que entrar um formulário**, uma
- * ferramenta de estatísticas ou um mapa embebido. Nessa altura passa a haver
- * dados de visitantes e fundamento de tratamento para declarar, e uma política
- * que diga "não recolhemos nada" passa a ser falsa. Está anotado em
+ * A newsletter foi o primeiro dado de visitantes a entrar, e foi ela que obrigou
+ * a reescrever a "recolha" e os "terceiros" (a Resend guarda a lista). Ver
+ * `docs/NEWSLETTER.md`.
+ *
+ * **Esta página tem de ser relida no dia em que entrar outro formulário**, uma
+ * ferramenta de estatísticas ou um mapa embebido. Está anotado em
  * `docs/decisoes-pendentes.md`.
  */
 export default async function Privacidade({ params }: Props) {
@@ -30,7 +32,14 @@ export default async function Privacidade({ params }: Props) {
   const t = await getTranslations("privacidade");
   const meta = await getTranslations("metadata.privacidade");
 
-  const seccoes = ["recolha", "terceiros", "alojamento", "equipa", "contacto"] as const;
+  const seccoes = [
+    "recolha",
+    "newsletter",
+    "terceiros",
+    "alojamento",
+    "equipa",
+    "contacto",
+  ] as const;
 
   return (
     <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>
@@ -38,9 +47,9 @@ export default async function Privacidade({ params }: Props) {
           ou um serviço de terceiros, mudam as duas — ver o aviso acima. */}
       <Ficha
         itens={[
-          { rotulo: t("ficha.formularios"), valor: t("ficha.nenhum") },
+          { rotulo: t("ficha.formularios"), valor: t("ficha.newsletter") },
           { rotulo: t("ficha.cookies"), valor: t("ficha.nenhum") },
-          { rotulo: t("ficha.terceiros"), valor: t("ficha.nenhum") },
+          { rotulo: t("ficha.terceiros"), valor: t("ficha.soEmail") },
         ]}
       />
       <Aviso>{t("atualizado")}</Aviso>

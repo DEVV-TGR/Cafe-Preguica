@@ -108,6 +108,8 @@ jobs:
           verificar /en               200
           verificar /en/ementa        200
           verificar /en/contactos     200
+          verificar /newsletter/confirmar    200
+          verificar /en/newsletter/confirmar 200
           verificar /sitemap.xml      200
           verificar /robots.txt       200
           verificar /uma-rota-que-nao-existe 404
@@ -150,7 +152,7 @@ jobs:
           set -euo pipefail
 
           # Sem sessão, `/painel` e as suas páginas mandam para a entrada.
-          for caminho in /painel /painel/ementa /painel/casa; do
+          for caminho in /painel /painel/ementa /painel/casa /painel/newsletter; do
             resposta=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "http://localhost:3000${caminho}")
             if [ "$resposta" != "307 http://localhost:3000/painel/entrar" ]; then
               echo "::error::${caminho} sem sessão devolveu '${resposta}', esperava 307 para /painel/entrar"
@@ -220,6 +222,32 @@ jobs:
             exit 1
           fi
           echo "✓ nenhum recurso de terceiros no HTML"
+
+      # O convite da newsletter escreve em `/api/newsletter`. Sem segredos no CI
+      # não se consegue ir até ao Resend, mas consegue-se confirmar que a porta
+      # recusa o que não é um email **antes** de tocar em qualquer serviço — e
+      # que nenhuma das duas rotas aceita um GET.
+      - name: A newsletter recusa o que deve
+        run: |
+          set -euo pipefail
+
+          obtido=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' -d '{"email":"isto-nao-e-um-email"}' \
+            http://localhost:3000/api/newsletter)
+          [ "$obtido" = "400" ] || { echo "::error::um email inválido devolveu ${obtido}, esperava 400"; exit 1; }
+          echo "✓ um email inválido → 400"
+
+          obtido=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' -d '{"convite":"n1.inventado.falso"}' \
+            http://localhost:3000/api/newsletter/confirmar)
+          [ "$obtido" != "200" ] || { echo "::error::um convite inventado foi aceite"; exit 1; }
+          echo "✓ um convite inventado não entra (${obtido})"
+
+          for rota in /api/newsletter /api/newsletter/confirmar; do
+            obtido=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:3000${rota}")
+            [ "$obtido" = "405" ] || { echo "::error::GET ${rota} devolveu ${obtido}, esperava 405"; exit 1; }
+            echo "✓ GET ${rota} → 405"
+          done
 
       # A página `/cookies` diz que não há nenhum. O caso que já apanhou o site
       # foi o do `next-intl`: grava a língua num cookie a quem abre `/en` com o

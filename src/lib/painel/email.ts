@@ -62,7 +62,7 @@ const SEM_CONFIGURACAO = 0;
   — uma página de erro de um proxy pelo meio, por exemplo — despejava kilobytes
   de HTML para dentro do registo.
 */
-function semEnderecos(detalhe: string): string {
+export function semEnderecos(detalhe: string): string {
   const limpo = detalhe.replace(
     /[^\s"'<>@]+@[^\s"'<>@]+\.[a-z]{2,}/gi,
     (endereco) => meioEscondido(endereco),

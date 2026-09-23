@@ -10,8 +10,9 @@ import { ler, guardarSeNovo } from "./redis";
   | `sessao` | assinar o cookie de quem já entrou | HMAC-SHA256 |
   | `desafio` | assinar o cookie que aponta ao código pendente | HMAC-SHA256 |
   | `aparelho` | assinar o "este aparelho já passou pelo email" | HMAC-SHA256 |
+  | `newsletter` | assinar o link de confirmação da inscrição | HMAC-SHA256 |
 
-  **As três não podem ser a mesma chave.** Sem separação, um selo de sessão podia
+  **Não podem ser a mesma chave.** Sem separação, um selo de sessão podia
   ser apresentado como selo de aparelho, e uma fraqueza num dos usos passava aos
   outros. O `hkdf` é a ferramenta desenhada exactamente para isto — esticar um
   segredo em várias chaves independentes, com um rótulo por uso — e é síncrono.
@@ -66,10 +67,10 @@ async function segredo(): Promise<string> {
   return emCache;
 }
 
-export type Uso = "sessao" | "desafio" | "aparelho";
+export type Uso = "sessao" | "desafio" | "aparelho" | "newsletter";
 
 /*
-  Sem sal: a separação que interessa é entre os três usos, e essa é feita pelo
+  Sem sal: a separação que interessa é entre os usos, e essa é feita pelo
   rótulo, que é o parâmetro `info` e é para isso que ele existe. Um sal fixo
   escrito no código não acrescentava nada, e um variável obrigava a guardá-lo em
   algum lado.

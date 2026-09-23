@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { DadosEstruturados } from "@/components/DadosEstruturados";
+import { Convite, type TextosDoConvite } from "@/components/newsletter/Convite";
 import { routing } from "@/i18n/routing";
 import { URL_SITE } from "@/lib/site";
 import { fontes } from "../fontes";
@@ -48,6 +49,27 @@ export default async function LayoutIdioma({
 
   const t = await getTranslations({ locale, namespace: "metadata.inicio" });
   const nav = await getTranslations({ locale, namespace: "nav" });
+  const convite = await getTranslations({ locale, namespace: "newsletter.convite" });
+
+  /* Os textos vão como props, já traduzidos, e não pelo `useTranslations` do
+     cliente: assim o convite não obriga a mandar as mensagens todas para o
+     browser. */
+  const textosDoConvite: TextosDoConvite = {
+    olho: convite("olho"),
+    titulo: convite("titulo"),
+    texto: convite("texto"),
+    etiqueta: convite("etiqueta"),
+    marcador: convite("marcador"),
+    botao: convite("botao"),
+    aEnviar: convite("aEnviar"),
+    fechar: convite("fechar"),
+    privacidade: convite("privacidade"),
+    enviadoTitulo: convite("enviadoTitulo"),
+    enviadoTexto: convite("enviadoTexto"),
+    erroEmail: convite("erroEmail"),
+    erroLimite: convite("erroLimite"),
+    erroServico: convite("erroServico"),
+  };
 
   return (
     <html lang={locale} className={fontes}>
@@ -67,6 +89,10 @@ export default async function LayoutIdioma({
               mesma em todas (`BarraSite`), mas cada página a põe onde precisa —
               a inicial, por exemplo, tem a preguiça e o motor antes dela. */}
           {children}
+          {/* No layout, e não no `template`: o layout não volta a montar ao
+              mudar de página, e é isso que faz os 8 segundos contarem uma vez
+              por visita e não uma vez por página. */}
+          <Convite locale={locale} textos={textosDoConvite} />
         </NextIntlClientProvider>
         <DadosEstruturados descricao={t("descricao")} />
       </body>

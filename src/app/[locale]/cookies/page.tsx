@@ -25,6 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * página deixa de estar correta** e passa a ser preciso banner de consentimento.
  * É uma das razões pelas quais essas coisas não entram sem decisão explícita.
  *
+ * A secção `memoria` existe por causa do convite da newsletter, que se lembra
+ * no `localStorage` de quem já se inscreveu. Não é cookie, mas a promessa desta
+ * página é que o site não guarda nada às escondidas.
+ *
  * O cookie da língua do `next-intl` já esteve ligado sem ninguém dar por isso —
  * está desligado em `i18n/routing.ts`, e o CI verifica que nenhuma página
  * devolve `Set-Cookie`.
@@ -35,7 +39,7 @@ export default async function Cookies({ params }: Props) {
   const t = await getTranslations("cookies");
   const meta = await getTranslations("metadata.cookies");
 
-  const seccoes = ["uso", "lingua", "equipa", "verificar"] as const;
+  const seccoes = ["uso", "lingua", "memoria", "equipa", "verificar"] as const;
 
   return (
     <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>

@@ -61,6 +61,7 @@ const eslintConfig = [
       "src/components/BarraSite.tsx",
       "src/components/Pagina.tsx",
       "src/components/Transicao.tsx",
+      "src/components/newsletter/Convite.tsx",
     ],
     rules: { "@next/next/no-img-element": "off" },
   },

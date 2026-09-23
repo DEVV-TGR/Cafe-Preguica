@@ -250,3 +250,174 @@
   pointer-events: none;
   will-change: transform;
 }
+
+/* ======================================================= O CONVITE DA NEWSLETTER
+   Ver `components/newsletter/Convite.tsx`. Um cartão pequeno, pousado no canto
+   de baixo, que não tapa a página nem a escurece. A preguiça pendura-se na
+   borda de cima, como no topo da inicial — é o que faz disto um convite da
+   casa e não o pop-up de qualquer site.
+
+   Por cima da barra (25) e por baixo da linha de progresso (40) e da transição
+   (100): se se mudar de página com ele aberto, a transição passa-lhe por cima. */
+
+.pg-convite {
+  position: fixed;
+  inset: auto 0.75rem 0.75rem 0.75rem;
+  z-index: 30;
+  padding: 1.4rem 1.25rem 1.1rem;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 45%, transparent);
+  border-top: 2px solid var(--color-ouro);
+  border-radius: 1rem;
+  background: var(--color-superficie);
+  box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.7);
+  animation: pg-convite-entrar 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (min-width: 40rem) {
+  .pg-convite {
+    inset: auto clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem) auto;
+    width: 23rem;
+  }
+}
+
+@keyframes pg-convite-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+
+.pg-convite__preguica {
+  position: absolute;
+  top: 0;
+  left: 1.1rem;
+  width: 4.2rem;
+  height: auto;
+  /* Os braços agarram a borda: 72% da imagem fica por cima do cartão. */
+  transform: translateY(-72%);
+  pointer-events: none;
+}
+
+.pg-convite__fechar {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  color: var(--color-tinta-suave);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.pg-convite__fechar:hover,
+.pg-convite__fechar:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+.pg-convite__olho {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pg-convite__titulo {
+  margin: 0.2rem 2rem 0.4rem 0;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1.05;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pg-convite__texto {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-tinta-suave);
+}
+
+.pg-convite__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.pg-convite__campo {
+  flex: 1 1 11rem;
+}
+
+.pg-convite__entrada {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  background: var(--color-canvas);
+  color: var(--color-tinta);
+  /* 16 px: abaixo disso o Safari do iPhone faz zoom ao tocar no campo. */
+  font-size: 1rem;
+}
+
+.pg-convite__entrada::placeholder {
+  color: color-mix(in oklab, var(--color-tinta-suave) 65%, transparent);
+}
+
+.pg-convite__entrada:focus {
+  outline: none;
+  border-color: var(--color-ouro);
+  box-shadow: 0 0 0 1px var(--color-ouro);
+}
+
+.pg-convite__entrada[aria-invalid="true"] {
+  border-color: #d9674c;
+}
+
+.pg-convite__botao {
+  flex: 0 0 auto;
+  justify-content: center;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+.pg-convite__botao:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Fora do ecrã, e não `display: none`: há robôs que saltam campos escondidos
+   assim, e o isco só serve se eles o preencherem. */
+.pg-convite__isco {
+  position: absolute;
+  left: -100vw;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.pg-convite__erro {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-ouro-claro);
+}
+
+.pg-convite__nota {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-convite__nota a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-ouro) 45%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.pg-convite__nota a:hover,
+.pg-convite__nota a:focus-visible {
+  color: var(--color-ouro-claro);
+}

@@ -55,7 +55,7 @@
     },
     "privacidade": {
       "titulo": "Privacy",
-      "descricao": "What data this site collects — and why the answer is none."
+      "descricao": "What data this site collects, what for, and for how long."
     },
     "cookies": {
       "titulo": "Cookies",
@@ -64,6 +64,10 @@
     "informacaoLegal": {
       "titulo": "Dispute resolution",
       "descricao": "What to do if something goes wrong: the consumer arbitration centre and the Complaints Book."
+    },
+    "newsletter": {
+      "titulo": "Newsletter",
+      "descricao": "Confirm your subscription to the Café Preguiça newsletter."
     }
   },
   "inicio": {
@@ -246,11 +250,15 @@
     "atualizado": "Last updated: draft, to be reviewed before publishing.",
     "recolha": {
       "titulo": "What data we collect",
-      "texto": "None about visitors. This site has no forms or visitor accounts, and stores nothing about the people who open it."
+      "texto": "About people who only visit, none: the site has no accounts or analytics tools, and stores nothing about the people who open it. The one exception is the newsletter, and only for those who sign up — it is explained in the next section."
+    },
+    "newsletter": {
+      "titulo": "The newsletter",
+      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you news from the house, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation the address is not kept. Every email has a link to unsubscribe, which takes effect immediately. The list is kept until you unsubscribe, and you can ask us at any time what data we hold or to delete it, through the contact details of the house."
     },
     "terceiros": {
       "titulo": "Third-party services",
-      "texto": "There are none. Fonts and images are served by this domain, there is no embedded map and no social buttons loading outside code. Links to Google Maps and to social networks are plain links: they are only followed if you click them."
+      "texto": "None that load code in your browser: fonts and images are served by this domain, there is no embedded map and no social buttons. Links to Google Maps and to social networks are plain links, only followed if you click them. Newsletter emails are sent through Resend, which keeps the contact list on our behalf; your browser never talks to it — the site's server does."
     },
     "alojamento": {
       "titulo": "Hosting",
@@ -269,7 +277,9 @@
       "formularios": "Forms",
       "cookies": "Cookies",
       "terceiros": "Third-party services",
-      "nenhum": "None"
+      "nenhum": "None",
+      "newsletter": "The newsletter",
+      "soEmail": "Email sending only"
     }
   },
   "cookies": {
@@ -289,6 +299,10 @@
     "lingua": {
       "titulo": "What about the language you chose?",
       "texto": "It lives in the address, not in a cookie: the English version is under /en. It stays as you browse the site. If you type the address again without /en, the site opens in your browser's language."
+    },
+    "memoria": {
+      "titulo": "What about the newsletter invitation?",
+      "texto": "So as not to show it again to someone who has signed up, the site leaves a note in the browser's storage that just says \"signed up\". Closing the invitation leaves another note, which the browser deletes by itself when the tab is closed. Neither is a cookie: they identify no one, are not sent to the server and never leave your device. If you delete them, the worst that happens is the invitation showing up again."
     },
     "equipa": {
       "titulo": "The staff area",
@@ -329,5 +343,40 @@
     "seguir": "Keep browsing",
     "inicio": "Back to the home page",
     "ementa": "See the menu"
+  },
+  "newsletter": {
+    "convite": {
+      "olho": "Newsletter",
+      "titulo": "News from the house",
+      "texto": "New cocktails, special nights and what changes on the menu — only when there's something to tell. Written in Portuguese.",
+      "etiqueta": "Your email",
+      "marcador": "you@email.com",
+      "botao": "Sign up",
+      "aEnviar": "Sending…",
+      "fechar": "Close",
+      "privacidade": "How we handle your email",
+      "enviadoTitulo": "One more step",
+      "enviadoTexto": "We've sent you an email. Click the link in it to confirm — until then, you're not signed up.",
+      "erroEmail": "That email doesn't look complete.",
+      "erroLimite": "Too many requests in the last few minutes. Please try again shortly.",
+      "erroServico": "We couldn't send it right now. Please try again shortly."
+    },
+    "confirmar": {
+      "olho": "Newsletter",
+      "titulo": "Confirm your sign-up",
+      "texto": "Just this: press the button to start receiving news from Café Preguiça at this email.",
+      "botao": "Confirm sign-up",
+      "aConfirmar": "Confirming…",
+      "feitoTitulo": "You're signed up",
+      "feitoTexto": "You'll get the house news by email. Every email has a link to unsubscribe, should you change your mind.",
+      "semConvite": "This address carries no sign-up to confirm. If you came from the email, open the link again — ideally copying it in full.",
+      "invalido": "This link is incomplete or no longer valid. Open it again from the email, or sign up again on the site.",
+      "expirado": "This link is more than 48 hours old. Sign up again on the site and a new one will arrive.",
+      "erro": "We couldn't confirm right now. Please try again shortly — the link is still valid."
+    },
+    "email": {
+      "assunto": "Confirm your subscription to the Café Preguiça newsletter",
+      "texto": "Hello,\n\nYou asked to receive news from Café Preguiça. To confirm, open this link:\n\n{link}\n\nThe link is valid for 48 hours. If this wasn't you, ignore this email: without confirmation, the address is neither subscribed nor stored.\n\nCafé Preguiça · Ermesinde"
+    }
   }
 }

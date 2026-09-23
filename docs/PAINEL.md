@@ -10,6 +10,9 @@ Aqui a casa muda a carta e o horário sem depender de nós: **`/painel`**.
   - mudar a ordem dentro de cada categoria;
   - apagar.
 - **Casa:** horário de cada dia, telefone, email e as quatro redes.
+- **Newsletter:** escrever e enviar a quem se inscreveu no site, e ver a lista
+  de contactos. Não grava no repositório — fala com o Resend. Ver
+  [`NEWSLETTER.md`](NEWSLETTER.md).
 
 É o mesmo desenho do painel da Taskuinha (`DEVV-TGR/Taskuinha`, `docs/PAINEL.md`),
 com as diferenças anotadas abaixo.

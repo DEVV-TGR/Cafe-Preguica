@@ -55,7 +55,7 @@
     },
     "privacidade": {
       "titulo": "Privacidade",
-      "descricao": "Que dados este site recolhe — e porque é que a resposta é nenhuns."
+      "descricao": "Que dados este site recolhe, para quê e por quanto tempo."
     },
     "cookies": {
       "titulo": "Cookies",
@@ -64,6 +64,10 @@
     "informacaoLegal": {
       "titulo": "Resolução de litígios",
       "descricao": "O que fazer se alguma coisa correr mal: o centro de arbitragem de consumo e o Livro de Reclamações."
+    },
+    "newsletter": {
+      "titulo": "Newsletter",
+      "descricao": "Confirmar a inscrição na newsletter do Café Preguiça."
     }
   },
   "inicio": {
@@ -246,11 +250,15 @@
     "atualizado": "Última atualização: rascunho, por rever antes de publicar.",
     "recolha": {
       "titulo": "Que dados recolhemos",
-      "texto": "Nenhuns sobre quem visita. Este site não tem formulários nem contas para visitantes, e não guarda nada sobre quem o abre."
+      "texto": "Sobre quem só visita, nenhuns: o site não tem contas nem ferramentas de estatística, e não guarda nada sobre quem o abre. A única exceção é a newsletter, e só para quem se inscreve — está explicada na secção seguinte."
+    },
+    "newsletter": {
+      "titulo": "A newsletter",
+      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou, e usamo-los só para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o no link que lhe enviamos. Sem essa confirmação o endereço não fica guardado. Cada email traz um link para cancelar a inscrição, que funciona de imediato. A lista é guardada até cancelar, e pode pedir-nos a qualquer momento para saber que dados temos ou para os apagar, pelos contactos da casa."
     },
     "terceiros": {
       "titulo": "Serviços de terceiros",
-      "texto": "Não há. As fontes e as imagens são servidas por este domínio, não há mapa embebido nem botões de redes sociais que carreguem código de fora. As ligações para o Google Maps e para as redes sociais são links normais: só são seguidos se carregar neles."
+      "texto": "Nenhum que carregue código no seu navegador: as fontes e as imagens são servidas por este domínio, não há mapa embebido nem botões de redes sociais. As ligações para o Google Maps e para as redes sociais são links normais, só seguidos se carregar neles. Os emails da newsletter são enviados pela Resend, que guarda a lista de contactos em nosso nome; o seu navegador nunca fala com ela, é o servidor do site que o faz."
     },
     "alojamento": {
       "titulo": "Alojamento",
@@ -269,7 +277,9 @@
       "formularios": "Formulários",
       "cookies": "Cookies",
       "terceiros": "Serviços de terceiros",
-      "nenhum": "Nenhum"
+      "nenhum": "Nenhum",
+      "newsletter": "A newsletter",
+      "soEmail": "Só o envio de email"
     }
   },
   "cookies": {
@@ -289,6 +299,10 @@
     "lingua": {
       "titulo": "E a língua que escolheu?",
       "texto": "Fica no endereço, e não num cookie: a versão inglesa vive em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre na língua do seu navegador."
+    },
+    "memoria": {
+      "titulo": "E o convite da newsletter?",
+      "texto": "Para não o voltar a mostrar a quem já se inscreveu, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\". Quem fecha o convite leva outra nota, que o navegador apaga sozinho ao fechar o separador. Nenhuma das duas é um cookie: não identificam ninguém, não são enviadas ao servidor e não saem do seu aparelho. Se as apagar, o pior que acontece é o convite voltar a aparecer."
     },
     "equipa": {
       "titulo": "A área da equipa",
@@ -329,5 +343,40 @@
     "seguir": "Continuar no site",
     "inicio": "Voltar ao início",
     "ementa": "Ver a ementa"
+  },
+  "newsletter": {
+    "convite": {
+      "olho": "Newsletter",
+      "titulo": "Novidades da casa",
+      "texto": "Cocktails novos, noites especiais e o que muda na carta. Só quando há alguma coisa para contar.",
+      "etiqueta": "O seu email",
+      "marcador": "o-seu@email.pt",
+      "botao": "Inscrever",
+      "aEnviar": "A enviar…",
+      "fechar": "Fechar",
+      "privacidade": "Como tratamos o seu email",
+      "enviadoTitulo": "Falta um passo",
+      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está para confirmar — até lá, não fica inscrito.",
+      "erroEmail": "Esse email não parece estar completo.",
+      "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente daqui a um bocado.",
+      "erroServico": "Não foi possível enviar agora. Tente daqui a um bocado."
+    },
+    "confirmar": {
+      "olho": "Newsletter",
+      "titulo": "Confirmar a inscrição",
+      "texto": "Falta só isto: carregue no botão para começar a receber as novidades do Café Preguiça neste email.",
+      "botao": "Confirmar inscrição",
+      "aConfirmar": "A confirmar…",
+      "feitoTitulo": "Está inscrito",
+      "feitoTexto": "Vai receber as novidades da casa no seu email. Cada envio traz um link para cancelar, se mudar de ideias.",
+      "semConvite": "Este endereço não traz nenhuma inscrição para confirmar. Se chegou aqui a partir do email, abra o link outra vez — de preferência copiando-o por inteiro.",
+      "invalido": "Este link não está completo ou já não serve. Abra-o outra vez a partir do email, ou inscreva-se de novo no site.",
+      "expirado": "Este link já passou das 48 horas. Inscreva-se outra vez no site e chega um novo.",
+      "erro": "Não foi possível confirmar agora. Tente daqui a um bocado — o link continua a valer."
+    },
+    "email": {
+      "assunto": "Confirme a sua inscrição na newsletter do Café Preguiça",
+      "texto": "Olá,\n\nPediu para receber as novidades do Café Preguiça. Para confirmar, abra este link:\n\n{link}\n\nO link vale 48 horas. Se não foi você, ignore este email: sem confirmação, o endereço não fica inscrito nem guardado.\n\nCafé Preguiça · Ermesinde"
+    }
   }
 }

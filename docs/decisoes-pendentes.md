@@ -7,8 +7,13 @@ se toma aqui evita a conversa de a desfazer daí a dois meses.
 
 ## 1. Formulário de contacto — **em aberto**
 
-Hoje não há. Os contactos são links diretos (telefone, email, direções) e o site
-é 100% estático: não recebe dados de ninguém.
+Hoje não há. Os contactos são links diretos (telefone, email, direções).
+
+O site já recebe **um** dado de visitantes: o email de quem se inscreve na
+newsletter (ver `docs/NEWSLETTER.md`). Metade do que está escrito em baixo já
+existe por causa dela — a rota em `/api`, o `zod` à entrada, o isco, os limites
+no Upstash e o Resend — e as páginas de privacidade e cookies já foram revistas
+uma vez. Um formulário de contacto seria mais uma rota ao lado dessa.
 
 ### Se ficar assim
 

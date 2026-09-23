@@ -4,7 +4,7 @@ import { routing } from "@/i18n/routing";
 import { URL_SITE, caminhoLocalizado } from "@/lib/site";
 import { criarConvite } from "@/lib/newsletter/convite";
 import { podeConvidar } from "@/lib/newsletter/limites";
-import { enviarConfirmacao, ErroDaNewsletter } from "@/lib/newsletter/resend";
+import { enviarConfirmacao, estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { ErroDoRedis } from "@/lib/painel/redis";
 
 /*
@@ -27,6 +27,7 @@ import { ErroDoRedis } from "@/lib/painel/redis";
   | estado | quando | o pop-up diz |
   |---|---|---|
   | 200 | pedido aceite (ou apanhado pelo isco, ver abaixo) | "vê o teu email" |
+  | 200 `jaInscrito` | o email já está na lista, e não se envia nada | "já está inscrito" |
   | 400 | o email não é um email | "esse email não parece completo" |
   | 429 | limites de `lib/newsletter/limites.ts` | "tenta daqui a um bocado" |
   | 503 | Resend ou Redis em baixo, ou sem configuração | "não conseguimos enviar agora" |
@@ -90,6 +91,20 @@ export async function POST(pedido: Request) {
   try {
     if (!(await podeConvidar(email))) {
       return Response.json({ erro: "limite" }, { status: 429 });
+    }
+
+    /*
+      Quem já está inscrito não recebe outro email de confirmação: não há nada
+      para confirmar, e um segundo email a quem já recebe a newsletter parece
+      spam.
+
+      Isto diz a quem escreve o email se ele está na lista — é o preço de não
+      mandar emails inúteis, e é o mesmo da carta secreta. Quem quisesse usar o
+      convite para testar uma lista de endereços esbarra nos limites de cima
+      (5 por hora por ligação), que contam antes desta pergunta.
+    */
+    if (await estaInscrito(email)) {
+      return Response.json({ ok: true, jaInscrito: true });
     }
 
     const t = await getTranslations({ locale: lingua, namespace: "newsletter.email" });

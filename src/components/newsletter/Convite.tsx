@@ -56,6 +56,8 @@ export type TextosDoConvite = {
   privacidade: string;
   enviadoTitulo: string;
   enviadoTexto: string;
+  jaTitulo: string;
+  jaTexto: string;
   erroEmail: string;
   erroLimite: string;
   erroServico: string;
@@ -65,6 +67,7 @@ type Estado =
   | { tipo: "formulario"; erro?: string }
   | { tipo: "a-enviar" }
   | { tipo: "enviado" }
+  | { tipo: "ja-inscrito" }
   | { tipo: "fechado" };
 
 function ler(armazem: () => Storage): string | null {
@@ -108,7 +111,9 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   const visivel = passouOTempo && estado.tipo !== "fechado" && podeAparecerAqui(caminho);
 
   function fechar() {
-    if (estado.tipo !== "enviado") guardar(() => sessionStorage, "fechado");
+    if (estado.tipo !== "enviado" && estado.tipo !== "ja-inscrito") {
+      guardar(() => sessionStorage, "fechado");
+    }
     setEstado({ tipo: "fechado" });
   }
 
@@ -145,7 +150,8 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
          convite também não volta — insistir com quem já respondeu é spam do
          nosso lado. */
       guardar(() => localStorage, "inscrito");
-      setEstado({ tipo: "enviado" });
+      const corpo = (await resposta.json().catch(() => ({}))) as { jaInscrito?: boolean };
+      setEstado({ tipo: corpo.jaInscrito ? "ja-inscrito" : "enviado" });
       return;
     }
 
@@ -176,13 +182,15 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
         <span aria-hidden="true">×</span>
       </button>
 
-      {estado.tipo === "enviado" ? (
+      {estado.tipo === "enviado" || estado.tipo === "ja-inscrito" ? (
         <div role="status">
           <p className="pg-convite__olho">{textos.olho}</p>
           <h2 id={idTitulo} className="pg-convite__titulo">
-            {textos.enviadoTitulo}
+            {estado.tipo === "enviado" ? textos.enviadoTitulo : textos.jaTitulo}
           </h2>
-          <p className="pg-convite__texto">{textos.enviadoTexto}</p>
+          <p className="pg-convite__texto">
+            {estado.tipo === "enviado" ? textos.enviadoTexto : textos.jaTexto}
+          </p>
         </div>
       ) : (
         <>

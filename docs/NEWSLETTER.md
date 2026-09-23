@@ -125,6 +125,11 @@ acrescenta prova nenhuma. A prova é a confirmação por email.
 | Confirmações enviadas ao todo | 30 | 24 h |
 | Validade do link de confirmação | — | 48 h |
 
+**Quem já está inscrito não recebe outro email.** Antes de enviar a
+confirmação, o servidor pergunta ao Resend se o email já está no segmento e
+ativo; se estiver, não envia nada e o convite diz "já está inscrito". Quem
+cancelou, ou ainda não confirmou, pode pedir outra vez.
+
 Mais um isco para robôs: um campo escondido que só um robô preenche.
 
 ---

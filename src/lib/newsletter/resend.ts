@@ -75,6 +75,8 @@ function rebentar(estado: number, detalhe: string): never {
   throw new ErroDaNewsletter(estado, seguro);
 }
 
+type ListaDoResend<T> = { has_more: boolean; data: T[] };
+
 type Configuracao = { chave: string; remetente: string; segmento: string };
 
 /** O que falta configurar, ou `null` se estiver tudo. Para o painel o poder dizer
@@ -195,6 +197,42 @@ export async function criarContacto(email: string): Promise<void> {
   await pedir(`/contacts/${alvo}/segments/${encodeURIComponent(segmento)}`, { metodo: "POST" });
 }
 
+/*
+  Este email já recebe a newsletter?
+
+  Três condições, e têm de se verificar as três: o contacto existe, não cancelou,
+  e está **no segmento desta newsletter** — a mesma conta do Resend pode ter
+  contactos de outras coisas, e esses não estão inscritos aqui.
+
+  Quem ainda não confirmou não está no Resend (ver `lib/newsletter/convite.ts`),
+  e por isso responde `false`: pode pedir o email de confirmação outra vez.
+
+  Em desenvolvimento, sem chave, não há a quem perguntar: responde `false`, e o
+  convite porta-se como com um email novo.
+*/
+export async function estaInscrito(email: string): Promise<boolean> {
+  if (process.env.NODE_ENV !== "production" && !process.env.RESEND_NEWSLETTER_API_KEY) {
+    return false;
+  }
+
+  const { segmento } = configuracao();
+  const alvo = encodeURIComponent(email);
+
+  let contacto: { unsubscribed: boolean };
+  try {
+    contacto = await pedir(`/contacts/${alvo}`);
+  } catch (erro) {
+    if (erro instanceof ErroDaNewsletter && erro.estado === 404) return false;
+    throw erro;
+  }
+  if (contacto.unsubscribed) return false;
+
+  const segmentos = await pedir<ListaDoResend<{ id: string }>>(
+    `/contacts/${alvo}/segments?limit=100`,
+  );
+  return segmentos.data.some((s) => s.id === segmento);
+}
+
 /* ------------------------------------------------------------ o painel -- */
 
 export type Contacto = {
@@ -202,8 +240,6 @@ export type Contacto = {
   criadoEm: string;
   cancelou: boolean;
 };
-
-type ListaDoResend<T> = { has_more: boolean; data: T[] };
 
 /*
   A lista inteira, de 100 em 100.

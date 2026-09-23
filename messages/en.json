@@ -358,6 +358,8 @@
       "privacidade": "How we handle your email",
       "enviadoTitulo": "One more step",
       "enviadoTexto": "We've sent you an email. Click the link in it to confirm — until then, you're not signed up.",
+      "jaTitulo": "You're already signed up",
+      "jaTexto": "This email already gets the house news. There's nothing else to do.",
       "erroEmail": "That email doesn't look complete.",
       "erroLimite": "Too many requests in the last few minutes. Please try again shortly.",
       "erroServico": "We couldn't send it right now. Please try again shortly."

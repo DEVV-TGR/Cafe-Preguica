@@ -67,6 +67,8 @@ export default async function LayoutIdioma({
     privacidade: convite("privacidade"),
     enviadoTitulo: convite("enviadoTitulo"),
     enviadoTexto: convite("enviadoTexto"),
+    jaTitulo: convite("jaTitulo"),
+    jaTexto: convite("jaTexto"),
     erroEmail: convite("erroEmail"),
     erroLimite: convite("erroLimite"),
     erroServico: convite("erroServico"),

@@ -13,6 +13,8 @@ import {
   type Ementa,
 } from "@/data/ementa";
 import mensagens from "../../../../messages/pt.json";
+/* Só o índice e o cabeçalho das secções — os mesmos da carta pública. */
+import "../../ementa.css";
 
 /**
  * Os capítulos e as categorias, já com os nomes que a carta mostra — os mesmos
@@ -22,6 +24,7 @@ import mensagens from "../../../../messages/pt.json";
  */
 function grupos(): GrupoDeCategorias[] {
   return (Object.keys(CAPITULOS) as Capitulo[]).map((capitulo) => ({
+    id: capitulo,
     capitulo: mensagens.ementa.capitulos[capitulo].nome,
     categorias: CATEGORIAS.filter((c) =>
       (CAPITULOS[capitulo] as readonly string[]).includes(c),

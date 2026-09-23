@@ -43,19 +43,34 @@ const Pedido = z.object({
 /*
   O endereço do link que vai no email.
 
-  Em produção é sempre o `URL_SITE`, e não o `Host` do pedido: um `Host`
-  forjado não pode pôr o domínio de outra pessoa dentro de um email que sai em
-  nome da casa. Em desenvolvimento é a origem do pedido, senão o link apontava à
-  Vercel e não à máquina de quem está a experimentar.
+  | onde | base do link |
+  |---|---|
+  | produção | `URL_SITE` |
+  | pré-visualização da Vercel (um PR) | o endereço desse deploy (`VERCEL_URL`) |
+  | `npm run dev` | a origem do pedido |
+
+  Nunca o `Host` do pedido fora do `dev`: um `Host` forjado não pode pôr o
+  domínio de outra pessoa dentro de um email que sai em nome da casa. As duas
+  variáveis da Vercel são postas pela plataforma, não por quem faz o pedido.
+
+  A pré-visualização tem linha própria porque lá o `NODE_ENV` também é
+  `production`: sem ela, o link de um teste num PR ia dar à página de
+  confirmação do site verdadeiro — que antes do merge ainda não existe.
 
   O convite vai no **fragmento** (`#`), e não na query: o fragmento nunca sai do
   browser, e por isso o convite não fica nos registos da Vercel nem no
   `Referer` de ninguém. A página de confirmação continua estática.
 */
+function baseDoLink(pedido: Request): string {
+  if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  if (process.env.NODE_ENV === "production") return URL_SITE;
+  return new URL(pedido.url).origin;
+}
+
 function linkDeConfirmacao(pedido: Request, lingua: (typeof routing.locales)[number], convite: string) {
-  const base =
-    process.env.NODE_ENV === "production" ? URL_SITE : new URL(pedido.url).origin;
-  return `${base}${caminhoLocalizado("/newsletter/confirmar", lingua)}#${convite}`;
+  return `${baseDoLink(pedido)}${caminhoLocalizado("/newsletter/confirmar", lingua)}#${convite}`;
 }
 
 export async function POST(pedido: Request) {

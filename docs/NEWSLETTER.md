@@ -47,15 +47,21 @@ mensagem. Ver `src/app/api/newsletter/confirmar/route.ts`.
 
 1. Resend → **Audience → Segments → Create segment**, com o nome
    `Newsletter Preguiça`. Copiar o id.
-2. Na Vercel (e no `.env.local`, para testar em casa):
+2. Resend → **API Keys → Create API key**, nome `Newsletter Preguiça`,
+   permissão **Full access**. Não reutilizar a `RESEND_API_KEY` do painel: essa
+   é normalmente *Sending access*, e com ela a lista de contactos e os envios a
+   todos são recusados com 401.
+3. Na Vercel, em **Production e Preview** (para se poder testar no PR):
 
    ```
-   RESEND_NEWSLETTER_API_KEY     = a mesma chave do RESEND_API_KEY
+   RESEND_NEWSLETTER_API_KEY     = a chave do passo 2
    RESEND_NEWSLETTER_REMETENTE   = Café Preguiça <novidades@send.devplus.pt>
    RESEND_NEWSLETTER_SEGMENTO    = o id do passo 1
    ```
 
-3. Redeploy.
+   O Upstash e o `PAINEL_EMAILS` também têm de existir em Preview — sem Upstash
+   o convite responde "não foi possível enviar agora".
+4. Redeploy.
 
 > Enquanto a conta for a mesma, os envios da newsletter e os códigos do painel
 > partilham os 100 emails por dia do plano gratuito. É por isso que as

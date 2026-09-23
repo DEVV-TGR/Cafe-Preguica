@@ -22,7 +22,18 @@
 
   Os clientes de email tratam fundos escuros cada um à sua maneira — o Gmail no
   telemóvel inverte as cores, o Outlook ignora metade do CSS. Um fundo papel com
-  tinta castanha sobrevive a todos, e o ouro fica no fio de cima, como no site.
+  tinta castanha sobrevive a todos.
+
+  O escuro fica só na faixa do logótipo, lá em cima, com o fio de ouro por baixo
+  — a mesma barra do site. O logótipo é um PNG com o fundo escuro já pintado
+  (`public/marca/email.png`, 360 px para ecrãs de alta densidade, mostrado a
+  180): o Outlook não lê WebP, e um PNG transparente fica dourado sobre branco
+  nos clientes que inventam o fundo.
+
+  **A imagem vem do site em produção**, por endereço absoluto, porque um email
+  não tem onde ir buscar ficheiros relativos. Consequência: um teste enviado de
+  uma pré-visualização mostra o logótipo que estiver no ar, e se o ficheiro
+  ainda lá não estiver, sai o texto alternativo.
 */
 
 /** O Resend troca isto, em cada envio, pelo link de cancelar dessa pessoa. */
@@ -37,6 +48,9 @@ const CORES = {
      mesmo tom escurecido até ~5:1, e só se usa nos links. */
   ligacao: "#7a5d0c",
   fio: "#c9a227",
+  /* O canvas do site — o mesmo com que o PNG do logótipo foi achatado, para a
+     imagem e a faixa não se verem como dois castanhos diferentes. */
+  escuro: "#0b0806",
 };
 
 function escapar(texto: string): string {
@@ -73,7 +87,11 @@ export function paragrafos(texto: string): string[] {
     .filter(Boolean);
 }
 
-export type Rodape = {
+/** O que envolve o texto: o logótipo em cima, a morada e o cancelar em baixo. */
+export type Moldura = {
+  /** O endereço do logótipo. Absoluto no email; relativo na pré-visualização do
+      painel, que só pode carregar imagens do próprio domínio (CSP). */
+  logo: string;
   /** "Café Preguiça · R. José Joaquim Ribeiro Teles, 560 · Ermesinde" */
   remetente: string;
   /** O link de cancelar. No envio a sério é a `MARCA_DO_CANCELAMENTO`; no teste
@@ -81,11 +99,14 @@ export type Rodape = {
   cancelar: string;
 };
 
+/** Onde está o logótipo do email, a partir da raiz do site. */
+export const CAMINHO_DO_LOGO = "/marca/email.png";
+
 /**
  * O email inteiro, em tabelas e estilos em linha — é a única forma de o Outlook
  * o mostrar como os outros o mostram.
  */
-export function emailEmHtml(assunto: string, texto: string, rodape: Rodape): string {
+export function emailEmHtml(assunto: string, texto: string, moldura: Moldura): string {
   const corpo = paragrafos(texto)
     .map(
       (p) =>
@@ -99,7 +120,7 @@ export function emailEmHtml(assunto: string, texto: string, rodape: Rodape): str
   /* A marca do Resend tem chavetas, e escapar não lhe mexe; um endereço
      qualquer passa pelo `escapar` como o resto. */
   const cancelar =
-    rodape.cancelar === MARCA_DO_CANCELAMENTO ? rodape.cancelar : escapar(rodape.cancelar);
+    moldura.cancelar === MARCA_DO_CANCELAMENTO ? moldura.cancelar : escapar(moldura.cancelar);
 
   return `<!doctype html>
 <html lang="pt-PT">
@@ -112,12 +133,12 @@ export function emailEmHtml(assunto: string, texto: string, rodape: Rodape): str
 <body style="margin:0;padding:0;background:${CORES.papel};color:${CORES.tinta};font-family:Georgia,'Times New Roman',serif">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CORES.papel}">
 <tr><td align="center" style="padding:32px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CORES.folha};border-top:3px solid ${CORES.fio}">
-<tr><td style="padding:28px 28px 8px;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${CORES.suave}">Café Preguiça</td></tr>
-<tr><td style="padding:0 28px 12px;font-size:26px;line-height:1.2;color:${CORES.tinta}">${escapar(assunto)}</td></tr>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CORES.folha}">
+<tr><td align="center" style="padding:24px 28px;background:${CORES.escuro};border-bottom:3px solid ${CORES.fio}"><img src="${escapar(moldura.logo)}" width="180" height="112" alt="Café Preguiça" style="display:block;border:0;outline:none;width:180px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px"></td></tr>
+<tr><td style="padding:28px 28px 12px;font-size:26px;line-height:1.2;color:${CORES.tinta}">${escapar(assunto)}</td></tr>
 <tr><td style="padding:12px 28px;font-family:Helvetica,Arial,sans-serif;color:${CORES.tinta}">${corpo}</td></tr>
 <tr><td style="padding:16px 28px 28px;border-top:1px solid #e4d8c6;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:${CORES.suave}">
-${escapar(rodape.remetente)}<br>
+${escapar(moldura.remetente)}<br>
 Recebe este email porque se inscreveu na newsletter no site da casa.
 <a href="${cancelar}" style="color:${CORES.suave};text-decoration:underline">Cancelar a inscrição</a>.
 </td></tr>
@@ -132,11 +153,11 @@ Recebe este email porque se inscreveu na newsletter no site da casa.
  * A versão só de texto, que vai ao lado da HTML — para quem lê no relógio, e
  * para os filtros de spam, que desconfiam de um email sem ela.
  */
-export function emailEmTexto(texto: string, rodape: Rodape): string {
+export function emailEmTexto(texto: string, moldura: Moldura): string {
   return [
     ...paragrafos(texto).map((p) => p.replace(/\*\*(.+?)\*\*/g, "$1")),
     "—",
-    rodape.remetente,
-    `Recebe este email porque se inscreveu na newsletter no site da casa. Cancelar a inscrição: ${rodape.cancelar}`,
+    moldura.remetente,
+    `Recebe este email porque se inscreveu na newsletter no site da casa. Cancelar a inscrição: ${moldura.cancelar}`,
   ].join("\n\n");
 }

@@ -8,7 +8,7 @@ import {
   enviarTesteDaNewsletter,
   type EstadoDaNewsletter,
 } from "@/app/painel/newsletter/accoes";
-import { emailEmHtml, type Rodape } from "@/lib/newsletter/corpo";
+import { emailEmHtml, type Moldura } from "@/lib/newsletter/corpo";
 
 /**
  * Escrever a newsletter, ver como fica, mandar um teste, e só depois mandar a
@@ -30,11 +30,11 @@ const INICIAL: EstadoDaNewsletter = { tipo: "parado" };
 export function EditorDaNewsletter({
   inscritos,
   podeEnviar,
-  rodape,
+  moldura,
 }: {
   inscritos: number;
   podeEnviar: boolean;
-  rodape: Rodape;
+  moldura: Moldura;
 }) {
   const [assunto, setAssunto] = useState("");
   const [texto, setTexto] = useState("");
@@ -62,8 +62,8 @@ export function EditorDaNewsletter({
   }, [escrito, enviada]);
 
   const html = useMemo(
-    () => (aVer ? emailEmHtml(assunto.trim() || "(sem assunto)", texto, rodape) : ""),
-    [aVer, assunto, texto, rodape],
+    () => (aVer ? emailEmHtml(assunto.trim() || "(sem assunto)", texto, moldura) : ""),
+    [aVer, assunto, texto, moldura],
   );
 
   const pessoas = `${inscritos} ${inscritos === 1 ? "pessoa" : "pessoas"}`;

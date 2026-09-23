@@ -152,7 +152,7 @@ jobs:
           set -euo pipefail
 
           # Sem sessão, `/painel` e as suas páginas mandam para a entrada.
-          for caminho in /painel /painel/ementa /painel/casa /painel/newsletter; do
+          for caminho in /painel /painel/ementa /painel/casa /painel/newsletter /painel/newsletter/enviada/qualquer; do
             resposta=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "http://localhost:3000${caminho}")
             if [ "$resposta" != "307 http://localhost:3000/painel/entrar" ]; then
               echo "::error::${caminho} sem sessão devolveu '${resposta}', esperava 307 para /painel/entrar"

@@ -7,11 +7,12 @@ import { meioEscondido } from "@/lib/painel/utilizadores";
 import { URL_SITE } from "@/lib/site";
 import { rodapeDaCasa, responderPara } from "@/lib/newsletter/casa";
 import {
+  CAMINHO_DO_LOGO,
   emailEmHtml,
   emailEmTexto,
   MARCA_DO_CANCELAMENTO,
   paragrafos,
-  type Rodape,
+  type Moldura,
 } from "@/lib/newsletter/corpo";
 import { enviarATodos, enviarTeste, ErroDaNewsletter } from "@/lib/newsletter/resend";
 
@@ -34,8 +35,10 @@ export type EstadoDaNewsletter =
 const MAX_ASSUNTO = 150;
 const MAX_TEXTO = 20_000;
 
-function rodape(cancelar: string): Rodape {
-  return { remetente: rodapeDaCasa(), cancelar };
+/* O logótipo por endereço absoluto, do site em produção: é de lá que o
+   programa de email de quem recebe o vai buscar. */
+function moldura(cancelar: string): Moldura {
+  return { logo: `${URL_SITE}${CAMINHO_DO_LOGO}`, remetente: rodapeDaCasa(), cancelar };
 }
 
 function lerMensagem(dados: FormData): { assunto: string; texto: string } | string {
@@ -70,8 +73,8 @@ export async function enviarTesteDaNewsletter(
   try {
     await enviarTeste(email, {
       assunto,
-      html: emailEmHtml(assunto, texto, rodape(URL_SITE)),
-      texto: emailEmTexto(texto, rodape(URL_SITE)),
+      html: emailEmHtml(assunto, texto, moldura(URL_SITE)),
+      texto: emailEmTexto(texto, moldura(URL_SITE)),
       responderPara: responderPara(),
     });
   } catch (erro) {
@@ -115,8 +118,8 @@ export async function enviarNewsletter(
 
     await enviarATodos({
       assunto,
-      html: emailEmHtml(assunto, texto, rodape(MARCA_DO_CANCELAMENTO)),
-      texto: emailEmTexto(texto, rodape(MARCA_DO_CANCELAMENTO)),
+      html: emailEmHtml(assunto, texto, moldura(MARCA_DO_CANCELAMENTO)),
+      texto: emailEmTexto(texto, moldura(MARCA_DO_CANCELAMENTO)),
       responderPara: responderPara(),
     });
   } catch (erro) {

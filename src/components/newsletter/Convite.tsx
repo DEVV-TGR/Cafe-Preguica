@@ -52,6 +52,7 @@ export type TextosDoConvite = {
   botao: string;
   aEnviar: string;
   fechar: string;
+  consentimento: string;
   privacidade: string;
   enviadoTitulo: string;
   enviadoTexto: string;
@@ -232,8 +233,11 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
             </p>
           ) : null}
 
+          {/* O que a pessoa aceita, escrito antes de carregar no botão — é isto
+              que faz a inscrição ser um consentimento informado, sem precisar
+              de uma caixa para marcar. Ver `docs/NEWSLETTER.md`. */}
           <p className="pg-convite__nota">
-            <Link href="/privacidade">{textos.privacidade}</Link>
+            {textos.consentimento} <Link href="/privacidade">{textos.privacidade}</Link>
           </p>
         </>
       )}

@@ -309,3 +309,50 @@ export async function enviarATodos(m: Mensagem): Promise<string> {
   });
   return id;
 }
+
+export type EnvioCompleto = Envio & { html: string; texto: string | null; de: string };
+
+/*
+  Um envio inteiro, para o painel o mostrar tal como saiu.
+
+  O conteúdo não é guardado por nós: é o Resend que o tem, e é-lhe pedido cada
+  vez. O `id` vem do endereço da página, por isso confere-se o formato antes de
+  o pôr num caminho — e o segmento depois, para o painel só mostrar envios desta
+  newsletter e não outros que a mesma conta tenha.
+*/
+export async function obterEnvio(id: string): Promise<EnvioCompleto | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+
+  const { segmento } = configuracao();
+  let b: {
+    id: string;
+    subject: string | null;
+    name: string | null;
+    from: string;
+    segment_id: string | null;
+    status: string;
+    html: string | null;
+    text: string | null;
+    created_at: string;
+    sent_at: string | null;
+  };
+  try {
+    b = await pedir(`/broadcasts/${id}`);
+  } catch (erro) {
+    if (erro instanceof ErroDaNewsletter && erro.estado === 404) return null;
+    throw erro;
+  }
+
+  if (b.segment_id !== segmento) return null;
+
+  return {
+    id: b.id,
+    assunto: b.subject ?? b.name ?? "(sem assunto)",
+    estado: b.status,
+    enviadoEm: b.sent_at,
+    criadoEm: b.created_at,
+    html: b.html ?? "",
+    texto: b.text,
+    de: b.from,
+  };
+}

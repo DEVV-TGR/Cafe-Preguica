@@ -809,3 +809,23 @@ select.pn-entrada {
   color: var(--color-tinta-suave);
   white-space: nowrap;
 }
+
+.pn-previsao--alta {
+  height: 70dvh;
+  min-height: 30rem;
+}
+
+.pn-lista__ligacao {
+  transition: color 200ms ease;
+}
+
+.pn-lista__ligacao:hover,
+.pn-lista__ligacao:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
+.pn-texto-corrido {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.95rem;
+}

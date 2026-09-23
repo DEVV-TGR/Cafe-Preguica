@@ -30,7 +30,11 @@ const Horario = z
   /** `null` num dia é **encerrado**, e o site escreve-o com todas as letras. */
   .nullable();
 
-const Esquema = z.object({
+/**
+ * Exportado para o painel (`/painel/casa`) validar com as mesmas regras do
+ * `build` antes de gravar.
+ */
+export const EsquemaCafe = z.object({
   nome: z.string().min(1),
   /** Rua e número. Chega para o botão de direções — ver `urlDirecoes`. */
   morada: z.string().min(1).nullable(),
@@ -99,7 +103,7 @@ const Esquema = z.object({
     .nullable(),
 });
 
-export type Cafe = z.infer<typeof Esquema>;
+export type Cafe = z.infer<typeof EsquemaCafe>;
 export type DiaDaSemana = keyof NonNullable<Cafe["horarios"]>;
 
 /** A ordem da semana portuguesa — a segunda primeiro, não o domingo. */
@@ -113,7 +117,7 @@ export const DIAS: readonly DiaDaSemana[] = [
   "domingo",
 ];
 
-const validado = Esquema.safeParse(dados);
+const validado = EsquemaCafe.safeParse(dados);
 if (!validado.success) {
   throw erroDeFicheiro("cafe.json", validado.error, dados);
 }

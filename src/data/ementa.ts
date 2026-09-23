@@ -7,12 +7,14 @@ import dados from "./ementa.json";
  * ordem, e o `id` é a chave.
  *
  * **Acrescentar, tirar ou mudar o preço de um artigo é editar esse ficheiro e
- * mais nada.** Não há base de dados nem área de administração: para uma carta
- * que muda duas ou três vezes por ano, um ficheiro versionado ganha a um CMS —
- * histórico no git, sem palavra-passe para esquecer, sem custo mensal, e sem
- * mais um serviço com sessão iniciada a poder ser comprometido.
+ * mais nada** — à mão, ou pelo painel (`/painel/ementa`), que faz exatamente o
+ * mesmo: grava o ficheiro no repositório com um commit, e a Vercel reconstrói o
+ * site. Não há base de dados: para uma carta que muda umas vezes por ano, um
+ * ficheiro versionado ganha — histórico no git, sem custo mensal, e o site
+ * continua estático. Ver `docs/PAINEL.md`.
  *
- * O ficheiro é editado à mão, por isso é validado com `zod` no arranque. Um
+ * O ficheiro é validado com `zod` no arranque, e **o painel valida com o mesmo
+ * esquema** antes de gravar (é por isso que `EsquemaEmenta` é exportado). Um
  * preço escrito como texto rebenta o `npm run build` com o artigo e o campo
  * identificados, em vez de chegar a produção como `NaN €`.
  */
@@ -108,7 +110,7 @@ export type Capitulo = keyof typeof CAPITULOS;
  * A regra é imposta pelo `superRefine` mais abaixo, nos dois sentidos: uma
  * descrição aqui dá erro, e a falta dela nas outras categorias também.
  */
-const SEM_DESCRICAO: readonly Categoria[] = [
+export const SEM_DESCRICAO: readonly Categoria[] = [
   "tostas-e-snacks",
   "tacas",
   "sobremesas",
@@ -148,7 +150,16 @@ export const ALERGENIOS = [
 
 export type Alergenio = (typeof ALERGENIOS)[number];
 
-const Texto = z.object({ pt: z.string().min(1), en: z.string().min(1) });
+/* Os tetos não vêm de nenhuma regra da casa — o nome mais comprido da carta tem
+   42 letras e a descrição mais comprida 136. Existem por causa do painel: um
+   texto colado de outro sítio sem querer passava a ser um artigo com um
+   parágrafo por nome, e partia a coluna da ementa no telemóvel. */
+function texto(maximo: number) {
+  return z.object({
+    pt: z.string().trim().min(1).max(maximo, `no máximo ${maximo} caracteres`),
+    en: z.string().trim().min(1).max(maximo, `no máximo ${maximo} caracteres`),
+  });
+}
 
 const EsquemaArtigo = z
   .object({
@@ -158,8 +169,8 @@ const EsquemaArtigo = z
       .string()
       .regex(/^[a-z0-9-]+$/, "só minúsculas, números e hífenes"),
     categoria: z.enum(CATEGORIAS),
-    nome: Texto,
-    descricao: Texto.nullable(),
+    nome: texto(80),
+    descricao: texto(300).nullable(),
     /**
      * `null` é **preço por confirmar ou variável** (o prato do dia), e o site
      * escreve-o em vez de mostrar um número errado.
@@ -188,6 +199,16 @@ const EsquemaArtigo = z
       .multipleOf(0.01, "no máximo duas casas decimais")
       .nullable(),
     alergenios: z.array(z.enum(ALERGENIOS)),
+    /**
+     * Fora da carta por agora, sem ser apagado — o que acabou, o que é da
+     * estação. É o painel que o liga e desliga; apagar e voltar a criar perdia
+     * as traduções e o lugar na lista.
+     *
+     * Sai da `/ementa` (`porCategoria`) mas **não** do `artigoPorId`, e é de
+     * propósito: as legendas das fotografias da página inicial pedem-no pelo
+     * `id`, e um artigo esgotado não deve deixar um buraco no carril.
+     */
+    escondido: z.boolean(),
   })
   .superRefine((artigo, ctx) => {
     const eLista = SEM_DESCRICAO.includes(artigo.categoria);
@@ -231,7 +252,7 @@ const EsquemaArtigo = z
 
 export type Artigo = z.infer<typeof EsquemaArtigo>;
 
-const EsquemaEmenta = z.object({
+export const EsquemaEmenta = z.object({
   confirmada: z.boolean(),
   artigos: z
     .array(EsquemaArtigo)
@@ -254,6 +275,8 @@ const EsquemaEmenta = z.object({
     }),
 });
 
+export type Ementa = z.infer<typeof EsquemaEmenta>;
+
 const validado = EsquemaEmenta.safeParse(dados);
 if (!validado.success) {
   throw erroDeFicheiro("ementa.json", validado.error, dados.artigos);
@@ -262,8 +285,8 @@ if (!validado.success) {
 export const artigos: Artigo[] = validado.data.artigos;
 
 /**
- * Os artigos agrupados por categoria, **pela ordem do enum** e já sem as
- * categorias vazias — uma secção sem artigos não aparece na página em vez de
+ * Os artigos agrupados por categoria, **pela ordem do enum**, sem os escondidos
+ * e já sem as categorias vazias — uma secção sem artigos não aparece na página em vez de
  * aparecer como um título solto.
  *
  * É uma função e não uma constante porque depende do JSON validado acima; se
@@ -272,7 +295,9 @@ export const artigos: Artigo[] = validado.data.artigos;
 export function porCategoria(): { categoria: Categoria; artigos: Artigo[] }[] {
   return CATEGORIAS.map((categoria) => ({
     categoria,
-    artigos: artigos.filter((artigo) => artigo.categoria === categoria),
+    artigos: artigos.filter(
+      (artigo) => artigo.categoria === categoria && !artigo.escondido,
+    ),
   })).filter((seccao) => seccao.artigos.length > 0);
 }
 
@@ -359,7 +384,47 @@ export function porCapitulo(): {
     .filter((c) => c.seccoes.length > 0);
 }
 
-/** Um artigo pelo `id`, para as legendas das fotografias irem buscar nome e preço à carta. */
+/**
+ * Um artigo pelo `id`, para as legendas das fotografias irem buscar nome e preço
+ * à carta. Devolve também os escondidos — ver `escondido`.
+ */
 export function artigoPorId(id: string): Artigo | undefined {
   return artigos.find((artigo) => artigo.id === id);
+}
+
+/**
+ * Os artigos que as páginas pedem **pelo `id`**: as legendas das fotografias da
+ * inicial (o carril, "Para partilhar") e as aberturas de capítulo da ementa.
+ *
+ * Existe para o painel: **estes não se podem apagar por lá.** Apagar um deles
+ * partia o `build` da ementa ou deixava um buraco na página inicial, e quem
+ * está ao balcão não tem como saber que aquele cocktail tem fotografia. Podem
+ * ser escondidos, que não parte nada.
+ *
+ * ⚠️ Quem pede um `id` novo numa página tem de o pôr aqui — e se não puser, o
+ * `build` rebenta a dizer qual (ver as verificações em `CartaoCarril`, em
+ * `Pratos` e na página da ementa).
+ */
+export const EM_DESTAQUE: readonly string[] = [
+  "negroni",
+  "blue-lagoon",
+  "cocktail-preguica",
+  "bocadinhos-de-pao-com-chourico",
+  "torrada-com-compota",
+  "caf-chocolate-quente-com-chantilly",
+];
+
+for (const id of EM_DESTAQUE) {
+  if (!artigoPorId(id)) {
+    throw new Error(`ementa.ts: o artigo em destaque "${id}" não existe em ementa.json`);
+  }
+}
+
+/** Para as páginas confirmarem, no `build`, que um `id` que pedem está na lista. */
+export function exigirEmDestaque(id: string, onde: string): void {
+  if (!EM_DESTAQUE.includes(id)) {
+    throw new Error(
+      `${onde}: o artigo "${id}" é pedido pelo id mas não está em EM_DESTAQUE (src/data/ementa.ts) — o painel deixava apagá-lo`,
+    );
+  }
 }

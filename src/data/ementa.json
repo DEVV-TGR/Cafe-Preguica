@@ -11,7 +11,8 @@
       "descricao": null,
       "preco": 3.9,
       "precoSecundario": 3.5,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "presunto-queijo",
@@ -23,7 +24,8 @@
       "descricao": null,
       "preco": 4.6,
       "precoSecundario": 3.9,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "pasta-de-atum-e-queijo",
@@ -35,7 +37,8 @@
       "descricao": null,
       "preco": 4.5,
       "precoSecundario": 3.8,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cachorro-xl",
@@ -47,7 +50,8 @@
       "descricao": null,
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "torrada",
@@ -59,7 +63,8 @@
       "descricao": null,
       "preco": 3.2,
       "precoSecundario": 2.6,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "torrada-com-compota",
@@ -71,7 +76,8 @@
       "descricao": null,
       "preco": 3.5,
       "precoSecundario": 2.9,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "tabua-mista",
@@ -86,7 +92,8 @@
       },
       "preco": 7.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "tabua-preguica",
@@ -101,7 +108,8 @@
       },
       "preco": 13.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "preguicinhas-com-queijo",
@@ -116,7 +124,8 @@
       },
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "bocadinhos-de-pao-com-chourico",
@@ -131,7 +140,8 @@
       },
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "amendoins-com-sal",
@@ -143,7 +153,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "milho-frito",
@@ -155,7 +166,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "mix-milho-e-amendoins",
@@ -167,7 +179,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "taca-grande-de-batata",
@@ -179,7 +192,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "petit-gateau-com-gelado-de-baunilha",
@@ -191,7 +205,8 @@
       "descricao": null,
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "affogato-al-caffe-com-gelado-e-chantilly",
@@ -203,7 +218,8 @@
       "descricao": null,
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "mojito",
@@ -218,7 +234,8 @@
       },
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caipirinha",
@@ -233,7 +250,8 @@
       },
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "aperol-spritz",
@@ -248,7 +266,8 @@
       },
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "blue-lagoon",
@@ -263,7 +282,8 @@
       },
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "hurricane",
@@ -278,7 +298,8 @@
       },
       "preco": 5.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "pina-colada",
@@ -293,7 +314,8 @@
       },
       "preco": 5.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "margarita",
@@ -308,7 +330,8 @@
       },
       "preco": 5.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caipi-maracuja",
@@ -323,7 +346,8 @@
       },
       "preco": 5.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "old-fashioned",
@@ -338,7 +362,8 @@
       },
       "preco": 5.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "mojito-melancia",
@@ -353,7 +378,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "preguica-mule",
@@ -368,7 +394,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "mexican-mule",
@@ -383,7 +410,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "espresso-martini",
@@ -398,7 +426,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "negroni",
@@ -413,7 +442,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "moscow-mule",
@@ -428,7 +458,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "tequila-sunrise",
@@ -443,7 +474,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "mongolia-m-f",
@@ -458,7 +490,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "long-island-ice-tea",
@@ -473,7 +506,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "amaretto-sour",
@@ -488,7 +522,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cocktail-preguica",
@@ -503,7 +538,8 @@
       },
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "unicornio",
@@ -518,7 +554,8 @@
       },
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "virgin-mojito",
@@ -533,7 +570,8 @@
       },
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "virgin-pina-colada",
@@ -548,7 +586,8 @@
       },
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "virgin-hurricane",
@@ -563,7 +602,8 @@
       },
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "virgin-blue-lagoon",
@@ -578,7 +618,8 @@
       },
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "shirley-temple",
@@ -593,7 +634,8 @@
       },
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "vinho-branco",
@@ -608,7 +650,8 @@
       },
       "preco": 5.4,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "espumante-preguica",
@@ -623,7 +666,8 @@
       },
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "espumante-frutos-vermelhos",
@@ -638,7 +682,8 @@
       },
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "espumante-melancia",
@@ -653,7 +698,8 @@
       },
       "preco": 6.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-gordon-s",
@@ -665,7 +711,8 @@
       "descricao": null,
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-bulldog",
@@ -677,7 +724,8 @@
       "descricao": null,
       "preco": 7.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-hendrick-s",
@@ -689,7 +737,8 @@
       "descricao": null,
       "preco": 8.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-beefeater",
@@ -701,7 +750,8 @@
       "descricao": null,
       "preco": 6.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-nordes",
@@ -713,7 +763,8 @@
       "descricao": null,
       "preco": 8.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-martin-miller-s",
@@ -725,7 +776,8 @@
       "descricao": null,
       "preco": 8.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-puerto-de-indias-pink",
@@ -737,7 +789,8 @@
       "descricao": null,
       "preco": 6.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-tanqueray",
@@ -749,7 +802,8 @@
       "descricao": null,
       "preco": 6.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-tanqueray-sevilla",
@@ -761,7 +815,8 @@
       "descricao": null,
       "preco": 6.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-sharish",
@@ -773,7 +828,8 @@
       "descricao": null,
       "preco": 8.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "gin-monkey-47",
@@ -785,7 +841,8 @@
       "descricao": null,
       "preco": 12.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-nikka-barrel",
@@ -797,7 +854,8 @@
       "descricao": null,
       "preco": 12.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-bushmills",
@@ -809,7 +867,8 @@
       "descricao": null,
       "preco": 5.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-old-parr-12-anos",
@@ -821,7 +880,8 @@
       "descricao": null,
       "preco": 9.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-macallan-12-anos",
@@ -833,7 +893,8 @@
       "descricao": null,
       "preco": 13.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-cutty-sark",
@@ -845,7 +906,8 @@
       "descricao": null,
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-jack-daniel-s",
@@ -857,7 +919,8 @@
       "descricao": null,
       "preco": 5.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-jameson",
@@ -869,7 +932,8 @@
       "descricao": null,
       "preco": 5.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-j-b",
@@ -881,7 +945,8 @@
       "descricao": null,
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-j-w-red-label",
@@ -893,7 +958,8 @@
       "descricao": null,
       "preco": 5.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "whi-j-w-black-label",
@@ -905,7 +971,8 @@
       "descricao": null,
       "preco": 7.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-whisky-ou-vodka",
@@ -917,7 +984,8 @@
       "descricao": null,
       "preco": 2.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-rum-ou-tequila",
@@ -929,7 +997,8 @@
       "descricao": null,
       "preco": 2.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-jack-daniel-s",
@@ -941,7 +1010,8 @@
       "descricao": null,
       "preco": 3.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-amaretto",
@@ -953,7 +1023,8 @@
       "descricao": null,
       "preco": 3.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-b52",
@@ -965,7 +1036,8 @@
       "descricao": null,
       "preco": 2.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-shot-preguica",
@@ -977,7 +1049,8 @@
       "descricao": null,
       "preco": 2.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-lollipop",
@@ -989,7 +1062,8 @@
       "descricao": null,
       "preco": 3.3,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "sho-baby-guinness",
@@ -1001,7 +1075,8 @@
       "descricao": null,
       "preco": 2.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-martini-rosso",
@@ -1013,7 +1088,8 @@
       "descricao": null,
       "preco": 3.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-martini-bianco",
@@ -1025,7 +1101,8 @@
       "descricao": null,
       "preco": 3.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-licor-beirao",
@@ -1037,7 +1114,8 @@
       "descricao": null,
       "preco": 4.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-amendoa-amarga",
@@ -1049,7 +1127,8 @@
       "descricao": null,
       "preco": 4.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-c-r-f",
@@ -1061,7 +1140,8 @@
       "descricao": null,
       "preco": 4.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-baileys",
@@ -1073,7 +1153,8 @@
       "descricao": null,
       "preco": 4.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-amaretto",
@@ -1085,7 +1166,8 @@
       "descricao": null,
       "preco": 4.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "lic-limoncello",
@@ -1097,7 +1179,8 @@
       "descricao": null,
       "preco": 4.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-super-bock",
@@ -1109,7 +1192,8 @@
       "descricao": null,
       "preco": 1.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-stout",
@@ -1121,7 +1205,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-coruja-ipa",
@@ -1133,7 +1218,8 @@
       "descricao": null,
       "preco": 2.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-somersby-maca",
@@ -1145,7 +1231,8 @@
       "descricao": null,
       "preco": 3.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-fino",
@@ -1157,7 +1244,8 @@
       "descricao": null,
       "preco": 1.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-fino-com-7up-ou-tango",
@@ -1169,7 +1257,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-fino-com-favaios",
@@ -1181,7 +1270,8 @@
       "descricao": null,
       "preco": 2.4,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cer-principe",
@@ -1193,7 +1283,8 @@
       "descricao": null,
       "preco": 2.3,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "vin-vinho-branco",
@@ -1205,7 +1296,8 @@
       "descricao": null,
       "preco": 3.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "vin-vinho-tinto-tons-duorum",
@@ -1217,7 +1309,8 @@
       "descricao": null,
       "preco": 3.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "vin-vinho-do-porto-branco-ou-tinto",
@@ -1229,7 +1322,8 @@
       "descricao": null,
       "preco": 2.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-cafe-ou-descafeinado",
@@ -1241,7 +1335,8 @@
       "descricao": null,
       "preco": 1.0,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-pingo",
@@ -1253,7 +1348,8 @@
       "descricao": null,
       "preco": 1.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-meia-de-leite-ou-galao",
@@ -1265,7 +1361,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-capuccino",
@@ -1277,7 +1374,8 @@
       "descricao": null,
       "preco": 2.5,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-cafe-bz-bz",
@@ -1289,7 +1387,8 @@
       "descricao": null,
       "preco": 1.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-chocolate-quente",
@@ -1301,7 +1400,8 @@
       "descricao": null,
       "preco": 3.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-chocolate-quente-com-chantilly",
@@ -1313,7 +1413,8 @@
       "descricao": null,
       "preco": 3.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-irish-coffee",
@@ -1325,7 +1426,8 @@
       "descricao": null,
       "preco": 5.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-grog",
@@ -1337,7 +1439,8 @@
       "descricao": null,
       "preco": 3.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-gluehwein",
@@ -1349,7 +1452,8 @@
       "descricao": null,
       "preco": 3.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "caf-skiwasser",
@@ -1361,7 +1465,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-limao-e-gengibre",
@@ -1373,7 +1478,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-frutos-vermelhos",
@@ -1385,7 +1491,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-maca-e-canela",
@@ -1397,7 +1504,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-tilia",
@@ -1409,7 +1517,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-preto",
@@ -1421,7 +1530,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-verde",
@@ -1433,7 +1543,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-menta",
@@ -1445,7 +1556,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-camomila",
@@ -1457,7 +1569,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-cidreira",
@@ -1469,7 +1582,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cha-curcuma",
@@ -1481,7 +1595,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-agua-luso",
@@ -1493,7 +1608,8 @@
       "descricao": null,
       "preco": 1.2,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-pedras",
@@ -1505,7 +1621,8 @@
       "descricao": null,
       "preco": 1.6,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-pedras-limao",
@@ -1517,7 +1634,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-pedras-maracuja",
@@ -1529,7 +1647,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-agua-tonica",
@@ -1541,7 +1660,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-unicornio",
@@ -1553,7 +1673,8 @@
       "descricao": null,
       "preco": 1.7,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-coca-cola",
@@ -1565,7 +1686,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-coca-cola-zero",
@@ -1577,7 +1699,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-ginger-ale",
@@ -1589,7 +1712,8 @@
       "descricao": null,
       "preco": 1.8,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "agu-red-bull",
@@ -1601,7 +1725,8 @@
       "descricao": null,
       "preco": 2.9,
       "precoSecundario": null,
-      "alergenios": []
+      "alergenios": [],
+      "escondido": false
     }
   ]
 }

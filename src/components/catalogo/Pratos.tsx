@@ -1,4 +1,4 @@
-import { artigos } from "@/data/ementa";
+import { artigos, exigirEmDestaque } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -42,6 +42,8 @@ const PRATOS = [
      de fingir que vem junto. */
   { id: "torrada-com-compota", foto: "/reels/DVHIQ4CDHyc", pequena: 420, grande: 720 },
 ] as const;
+
+for (const { id } of PRATOS) exigirEmDestaque(id, "Pratos.tsx");
 
 export function Pratos({
   locale,

@@ -6,6 +6,7 @@ import { metadataDaPagina } from "@/lib/metadata";
 import { formatarPreco } from "@/lib/preco";
 import {
   artigoPorId,
+  exigirEmDestaque,
   porCapitulo,
   CARTA_CONFIRMADA,
   METADADOS,
@@ -103,6 +104,7 @@ for (const id of [
   if (!artigoPorId(id)) {
     throw new Error(`ementa/page.tsx: o artigo "${id}" não existe em ementa.json`);
   }
+  exigirEmDestaque(id, "ementa/page.tsx");
 }
 
 /** Os copos do leque do topo — decorativos, sem nome, pela razão acima. */
@@ -187,7 +189,9 @@ export default async function Ementa({ params }: Props) {
           const abertura = ABERTURAS[capitulo];
           const naFoto = abertura.artigos
             .map(artigoPorId)
-            .filter((a): a is Artigo => a !== undefined);
+            /* Um artigo escondido pelo painel não está na lista por baixo, e
+               a legenda não o pode anunciar. */
+            .filter((a): a is Artigo => a !== undefined && !a.escondido);
 
           return (
             <section

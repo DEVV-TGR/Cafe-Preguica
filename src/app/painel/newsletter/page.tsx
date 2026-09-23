@@ -1,6 +1,9 @@
 import { exigirSessao } from "@/lib/painel/porta";
 import { URL_SITE } from "@/lib/site";
+import Link from "next/link";
 import { rodapeDaCasa } from "@/lib/newsletter/casa";
+import { CAMINHO_DO_LOGO } from "@/lib/newsletter/corpo";
+import { dataDoResend as data, ESTADOS_DO_ENVIO as ESTADOS } from "@/lib/newsletter/datas";
 import {
   listarContactos,
   listarEnvios,
@@ -20,33 +23,6 @@ import { ListaDeContactos, type LinhaDeContacto } from "@/components/painel/List
  * Os contactos e os envios vêm do Resend de cada vez que a página abre — não há
  * cópia nossa em lado nenhum, ver `lib/newsletter/resend.ts`.
  */
-
-/*
-  O Resend devolve `2026-10-06 23:47:56.678+00`, que não é ISO: o Safari recusa-o
-  no `new Date()`. Normaliza-se aqui, no servidor, e a data já vai escrita para o
-  browser — assim também não há diferença de fuso entre o servidor e o telemóvel
-  a partir a hidratação.
-*/
-function data(texto: string | null): string {
-  if (!texto) return "—";
-  const iso = texto.replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00");
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
-  return new Intl.DateTimeFormat("pt-PT", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "Europe/Lisbon",
-  }).format(d);
-}
-
-const ESTADOS: Record<string, string> = {
-  sent: "Enviada",
-  sending: "A enviar",
-  queued: "A enviar",
-  scheduled: "Agendada",
-  draft: "Rascunho",
-};
 
 export default async function PaginaDaNewsletter() {
   const { email } = await exigirSessao();
@@ -92,7 +68,9 @@ export default async function PaginaDaNewsletter() {
           <EditorDaNewsletter
             inscritos={inscritos}
             podeEnviar={!falta && !erro}
-            rodape={{ remetente: rodapeDaCasa(), cancelar: URL_SITE }}
+            /* O logótipo relativo: a CSP do painel só deixa carregar imagens do
+                próprio domínio, e a pré-visualização vive dentro dela. */
+            moldura={{ logo: CAMINHO_DO_LOGO, remetente: rodapeDaCasa(), cancelar: URL_SITE }}
           />
         </section>
 
@@ -112,11 +90,14 @@ export default async function PaginaDaNewsletter() {
           ) : (
             <ul className="pn-lista">
               {envios.map((envio) => (
-                <li key={envio.id} className="pn-lista__linha">
-                  <span className="pn-lista__principal">{envio.assunto}</span>
-                  <span className="pn-lista__lado">
-                    {ESTADOS[envio.estado] ?? envio.estado} · {data(envio.enviadoEm ?? envio.criadoEm)}
-                  </span>
+                <li key={envio.id}>
+                  <Link href={`/painel/newsletter/enviada/${envio.id}`} className="pn-lista__linha pn-lista__ligacao">
+                    <span className="pn-lista__principal">{envio.assunto}</span>
+                    <span className="pn-lista__lado">
+                      {ESTADOS[envio.estado] ?? envio.estado} · {data(envio.enviadoEm ?? envio.criadoEm)}
+                      <span aria-hidden="true"> →</span>
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

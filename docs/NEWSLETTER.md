@@ -97,12 +97,24 @@ O plano gratuito do Resend deixa ter até 1000 contactos.
 - **O formato é texto simples:** linha em branco = parágrafo, `**negrito**`, e
   endereços `https://` ficam clicáveis. O rodapé (morada da casa e link de
   cancelar) é posto sozinho.
+- **O logótipo vai numa faixa escura no topo** (`public/marca/email.png`, por
+  endereço absoluto do site em produção — um email não tem ficheiros relativos).
+- **As enviadas abrem-se** em `/painel/newsletter/enviada/<id>`, tal como
+  saíram, só para ler. O conteúdo é pedido ao Resend, não guardado por nós.
 - **As respostas vão para o email da casa** (`email` do `cafe.json`), não para a
   caixa `novidades@`.
 - **Só em português.** O convite e a confirmação seguem a língua do site; o
   convite em inglês avisa que a newsletter é escrita em português.
 
 ---
+
+## Porque é que não há caixa de "aceito a política"
+
+O consentimento vem do próprio acto de se inscrever, com a informação à vista
+antes do botão: o convite diz o que se vai receber, que se pode cancelar, e tem
+o link da privacidade. Uma caixa de "li e aceito a política de privacidade"
+confunde duas coisas — a política é informação, não um contrato — e não
+acrescenta prova nenhuma. A prova é a confirmação por email.
 
 ## Os limites do convite
 

@@ -32,7 +32,9 @@
       "domingo": "Sunday"
     },
     "dose": "Serving",
-    "olhoCasa": "Café Preguiça · Ermesinde"
+    "olhoCasa": "Café Preguiça · Ermesinde",
+    "redes": "Our social media",
+    "seguir": "Follow"
   },
   "metadata": {
     "inicio": {
@@ -76,6 +78,7 @@
       "nome": "The room",
       "facto": "Solid wood, bare granite and the name chalked on a blackboard. A small room where everyone knows everyone, open afternoons and evenings.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
+      "animais": "Dogs come in too. If you bring yours, there's no need to leave it at the door.",
       "alt": "The house menu standing on a wooden table, against the granite block wall."
     },
     "cocktail": {
@@ -96,7 +99,6 @@
     "reels": {
       "nome": "The house, moving",
       "facto": "What happens at the counter, filmed by the house and posted on Instagram. Tap one to watch it there.",
-      "dado": "@cafepreguica",
       "noInstagram": "opens on Instagram",
       "legendas": {
         "masterclass": "Hera × Preguiça masterclass",
@@ -106,7 +108,6 @@
         "menu": "The menu, against the granite wall",
         "lima": "Lime squeezed by hand"
       },
-      "seguir": "Follow",
       "etiqueta": "Reel"
     },
     "partilhar": {
@@ -136,6 +137,7 @@
         "movel": "Call to the Portuguese mobile network"
       },
       "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
+      "animais": "Dogs are welcome. Bring yours along.",
       "mapaAlt": "Map of the streets around Café Preguiça in Ermesinde, with the house marked by the sloth from the logo.",
       "credito": "© OpenStreetMap contributors"
     }

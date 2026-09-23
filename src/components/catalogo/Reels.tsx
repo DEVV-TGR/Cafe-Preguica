@@ -1,6 +1,6 @@
 import { reels, urlDoReel } from "@/data/reels";
-import { marca } from "@/data/marca";
-import { IconeInstagram, IconePlay, IconeReel } from "./Icones";
+import { IconePlay, IconeReel } from "./Icones";
+import { Redes } from "./Redes";
 
 /**
  * # Os reels: seis vídeos da casa
@@ -38,26 +38,27 @@ import { IconeInstagram, IconePlay, IconeReel } from "./Icones";
  * Na primeira versão as capas liam-se como seis fotografias de catálogo e
  * ninguém percebia que eram vídeos nem que abriam o Instagram. Por isso cada
  * cela leva o botão de reprodução, a etiqueta "Reel" e a legenda por cima da
- * imagem, como no feed — e o cabeçalho leva o botão para seguir a conta.
+ * imagem, como no feed — e o cabeçalho leva os perfis da casa (`Redes`).
  * Os ícones são SVG nossos (`Icones.tsx`), não os da Meta.
  */
 export function Reels({
   nome,
   facto,
-  dado,
   legendas,
   noInstagram,
+  redes,
   seguir,
   etiqueta,
 }: {
   nome: string;
   facto: string;
-  dado: string;
   /** O texto de cada cela, por `chave`. Descreve a capa, não copia a legenda. */
   legendas: Record<string, string>;
   /** Dito em cada ligação, para quem navega por teclado saber para onde vai. */
   noInstagram: string;
-  /** O texto do botão para o perfil. */
+  /** O nome da lista de redes, para leitores de ecrã. */
+  redes: string;
+  /** "Seguir", no botão de cada rede. */
   seguir: string;
   /** A etiqueta no canto de cada capa ("Reel"). */
   etiqueta: string;
@@ -80,19 +81,7 @@ export function Reels({
             <h2 className="pg-rotulo__nome">{nome}</h2>
             <p className="pg-rotulo__facto">{facto}</p>
           </div>
-          {marca.instagram && (
-            <a
-              className="pg-botao pg-botao--instagram"
-              href={marca.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconeInstagram className="pg-icone" />
-              <span>
-                {seguir} <span className="pg-botao__conta">{dado}</span>
-              </span>
-            </a>
-          )}
+          <Redes rotulo={redes} seguir={seguir} />
         </header>
 
         <ul className="pg-reels__grelha">

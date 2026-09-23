@@ -33,6 +33,7 @@
     },
     "domingo": null
   },
+  "aceitaAnimais": true,
   "litigios": {
     "nome": "CICAP – Centro de Informação de Consumo e Arbitragem do Porto",
     "url": "https://cicap.pt/"

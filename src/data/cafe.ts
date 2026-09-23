@@ -76,6 +76,12 @@ const Esquema = z.object({
     })
     .nullable(),
   /**
+   * Se a casa recebe cães. Veio do próprio cliente, que queria que o site o
+   * dissesse. `null` esconde a linha em "Onde estamos"; `false` também, porque
+   * um "não aceitamos animais" não é coisa que se anuncie na página inicial.
+   */
+  aceitaAnimais: z.boolean().nullable(),
+  /**
    * A entidade de resolução alternativa de litígios de consumo, indicada em
    * `/informacao-legal` — é obrigatório (Lei 144/2015, art. 18.º). `null`
    * esconde a secção; a página fica, com o Livro de Reclamações.

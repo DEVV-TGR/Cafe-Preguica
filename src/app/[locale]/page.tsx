@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
 import { cafe, DIAS, moradaCompleta, redeDoTelefone, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
-import { marca as redes } from "@/data/marca";
 import { Motor } from "@/components/catalogo/Motor";
 import { Preguica } from "@/components/catalogo/Preguica";
 import { Heroi } from "@/components/catalogo/Heroi";
@@ -12,6 +11,8 @@ import { Pratos } from "@/components/catalogo/Pratos";
 import { Preguicosos } from "@/components/catalogo/Preguicosos";
 import { avaliacoes } from "@/data/avaliacoes";
 import { CartaoCarril, Rotulo } from "@/components/catalogo/Objeto";
+import { IconePata } from "@/components/catalogo/Icones";
+import { Redes } from "@/components/catalogo/Redes";
 import { Link } from "@/i18n/navigation";
 import { RodapeSite } from "@/components/RodapeSite";
 import { BarraSite } from "@/components/BarraSite";
@@ -95,8 +96,16 @@ export default async function Inicio({ params }: Props) {
       {/* 2 · A CASA — texto à esquerda e a fotografia ao lado, em paisagem,
           como a porta do Damira: da altura do texto, não do ecrã. */}
       <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
-        <div data-sc-in data-sc-stagger="80">
+        <div className="pg-casa__texto" data-sc-in data-sc-stagger="80">
           <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
+          {/* Repete de propósito a linha de "Onde estamos": aqui é o feitio da
+              casa, lá é informação prática para quem vem. */}
+          {cafe.aceitaAnimais && (
+            <p className="pg-casa__animais">
+              <IconePata className="pg-icone" />
+              {t("casa.animais")}
+            </p>
+          )}
         </div>
         <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
           {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
@@ -157,9 +166,9 @@ export default async function Inicio({ params }: Props) {
       <Reels
         nome={t("reels.nome")}
         facto={t("reels.facto")}
-        dado={t("reels.dado")}
         noInstagram={t("reels.noInstagram")}
-        seguir={t("reels.seguir")}
+        redes={comum("redes")}
+        seguir={comum("seguir")}
         etiqueta={t("reels.etiqueta")}
         legendas={{
           masterclass: t("reels.legendas.masterclass"),
@@ -265,18 +274,23 @@ export default async function Inicio({ params }: Props) {
             </>
           )}
 
+          {/* Pedido do cliente. Vive aqui, e não numa secção própria, porque é
+              informação prática para quem vem: está ao pé do horário. */}
+          {cafe.aceitaAnimais && (
+            <p className="pg-onde__animais">
+              <IconePata className="pg-icone" />
+              {t("onde.animais")}
+            </p>
+          )}
+
           <p className="pg-onde__botoes">
             {direcoes && (
               <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
                 {t("onde.direcoes")} <span aria-hidden="true">↗</span>
               </a>
             )}
-            {redes.instagram && (
-              <a className="pg-botao" href={redes.instagram} target="_blank" rel="noopener noreferrer">
-                Instagram <span aria-hidden="true">↗</span>
-              </a>
-            )}
           </p>
+          <Redes rotulo={comum("redes")} seguir={comum("seguir")} className="pg-onde__redes" />
         </div>
       </section>
 

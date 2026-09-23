@@ -476,6 +476,30 @@
   font-size: clamp(2.2rem, 5.2vw, 4rem);
 }
 
+/* A largura vem do bloco e não do parágrafo: `34ch` é o mesmo limite do
+   `.pg-rotulo`, e só dá a mesma medida na letra do bloco. No parágrafo, que tem
+   letra mais pequena, sairia mais estreito. */
+.pg-casa__texto {
+  max-width: 34ch;
+}
+
+.pg-casa__animais {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-top: 1.4rem;
+  color: var(--color-tinta-suave);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* O ícone desce um pouco para ficar alinhado com a primeira linha do texto. */
+.pg-casa__animais .pg-icone {
+  color: var(--color-ouro);
+  transform: translateY(0.15em);
+}
+
 .pg-casa figure {
   margin: 0;
   overflow: hidden;
@@ -512,7 +536,7 @@
   padding-inline-end: clamp(4rem, 8vw, 7rem);
 }
 
-/* Cabeçalho a toda a largura: título e frase à esquerda, o botão do perfil à
+/* Cabeçalho a toda a largura: título e frase à esquerda, os perfis da casa à
    direita. */
 .pg-reels__intro {
   display: flex;
@@ -538,8 +562,124 @@
   flex: none;
 }
 
-.pg-botao__conta {
+/* ============================================================== AS REDES == */
+
+/* Um círculo por rede (`Redes.tsx`). O círculo é o próprio link: a altura é
+   fixa e o espaço de cada lado é o que sobra do ícone e da borda (os `2px`),
+   por isso fechado a largura dá igual à altura. */
+.pg-redes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-rede {
+  --lado: 2.75rem;
+  --icone: 1.3em;
+  --duracao: 420ms;
+  --curva: cubic-bezier(0.32, 0.72, 0, 1);
+  display: inline-flex;
+  align-items: center;
+  height: var(--lado);
+  padding-inline: calc((var(--lado) - var(--icone) - 2px) / 2);
+  border: 1px solid var(--color-ouro);
+  border-radius: 999px;
+  color: var(--color-ouro-claro);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease;
+}
+
+/* Maior do que o `.pg-icone` normal: aqui o ícone está sozinho no círculo, sem
+   texto ao lado que o ajude a ler-se. */
+.pg-rede .pg-icone {
+  width: var(--icone);
+  height: var(--icone);
+}
+
+.pg-rede:hover,
+.pg-rede:focus-visible {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ⚠️ **A abertura anima a largura real do texto, e não um `max-width`.**
+
+   Esteve com `max-width: 0 → 14rem`, e ao passar de um círculo para o do lado
+   a fila dava solavancos. O limite (224px) era maior do que o texto (~163px):
+   ao abrir, o círculo chegava cedo à largura final; ao fechar, ficava parado
+   até o `max-width` descer abaixo do texto, e só então encolhia. O que abria e
+   o que fechava andavam a ritmos diferentes, e a fila ia aos saltos.
+
+   Com `grid-template-columns: 0fr → 1fr` a coluna mede sempre uma fração da
+   largura real do texto, na mesma curva à ida e à volta. O que um fecha é o
+   que o outro abre, frame a frame: a fila mantém a largura e os vizinhos
+   deslizam num movimento só, sem saltos.
+
+   (Tentou-se também tirar o texto de dentro do círculo, para nada se mexer.
+   Não era o que se queria: o texto é para estar dentro do logótipo.)
+
+   As três camadas: a grelha (`__texto`) anima; o `__corte` tem `min-width: 0`
+   e esconde o que sobra; a `__frase` leva o espaço à esquerda. Esse espaço
+   não pode estar no `__corte`: um `padding` não encolhe abaixo de si próprio,
+   e o círculo fechado ficava 8px mais largo do que alto. */
+.pg-rede__texto {
+  display: grid;
+  grid-template-columns: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-columns var(--duracao) var(--curva),
+    opacity 160ms ease;
+}
+
+.pg-rede__corte {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pg-rede__frase {
+  display: block;
+  padding-left: 0.5rem;
+}
+
+/* O nome de utilizador um pouco mais apagado, como estava no botão antigo. */
+.pg-rede__conta {
   opacity: 0.75;
+}
+
+/* Só abre com um rato: num ecrã tátil o primeiro toque já abre a rede, e o
+   círculo ficava aberto depois de voltar à página. O teclado abre sempre.
+
+   Ao abrir, o texto só aparece depois de haver espaço para ele (o atraso da
+   opacidade). Ao fechar, some logo: letras cortadas a meio pela borda leem-se
+   como um erro. */
+@media (hover: hover) {
+  .pg-rede:hover .pg-rede__texto {
+    grid-template-columns: 1fr;
+    opacity: 1;
+    transition:
+      grid-template-columns var(--duracao) var(--curva),
+      opacity 240ms ease 140ms;
+  }
+}
+
+.pg-rede:focus-visible .pg-rede__texto {
+  grid-template-columns: 1fr;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-rede,
+  .pg-rede__texto,
+  .pg-rede:hover .pg-rede__texto {
+    transition: none;
+  }
 }
 
 .pg-reels__grelha {
@@ -1115,11 +1255,40 @@
   color: var(--color-tinta-suave);
 }
 
+.pg-onde__animais {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.pg-onde__animais .pg-icone {
+  color: var(--color-ouro);
+}
+
 .pg-onde__botoes {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1.1rem;
+}
+
+/* ⚠️ O cartão é estreito: tem 344px por dentro, e a fila aberta, com os
+   círculos e a letra dos reels, mede 376px. Partia para a linha de baixo ao
+   passar o rato, e a fila toda saltava. Com círculos de 40px, menos espaço
+   entre eles e letra mais pequena, a fila aberta fica em ~335px e cabe.
+   O `nowrap` é a rede de segurança: mais vale sair uns píxeis para a margem
+   do cartão do que saltar. */
+.pg-onde__redes {
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.pg-onde__redes .pg-rede {
+  --lado: 2.5rem;
+  font-size: 0.82rem;
 }
 
 /* Ecrã largo: o mapa ocupa a secção inteira e o cartão flutua por cima, à

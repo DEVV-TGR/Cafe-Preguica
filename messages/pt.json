@@ -32,7 +32,9 @@
       "domingo": "Domingo"
     },
     "dose": "Dose",
-    "olhoCasa": "Café Preguiça · Ermesinde"
+    "olhoCasa": "Café Preguiça · Ermesinde",
+    "redes": "As redes da casa",
+    "seguir": "Seguir"
   },
   "metadata": {
     "inicio": {
@@ -76,6 +78,7 @@
       "nome": "A casa",
       "facto": "Madeira maciça, granito à vista e o nome escrito a giz na ardósia. Uma sala pequena onde toda a gente se conhece, aberta de tarde e de noite.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
+      "animais": "E os cães também entram. Quem vem com o seu não tem de o deixar à porta.",
       "alt": "A carta da casa em cima de uma mesa de madeira, diante da parede de blocos de granito."
     },
     "cocktail": {
@@ -96,7 +99,6 @@
     "reels": {
       "nome": "A casa em movimento",
       "facto": "O que se passa ao balcão, filmado pela casa e publicado no Instagram. Carregue num para o ver lá.",
-      "dado": "@cafepreguica",
       "noInstagram": "abre no Instagram",
       "legendas": {
         "masterclass": "Masterclass Hera × Preguiça",
@@ -106,7 +108,6 @@
         "menu": "A carta, na parede de granito",
         "lima": "Lima espremida à mão"
       },
-      "seguir": "Seguir",
       "etiqueta": "Reel"
     },
     "partilhar": {
@@ -136,6 +137,7 @@
         "movel": "Chamada para a rede móvel nacional"
       },
       "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir.",
+      "animais": "Os cães são bem-vindos. Traz o teu.",
       "mapaAlt": "Mapa das ruas à volta do Café Preguiça, em Ermesinde, com a casa assinalada pela preguiça do logótipo.",
       "credito": "© contribuidores do OpenStreetMap"
     }

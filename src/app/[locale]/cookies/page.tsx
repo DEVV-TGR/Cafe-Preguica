@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * Esta página só pode dizer o que diz porque o site não carrega nada de fora: as
  * fontes vêm do próprio domínio (`next/font`), não há mapa embebido, não há
  * botões de redes sociais e não há ferramenta de estatísticas. A CSP em
- * `next.config.ts` é o que mantém isso verdadeiro ao longo do tempo — um script
+ * `src/lib/cabecalhos.ts` é o que mantém isso verdadeiro ao longo do tempo — um script
  * de terceiros acrescentado por distração é bloqueado pelo browser em vez de
  * passar despercebido.
  *
@@ -35,7 +35,7 @@ export default async function Cookies({ params }: Props) {
   const t = await getTranslations("cookies");
   const meta = await getTranslations("metadata.cookies");
 
-  const seccoes = ["uso", "lingua", "verificar"] as const;
+  const seccoes = ["uso", "lingua", "equipa", "verificar"] as const;
 
   return (
     <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>

@@ -1,0 +1,624 @@
+/**
+ * O painel — classes com o prefixo `pn-`.
+ *
+ * A mesma casa que o site: os tokens de `globals.css` (canvas, superfície, tinta,
+ * ouro), a Fraunces nos títulos com os eixos `SOFT` e `WONK` como nas páginas de
+ * leitura, e os botões `.pg-botao` de `site.css`. O que muda é o propósito:
+ * **isto usa-se ao balcão, com o telemóvel numa mão.** Alvos de toque de 44 px,
+ * uma coluna, e o botão de publicar colado em baixo, ao pé do polegar.
+ */
+
+.pn-corpo {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================================ TOPO === */
+
+.pn-topo {
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ouro) 35%, transparent);
+  background: var(--color-canvas);
+}
+
+.pn-topo__dentro {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+}
+
+.pn-topo__marca {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.pn-topo__titulo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pn-topo__sair {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pn-topo__quem {
+  display: none;
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+@media (min-width: 40rem) {
+  .pn-topo__quem {
+    display: inline;
+  }
+}
+
+/* ============================================================ MOLDURAS === */
+
+.pn-principal {
+  flex: 1;
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.pn-pilha {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pn-pilha-larga {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pn-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pn-linha > .pn-campo {
+  flex: 1 1 8rem;
+}
+
+.pn-espaco {
+  margin-top: 1.5rem;
+}
+
+.pn-separado {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pn-centro {
+  text-align: center;
+}
+
+.pn-cartao {
+  padding: 1.25rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 1rem;
+  background: var(--color-superficie);
+}
+
+/* ========================================================== TIPOGRAFIA === */
+
+.pn-olho {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.pn-titulo {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 11vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pn-texto-suave {
+  color: var(--color-tinta-suave);
+  font-size: 0.95rem;
+}
+
+.pn-forte {
+  color: var(--color-tinta);
+  font-weight: 600;
+}
+
+.pn-nota {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-tinta-suave);
+}
+
+.pn-ligacao {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-ouro-claro);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-ouro) 50%, transparent);
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.pn-ligacao:hover {
+  color: var(--color-ouro);
+}
+
+.pn-largo {
+  width: 100%;
+  justify-content: center;
+  min-height: 3rem;
+  white-space: normal;
+}
+
+.pg-botao {
+  cursor: pointer;
+}
+
+.pg-botao:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pg-botao:disabled:hover {
+  background: transparent;
+  color: var(--color-ouro-claro);
+}
+
+.pg-botao--cheio:disabled:hover {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ============================================================== ENTRADA === */
+
+.pn-entrada-ecra {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.pn-entrada-ecra__caixa {
+  width: 100%;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pn-entrada-ecra__topo {
+  text-align: center;
+}
+
+.pn-entrada-ecra__marca {
+  width: 6rem;
+  height: 6rem;
+  margin: 0 auto 1rem;
+  object-fit: contain;
+}
+
+.pn-rodape-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-linha);
+  font-size: 0.9rem;
+}
+
+/* =============================================================== CAMPOS === */
+
+.pn-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pn-campo__etiqueta {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--color-tinta-suave);
+}
+
+.pn-campo__nota {
+  font-size: 0.78rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-entrada {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 0.6rem;
+  background: var(--color-canvas);
+  color: var(--color-tinta);
+  /* 16 px no mínimo: abaixo disso o Safari do iPhone faz zoom ao tocar no campo
+     e não volta atrás sozinho. */
+  font-size: 1rem;
+}
+
+.pn-entrada:focus {
+  outline: none;
+  border-color: var(--color-ouro);
+  box-shadow: 0 0 0 1px var(--color-ouro);
+}
+
+.pn-entrada[aria-invalid="true"] {
+  border-color: #d9674c;
+  box-shadow: 0 0 0 1px #d9674c;
+}
+
+.pn-entrada::placeholder {
+  color: color-mix(in oklab, var(--color-tinta-suave) 60%, transparent);
+}
+
+.pn-entrada--longa {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.pn-entrada--codigo {
+  min-height: 3.5rem;
+  text-align: center;
+  font-size: 1.6rem;
+  letter-spacing: 0.4em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-entrada--preco {
+  width: 6.5rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-entrada--hora {
+  width: auto;
+  min-width: 6.5rem;
+  font-variant-numeric: tabular-nums;
+  color-scheme: dark;
+}
+
+select.pn-entrada {
+  color-scheme: dark;
+}
+
+/* =============================================================== AVISOS === */
+
+.pn-aviso {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.pn-aviso--nota {
+  background: var(--color-superficie);
+  color: var(--color-tinta-suave);
+}
+
+.pn-aviso--bom {
+  border-color: color-mix(in oklab, var(--color-ouro) 60%, transparent);
+  background: color-mix(in oklab, var(--color-ouro) 10%, var(--color-canvas));
+  color: var(--color-ouro-claro);
+}
+
+.pn-aviso--mau {
+  border-color: #d9674c;
+  background: color-mix(in oklab, #d9674c 12%, var(--color-canvas));
+  color: var(--color-tinta);
+}
+
+.pn-problemas {
+  margin-top: 0.5rem;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+
+/* =============================================================== PORTAS === */
+
+.pn-porta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.25rem 3rem 1.25rem 1.25rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 1rem;
+  background: var(--color-superficie);
+  transition: border-color 220ms ease;
+}
+
+.pn-porta:hover,
+.pn-porta:focus-visible {
+  border-color: var(--color-ouro);
+}
+
+.pn-porta__titulo {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  line-height: 1.05;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pn-porta__seta {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--color-ouro);
+  font-size: 1.3rem;
+}
+
+/* ============================================================== ARTIGOS === */
+
+.pn-editor {
+  /* Espaço para a barra de publicar, que está colada em baixo por cima. */
+  padding-bottom: 6rem;
+}
+
+.pn-artigos {
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pn-artigo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-linha);
+}
+
+.pn-artigo--escondido .pn-artigo__nome,
+.pn-artigo--escondido .pn-artigo__precos {
+  opacity: 0.45;
+}
+
+.pn-artigo__cabeca {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pn-artigo__nome {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pn-artigo__pt {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.15;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pn-artigo__en {
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-selos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.pn-selo {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--color-ouro);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ouro-claro);
+  white-space: nowrap;
+}
+
+.pn-selo--apagado {
+  border-color: var(--color-linha);
+  color: var(--color-tinta-suave);
+}
+
+.pn-artigo__precos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pn-preco {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pn-preco__caixa {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-artigo__accoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pn-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 0.6rem;
+  color: var(--color-tinta);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.pn-icone:hover:not(:disabled) {
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-claro);
+}
+
+.pn-icone:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.pn-accao {
+  min-height: 2.75rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--color-tinta);
+  cursor: pointer;
+}
+
+.pn-accao:hover {
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-claro);
+}
+
+.pn-accao--perigo {
+  color: #f0a18c;
+}
+
+.pn-accao--perigo:hover {
+  border-color: #d9674c;
+  color: #f0a18c;
+}
+
+.pn-confirmar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: 1px solid #d9674c;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.pn-artigo__textos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--color-superficie);
+}
+
+/* ============================================================ PUBLICAR === */
+
+.pn-publicar {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 10;
+  border-top: 1px solid color-mix(in oklab, var(--color-ouro) 35%, transparent);
+  background: color-mix(in oklab, var(--color-canvas) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.pn-publicar__dentro {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+}
+
+/* ================================================================ CASA === */
+
+.pn-seccao__titulo {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  line-height: 1.05;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  margin-bottom: 0.5rem;
+}
+
+.pn-dias {
+  margin: 1rem 0 0.75rem;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pn-dia {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-linha);
+}
+
+.pn-dia__nome {
+  font-weight: 600;
+}
+
+.pn-dia__horas {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-tinta-suave);
+}
+
+@media (min-width: 36rem) {
+  .pn-dia {
+    grid-template-columns: 6rem 8rem 1fr;
+  }
+
+  .pn-dia__horas {
+    grid-column: auto;
+  }
+}
+
+.pn-interruptor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  color: var(--color-tinta-suave);
+  cursor: pointer;
+}
+
+.pn-interruptor input {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--color-ouro);
+}
+
+.pn-accao--sozinha {
+  align-self: flex-start;
+}

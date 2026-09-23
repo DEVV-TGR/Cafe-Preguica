@@ -246,7 +246,7 @@
     "atualizado": "Última atualização: rascunho, por rever antes de publicar.",
     "recolha": {
       "titulo": "Que dados recolhemos",
-      "texto": "Nenhuns. Este site não tem formulários, não tem contas e não guarda nada sobre quem o visita."
+      "texto": "Nenhuns sobre quem visita. Este site não tem formulários nem contas para visitantes, e não guarda nada sobre quem o abre."
     },
     "terceiros": {
       "titulo": "Serviços de terceiros",
@@ -255,6 +255,10 @@
     "alojamento": {
       "titulo": "Alojamento",
       "texto": "O site é alojado pela Vercel, que regista pedidos ao servidor para o poder servir e proteger. Esses registos são da plataforma e não são usados por nós para identificar ninguém."
+    },
+    "equipa": {
+      "titulo": "A área da equipa",
+      "texto": "Quem trabalha na casa entra numa área reservada com um código enviado para o seu email. Para isso, o endereço de email da equipa é usado para enviar o código (pela Resend) e o registo de entrada fica guardado no máximo 30 dias (na Upstash), para limitar tentativas e lembrar o aparelho. Não diz respeito a quem visita o site."
     },
     "contacto": {
       "titulo": "Dúvidas",
@@ -280,11 +284,15 @@
     },
     "uso": {
       "titulo": "O que usamos",
-      "texto": "Este site não usa cookies. Não há cookies de análise, de publicidade nem de sessão, e por isso não há banner de consentimento — não haveria nada para consentir."
+      "texto": "Este site não põe cookies a quem o visita. Não há cookies de análise, de publicidade nem de sessão, e por isso não há banner de consentimento — não haveria nada para consentir."
     },
     "lingua": {
       "titulo": "E a língua que escolheu?",
       "texto": "Fica no endereço, e não num cookie: a versão inglesa vive em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre na língua do seu navegador."
+    },
+    "equipa": {
+      "titulo": "A área da equipa",
+      "texto": "Há uma área reservada a quem trabalha na casa, para atualizar a carta e o horário. Quem lá entra recebe dois cookies estritamente necessários — um para manter a sessão aberta, outro para o aparelho não pedir o código de entrada todas as vezes — e só nessa área. Quem visita o site nunca os recebe."
     },
     "verificar": {
       "titulo": "Como confirmar",

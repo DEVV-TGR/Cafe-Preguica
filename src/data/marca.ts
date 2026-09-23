@@ -13,17 +13,39 @@ import dados from "./marca.json";
  * Misturar as duas coisas é o erro que se paga meses depois, quando alguém
  * traduz o site e descobre metade do texto num ficheiro que não tem idioma.
  */
-const Esquema = z.object({
+/**
+ * O endereço de uma rede tem de ser **dessa rede**: `https:` e o domínio certo.
+ *
+ * Existe por causa do painel, onde qualquer um destes links se muda com dois
+ * toques. Um link colado à pressa — ou trocado por quem não devia — mandava os
+ * clientes para outro sítio com o ícone do Instagram por cima. Assim só passa o
+ * que é mesmo do Instagram, do Facebook, do TikTok ou do Spotify.
+ */
+function linkDe(...dominios: string[]) {
+  return z
+    .url()
+    .refine((valor) => {
+      const url = new URL(valor);
+      return (
+        url.protocol === "https:" &&
+        dominios.some((d) => url.hostname === d || url.hostname.endsWith(`.${d}`))
+      );
+    }, `tem de ser um endereço https de ${dominios.join(" ou ")}`)
+    .nullable();
+}
+
+/** Exportado para o painel validar com as mesmas regras do `build`. */
+export const EsquemaMarca = z.object({
   nome: z.string().min(1),
   /** Ano de fundação. `null` enquanto não se confirmar com o cliente. */
   fundacao: z.number().int().min(1800).max(new Date().getFullYear()).nullable(),
   /* Os perfis a `null` não aparecem no rodapé. Um link de rede social
      adivinhado leva o visitante à conta de outra pessoa. */
-  instagram: z.url().nullable(),
+  instagram: linkDe("instagram.com"),
   /* O link de partilha que está no Linktree da casa (`/share/…`) redireciona
      para este. Fica o de destino, que não depende do serviço de partilha. */
-  facebook: z.url().nullable(),
-  tiktok: z.url().nullable(),
+  facebook: linkDe("facebook.com"),
+  tiktok: linkDe("tiktok.com"),
   /**
    * O perfil da casa no Spotify, com as playlists que tocam no bar e que os
    * clientes pedem. É **só um link**, e não o leitor embebido do Spotify: esse é
@@ -31,12 +53,12 @@ const Esquema = z.object({
    * `/cookies` e `/privacidade`. Guardado sem o `?si=` da partilha, que só
    * serve para o Spotify saber quem partilhou.
    */
-  spotify: z.url().nullable(),
+  spotify: linkDe("open.spotify.com"),
 });
 
-export type Marca = z.infer<typeof Esquema>;
+export type Marca = z.infer<typeof EsquemaMarca>;
 
-const validado = Esquema.safeParse(dados);
+const validado = EsquemaMarca.safeParse(dados);
 if (!validado.success) {
   throw erroDeFicheiro("marca.json", validado.error, dados);
 }

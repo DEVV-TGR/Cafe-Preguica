@@ -77,6 +77,21 @@ Deduzir alergénios de uma descrição é inventar informação de saúde — e 
 o array estiver vazio o site mostra o aviso de que a informação está no balcão,
 que é o que a lei aceita.
 
+### O painel grava em `src/data/`, e isso tem regras
+
+O `/painel` (ver `docs/PAINEL.md`) faz commits aos JSON de `src/data/` pela API
+do GitHub. Três consequências para quem mexe no código:
+
+- **Um campo novo num esquema é um campo que o painel tem de saber escrever.**
+  Se o painel não o mandar, a publicação é recusada pelo mesmo `zod` do build.
+  Os esquemas são exportados (`EsquemaEmenta`, `EsquemaCafe`, `EsquemaMarca`)
+  para o painel validar com eles; não duplicar regras à mão.
+- **Uma página que pede um artigo pelo `id` tem de o pôr em `EM_DESTAQUE`**
+  (`src/data/ementa.ts`), senão o painel deixava apagá-lo. O `build` rebenta a
+  lembrar.
+- **`confirmada` e `horarioConfirmado` não são do painel.** A ação do servidor
+  vai buscá-los ao repositório e ignora o que o browser mande.
+
 ### Nada de terceiros sem decisão explícita
 
 ⚠️ Um mapa embebido, um vídeo do YouTube, um widget do Instagram ou uma
@@ -91,5 +106,15 @@ exactamente por esta razão. Ver `docs/seguranca.md`.
 
 ### A CSP de produção não leva `'unsafe-eval'`
 
-Está dentro de um `if` de `NODE_ENV` em `next.config.ts` porque o React só o usa
+Está dentro de um `NODE_ENV` em `src/lib/cabecalhos.ts` porque o React só o usa
 em desenvolvimento. O CI verifica e fica vermelho se alguém o tirar de lá.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

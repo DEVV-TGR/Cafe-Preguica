@@ -1,4 +1,4 @@
-import { artigos, type Artigo } from "@/data/ementa";
+import { artigos, exigirEmDestaque, type Artigo } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import type { Locale } from "@/i18n/routing";
 
@@ -64,6 +64,9 @@ export function CartaoCarril({
   nome?: string;
   facto?: string;
 }) {
+  /* Rebenta o `build` se o `id` não estiver protegido contra o painel. */
+  if (id) exigirEmDestaque(id, "CartaoCarril");
+
   const artigo: Artigo | undefined = id
     ? artigos.find((a) => a.id === id)
     : undefined;

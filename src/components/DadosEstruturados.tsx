@@ -96,7 +96,7 @@ export function DadosEstruturados({ descricao }: { descricao: string }) {
       type="application/ld+json"
       /* Alimentado por `cafe.json` e `marca.json`, os dois validados por `zod`
          e sem entrada de utilizador. É o único `dangerouslySetInnerHTML` do
-         site — ver o comentário da CSP em `next.config.ts`. */
+         site — ver o comentário da CSP em `src/lib/cabecalhos.ts`. */
       dangerouslySetInnerHTML={{ __html: JSON.stringify(dados) }}
     />
   );

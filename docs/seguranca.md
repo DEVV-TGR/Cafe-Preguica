@@ -5,10 +5,16 @@ automaticamente. É a página para entregar a quem pedir contas.
 
 ## O ponto de partida
 
-Este é um site de montra: **não tem base de dados, não tem contas, não tem
-formulários e não recebe texto de ninguém**. Nada do que é renderizado vem de
-fora — vem de `src/data/`, que são ficheiros nossos, versionados no git e
-validados por `zod` antes de o build passar.
+Este é um site de montra: **não tem base de dados, e para quem o visita não tem
+contas, não tem formulários e não recebe texto de ninguém**. Nada do que é
+renderizado vem de fora — vem de `src/data/`, que são ficheiros versionados no
+git e validados por `zod` antes de o build passar.
+
+A única exceção é o **painel da casa** (`/painel`, ver [`PAINEL.md`](PAINEL.md)):
+quem trabalha lá entra com um código enviado por email e muda a carta e o
+horário. O painel escreve nos mesmos ficheiros de `src/data/`, com um commit, e
+passa pelos mesmos esquemas `zod`. O site público continua estático e continua
+sem receber texto de visitantes.
 
 Isso muda a conta toda. A maior parte das vulnerabilidades de um site vive na
 fronteira entre o que o visitante escreve e o que o servidor faz com isso. Aqui
@@ -17,7 +23,9 @@ browser é autorizado a carregar** e **o que entra no repositório**.
 
 ## Cabeçalhos
 
-Definidos em `next.config.ts`, aplicados a todas as rotas.
+Definidos em `src/lib/cabecalhos.ts` e aplicados pelo `next.config.ts` a todas
+as rotas. A exceção é a CSP do painel, que é outra e vem do `src/proxy.ts` (ver
+abaixo).
 
 | Cabeçalho | O que faz |
 |---|---|
@@ -56,7 +64,17 @@ conteúdo de terceiros nem entrada de utilizador a chegar ao HTML. O único
 alimentado por ficheiros que o `zod` valida no build.
 
 **Se um dia entrar um CMS, comentários ou testemunhos submetidos, esta conta
-muda e volta-se a fazê-la.**
+muda e volta-se a fazê-la.** O painel não a muda: quem lá escreve entrou com um
+código, o que escreve passa pelo `zod`, e o React escapa o texto.
+
+### A CSP do painel
+
+O `/painel` é dinâmico de qualquer forma, porque tem sessão, e por isso leva a
+CSP que as páginas públicas não podem ter sem perder o CDN: **um nonce por
+pedido, `'strict-dynamic'`, e nada de `'unsafe-inline'` nos scripts**. Leva
+também `Cache-Control: no-store` e `X-Robots-Tag: noindex`. O `next.config.ts`
+não põe a CSP pública no painel: duas CSP na mesma resposta somavam-se e ninguém
+percebia porquê.
 
 O que a CSP dá a sério, mesmo com o `'unsafe-inline'`:
 
@@ -68,8 +86,8 @@ O que a CSP dá a sério, mesmo com o `'unsafe-inline'`:
 - `object-src 'none'` e `base-uri 'self'` — fecham dois vetores clássicos:
   plugins e sequestro de URLs relativos.
 
-O `'unsafe-eval'` existe **só em desenvolvimento**, dentro de um `if` de
-`NODE_ENV`: o React usa `eval` para reconstruir as pilhas de erro do servidor no
+O `'unsafe-eval'` existe **só em desenvolvimento**, dentro de um `NODE_ENV` em
+`src/lib/cabecalhos.ts`: o React usa `eval` para reconstruir as pilhas de erro do servidor no
 overlay do `npm run dev`. Em produção nunca é usado, e o CI fica vermelho se lá
 aparecer.
 
@@ -87,8 +105,8 @@ O site não carrega **nada** de fora:
 - Não há botões de redes sociais que carreguem código, não há vídeo embebido e
   não há ferramenta de estatísticas.
 
-**A consequência é que o site não põe um único cookie**, e por isso não tem
-banner de consentimento — não haveria nada para consentir. É o que a página
+**A consequência é que o site não põe um único cookie a quem o visita**, e por
+isso não tem banner de consentimento — não haveria nada para consentir. É o que a página
 `/cookies` diz, e é verificável em dez segundos nas ferramentas de programador.
 
 Isto não se mantém sozinho. Mantém-se com duas peças:
@@ -114,28 +132,46 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
 - Dependabot semanal (`.github/dependabot.yml`). É a peça que faz par com o
   `audit`: sem ela, um audit a zero é a fotografia do dia em que alguém o pôs a
   zero.
-- Cinco dependências de produção: `next`, `react`, `react-dom`, `next-intl`,
-  `zod`. Cada uma que não existe é uma que não precisa de ser auditada.
+- Seis dependências de produção: `next`, `react`, `react-dom`, `next-intl`,
+  `zod` e `server-only`. Este último não tem código a correr; serve para o
+  build falhar se um módulo com segredos do painel for parar ao browser. Cada
+  dependência que não existe é uma que não precisa de ser auditada. O painel
+  fala com o GitHub, o Resend e o Upstash por `fetch`, sem SDKs.
 - O token do CI corre com `permissions: contents: read`. Nenhum dos passos
   escreve no repositório.
 
 ## Dados pessoais
 
-Nenhuns são recolhidos pelo site: não há formulários, contas nem cookies. O
-alojamento (Vercel) regista pedidos ao servidor para o poder servir e proteger;
-esses registos são da plataforma e não são usados por nós.
+Nenhuns são recolhidos sobre quem visita o site: não há formulários, contas nem
+cookies. O alojamento (Vercel) regista pedidos ao servidor para o poder servir e
+proteger; esses registos são da plataforma e não são usados por nós.
+
+O painel usa os emails da equipa autorizada, e só esses. Servem para enviar o
+código (Resend), e no Upstash ficam em hash, com prazo de 30 dias no máximo. Nos
+registos da Vercel aparecem mascarados (`m•••a@…`), e nos commits do repositório,
+que é público, também: o autor de cada commit do painel é fixo e nunca é o email
+de quem gravou. As páginas `/cookies` e `/privacidade` dizem-no numa secção
+própria.
 
 ⚠️ Isto muda no dia em que houver formulário. Ver `docs/decisoes-pendentes.md`.
 
 ## Segredos
 
 O `.gitignore` deixa `.env`, `.env.local` e `.env*.local` de fora do
-repositório. O `.env.example` documenta a lista completa de variáveis — hoje é
-uma só, `NEXT_PUBLIC_SITE_URL`, que não é segredo nenhum: é o domínio público, e
-o prefixo `NEXT_PUBLIC_` significa precisamente que vai para o browser.
+repositório. O `.env.example` documenta a lista completa de variáveis.
 
-**Não há neste repositório nenhuma credencial**, e não deve passar a haver sem
-que a caixa onde ela é guardada seja discutida primeiro.
+- `NEXT_PUBLIC_SITE_URL` não é segredo: é o domínio público.
+- As do painel são segredos e vivem só nas Environment Variables da Vercel,
+  marcadas como *Sensitive*: `PAINEL_GITHUB_TOKEN`, `RESEND_API_KEY` e as do
+  Upstash.
+  - O token do GitHub é *fine-grained*, só neste repositório e só com
+    `Contents: Read and write`.
+  - O `build` corre sem nenhuma delas.
+
+**Não há neste repositório nenhuma credencial.** Todas as chamadas que usam
+segredos são feitas no servidor, e a CSP do browser continua com
+`connect-src 'self'`. Se alguém precisar de lá acrescentar `api.github.com`, é
+sinal de que um segredo está a passar pelo cliente.
 
 ## O que o CI verifica, em cada PR
 
@@ -145,10 +181,17 @@ que a caixa onde ela é guardada seja discutida primeiro.
 4. As duas línguas têm as mesmas chaves de tradução
 5. `npm audit --audit-level=high`
 6. `build` — e com ele a validação `zod` de `src/data/`
-7. O site arranca e as 12 rotas respondem com o código certo
+7. O site arranca e as 13 rotas respondem com o código certo
 8. Os seis cabeçalhos de segurança estão na resposta
 9. A CSP de produção não traz `'unsafe-eval'`
-10. O HTML não carrega nenhum recurso de terceiros
+10. O painel está fechado:
+    - `/painel` sem sessão, ou com um cookie inventado, vai para a entrada;
+    - a CSP do painel tem nonce, e nem `'unsafe-inline'` nem `'unsafe-eval'`
+      nos scripts;
+    - traz `no-store` e `noindex`;
+    - nenhuma rota dele é estática.
+11. O HTML não carrega nenhum recurso de terceiros
+12. Nenhuma página pública grava cookies
 
 Configuração parte-se sem ninguém dar por isso. Aqui, parte-se com o CI
 vermelho.

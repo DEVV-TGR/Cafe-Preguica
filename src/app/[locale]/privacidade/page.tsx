@@ -30,7 +30,7 @@ export default async function Privacidade({ params }: Props) {
   const t = await getTranslations("privacidade");
   const meta = await getTranslations("metadata.privacidade");
 
-  const seccoes = ["recolha", "terceiros", "alojamento", "contacto"] as const;
+  const seccoes = ["recolha", "terceiros", "alojamento", "equipa", "contacto"] as const;
 
   return (
     <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>

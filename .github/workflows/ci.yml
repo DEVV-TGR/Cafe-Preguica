@@ -141,6 +141,59 @@ jobs:
           fi
           echo "✓ a CSP não traz 'unsafe-eval'"
 
+      # O painel (`/painel`) é a única parte do site com sessão. Isto confirma,
+      # sem segredos nenhuns definidos, que a porta está fechada e que a
+      # variante da CSP com nonce é a que lá chega — ver `src/proxy.ts` e
+      # `src/lib/cabecalhos.ts`.
+      - name: O painel está fechado
+        run: |
+          set -euo pipefail
+
+          # Sem sessão, `/painel` e as suas páginas mandam para a entrada.
+          for caminho in /painel /painel/ementa /painel/casa; do
+            resposta=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "http://localhost:3000${caminho}")
+            if [ "$resposta" != "307 http://localhost:3000/painel/entrar" ]; then
+              echo "::error::${caminho} sem sessão devolveu '${resposta}', esperava 307 para /painel/entrar"
+              exit 1
+            fi
+            echo "✓ ${caminho} → /painel/entrar"
+          done
+
+          # Um cookie com o nome certo e conteúdo inventado passa pelo proxy,
+          # que só olha se existe — e tem de morrer no `exigirSessao()`.
+          resposta=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' \
+            -b 'preguica_sessao=s2.inventado.falso' http://localhost:3000/painel/ementa)
+          if [ "$resposta" != "307 http://localhost:3000/painel/entrar" ]; then
+            echo "::error::um cookie de sessão falso abriu o painel ('${resposta}')"
+            exit 1
+          fi
+          echo "✓ um cookie de sessão falso não entra"
+
+          cabecalhos=$(curl -s -D - -o /dev/null http://localhost:3000/painel/entrar | tr 'A-Z' 'a-z')
+          csp=$(grep '^content-security-policy:' <<< "$cabecalhos")
+
+          if [ "$(grep -c '^content-security-policy:' <<< "$cabecalhos")" != "1" ]; then
+            echo "::error::/painel/entrar tem de ter exatamente uma CSP"
+            exit 1
+          fi
+          grep -q "'nonce-" <<< "$csp" || { echo "::error::a CSP do painel não traz nonce"; exit 1; }
+          script_src=$(grep -oE "script-src [^;]*" <<< "$csp")
+          if grep -q "unsafe-inline\|unsafe-eval" <<< "$script_src"; then
+            echo "::error::o script-src do painel traz '${script_src}'"
+            exit 1
+          fi
+          grep -q '^cache-control: no-store' <<< "$cabecalhos" || { echo "::error::o painel não traz Cache-Control: no-store"; exit 1; }
+          grep -q '^x-robots-tag: noindex' <<< "$cabecalhos" || { echo "::error::o painel não traz X-Robots-Tag: noindex"; exit 1; }
+          echo "✓ o painel traz CSP com nonce, no-store e noindex"
+
+          # Nenhuma página do painel pode ser gerada no build: uma página
+          # estática com sessão serviria o mesmo HTML a toda a gente.
+          if grep -q '"/painel' .next/prerender-manifest.json; then
+            echo "::error::há rotas do painel no prerender-manifest"
+            exit 1
+          fi
+          echo "✓ nenhuma rota do painel é estática"
+
       # O site não carrega nada de fora, e é isso que torna verdadeira a página
       # de cookies. Se alguém acrescentar um script, uma fonte ou um iframe de
       # terceiros, é aqui que se vê — antes de a página passar a mentir.

@@ -10,7 +10,9 @@ import { URL_SITE } from "@/lib/site";
  */
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/" },
+    /* O painel também leva `noindex` na metadata e no `X-Robots-Tag` — isto é
+       só a primeira das três camadas, e a mais fraca. */
+    rules: { userAgent: "*", allow: "/", disallow: "/painel" },
     sitemap: `${URL_SITE}/sitemap.xml`,
   };
 }

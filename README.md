@@ -67,6 +67,7 @@ gravidade:
 | `src/components/` | Cabeçalho, rodapé, marca, dados estruturados, invólucro das páginas de leitura. |
 | `public/scrollcraft/` | O motor de rolagem, **de terceiros e nunca editado**. |
 | `scrollcraft/` | O `BRIEF.md` da página inicial e o registo de originalidade. |
+| `src/app/painel/`, `src/lib/painel/` | O painel da casa. Ver `docs/PAINEL.md`. |
 | `docs/` | As decisões e o porquê delas. |
 
 A separação que interessa é **factos em `src/data/`, texto em `messages/`**.
@@ -101,13 +102,15 @@ um carril parado parece uma fotografia e não um erro.
 
 ## Mudar a carta
 
-Editar `src/data/ementa.json` e mais nada. Não há base de dados nem área de
-administração: para uma carta que muda duas ou três vezes por ano, um ficheiro
-versionado ganha a um CMS — histórico no git, sem palavra-passe para esquecer,
-sem custo mensal, e sem mais um serviço com sessão iniciada a poder ser
-comprometido.
+**A casa muda-a no painel, em `/painel`** — preços, artigos, textos, esconder o
+que acabou, a ordem, e também o horário, os contactos e as redes. O painel não
+tem base de dados: grava `src/data/*.json` no repositório com um commit, e a
+Vercel reconstrói o site em 1 a 2 minutos. Como se monta e o que pode e não pode
+mudar está em [`docs/PAINEL.md`](docs/PAINEL.md).
 
-O ficheiro é editado à mão, por isso o `zod` valida-o no `npm run build`. Um
+À mão continua a ser editar `src/data/ementa.json` e mais nada. O `zod`
+valida-o no `npm run build` — e o painel valida com o mesmo esquema antes de
+gravar. Um
 erro rebenta a compilação a dizer **qual é o artigo**:
 
 ```
@@ -141,5 +144,6 @@ rotas e os cabeçalhos de segurança. Ver `.github/workflows/ci.yml`.
 O resumo está em `docs/seguranca.md`. Em três linhas: cabeçalhos completos e
 verificados pelo CI, CSP que não deixa carregar nada de fora — **incluindo o
 motor de rolagem, que é servido por nós** — nenhum serviço de terceiros, nenhum
-cookie, nenhum dado de visitante recolhido, scripts de instalação de pacotes
+cookie a quem visita, nenhum dado de visitante recolhido, um painel com login
+por código e CSP com nonce, scripts de instalação de pacotes
 bloqueados e `npm audit` a zero mantido pelo Dependabot.

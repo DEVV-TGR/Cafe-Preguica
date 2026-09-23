@@ -246,7 +246,7 @@
     "atualizado": "Last updated: draft, to be reviewed before publishing.",
     "recolha": {
       "titulo": "What data we collect",
-      "texto": "None. This site has no forms, no accounts and stores nothing about its visitors."
+      "texto": "None about visitors. This site has no forms or visitor accounts, and stores nothing about the people who open it."
     },
     "terceiros": {
       "titulo": "Third-party services",
@@ -255,6 +255,10 @@
     "alojamento": {
       "titulo": "Hosting",
       "texto": "The site is hosted by Vercel, which logs server requests in order to serve and protect it. Those logs belong to the platform and are not used by us to identify anyone."
+    },
+    "equipa": {
+      "titulo": "The staff area",
+      "texto": "Staff sign in to a reserved area with a code sent to their email. For that, the staff member's email address is used to send the code (through Resend), and the sign-in record is kept for at most 30 days (at Upstash) to limit attempts and remember the device. It does not concern visitors to the site."
     },
     "contacto": {
       "titulo": "Questions",
@@ -280,11 +284,15 @@
     },
     "uso": {
       "titulo": "What we use",
-      "texto": "This site uses no cookies. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to."
+      "texto": "This site sets no cookies for its visitors. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to."
     },
     "lingua": {
       "titulo": "What about the language you chose?",
       "texto": "It lives in the address, not in a cookie: the English version is under /en. It stays as you browse the site. If you type the address again without /en, the site opens in your browser's language."
+    },
+    "equipa": {
+      "titulo": "The staff area",
+      "texto": "There is an area reserved for the people who work here, to update the menu and opening hours. Whoever signs in there receives two strictly necessary cookies — one to keep the session open, another so the device doesn't ask for the sign-in code every time — and only in that area. Visitors never receive them."
     },
     "verificar": {
       "titulo": "How to check",

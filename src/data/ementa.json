@@ -543,7 +543,7 @@
     },
     {
       "id": "unicornio",
-      "categoria": "cocktail-preguica",
+      "categoria": "unicornio",
       "nome": {
         "pt": "Unicórnio",
         "en": "Unicorn"
@@ -1656,19 +1656,6 @@
       "nome": {
         "pt": "Água tónica",
         "en": "Tonic water"
-      },
-      "descricao": null,
-      "preco": 1.7,
-      "precoSecundario": null,
-      "alergenios": [],
-      "escondido": false
-    },
-    {
-      "id": "agu-unicornio",
-      "categoria": "aguas-e-refrigerantes",
-      "nome": {
-        "pt": "Unicórnio",
-        "en": "Unicorn"
       },
       "descricao": null,
       "preco": 1.7,

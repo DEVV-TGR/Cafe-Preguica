@@ -34,7 +34,13 @@
     "dose": "Dose",
     "olhoCasa": "Café Preguiça · Ermesinde",
     "redes": "As redes da casa",
-    "seguir": "Seguir"
+    "seguir": "Seguir",
+    "cozinha": "Cozinha",
+    "cozinhaAte": "cozinha até {hora}",
+    "cozinhaBloco": "{dias} até {hora}",
+    "diasAte": "{de} a {ate}",
+    "diasE": "{a} e {b}",
+    "cozinhaNota": "A cozinha fecha antes do bar: os pedidos de comida aceitam-se até à hora indicada."
   },
   "metadata": {
     "inicio": {
@@ -156,7 +162,7 @@
       "tabuas": "Tábuas",
       "tacas": "Taças",
       "sobremesas": "Sobremesas",
-      "cocktail-preguica": "Cocktail Preguiça & Unicórnio",
+      "cocktail-preguica": "Cocktail Preguiça",
       "cocktails-classicos": "Cocktails clássicos",
       "cocktails-special": "Special's",
       "mocktails": "Mocktails, sem álcool",
@@ -169,6 +175,7 @@
       "vinhos": "Vinhos",
       "cafetaria": "Cafetaria & bebidas quentes",
       "chas": "Chás",
+      "unicornio": "Unicórnio",
       "aguas-e-refrigerantes": "Águas & refrigerantes"
     },
     "colunaPreco": "Pão saloio",
@@ -200,23 +207,33 @@
         "facto": "Tostas, tábuas para o meio da mesa, taças para petiscar e sobremesa."
       },
       "cocktails": {
-        "nome": "Cocktails",
-        "facto": "O da casa, os clássicos, os special's, os sem álcool e as sangrias em garrafão."
+        "nome": "Cocktails & sangrias",
+        "facto": "O da casa, os clássicos, os special's e as sangrias em garrafão."
+      },
+      "mocktails": {
+        "nome": "Mocktails",
+        "facto": "Os cocktails da casa, sem álcool."
       },
       "garrafeira": {
-        "nome": "Garrafeira",
+        "nome": "Garrafeira & cervejas",
         "facto": "Gin, whisky, shots, licores, cervejas e vinhos."
       },
-      "cafe-e-cha": {
-        "nome": "Café & chá",
-        "facto": "Cafetaria, bebidas quentes, chás, águas e refrigerantes."
+      "aguas": {
+        "nome": "Águas & refrigerantes",
+        "facto": "O Unicórnio — o Cocktail Preguiça sem álcool, num sabor à escolha —, as águas e os refrigerantes."
+      },
+      "cafetaria": {
+        "nome": "Cafetaria & bebidas quentes",
+        "facto": "Café, bebidas quentes e chás."
       }
     },
     "fotos": {
       "comer": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
       "cocktails": "Um negroni num copo baixo, com uma rodela de laranja e gotas a saltar por cima do copo.",
+      "mocktails": "Um copo balão com uma bebida turquesa, gelo picado, um morango, hortelã e uma palhinha às riscas azuis, sobre uma mesa de madeira.",
       "garrafeira": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
-      "cafe-e-cha": "Um chocolate quente com chantilly e um pau de canela, ao lado de uma torrada com compota."
+      "aguas": "Um copo balão com uma bebida amarela, uma rodela de kiwi e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
+      "cafetaria": "Um chocolate quente com chantilly e um pau de canela, ao lado de uma torrada com compota."
     },
     "sortear": "Deixa a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",

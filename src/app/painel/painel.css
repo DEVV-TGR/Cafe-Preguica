@@ -744,6 +744,15 @@ select.pn-entrada {
   }
 }
 
+.pn-dia__cozinha {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-tinta-suave);
+}
+
 .pn-interruptor {
   display: inline-flex;
   align-items: center;

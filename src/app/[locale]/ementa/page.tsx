@@ -9,6 +9,7 @@ import {
   exigirEmDestaque,
   porCapitulo,
   CARTA_CONFIRMADA,
+  COM_SABORES,
   METADADOS,
   SABORES,
   temAlergeniosDeclarados,
@@ -22,6 +23,7 @@ import { Preguica } from "@/components/catalogo/Preguica";
 import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
+import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
 import "../../catalogo.css";
 import "../../ementa.css";
 
@@ -71,8 +73,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }> = {
   comer: { foto: "tabua-partilha", artigos: ["bocadinhos-de-pao-com-chourico"] },
   cocktails: { foto: "negroni-salpico", artigos: ["negroni"] },
+  /* Os dois copos balão sem nome — ver a nota do `FOTOS_ARTIGO`. Abrem o
+     capítulo sem legenda, que é o que não afirma que bebida são. */
+  mocktails: { foto: "cocktail-turquesa", artigos: [] },
   garrafeira: { foto: "lima-espremida", artigos: [] },
-  "cafe-e-cha": {
+  aguas: { foto: "cocktail-amarelo", artigos: [] },
+  cafetaria: {
     foto: "tosta-chocolate",
     artigos: ["caf-chocolate-quente-com-chantilly", "torrada-com-compota"],
   },
@@ -231,6 +237,11 @@ export default async function Ementa({ params }: Props) {
                 </figure>
 
                 <p className="em-abertura__facto">{t(`capitulos.${capitulo}.facto`)}</p>
+                {/* Onde se escolhe a comida é onde tem de estar a hora a que a
+                    cozinha fecha — pedido da casa. */}
+                {capitulo === "comer" && (
+                  <HorarioDaCozinha locale={locale} className="em-abertura__cozinha" />
+                )}
                 {/* O sub-índice do capítulo: salta para a secção. Com uma
                     secção só não aparece — era um botão para o sítio onde já
                     se está. */}
@@ -256,7 +267,7 @@ export default async function Ementa({ params }: Props) {
                   colunas={[t("colunaPreco"), t("colunaPrecoAlt")]}
                   preco={preco}
                   extra={
-                    categoria === "cocktail-preguica" ? (
+                    COM_SABORES.includes(categoria) ? (
                       <Sabores
                         nomes={nomesSabores}
                         textos={{

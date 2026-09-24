@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
 import { cafe, DIAS, moradaCompleta, redeDoTelefone, telefoneParaLigar, urlDirecoes } from "@/data/cafe";
+import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
 import { Motor } from "@/components/catalogo/Motor";
 import { Preguica } from "@/components/catalogo/Preguica";
 import { Heroi } from "@/components/catalogo/Heroi";
@@ -267,6 +268,7 @@ export default async function Inicio({ params }: Props) {
                   );
                 })}
               </ul>
+              <HorarioDaCozinha locale={locale} className="pg-onde__cozinha" />
               {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
               {!cafe.horarioConfirmado && (
                 <p className="pg-nota">{t("onde.horarioPorConfirmar")}</p>

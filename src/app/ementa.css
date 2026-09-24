@@ -326,6 +326,21 @@ html:has(.em-pagina) {
   text-wrap: pretty;
 }
 
+/* A hora da cozinha em "Para comer" — ver `HorarioDaCozinha`. O ouro no rótulo
+   é o que a faz ler como aviso prático e não como mais uma linha de texto. */
+.em-abertura__cozinha {
+  max-width: var(--em-coluna);
+  margin: 0.5rem auto 0;
+  font-size: 0.9rem;
+  color: var(--color-tinta-suave);
+  text-wrap: pretty;
+}
+
+.em-abertura__cozinha strong {
+  color: var(--color-ouro);
+  font-weight: 600;
+}
+
 .em-abertura__seccoes {
   display: flex;
   flex-wrap: wrap;

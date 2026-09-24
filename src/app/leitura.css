@@ -196,6 +196,20 @@
   color: var(--color-tinta-suave);
 }
 
+/* A hora da cozinha, por baixo das horas do dia — mais pequena, porque é um
+   aparte do horário e não um segundo horário. */
+.lt-horario__cozinha {
+  display: block;
+  font-size: 0.85em;
+  color: var(--color-ouro-claro);
+}
+
+.lt-nota {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-tinta-suave);
+}
+
 /* ---------------------------------------------------------------- o fecho */
 
 .lt-fecho {

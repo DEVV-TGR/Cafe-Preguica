@@ -22,10 +22,42 @@ import dados from "./cafe.json";
  * e é de propósito que são diferentes.
  */
 
+const HORA = z.string().regex(/^\d{2}:\d{2}$/, "formato 00:00");
+
+/** Minutos desde a abertura — o que vem depois da meia-noite conta como do mesmo
+    turno, e é por isso que o `00:30` de uma segunda vem depois do `16:00`. */
+function depoisDeAbrir(hora: string, abre: string): number {
+  const minutos = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3));
+  return (minutos(hora) - minutos(abre) + 24 * 60) % (24 * 60);
+}
+
 const Horario = z
   .object({
-    abre: z.string().regex(/^\d{2}:\d{2}$/, "formato 00:00"),
-    fecha: z.string().regex(/^\d{2}:\d{2}$/, "formato 00:00"),
+    abre: HORA,
+    fecha: HORA,
+    /**
+     * A que horas a cozinha deixa de aceitar pedidos. A casa pediu que isto
+     * estivesse **escrito**: quem chega à meia-noite para jantar tem de saber
+     * antes de se sentar que a cozinha já fechou.
+     *
+     * `null` quer dizer que a cozinha fecha com o bar.
+     */
+    cozinhaFecha: HORA.nullable(),
+  })
+  /* A cozinha não pode fechar depois do bar — um `01:00` num dia que fecha às
+     `00:30` é quase sempre o horário de sexta copiado para a segunda. Tem de
+     ficar entre a abertura e o fecho, contando com a passagem da meia-noite. */
+  .superRefine((h, ctx) => {
+    if (h.cozinhaFecha === null) return;
+    const fecho = depoisDeAbrir(h.fecha, h.abre) || 24 * 60;
+    const cozinha = depoisDeAbrir(h.cozinhaFecha, h.abre);
+    if (cozinha === 0 || cozinha > fecho) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["cozinhaFecha"],
+        message: `a cozinha tem de fechar entre a abertura (${h.abre}) e o fecho (${h.fecha})`,
+      });
+    }
   })
   /** `null` num dia é **encerrado**, e o site escreve-o com todas as letras. */
   .nullable();
@@ -48,18 +80,16 @@ export const EsquemaCafe = z.object({
   telefone: z.string().min(9).nullable(),
   email: z.email().nullable(),
   /**
-   * ⚠️ **O horário abaixo não foi confirmado pela casa.**
+   * Se a casa já disse que o horário está certo.
    *
-   * Foi recolhido de fontes públicas, e as fontes **não concordam**: umas dizem
-   * que abre às 15h00, outras às 15h30, outras às 16h00. O que está no
-   * `cafe.json` é o mais reportado.
+   * Com esta bandeira a `false`, o site escreve por baixo do horário que está
+   * sujeito a confirmação e que convém ligar antes de vir — **o dado aparece,
+   * mas o site não promete o que não sabe.**
    *
-   * Com esta bandeira a `false`, a página de contactos escreve por baixo da
-   * tabela que o horário está sujeito a confirmação e que convém ligar antes de
-   * vir. **O dado aparece, mas o site não promete o que não sabe** — mandar
-   * alguém a uma porta fechada é o erro que mais custa neste negócio.
-   *
-   * Passa a `true` quando o cliente responder, e o aviso desaparece sozinho.
+   * Está a `true` desde a reunião de 2026-09-23, em que a casa deu o horário
+   * novo e a hora da cozinha. Passa outra vez a `false` se alguém escrever um
+   * horário que a casa não disse. Não é o painel que a muda — ver
+   * `docs/PAINEL.md`.
    */
   horarioConfirmado: z.boolean(),
   /**
@@ -172,4 +202,39 @@ export function redeDoTelefone(): "fixa" | "movel" | null {
   if (numero.startsWith("2")) return "fixa";
   if (numero.startsWith("9")) return "movel";
   return null;
+}
+
+/**
+ * A hora a que a cozinha fecha num dia — a do bar, se não houver outra.
+ * `null` se o dia estiver encerrado ou o horário por confirmar.
+ */
+export function cozinhaFecha(dia: DiaDaSemana): string | null {
+  const h = cafe.horarios?.[dia];
+  return h ? (h.cozinhaFecha ?? h.fecha) : null;
+}
+
+/**
+ * A hora da cozinha em blocos de dias seguidos com a mesma hora — "segunda a
+ * quinta até 00:00 · sexta e sábado até 01:00". É o que a ementa escreve em
+ * "Para comer", onde a pessoa escolhe a comida.
+ *
+ * Os dias encerrados partem os blocos e não entram. Sai do `cafe.json`, e por
+ * isso o painel muda-o sem se tocar na ementa.
+ */
+export function horarioDaCozinha(): { dias: DiaDaSemana[]; hora: string }[] {
+  const blocos: { dias: DiaDaSemana[]; hora: string }[] = [];
+  let anterior: string | null = null;
+
+  for (const dia of DIAS) {
+    const hora = cozinhaFecha(dia);
+    if (hora === null) {
+      anterior = null;
+      continue;
+    }
+    if (hora === anterior) blocos.at(-1)!.dias.push(dia);
+    else blocos.push({ dias: [dia], hora });
+    anterior = hora;
+  }
+
+  return blocos;
 }

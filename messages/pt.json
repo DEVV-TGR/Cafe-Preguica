@@ -201,6 +201,11 @@
     "contagem": "{artigos} artigos · {seccoes} secções",
     "indice": "Capítulos da carta",
     "naFotografia": "Na fotografia",
+    "carrossel": {
+      "foto": "Fotografia {n} de {total}",
+      "pausar": "Pausar as fotografias",
+      "continuar": "Continuar as fotografias"
+    },
     "capitulos": {
       "comer": {
         "nome": "Para comer",
@@ -228,12 +233,16 @@
       }
     },
     "fotos": {
-      "comer": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
-      "cocktails": "Um negroni num copo baixo, com uma rodela de laranja e gotas a saltar por cima do copo.",
-      "mocktails": "Um copo balão com uma bebida turquesa, gelo picado, um morango, hortelã e uma palhinha às riscas azuis, sobre uma mesa de madeira.",
-      "garrafeira": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
-      "aguas": "Um copo balão com uma bebida amarela, uma rodela de kiwi e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
-      "cafetaria": "Um chocolate quente com chantilly e um pau de canela, ao lado de uma torrada com compota."
+      "tabua-partilha": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
+      "negroni-salpico": "Um negroni num copo baixo, com uma rodela de laranja e gotas a saltar por cima do copo.",
+      "cocktail-turquesa": "Um copo balão com uma bebida turquesa, gelo picado, um morango, hortelã e uma palhinha às riscas azuis, sobre uma mesa de madeira.",
+      "lima-espremida": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
+      "cocktail-amarelo": "Um copo balão com uma bebida amarela, uma rodela de kiwi e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
+      "tosta-chocolate": "Um chocolate quente com chantilly e um pau de canela, ao lado de uma torrada com compota.",
+      "cocktail-rosa": "Um copo balão com uma bebida cor-de-rosa, uma rodela de laranja desidratada e uma palhinha às riscas amarelas, sobre uma mesa de madeira.",
+      "cocktail-azul": "Um copo balão com uma bebida azul, uma rodela de limão e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
+      "negroni-fumo": "Um negroni num copo baixo com gelo e casca de laranja, envolto em fumo, em cima do balcão.",
+      "cocktail-coco": "Um copo balão com uma bebida branca e gelo, um guarda-chuva amarelo e uma palhinha às riscas vermelhas, ao lado de um coco, sobre uma mesa de madeira."
     },
     "sortear": "Deixa a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",

@@ -24,7 +24,7 @@ import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
 import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
-import { DesenhoDaSeccao, DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
+import { DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
 import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
 import "../../catalogo.css";
 import "../../ementa.css";
@@ -412,7 +412,6 @@ function Seccao({
     >
       <header className="em-seccao__cabeca">
         <h3 id={`seccao-${categoria}`}>{titulo}</h3>
-        <DesenhoDaSeccao categoria={categoria} />
         {/* A dose é propriedade da secção, não do artigo: o gin serve-se todo
             a 5 cl e repeti-lo em onze linhas era ruído. */}
         {meta?.dose && (

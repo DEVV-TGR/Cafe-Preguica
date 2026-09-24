@@ -16,8 +16,13 @@
  * dos desenhos também se vão — mas por cima do fundo quase preto do site o
  * resultado é o mesmo que se lá estivessem.
  *
- * Nunca se amplia: cada desenho sai no tamanho do recorte, e o CSS nunca o
- * mostra maior do que isso.
+ * ## Ampliados para o dobro
+ *
+ * A página mostra-os maiores do que o recorte, e o browser a esticar 150 px
+ * serrilha. Ampliam-se aqui, uma vez, com `lanczos3` e um realce leve — ficam
+ * macios, mas limpos. Como vivem sobretudo por trás do texto e esbatidos (ver
+ * `components/ementa/Desenhos.tsx`), a moleza não se nota. Com os originais,
+ * esta ampliação deixa de ser precisa: tira-se o `AMPLIAR`.
  */
 import sharp from "sharp";
 import { mkdirSync } from "node:fs";
@@ -45,6 +50,8 @@ const CAIXAS = {
 const ESCURO = 58;
 const CLARO = 96;
 
+const AMPLIAR = 2;
+
 mkdirSync("public/desenhos", { recursive: true });
 
 for (const [nome, [left, top, width, height]] of Object.entries(CAIXAS)) {
@@ -65,9 +72,19 @@ for (const [nome, [left, top, width, height]] of Object.entries(CAIXAS)) {
     rgba[j + 3] = Math.round(t * t * (3 - 2 * t) * 255);
   }
 
-  await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } })
+  /* Primeiro aparar o transparente à volta, depois ampliar — duas passagens,
+     porque o `sharp` corta antes de redimensionar dentro da mesma cadeia. */
+  const aparado = await sharp(rgba, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
     .trim({ threshold: 1 })
+    .png()
+    .toBuffer({ resolveWithObject: true });
+
+  const final = await sharp(aparado.data)
+    .resize(aparado.info.width * AMPLIAR, aparado.info.height * AMPLIAR, { kernel: "lanczos3" })
+    .sharpen({ sigma: 0.7 })
     .webp({ quality: 90, alphaQuality: 90 })
     .toFile(`public/desenhos/${nome}.webp`);
-  console.log(`✓ public/desenhos/${nome}.webp`);
+  console.log(`✓ public/desenhos/${nome}.webp — ${final.width} × ${final.height}`);
 }

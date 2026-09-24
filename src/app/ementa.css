@@ -232,51 +232,54 @@ html:has(.em-pagina) {
 }
 
 /* ------------------------------------------------------------ os desenhos
-   Ver `components/ementa/Desenhos.tsx`. Recortados da fotografia do menu, e por
-   isso **nunca maiores do que o recorte**: o `max-width` e o `max-height` são
-   o tamanho natural, e o que se escolhe aqui é só o quanto se encolhem. */
+   Ver `components/ementa/Desenhos.tsx`. **Por trás da carta**: o capítulo
+   isola o empilhamento (`isolation`), e o `z-index: -1` põe os desenhos atrás
+   do texto e à frente do fundo da página. O `overflow-x: clip` corta a parte
+   que fica fora do ecrã sem criar scroll de lado. */
+
+.em-capitulo {
+  isolation: isolate;
+  overflow-x: clip;
+}
 
 .em-desenho {
-  max-width: 100%;
+  position: absolute;
+  z-index: -1;
+  width: min(var(--largura), 44vw);
+  max-width: none;
   height: auto;
+  rotate: var(--rodar, 0deg);
+  opacity: 0.16;
   pointer-events: none;
   user-select: none;
 }
 
-/* Ao lado do título da secção: do tamanho de uma letra grande, a olhar para o
-   título. Empurra as colunas de preço (tostas, vinhos) para a linha de baixo
-   só se não couber. */
-.em-desenho--seccao {
-  align-self: center;
-  width: auto;
-  height: 2.75rem;
-  margin-inline-end: auto;
+/* Meio fora do ecrã, para ler como coisa espalhada e não como imagem posta. */
+.em-desenho--esquerda {
+  left: -3rem;
 }
 
-/* Nas margens: só onde há margem — a coluna da carta tem 72rem, e abaixo de
-   90rem de ecrã o desenho ia para cima do texto. */
-.em-desenho--margem {
-  display: none;
+.em-desenho--direita {
+  right: -3rem;
 }
 
+/* No computador largo, nas margens de cada lado da coluna de 72rem, com a
+   cor toda — aí não ficam por trás de nada. A largura nunca passa da margem
+   livre, menos um respiro. */
 @media (min-width: 90rem) {
-  .em-desenho--margem {
-    display: block;
-    position: absolute;
-    width: auto;
-    height: auto;
-    max-height: 10rem;
-    rotate: var(--rodar, 0deg);
-    opacity: 0.92;
+  .em-desenho {
+    width: min(var(--largura), calc((100% - 72rem) / 2 - 3rem));
+    opacity: 0.95;
   }
 
-  /* Metade da margem livre, à esquerda ou à direita da coluna de 72rem. */
   .em-desenho--esquerda {
-    right: calc(50% + 36rem + 2.5rem);
+    left: auto;
+    right: calc(50% + 36rem + 1.5rem);
   }
 
   .em-desenho--direita {
-    left: calc(50% + 36rem + 2.5rem);
+    right: auto;
+    left: calc(50% + 36rem + 1.5rem);
   }
 }
 

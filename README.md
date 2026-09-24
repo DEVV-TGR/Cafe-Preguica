@@ -31,11 +31,9 @@ gravidade:
       na cozinha, **sem deduzir das descrições**. Até lá o site mostra o aviso de
       que a informação está no balcão, que é o que o Regulamento (UE) 1169/2011
       aceita.
-- [ ] **Confirmar o horário.** Está no site mas com `horarioConfirmado: false`,
-      e por isso a página escreve que é preciso ligar antes de vir. **Três fontes
-      públicas dão três horas de abertura diferentes** — 15h00, 15h30 e 16h00. O
-      que está é o mais reportado. Uma resposta do cliente resolve e faz o aviso
-      desaparecer sozinho.
+- [x] **Confirmar o horário.** Dado pela casa na reunião de 2026-09-23: 16:00–00:30
+      de segunda a quinta, 16:00–01:30 à sexta e ao sábado, domingo encerrado, e a
+      cozinha fecha meia hora antes. `horarioConfirmado: true`.
 - [ ] **Confirmar que a casa está aberta.** Um agregador marca-a como
       *temporariamente encerrada*. Pode ser dado velho, mas convém perguntar.
 - [ ] **Fotografias originais.** As 38 imagens de `public/casa/` saíram das 19

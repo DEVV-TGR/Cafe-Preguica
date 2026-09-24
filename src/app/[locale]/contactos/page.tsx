@@ -6,6 +6,7 @@ import { Aviso, Pagina, Seccao } from "@/components/Pagina";
 import {
   cafe,
   DIAS,
+  cozinhaFecha,
   moradaCompleta,
   telefoneParaLigar,
   urlDirecoes,
@@ -84,6 +85,7 @@ export default async function Contactos({ params }: Props) {
           <dl className="lt-horario">
             {DIAS.map((dia) => {
               const horario = cafe.horarios![dia];
+              const cozinha = cozinhaFecha(dia);
               return (
                 <div key={dia} className="contents">
                   <dt>{comum(`dias.${dia}`)}</dt>
@@ -91,11 +93,21 @@ export default async function Contactos({ params }: Props) {
                     {horario
                       ? `${horario.abre}–${horario.fecha}`
                       : comum("encerrado")}
+                    {/* Só quando a cozinha fecha antes do bar: repetir a mesma
+                        hora duas vezes não diz nada a ninguém. */}
+                    {horario && cozinha !== horario.fecha && (
+                      <span className="lt-horario__cozinha">
+                        {comum("cozinhaAte", { hora: cozinha! })}
+                      </span>
+                    )}
                   </dd>
                 </div>
               );
             })}
           </dl>
+          {DIAS.some((dia) => cafe.horarios?.[dia]?.cozinhaFecha) && (
+            <p className="lt-nota">{comum("cozinhaNota")}</p>
+          )}
         </Seccao>
       )}
     </Pagina>

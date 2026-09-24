@@ -5,31 +5,37 @@
   "cidade": "Ermesinde",
   "telefone": "229 730 873",
   "email": "cafepreguica@sapo.pt",
-  "horarioConfirmado": false,
+  "horarioConfirmado": true,
   "horarios": {
     "segunda": {
-      "abre": "15:30",
-      "fecha": "00:00"
+      "abre": "16:00",
+      "fecha": "00:30",
+      "cozinhaFecha": "00:00"
     },
     "terca": {
-      "abre": "15:30",
-      "fecha": "00:00"
+      "abre": "16:00",
+      "fecha": "00:30",
+      "cozinhaFecha": "00:00"
     },
     "quarta": {
-      "abre": "15:30",
-      "fecha": "00:00"
+      "abre": "16:00",
+      "fecha": "00:30",
+      "cozinhaFecha": "00:00"
     },
     "quinta": {
-      "abre": "15:30",
-      "fecha": "00:00"
+      "abre": "16:00",
+      "fecha": "00:30",
+      "cozinhaFecha": "00:00"
     },
     "sexta": {
-      "abre": "15:30",
-      "fecha": "01:00"
+      "abre": "16:00",
+      "fecha": "01:30",
+      "cozinhaFecha": "01:00"
     },
     "sabado": {
-      "abre": "15:30",
-      "fecha": "01:00"
+      "abre": "16:00",
+      "fecha": "01:30",
+      "cozinhaFecha": "01:00"
     },
     "domingo": null
   },

@@ -1255,6 +1255,19 @@
   color: var(--color-tinta-suave);
 }
 
+/* "Cozinha — segunda a quinta até 00:00 · …", ver `HorarioDaCozinha`. */
+.pg-onde__cozinha {
+  width: min(19rem, 100%);
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  color: var(--color-tinta-suave);
+}
+
+.pg-onde__cozinha strong {
+  color: var(--color-ouro-claro);
+  font-weight: inherit;
+}
+
 .pg-onde__animais {
   display: flex;
   align-items: center;

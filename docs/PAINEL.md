@@ -9,7 +9,8 @@ Aqui a casa muda a carta e o horário sem depender de nós: **`/painel`**.
   - **esconder** um artigo sem o apagar (acabou, é da estação);
   - mudar a ordem dentro de cada categoria;
   - apagar.
-- **Casa:** horário de cada dia, telefone, email e as quatro redes.
+- **Casa:** horário de cada dia (e a hora a que a cozinha fecha), telefone, email
+  e as quatro redes.
 - **Newsletter:** escrever e enviar a quem se inscreveu no site, e ver a lista
   de contactos. Não grava no repositório — fala com o Resend. Ver
   [`NEWSLETTER.md`](NEWSLETTER.md).

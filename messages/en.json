@@ -34,7 +34,13 @@
     "dose": "Serving",
     "olhoCasa": "Café Preguiça · Ermesinde",
     "redes": "Our social media",
-    "seguir": "Follow"
+    "seguir": "Follow",
+    "cozinha": "Kitchen",
+    "cozinhaAte": "kitchen until {hora}",
+    "cozinhaBloco": "{dias} until {hora}",
+    "diasAte": "{de} to {ate}",
+    "diasE": "{a} and {b}",
+    "cozinhaNota": "The kitchen closes before the bar: food orders are taken until the time shown."
   },
   "metadata": {
     "inicio": {
@@ -156,7 +162,7 @@
       "tabuas": "Boards",
       "tacas": "Bowls",
       "sobremesas": "Desserts",
-      "cocktail-preguica": "Cocktail Preguiça & Unicorn",
+      "cocktail-preguica": "Cocktail Preguiça",
       "cocktails-classicos": "Classic cocktails",
       "cocktails-special": "Specials",
       "mocktails": "Mocktails, alcohol free",
@@ -169,6 +175,7 @@
       "vinhos": "Wine",
       "cafetaria": "Coffee & hot drinks",
       "chas": "Tea",
+      "unicornio": "Unicorn",
       "aguas-e-refrigerantes": "Water & soft drinks"
     },
     "colunaPreco": "Country bread",
@@ -200,23 +207,33 @@
         "facto": "Toasties, boards for the middle of the table, bowls to nibble and dessert."
       },
       "cocktails": {
-        "nome": "Cocktails",
-        "facto": "The house one, the classics, the specials, the alcohol-free ones and sangria by the jug."
+        "nome": "Cocktails & sangrias",
+        "facto": "The house one, the classics, the specials and sangria by the jug."
+      },
+      "mocktails": {
+        "nome": "Mocktails",
+        "facto": "The house cocktails, without alcohol."
       },
       "garrafeira": {
-        "nome": "Spirits & beer",
+        "nome": "Spirits & beers",
         "facto": "Gin, whisky, shots, liqueurs, beers and wines."
       },
-      "cafe-e-cha": {
-        "nome": "Coffee & tea",
-        "facto": "Coffee, hot drinks, teas, water and soft drinks."
+      "aguas": {
+        "nome": "Water & soft drinks",
+        "facto": "The Unicorn — the Cocktail Preguiça without alcohol, in a flavour of your choice —, water and soft drinks."
+      },
+      "cafetaria": {
+        "nome": "Coffee & hot drinks",
+        "facto": "Coffee, hot drinks and teas."
       }
     },
     "fotos": {
       "comer": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
       "cocktails": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
+      "mocktails": "A balloon glass with a turquoise drink, crushed ice, a strawberry, mint and a blue striped straw, on a wooden table.",
       "garrafeira": "A hand squeezing half a lime over a tall glass with ice.",
-      "cafe-e-cha": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam."
+      "aguas": "A balloon glass with a yellow drink, a slice of kiwi and a green striped straw, on a wooden table.",
+      "cafetaria": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",

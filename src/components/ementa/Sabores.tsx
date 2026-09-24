@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { SABORES, type Sabor } from "@/data/ementa";
 
 /**
  * # O jogo dos sabores
  *
  * O Cocktail Preguiça e o Unicórnio vendem-se num sabor à escolha, entre
- * catorze. Na mesa, com a carta no telemóvel, **escolher é a parte difícil** —
+ * catorze, e cada um tem o seu jogo — o Cocktail nos cocktails, o Unicórnio nas
+ * águas (ver `COM_SABORES` em `data/ementa.ts`). Na mesa, com a carta no telemóvel, **escolher é a parte difícil** —
  * e é aí que a preguiça ajuda: roda pelos sabores, cada vez mais devagar, e
  * pára num. O abrandar não é enfeite; é o nome da casa outra vez.
  *
@@ -27,8 +28,9 @@ import { SABORES, type Sabor } from "@/data/ementa";
  * global já corta as transições; isto corta a sequência de passos, que é JS.
  */
 
-const CORES: Record<Sabor, string> = {
-  surpresa: "url(#em-surpresa)",
+/* O `surpresa` é um gradiente do SVG, e o endereço dele depende do id de cada
+   copo — ver `Copo`. */
+const CORES: Record<Exclude<Sabor, "surpresa">, string> = {
   limao: "#e3d34a",
   manga: "#f2a33a",
   "frutos-vermelhos": "#a8203c",
@@ -107,7 +109,11 @@ export function Sabores({
     seguinte();
   }
 
-  const cor = sabor ? CORES[sabor] : "transparent";
+  /* Um id por jogo: com dois na mesma página (Cocktail e Unicórnio), ids fixos
+     no SVG repetiam-se, e o gradiente de um copo podia vir do outro. */
+  const id = useId().replace(/[^a-zA-Z0-9-]/g, "");
+  const gradiente = `em-surpresa-${id}`;
+  const cor = !sabor ? "transparent" : sabor === "surpresa" ? `url(#${gradiente})` : CORES[sabor];
   const olho = aRodar
     ? textos.aRodar
     : sabor
@@ -119,7 +125,7 @@ export function Sabores({
   return (
     <div className="em-sabores" data-a-rodar={aRodar || undefined}>
       <div className="em-sabores__palco">
-        <Copo cor={cor} cheio={sabor !== null} />
+        <Copo id={id} gradiente={gradiente} cor={cor} cheio={sabor !== null} />
         <div className="em-sabores__leitura">
           <p className="em-sabores__olho">{olho}</p>
           <p className="em-sabores__nome" aria-hidden="true">
@@ -181,22 +187,33 @@ export function Sabores({
  * pela forma da taça, e é só a cor dele que muda — a forma nunca mexe, para a
  * roleta ler como "o copo a mudar de sabor" e não como uma animação.
  */
-function Copo({ cor, cheio }: { cor: string; cheio: boolean }) {
+function Copo({
+  id,
+  gradiente,
+  cor,
+  cheio,
+}: {
+  id: string;
+  gradiente: string;
+  cor: string;
+  cheio: boolean;
+}) {
+  const taca = `em-taca-${id}`;
   return (
     <svg className="em-copo" viewBox="0 0 140 220" aria-hidden="true">
       <defs>
-        <linearGradient id="em-surpresa" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={gradiente} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#e0455c" />
           <stop offset="0.35" stopColor="#efc53d" />
           <stop offset="0.65" stopColor="#5cc49a" />
           <stop offset="1" stopColor="#3f8fd8" />
         </linearGradient>
-        <clipPath id="em-taca">
+        <clipPath id={taca}>
           <path d="M34 34 C12 64 14 124 70 128 C126 124 128 64 106 34 Z" />
         </clipPath>
       </defs>
 
-      <g clipPath="url(#em-taca)">
+      <g clipPath={`url(#${taca})`}>
         <rect
           className="em-copo__liquido"
           x="0"

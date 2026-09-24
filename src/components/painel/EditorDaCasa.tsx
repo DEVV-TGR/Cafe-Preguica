@@ -145,7 +145,12 @@ export function EditorDaCasa({
                     type="checkbox"
                     checked={valor !== null}
                     onChange={(e) =>
-                      mudarDia(dia, e.target.checked ? { abre: "15:30", fecha: "00:00" } : null)
+                      mudarDia(
+                        dia,
+                        e.target.checked
+                          ? { abre: "16:00", fecha: "00:30", cozinhaFecha: null }
+                          : null,
+                      )
                     }
                   />
                   <span>{valor === null ? "Encerrado" : "Aberto"}</span>
@@ -171,12 +176,29 @@ export function EditorDaCasa({
                     />
                   </span>
                 ) : null}
+                {/* A hora da cozinha. Vazio quer dizer que fecha com o bar — é o
+                    `null` do `cafe.json`, e o site não escreve nada a mais. */}
+                {valor !== null ? (
+                  <span className="pn-dia__cozinha">
+                    <span>Cozinha até</span>
+                    <input
+                      type="time"
+                      className="pn-entrada pn-entrada--hora"
+                      aria-label={`${nome}, a cozinha fecha às`}
+                      value={valor.cozinhaFecha ?? ""}
+                      onChange={(e) =>
+                        mudarDia(dia, { ...valor, cozinhaFecha: e.target.value || null })
+                      }
+                    />
+                  </span>
+                ) : null}
               </li>
             );
           })}
         </ul>
         <p className="pn-nota">
-          Se fecha depois da meia-noite, escreve a hora a que fecha mesmo — 01:00, e não 25:00.
+          Se fecha depois da meia-noite, escreve a hora a que fecha mesmo — 01:00, e não 25:00. A
+          cozinha aparece no site ao lado do horário; se a deixares vazia, fecha com o bar.
         </p>
       </section>
 

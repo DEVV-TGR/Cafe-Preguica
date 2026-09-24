@@ -34,10 +34,11 @@ export const CARTA_CONFIRMADA: boolean = dados.confirmada;
  * A ordem do enum **é** a ordem em que as secções saem na página — mudar uma
  * linha de sítio aqui muda o site.
  *
- * Não é a ordem do menu impresso, e é de propósito: come-se primeiro, bebe-se
- * depois, e **o Cocktail Preguiça vem à frente dos clássicos** por ser o que dá
- * nome à casa. No papel ele está no verso porque o verso é onde cabia a lista
- * dos sabores; aqui não há verso.
+ * É a ordem que a casa pediu na reunião de 2026-09-23: come-se primeiro, depois
+ * os cocktails, os sem álcool, a garrafeira, as águas e, a fechar, o café. **O
+ * Cocktail Preguiça vem à frente dos clássicos** por ser o que dá nome à casa, e
+ * **o Unicórnio à frente das águas** pela mesma razão — são a mesma bebida, um
+ * com álcool e o outro sem.
  */
 export const CATEGORIAS = [
   "tostas-e-snacks",
@@ -47,28 +48,33 @@ export const CATEGORIAS = [
   "cocktail-preguica",
   "cocktails-classicos",
   "cocktails-special",
-  "mocktails",
   "sangrias-e-espumantes",
+  "mocktails",
   "gin",
   "whisky",
   "shots",
   "licores",
   "cervejas",
   "vinhos",
+  "unicornio",
+  "aguas-e-refrigerantes",
   "cafetaria",
   "chas",
-  "aguas-e-refrigerantes",
 ] as const;
 
 export type Categoria = (typeof CATEGORIAS)[number];
 
 /**
- * Os quatro capítulos da carta, e as secções de cada um.
+ * Os seis capítulos da carta, e as secções de cada um — pela ordem que a casa
+ * pediu.
  *
  * Existem por causa de **quem lê a carta: alguém sentado à mesa, com o
- * telemóvel, que acabou de ler o QR.** Dezoito secções num índice são dezoito
- * botões para percorrer de lado; quatro cabem no ecrã e respondem à pergunta que
- * a pessoa traz — "quero comer", "quero um cocktail".
+ * telemóvel, que acabou de ler o QR.** Dezanove secções num índice são dezanove
+ * botões para percorrer de lado; seis cabem no ecrã e respondem à pergunta que
+ * a pessoa traz — "quero comer", "quero um cocktail", "sem álcool".
+ *
+ * O Unicórnio está nas águas e não nos cocktails: é um sumo, não leva álcool, e
+ * quem procura uma bebida sem álcool não a vai procurar entre os cocktails.
  *
  * ⚠️ **A ordem das secções vem de `CATEGORIAS`, não daqui.** Esta lista diz só a
  * que capítulo pertence cada uma, e a verificação logo abaixo rebenta o `build`
@@ -81,11 +87,12 @@ export const CAPITULOS = {
     "cocktail-preguica",
     "cocktails-classicos",
     "cocktails-special",
-    "mocktails",
     "sangrias-e-espumantes",
   ],
+  mocktails: ["mocktails"],
   garrafeira: ["gin", "whisky", "shots", "licores", "cervejas", "vinhos"],
-  "cafe-e-cha": ["cafetaria", "chas", "aguas-e-refrigerantes"],
+  aguas: ["unicornio", "aguas-e-refrigerantes"],
+  cafetaria: ["cafetaria", "chas"],
 } as const satisfies Record<string, readonly Categoria[]>;
 
 export type Capitulo = keyof typeof CAPITULOS;
@@ -312,6 +319,13 @@ export function porCategoria(): { categoria: Categoria; artigos: Artigo[] }[] {
 export function temAlergeniosDeclarados(): boolean {
   return artigos.some((artigo) => artigo.alergenios.length > 0);
 }
+
+/**
+ * As secções que levam o jogo dos sabores por baixo (`components/ementa/
+ * Sabores.tsx`). São duas porque são a mesma bebida — o Cocktail Preguiça com
+ * álcool, o Unicórnio sem — e cada uma vive no seu capítulo.
+ */
+export const COM_SABORES: readonly Categoria[] = ["cocktail-preguica", "unicornio"];
 
 /**
  * Os catorze sabores do Cocktail Preguiça e do Unicórnio.

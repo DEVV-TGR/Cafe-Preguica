@@ -227,7 +227,60 @@ html:has(.em-pagina) {
 /* ------------------------------------------------------------ o capítulo */
 
 .em-capitulo {
+  position: relative;
   padding-top: clamp(2rem, 6vh, 4rem);
+}
+
+/* ------------------------------------------------------------ os desenhos
+   Ver `components/ementa/Desenhos.tsx`. **Por trás da carta**: o capítulo
+   isola o empilhamento (`isolation`), e o `z-index: -1` põe os desenhos atrás
+   do texto e à frente do fundo da página. O `overflow-x: clip` corta a parte
+   que fica fora do ecrã sem criar scroll de lado. */
+
+.em-capitulo {
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.em-desenho {
+  position: absolute;
+  z-index: -1;
+  width: min(var(--largura), 44vw);
+  max-width: none;
+  height: auto;
+  rotate: var(--rodar, 0deg);
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Meio fora do ecrã, para ler como coisa espalhada e não como imagem posta. */
+.em-desenho--esquerda {
+  left: -3rem;
+}
+
+.em-desenho--direita {
+  right: -3rem;
+}
+
+/* No computador largo, nas margens de cada lado da coluna de 72rem, com a
+   cor toda — aí não ficam por trás de nada. A largura nunca passa da margem
+   livre, menos um respiro. */
+@media (min-width: 90rem) {
+  .em-desenho {
+    width: min(var(--largura), calc((100% - 72rem) / 2 - 3rem));
+    opacity: 0.95;
+  }
+
+  .em-desenho--esquerda {
+    left: auto;
+    right: calc(50% + 36rem + 1.5rem);
+  }
+
+  .em-desenho--direita {
+    right: auto;
+    left: calc(50% + 36rem + 1.5rem);
+  }
 }
 
 .em-abertura {

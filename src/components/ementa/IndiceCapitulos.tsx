@@ -21,7 +21,7 @@ export function IndiceCapitulos({
   itens,
   etiqueta,
 }: {
-  itens: { id: string; nome: string }[];
+  itens: { id: string; nome: string; secreta?: boolean }[];
   etiqueta: string;
 }) {
   const [ativo, setAtivo] = useState<string | null>(null);
@@ -59,14 +59,16 @@ export function IndiceCapitulos({
 
   return (
     <nav ref={nav} className="em-indice" aria-label={etiqueta}>
-      {itens.map(({ id, nome }, i) => (
+      {itens.map(({ id, nome, secreta }, i) => (
         <a
           key={id}
           href={`#${id}`}
           aria-current={ativo === id ? "true" : undefined}
+          data-secreta={secreta || undefined}
         >
+          {/* A carta secreta não é um capítulo numerado: leva o cadeado. */}
           <span className="em-indice__numero" aria-hidden="true">
-            {String(i + 1).padStart(2, "0")}
+            {secreta ? "🔒" : String(i + 1).padStart(2, "0")}
           </span>
           {nome}
         </a>

@@ -25,6 +25,7 @@ import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
 import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
 import { DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
+import { CartaSecreta } from "@/components/ementa/CartaSecreta";
 import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
 import "../../catalogo.css";
 import "../../ementa.css";
@@ -157,6 +158,7 @@ export default async function Ementa({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("ementa");
   const comum = await getTranslations("comum");
+  const convite = await getTranslations("newsletter.convite");
 
   const capitulos = porCapitulo();
   const seccoes = capitulos.flatMap((c) => c.seccoes);
@@ -181,10 +183,15 @@ export default async function Ementa({ params }: Props) {
 
       <IndiceCapitulos
         etiqueta={t("indice")}
-        itens={capitulos.map(({ capitulo }) => ({
-          id: capitulo,
-          nome: t(`capitulos.${capitulo}.nome`),
-        }))}
+        itens={[
+          ...capitulos.map(({ capitulo }) => ({
+            id: capitulo,
+            nome: t(`capitulos.${capitulo}.nome`),
+          })),
+          /* A carta secreta é o fim da página, e está sempre à vista no índice
+             — o sítio onde a pessoa vê a carta toda de relance. */
+          { id: "carta-secreta", nome: t("secreta.indice"), secreta: true },
+        ]}
       />
 
       <main id="conteudo" className="em-pagina">
@@ -210,6 +217,18 @@ export default async function Ementa({ params }: Props) {
                 <p className="em-aviso">{t("avisoAlergenios")}</p>
               )}
             </div>
+
+            {/* O sinal, lá em cima: quem leu o QR fica a saber no primeiro
+                segundo que há mais do que isto. A carta está no fim. */}
+            <a href="#carta-secreta" className="em-sinal-secreto">
+              <svg viewBox="0 0 48 56" aria-hidden="true">
+                <path d="M14 26 V17 a10 10 0 0 1 20 0 V26" />
+                <rect x="7" y="25" width="34" height="26" rx="5" />
+              </svg>
+              <span>
+                <strong>{t("secreta.sinal")}</strong> {t("secreta.sinalLigacao")}
+              </span>
+            </a>
           </div>
 
           <div className="em-leque" aria-hidden="true">
@@ -334,9 +353,44 @@ export default async function Ementa({ params }: Props) {
                   }
                 />
               ))}
+
+              {/* "São cocktails, não deviam estar aqui?" — estão lá em baixo,
+                  e esta linha é o caminho. */}
+              {capitulo === "cocktails" && (
+                <p className="em-mais-secretos">
+                  <a href="#carta-secreta">{t("secreta.maisCocktails")}</a>
+                </p>
+              )}
             </section>
           );
         })}
+
+        <CartaSecreta
+          locale={locale}
+          textos={{
+            olho: t("secreta.olho"),
+            titulo: t("secreta.titulo"),
+            texto: t("secreta.texto"),
+            etiqueta: t("secreta.etiqueta"),
+            marcador: t("secreta.marcador"),
+            abrir: t("secreta.abrir"),
+            aAbrir: t("secreta.aAbrir"),
+            naoInscritoTitulo: t("secreta.naoInscritoTitulo"),
+            naoInscritoTexto: t("secreta.naoInscritoTexto", { email: "{email}" }),
+            inscrever: t("secreta.inscrever"),
+            aEnviar: t("secreta.aEnviar"),
+            consentimento: convite("consentimento"),
+            privacidade: convite("privacidade"),
+            enviadoTitulo: t("secreta.enviadoTitulo"),
+            enviadoTexto: t("secreta.enviadoTexto"),
+            outroEmail: t("secreta.outroEmail"),
+            abertaTexto: t("secreta.abertaTexto"),
+            fechar: t("secreta.fechar"),
+            erroEmail: convite("erroEmail"),
+            erroLimite: convite("erroLimite"),
+            erroServico: convite("erroServico"),
+          }}
+        />
 
         <section className="em-fecho" aria-labelledby="titulo-fecho">
           <img

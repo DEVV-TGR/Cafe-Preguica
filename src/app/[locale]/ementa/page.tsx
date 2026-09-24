@@ -140,12 +140,14 @@ for (const id of [
 }
 
 /** Um GIF transparente de 1×1 — o que o telemóvel recebe no lugar do leque. */
+/* O contrário de "computador" em `ementa.css`: menos de 64rem, ou sem rato. */
+const FORA_DO_COMPUTADOR = "not all and (min-width: 64rem) and (hover: hover) and (pointer: fine)";
 const PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 /**
  * Os copos do leque do topo — decorativos, sem nome, pela razão acima. **Só no
- * computador**: no telemóvel, quem leu o QR quer ver a carta a começar, e o
- * leque empurrava-a para o segundo ecrã.
+ * computador**: no telemóvel e no tablet, quem leu o QR quer ver a carta a
+ * começar, e o leque empurrava-a para o segundo ecrã.
  */
 const LEQUE = ["cocktail-amarelo", "cocktail-azul", "cocktail-rosa", "cocktail-turquesa", "cocktail-coco"];
 
@@ -211,12 +213,13 @@ export default async function Ementa({ params }: Props) {
 
           <div className="em-leque" aria-hidden="true">
             {LEQUE.map((foto, i) => (
-              /* Abaixo de 56rem o leque não aparece (ver `ementa.css`), e o
-                 `<source>` troca cada copo por um pixel transparente: um
-                 `display: none` sozinho não impede o telemóvel de descarregar
-                 as cinco fotografias. */
+              /* Fora do computador o leque não aparece (ver `.em-leque` em
+                 `ementa.css`), e o `<source>` troca cada copo por um pixel
+                 transparente: um `display: none` sozinho não impede o
+                 telemóvel de descarregar as cinco fotografias. A condição é a
+                 do CSS, negada. */
               <picture key={foto}>
-                <source media="(max-width: 55.99rem)" srcSet={PIXEL} />
+                <source media={FORA_DO_COMPUTADOR} srcSet={PIXEL} />
                 <img
                   src={`/casa/${foto}-640.webp`}
                   width={640}

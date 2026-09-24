@@ -99,7 +99,12 @@ html:has(.em-pagina) {
   padding: clamp(1.5rem, 5vh, 4.5rem) var(--em-margem) clamp(1rem, 4vh, 5rem);
 }
 
-@media (min-width: 56rem) {
+/* Duas colunas — o texto e o leque — **só no computador**: pelo menos 64rem e
+   um rato ou trackpad. Telemóveis e tablets são de toque, e aí o leque não
+   existe (ver `.em-leque`); uma segunda coluna vazia empurrava a carta para
+   baixo sem nada lá dentro. A mesma condição está no `<source>` do leque, em
+   `ementa/page.tsx` — as duas têm de mudar juntas. */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
   .em-topo {
     grid-template-columns: 1fr 1fr;
   }
@@ -152,14 +157,6 @@ html:has(.em-pagina) {
    Os copos balão da casa, abertos em leque como cartas em cima da mesa.
    `--i` vai de -2 a 2: o do meio fica direito, os das pontas rodam e descem. */
 
-/* Só no computador: abaixo de 56rem o topo tem uma coluna, e o leque empurrava
-   a carta para o segundo ecrã. O `<picture>` da página impede o download. */
-@media (max-width: 55.99rem) {
-  .em-leque {
-    display: none;
-  }
-}
-
 .em-leque {
   /* Quanto se afasta e roda cada copo por passo do leque. No telemóvel o
      leque fecha-se: aberto, as pontas saíam do ecrã e ele comia o fim do
@@ -169,7 +166,10 @@ html:has(.em-pagina) {
   --em-leque-abrir: 36%;
   position: relative;
   height: clamp(11rem, 44vw, 27rem);
-  display: flex;
+  /* Escondido por omissão, e só o computador o mostra (logo abaixo). No
+     telemóvel e no tablet, quem leu o QR quer ver a carta a começar, não copos
+     — e o `<picture>` da página impede que as fotografias sejam descarregadas. */
+  display: none;
   justify-content: center;
   align-items: flex-end;
   isolation: isolate;
@@ -195,8 +195,9 @@ html:has(.em-pagina) {
 
 /* Passar o rato abre mais o leque — é o único sítio da página que responde ao
    ponteiro sem se carregar em nada. */
-@media (min-width: 56rem) {
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
   .em-leque {
+    display: flex;
     --em-leque-passo: 34%;
     --em-leque-rodar: 9deg;
     --em-leque-abrir: 52%;

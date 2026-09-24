@@ -201,6 +201,11 @@
     "contagem": "{artigos} items · {seccoes} sections",
     "indice": "Menu chapters",
     "naFotografia": "In the photo",
+    "carrossel": {
+      "foto": "Photo {n} of {total}",
+      "pausar": "Pause the photos",
+      "continuar": "Play the photos"
+    },
     "capitulos": {
       "comer": {
         "nome": "To eat",
@@ -228,12 +233,16 @@
       }
     },
     "fotos": {
-      "comer": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
-      "cocktails": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
-      "mocktails": "A balloon glass with a turquoise drink, crushed ice, a strawberry, mint and a blue striped straw, on a wooden table.",
-      "garrafeira": "A hand squeezing half a lime over a tall glass with ice.",
-      "aguas": "A balloon glass with a yellow drink, a slice of kiwi and a green striped straw, on a wooden table.",
-      "cafetaria": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam."
+      "tabua-partilha": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
+      "negroni-salpico": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
+      "cocktail-turquesa": "A balloon glass with a turquoise drink, crushed ice, a strawberry, mint and a blue striped straw, on a wooden table.",
+      "lima-espremida": "A hand squeezing half a lime over a tall glass with ice.",
+      "cocktail-amarelo": "A balloon glass with a yellow drink, a slice of kiwi and a green striped straw, on a wooden table.",
+      "tosta-chocolate": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam.",
+      "cocktail-rosa": "A balloon glass with a pink drink, a dried orange slice and a yellow striped straw, on a wooden table.",
+      "cocktail-azul": "A balloon glass with a blue drink, a slice of lemon and a green striped straw, on a wooden table.",
+      "negroni-fumo": "A negroni in a short glass with ice and orange peel, wrapped in smoke, on the bar.",
+      "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red striped straw, next to a coconut, on a wooden table."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",

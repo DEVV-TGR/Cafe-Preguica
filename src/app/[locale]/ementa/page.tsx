@@ -23,6 +23,7 @@ import { Preguica } from "@/components/catalogo/Preguica";
 import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
+import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
 import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
 import "../../catalogo.css";
 import "../../ementa.css";
@@ -64,24 +65,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 
 /**
- * A fotografia que abre cada capítulo, e os artigos que se vêem nela.
+ * As fotografias que abrem cada capítulo, e os artigos que se vêem em cada uma.
+ * Com mais do que uma, o capítulo abre num carrossel (`components/ementa/
+ * Carrossel.tsx`); com uma, fica parada.
  *
  * A legenda "Na fotografia" vai buscar nome e preço **à carta** pelo `id` —
- * nunca escritos aqui, senão passava a haver dois preços para o mesmo prato. A
- * da garrafeira não tem legenda porque a fotografia é o balcão, não um artigo.
+ * nunca escritos aqui, senão passava a haver dois preços para o mesmo prato. As
+ * que não têm artigos não têm legenda: a da garrafeira é o balcão, e os copos
+ * balão dos mocktails e das águas são da casa mas ninguém disse que bebida são.
+ *
+ * ## Juntar uma fotografia
+ *
+ * 1. `npm run fotos` com o original, para sair em `public/casa/` nas duas
+ *    larguras (`nome.webp` e `nome-640.webp`).
+ * 2. Acrescentá-la à lista do capítulo, com os `id` do que se vê nela — e esses
+ *    `id` em `EM_DESTAQUE` (`data/ementa.ts`), senão o `build` rebenta a dizê-lo.
+ * 3. Texto alternativo em `ementa.fotos.<nome>`, nas duas línguas.
+ *
+ * ⚠️ Fotografias com caras de clientes não entram sem a casa confirmar que tem
+ * autorização de quem aparece.
  */
-const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }> = {
-  comer: { foto: "tabua-partilha", artigos: ["bocadinhos-de-pao-com-chourico"] },
-  cocktails: { foto: "negroni-salpico", artigos: ["negroni"] },
-  /* Os dois copos balão sem nome — ver a nota do `FOTOS_ARTIGO`. Abrem o
-     capítulo sem legenda, que é o que não afirma que bebida são. */
-  mocktails: { foto: "cocktail-turquesa", artigos: [] },
-  garrafeira: { foto: "lima-espremida", artigos: [] },
-  aguas: { foto: "cocktail-amarelo", artigos: [] },
-  cafetaria: {
-    foto: "tosta-chocolate",
-    artigos: ["caf-chocolate-quente-com-chantilly", "torrada-com-compota"],
-  },
+const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }[]> = {
+  comer: [
+    { foto: "tabua-partilha", artigos: ["bocadinhos-de-pao-com-chourico"] },
+    { foto: "tosta-chocolate", artigos: ["torrada-com-compota"] },
+  ],
+  cocktails: [
+    { foto: "negroni-salpico", artigos: ["negroni"] },
+    { foto: "cocktail-rosa", artigos: ["cocktail-preguica"] },
+    { foto: "cocktail-azul", artigos: ["blue-lagoon"] },
+    { foto: "negroni-fumo", artigos: ["negroni"] },
+  ],
+  mocktails: [{ foto: "cocktail-turquesa", artigos: [] }],
+  garrafeira: [{ foto: "lima-espremida", artigos: [] }],
+  aguas: [
+    { foto: "cocktail-amarelo", artigos: [] },
+    { foto: "cocktail-coco", artigos: [] },
+  ],
+  cafetaria: [
+    {
+      foto: "tosta-chocolate",
+      artigos: ["caf-chocolate-quente-com-chantilly", "torrada-com-compota"],
+    },
+  ],
 };
 
 /**
@@ -104,7 +130,7 @@ const FOTOS_ARTIGO: Record<string, string> = {
 /* Um `id` que deixou de existir na carta partia a legenda em silêncio. Assim
    rebenta o `build` e diz qual. */
 for (const id of [
-  ...Object.values(ABERTURAS).flatMap((a) => a.artigos),
+  ...Object.values(ABERTURAS).flatMap((fotos) => fotos.flatMap((f) => f.artigos)),
   ...Object.keys(FOTOS_ARTIGO),
 ]) {
   if (!artigoPorId(id)) {
@@ -113,7 +139,14 @@ for (const id of [
   exigirEmDestaque(id, "ementa/page.tsx");
 }
 
-/** Os copos do leque do topo — decorativos, sem nome, pela razão acima. */
+/** Um GIF transparente de 1×1 — o que o telemóvel recebe no lugar do leque. */
+const PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+/**
+ * Os copos do leque do topo — decorativos, sem nome, pela razão acima. **Só no
+ * computador**: no telemóvel, quem leu o QR quer ver a carta a começar, e o
+ * leque empurrava-a para o segundo ecrã.
+ */
 const LEQUE = ["cocktail-amarelo", "cocktail-azul", "cocktail-rosa", "cocktail-turquesa", "cocktail-coco"];
 
 export default async function Ementa({ params }: Props) {
@@ -178,26 +211,37 @@ export default async function Ementa({ params }: Props) {
 
           <div className="em-leque" aria-hidden="true">
             {LEQUE.map((foto, i) => (
-              <img
-                key={foto}
-                src={`/casa/${foto}-640.webp`}
-                width={640}
-                height={853}
-                alt=""
-                style={{ "--i": i - (LEQUE.length - 1) / 2 } as React.CSSProperties}
-                fetchPriority={i === 2 ? "high" : undefined}
-              />
+              /* Abaixo de 56rem o leque não aparece (ver `ementa.css`), e o
+                 `<source>` troca cada copo por um pixel transparente: um
+                 `display: none` sozinho não impede o telemóvel de descarregar
+                 as cinco fotografias. */
+              <picture key={foto}>
+                <source media="(max-width: 55.99rem)" srcSet={PIXEL} />
+                <img
+                  src={`/casa/${foto}-640.webp`}
+                  width={640}
+                  height={853}
+                  alt=""
+                  style={{ "--i": i - (LEQUE.length - 1) / 2 } as React.CSSProperties}
+                  fetchPriority={i === 2 ? "high" : undefined}
+                />
+              </picture>
             ))}
           </div>
         </header>
 
         {capitulos.map(({ capitulo, seccoes }, i) => {
-          const abertura = ABERTURAS[capitulo];
-          const naFoto = abertura.artigos
-            .map(artigoPorId)
-            /* Um artigo escondido pelo painel não está na lista por baixo, e
-               a legenda não o pode anunciar. */
-            .filter((a): a is Artigo => a !== undefined && !a.escondido);
+          const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, artigos }) => ({
+            src: `/casa/${foto}.webp`,
+            srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
+            alt: t(`fotos.${foto}`),
+            legenda: artigos
+              .map(artigoPorId)
+              /* Um artigo escondido pelo painel não está na lista por baixo, e
+                 a legenda não o pode anunciar. */
+              .filter((a): a is Artigo => a !== undefined && !a.escondido)
+              .map((a) => `${a.nome[locale]} · ${preco(a.preco)}`),
+          }));
 
           return (
             <section
@@ -207,34 +251,28 @@ export default async function Ementa({ params }: Props) {
               aria-labelledby={`titulo-${capitulo}`}
             >
               <header className="em-abertura">
-                <figure className="em-abertura__foto">
-                  <img
-                    src={`/casa/${abertura.foto}.webp`}
-                    srcSet={`/casa/${abertura.foto}-640.webp 640w, /casa/${abertura.foto}.webp 1080w`}
-                    sizes="(min-width: 72rem) 72rem, 100vw"
-                    width={1080}
-                    height={1440}
-                    alt={t(`fotos.${capitulo}`)}
-                    loading={i === 0 ? undefined : "lazy"}
-                    decoding="async"
-                  />
-                  {naFoto.length > 0 && (
-                    <figcaption className="em-abertura__legenda">
-                      <span>{t("naFotografia")}</span>
-                      {naFoto.map((a) => (
-                        <span key={a.id}>
-                          {a.nome[locale]} · {preco(a.preco)}
-                        </span>
-                      ))}
-                    </figcaption>
-                  )}
-                  <div className="em-abertura__titulo">
-                    <span className="em-abertura__numero" aria-hidden="true">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h2 id={`titulo-${capitulo}`}>{t(`capitulos.${capitulo}.nome`)}</h2>
-                  </div>
-                </figure>
+                <Carrossel
+                  fotos={fotos}
+                  prioridade={i === 0}
+                  textos={{
+                    naFotografia: t("naFotografia"),
+                    nome: t(`capitulos.${capitulo}.nome`),
+                    rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
+                    pausar: t("carrossel.pausar"),
+                    continuar: t("carrossel.continuar"),
+                  }}
+                  /* A `key` não é decoração: um elemento criado aqui e desenhado
+                     dentro de um componente de cliente passa pela fronteira do
+                     servidor, e o React avisa se ele vier sem ela. */
+                  titulo={
+                    <div key="titulo" className="em-abertura__titulo">
+                      <span className="em-abertura__numero" aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h2 id={`titulo-${capitulo}`}>{t(`capitulos.${capitulo}.nome`)}</h2>
+                    </div>
+                  }
+                />
 
                 <p className="em-abertura__facto">{t(`capitulos.${capitulo}.facto`)}</p>
                 {/* Onde se escolhe a comida é onde tem de estar a hora a que a

@@ -227,7 +227,57 @@ html:has(.em-pagina) {
 /* ------------------------------------------------------------ o capítulo */
 
 .em-capitulo {
+  position: relative;
   padding-top: clamp(2rem, 6vh, 4rem);
+}
+
+/* ------------------------------------------------------------ os desenhos
+   Ver `components/ementa/Desenhos.tsx`. Recortados da fotografia do menu, e por
+   isso **nunca maiores do que o recorte**: o `max-width` e o `max-height` são
+   o tamanho natural, e o que se escolhe aqui é só o quanto se encolhem. */
+
+.em-desenho {
+  max-width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Ao lado do título da secção: do tamanho de uma letra grande, a olhar para o
+   título. Empurra as colunas de preço (tostas, vinhos) para a linha de baixo
+   só se não couber. */
+.em-desenho--seccao {
+  align-self: center;
+  width: auto;
+  height: 2.75rem;
+  margin-inline-end: auto;
+}
+
+/* Nas margens: só onde há margem — a coluna da carta tem 72rem, e abaixo de
+   90rem de ecrã o desenho ia para cima do texto. */
+.em-desenho--margem {
+  display: none;
+}
+
+@media (min-width: 90rem) {
+  .em-desenho--margem {
+    display: block;
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-height: 10rem;
+    rotate: var(--rodar, 0deg);
+    opacity: 0.92;
+  }
+
+  /* Metade da margem livre, à esquerda ou à direita da coluna de 72rem. */
+  .em-desenho--esquerda {
+    right: calc(50% + 36rem + 2.5rem);
+  }
+
+  .em-desenho--direita {
+    left: calc(50% + 36rem + 2.5rem);
+  }
 }
 
 .em-abertura {

@@ -178,13 +178,21 @@
       "unicornio": "Unicórnio",
       "aguas-e-refrigerantes": "Águas & refrigerantes"
     },
-    "colunaPreco": "Pão saloio",
-    "colunaPrecoAlt": "Pão de forma",
+    "colunas": {
+      "tostas-e-snacks": {
+        "a": "Pão saloio",
+        "b": "Pão de forma"
+      },
+      "vinhos": {
+        "a": "Copo",
+        "b": "Garrafa"
+      }
+    },
     "saboresTitulo": "Escolha o sabor",
     "sabores": {
       "surpresa": "Surpresa",
       "limao": "Limão",
-      "manga": "Manga",
+      "matcha": "Matcha",
       "frutos-vermelhos": "Frutos vermelhos",
       "caramelo": "Caramelo",
       "menta": "Menta",

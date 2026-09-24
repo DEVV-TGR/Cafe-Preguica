@@ -1,5 +1,5 @@
 {
-  "confirmada": false,
+  "confirmada": true,
   "artigos": [
     {
       "id": "queijo-fiambre",
@@ -9,8 +9,8 @@
         "en": "Cheese & ham"
       },
       "descricao": null,
-      "preco": 3.9,
-      "precoSecundario": 3.5,
+      "preco": 4.6,
+      "precoSecundario": 4.1,
       "alergenios": [],
       "escondido": false
     },
@@ -22,8 +22,8 @@
         "en": "Cured ham & cheese"
       },
       "descricao": null,
-      "preco": 4.6,
-      "precoSecundario": 3.9,
+      "preco": 5.2,
+      "precoSecundario": 4.6,
       "alergenios": [],
       "escondido": false
     },
@@ -35,8 +35,8 @@
         "en": "Tuna pâté & cheese"
       },
       "descricao": null,
-      "preco": 4.5,
-      "precoSecundario": 3.8,
+      "preco": 4.9,
+      "precoSecundario": 4.5,
       "alergenios": [],
       "escondido": false
     },
@@ -48,7 +48,7 @@
         "en": "XL hot dog"
       },
       "descricao": null,
-      "preco": 5.8,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -61,8 +61,8 @@
         "en": "Toast"
       },
       "descricao": null,
-      "preco": 3.2,
-      "precoSecundario": 2.6,
+      "preco": 3.8,
+      "precoSecundario": 3.2,
       "alergenios": [],
       "escondido": false
     },
@@ -74,8 +74,8 @@
         "en": "Toast with jam"
       },
       "descricao": null,
-      "preco": 3.5,
-      "precoSecundario": 2.9,
+      "preco": 4.2,
+      "precoSecundario": 3.5,
       "alergenios": [],
       "escondido": false
     },
@@ -87,10 +87,10 @@
         "en": "Mixed board"
       },
       "descricao": {
-        "pt": "Fuet, queijo da ilha, presunto e cesto de pão. Com compota e extra presunto, 10,60 €.",
-        "en": "Fuet, island cheese, cured ham and a bread basket. With jam and extra ham, €10.60."
+        "pt": "Fuet, queijo da ilha, presunto e cesto de pão. Com compota e extra presunto, 11,60 €.",
+        "en": "Fuet, island cheese, cured ham and a bread basket. With jam and extra ham, €11.60."
       },
-      "preco": 7.8,
+      "preco": 8.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -103,10 +103,10 @@
         "en": "Preguiça board"
       },
       "descricao": {
-        "pt": "Fuet, queijo da ilha, presunto, bocadinhos de pão com chouriço e queijo, cesto de pão e crackers. Com compota e extra presunto, 15,80 €.",
-        "en": "Fuet, island cheese, cured ham, bread pieces with chouriço and cheese, bread basket and crackers. With jam and extra ham, €15.80."
+        "pt": "Fuet, queijo da ilha, presunto, bocadinhos de pão com chouriço e queijo, cesto de pão e crackers. Com compota e extra presunto, 16,20 €.",
+        "en": "Fuet, island cheese, cured ham, bread pieces with chouriço and cheese, bread basket and crackers. With jam and extra ham, €16.20."
       },
-      "preco": 13.5,
+      "preco": 14.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -122,7 +122,7 @@
         "pt": "Vinte e quatro tostinhas com chouriço e queijo.",
         "en": "Twenty-four little toasts with chouriço and cheese."
       },
-      "preco": 5.8,
+      "preco": 6.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -135,10 +135,10 @@
         "en": "Bread pieces with chouriço"
       },
       "descricao": {
-        "pt": "Pedaços de pão com chouriço, taça de batata e tabasco. Com queijo, 6,20 €.",
-        "en": "Bread pieces with chouriço, a bowl of crisps and tabasco. With cheese, €6.20."
+        "pt": "Pedaços de pão com chouriço, taça de batata e tabasco. Com queijo, 6,90 €.",
+        "en": "Bread pieces with chouriço, a bowl of crisps and tabasco. With cheese, €6.90."
       },
-      "preco": 5.8,
+      "preco": 6.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -151,7 +151,7 @@
         "en": "Salted peanuts"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.85,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -164,7 +164,7 @@
         "en": "Fried corn"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.85,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -177,7 +177,7 @@
         "en": "Corn and peanut mix"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.85,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -190,7 +190,7 @@
         "en": "Large bowl of crisps"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.85,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -203,7 +203,7 @@
         "en": "Petit gateau with vanilla ice cream"
       },
       "descricao": null,
-      "preco": 4.2,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -216,7 +216,7 @@
         "en": "Affogato al caffè with ice cream and cream"
       },
       "descricao": null,
-      "preco": 4.2,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -232,7 +232,7 @@
         "pt": "Rum, hortelã, açúcar, sumo de lima e água com gás.",
         "en": "Rum, mint, sugar, lime juice and sparkling water."
       },
-      "preco": 5.0,
+      "preco": 5.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -248,7 +248,7 @@
         "pt": "Cachaça, sumo de lima e açúcar.",
         "en": "Cachaça, lime juice and sugar."
       },
-      "preco": 5.0,
+      "preco": 5.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -264,7 +264,7 @@
         "pt": "Aperol, espumante e água com gás.",
         "en": "Aperol, sparkling wine and sparkling water."
       },
-      "preco": 5.0,
+      "preco": 5.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -280,7 +280,7 @@
         "pt": "Vodka, blue curaçao, sprite e goma.",
         "en": "Vodka, blue curaçao, sprite and gum syrup."
       },
-      "preco": 5.0,
+      "preco": 5.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -296,7 +296,7 @@
         "pt": "Rum, sumo de laranja, ananás e polpa de maracujá.",
         "en": "Rum, orange juice, pineapple and passion fruit pulp."
       },
-      "preco": 5.6,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -312,7 +312,7 @@
         "pt": "Rum, coco e sumo de ananás.",
         "en": "Rum, coconut and pineapple juice."
       },
-      "preco": 5.6,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -328,7 +328,7 @@
         "pt": "Tequila, sumo de lima e triple sec.",
         "en": "Tequila, lime juice and triple sec."
       },
-      "preco": 5.6,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -344,7 +344,7 @@
         "pt": "Cachaça, sumo de lima e polpa de maracujá.",
         "en": "Cachaça, lime juice and passion fruit pulp."
       },
-      "preco": 5.6,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -360,7 +360,7 @@
         "pt": "Bourbon, angostura bitters e açúcar branco.",
         "en": "Bourbon, angostura bitters and white sugar."
       },
-      "preco": 5.6,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -376,7 +376,7 @@
         "pt": "Rum, hortelã, açúcar, polpa de melancia, sumo de lima e água com gás.",
         "en": "Rum, mint, sugar, watermelon pulp, lime juice and sparkling water."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -392,7 +392,7 @@
         "pt": "Gin Tanqueray, gengibre fresco, pepino, ginger ale e malagueta.",
         "en": "Tanqueray gin, fresh ginger, cucumber, ginger ale and chilli."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -408,7 +408,7 @@
         "pt": "Tequila, gengibre fresco, ginger ale, xarope de agave, sumo de limão e açúcar.",
         "en": "Tequila, fresh ginger, ginger ale, agave syrup, lemon juice and sugar."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -424,7 +424,7 @@
         "pt": "Vodka, licor de café, triple sec e café.",
         "en": "Vodka, coffee liqueur, triple sec and espresso."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -440,7 +440,7 @@
         "pt": "Tanqueray, Campari e Martini Rosso.",
         "en": "Tanqueray, Campari and Martini Rosso."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -456,7 +456,7 @@
         "pt": "Vodka, gengibre fresco, sumo de limão, açúcar e ginger ale.",
         "en": "Vodka, fresh ginger, lemon juice, sugar and ginger ale."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -472,7 +472,7 @@
         "pt": "Tequila, sumo de laranja natural e xarope de romã.",
         "en": "Tequila, fresh orange juice and grenadine."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -488,7 +488,7 @@
         "pt": "Gin, vodka, rum, whisky, tequila, triple sec, sumo de ananás, sumo de laranja, xarope de romã e sumo de limão.",
         "en": "Gin, vodka, rum, whisky, tequila, triple sec, pineapple juice, orange juice, grenadine and lemon juice."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -504,7 +504,23 @@
         "pt": "Gin, vodka, rum, tequila, triple sec, sumo de limão, açúcar e cola.",
         "en": "Gin, vodka, rum, tequila, triple sec, lemon juice, sugar and cola."
       },
-      "preco": 6.2,
+      "preco": 6.8,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "godfather",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Godfather",
+        "en": "Godfather"
+      },
+      "descricao": {
+        "pt": "Scotch whisky e amaretto.",
+        "en": "Scotch whisky and amaretto."
+      },
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -523,7 +539,7 @@
       "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": false
+      "escondido": true
     },
     {
       "id": "cocktail-preguica",
@@ -533,10 +549,10 @@
         "en": "Cocktail Preguiça"
       },
       "descricao": {
-        "pt": "Gin, vodka e rum. Escolhe-se o sabor.",
-        "en": "Gin, vodka and rum. You pick the flavour."
+        "pt": "Gin, vodka, rum e unicórnio. Escolhe-se o sabor.",
+        "en": "Gin, vodka, rum and unicorn. You pick the flavour."
       },
-      "preco": 5.0,
+      "preco": 5.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -552,7 +568,7 @@
         "pt": "Sem álcool. Escolhe-se o sabor.",
         "en": "Alcohol free. You pick the flavour."
       },
-      "preco": 1.7,
+      "preco": 2.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -568,7 +584,7 @@
         "pt": "Sumo de lima, açúcar, hortelã e ginger ale.",
         "en": "Lime juice, sugar, mint and ginger ale."
       },
-      "preco": 4.2,
+      "preco": 4.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -584,7 +600,7 @@
         "pt": "Sumo de ananás e polpa de coco.",
         "en": "Pineapple juice and coconut pulp."
       },
-      "preco": 4.2,
+      "preco": 4.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -600,7 +616,7 @@
         "pt": "Sumo de laranja natural, ananás e polpa de maracujá.",
         "en": "Fresh orange juice, pineapple and passion fruit pulp."
       },
-      "preco": 4.2,
+      "preco": 4.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -616,7 +632,23 @@
         "pt": "Blue curaçao, sprite, sumo de limão fresco e goma.",
         "en": "Blue curaçao, sprite, fresh lemon juice and gum syrup."
       },
-      "preco": 4.2,
+      "preco": 4.6,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "ginger-mint",
+      "categoria": "mocktails",
+      "nome": {
+        "pt": "Ginger Mint",
+        "en": "Ginger Mint"
+      },
+      "descricao": {
+        "pt": "Gengibre fresco, sumo de limão, ginger ale e hortelã.",
+        "en": "Fresh ginger, lemon juice, ginger ale and mint."
+      },
+      "preco": 4.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -635,7 +667,7 @@
       "preco": 4.2,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": false
+      "escondido": true
     },
     {
       "id": "vinho-branco",
@@ -645,10 +677,10 @@
         "en": "White wine"
       },
       "descricao": {
-        "pt": "Pepino, canela e maçã. Garrafão de 1,75 l, 19,50 €.",
-        "en": "Cucumber, cinnamon and apple. 1.75 l jug, €19.50."
+        "pt": "Pepino, canela e maçã. Garrafão de 1,75 l, 21,50 €.",
+        "en": "Cucumber, cinnamon and apple. 1.75 l jug, €21.50."
       },
-      "preco": 5.4,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -661,10 +693,10 @@
         "en": "Preguiça sparkling"
       },
       "descricao": {
-        "pt": "Maracujá e hortelã. Garrafão de 1,75 l, 21,80 €.",
-        "en": "Passion fruit and mint. 1.75 l jug, €21.80."
+        "pt": "Maracujá e hortelã. Garrafão de 1,75 l, 22,80 €.",
+        "en": "Passion fruit and mint. 1.75 l jug, €22.80."
       },
-      "preco": 5.8,
+      "preco": 6.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -677,10 +709,10 @@
         "en": "Red berry sparkling"
       },
       "descricao": {
-        "pt": "Frutos vermelhos e canela. Garrafão de 1,75 l, 21,80 €.",
-        "en": "Red berries and cinnamon. 1.75 l jug, €21.80."
+        "pt": "Frutos vermelhos e canela. Garrafão de 1,75 l, 22,80 €.",
+        "en": "Red berries and cinnamon. 1.75 l jug, €22.80."
       },
-      "preco": 5.8,
+      "preco": 6.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -693,10 +725,10 @@
         "en": "Watermelon sparkling"
       },
       "descricao": {
-        "pt": "Hortelã e limão. Garrafão de 1,75 l, 22,80 €.",
-        "en": "Mint and lemon. 1.75 l jug, €22.80."
+        "pt": "Hortelã e lima. Garrafão de 1,75 l, 23,80 €.",
+        "en": "Mint and lime. 1.75 l jug, €23.80."
       },
-      "preco": 6.2,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -709,7 +741,7 @@
         "en": "Gordon's"
       },
       "descricao": null,
-      "preco": 5.8,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -722,7 +754,7 @@
         "en": "Bulldog"
       },
       "descricao": null,
-      "preco": 7.5,
+      "preco": 8.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -735,7 +767,7 @@
         "en": "Hendrick's"
       },
       "descricao": null,
-      "preco": 8.5,
+      "preco": 9.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -748,7 +780,7 @@
         "en": "Beefeater"
       },
       "descricao": null,
-      "preco": 6.5,
+      "preco": 7.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -761,7 +793,7 @@
         "en": "Nordés"
       },
       "descricao": null,
-      "preco": 8.5,
+      "preco": 9.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -774,7 +806,7 @@
         "en": "Martin Miller's"
       },
       "descricao": null,
-      "preco": 8.0,
+      "preco": 8.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -800,7 +832,7 @@
         "en": "Tanqueray"
       },
       "descricao": null,
-      "preco": 6.5,
+      "preco": 7.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -813,7 +845,7 @@
         "en": "Tanqueray Sevilla"
       },
       "descricao": null,
-      "preco": 6.5,
+      "preco": 7.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -826,7 +858,7 @@
         "en": "Sharish"
       },
       "descricao": null,
-      "preco": 8.0,
+      "preco": 8.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -839,7 +871,20 @@
         "en": "Monkey 47"
       },
       "descricao": null,
-      "preco": 12.5,
+      "preco": 13.5,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "gin-adamus",
+      "categoria": "gin",
+      "nome": {
+        "pt": "Adamus",
+        "en": "Adamus"
+      },
+      "descricao": null,
+      "preco": 9.0,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -852,7 +897,7 @@
         "en": "Nikka Barrel"
       },
       "descricao": null,
-      "preco": 12.0,
+      "preco": 13.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -865,7 +910,7 @@
         "en": "Bushmills"
       },
       "descricao": null,
-      "preco": 5.2,
+      "preco": 5.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -891,7 +936,7 @@
         "en": "Macallan 12 year"
       },
       "descricao": null,
-      "preco": 13.5,
+      "preco": 14.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -904,7 +949,7 @@
         "en": "Cutty Sark"
       },
       "descricao": null,
-      "preco": 5.0,
+      "preco": 5.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -917,7 +962,7 @@
         "en": "Jack Daniel's"
       },
       "descricao": null,
-      "preco": 5.8,
+      "preco": 6.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -930,7 +975,7 @@
         "en": "Jameson"
       },
       "descricao": null,
-      "preco": 5.2,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -943,7 +988,7 @@
         "en": "J&B"
       },
       "descricao": null,
-      "preco": 5.0,
+      "preco": 5.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -956,7 +1001,7 @@
         "en": "J. W. Red Label"
       },
       "descricao": null,
-      "preco": 5.0,
+      "preco": 5.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -969,7 +1014,7 @@
         "en": "J. W. Black Label"
       },
       "descricao": null,
-      "preco": 7.0,
+      "preco": 8.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -982,7 +1027,7 @@
         "en": "Whisky or vodka"
       },
       "descricao": null,
-      "preco": 2.2,
+      "preco": 2.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -995,7 +1040,7 @@
         "en": "Rum or tequila"
       },
       "descricao": null,
-      "preco": 2.2,
+      "preco": 2.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1008,7 +1053,7 @@
         "en": "Jack Daniel's"
       },
       "descricao": null,
-      "preco": 3.0,
+      "preco": 3.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1034,7 +1079,7 @@
         "en": "B52"
       },
       "descricao": null,
-      "preco": 2.5,
+      "preco": 3.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1050,7 +1095,7 @@
       "preco": 2.5,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": false
+      "escondido": true
     },
     {
       "id": "sho-lollipop",
@@ -1063,7 +1108,7 @@
       "preco": 3.3,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": false
+      "escondido": true
     },
     {
       "id": "sho-baby-guinness",
@@ -1086,7 +1131,7 @@
         "en": "Martini Rosso"
       },
       "descricao": null,
-      "preco": 3.2,
+      "preco": 3.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1099,7 +1144,7 @@
         "en": "Martini Bianco"
       },
       "descricao": null,
-      "preco": 3.2,
+      "preco": 3.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1112,7 +1157,7 @@
         "en": "Licor Beirão"
       },
       "descricao": null,
-      "preco": 4.0,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1125,7 +1170,7 @@
         "en": "Bitter almond"
       },
       "descricao": null,
-      "preco": 4.0,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1138,7 +1183,7 @@
         "en": "C.R.F."
       },
       "descricao": null,
-      "preco": 4.0,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1151,7 +1196,7 @@
         "en": "Baileys"
       },
       "descricao": null,
-      "preco": 4.2,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1164,7 +1209,7 @@
         "en": "Amaretto"
       },
       "descricao": null,
-      "preco": 4.5,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1177,7 +1222,7 @@
         "en": "Limoncello"
       },
       "descricao": null,
-      "preco": 4.5,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1190,7 +1235,7 @@
         "en": "Super Bock"
       },
       "descricao": null,
-      "preco": 1.6,
+      "preco": 1.7,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1203,7 +1248,7 @@
         "en": "Stout"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1216,7 +1261,7 @@
         "en": "Coruja IPA"
       },
       "descricao": null,
-      "preco": 2.2,
+      "preco": 2.3,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1229,7 +1274,7 @@
         "en": "Somersby apple"
       },
       "descricao": null,
-      "preco": 3.2,
+      "preco": 3.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1242,7 +1287,7 @@
         "en": "Draught beer"
       },
       "descricao": null,
-      "preco": 1.6,
+      "preco": 1.7,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1255,7 +1300,7 @@
         "en": "Draught with 7up or Tango"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1268,7 +1313,7 @@
         "en": "Draught with Favaios"
       },
       "descricao": null,
-      "preco": 2.4,
+      "preco": 2.7,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1281,7 +1326,7 @@
         "en": "Príncipe"
       },
       "descricao": null,
-      "preco": 2.3,
+      "preco": 2.9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1290,12 +1335,12 @@
       "id": "vin-vinho-branco",
       "categoria": "vinhos",
       "nome": {
-        "pt": "Vinho branco",
-        "en": "White wine"
+        "pt": "Vinho branco Tons Duorum",
+        "en": "Tons Duorum white wine"
       },
       "descricao": null,
-      "preco": 3.0,
-      "precoSecundario": null,
+      "preco": 3.2,
+      "precoSecundario": 11.5,
       "alergenios": [],
       "escondido": false
     },
@@ -1307,8 +1352,8 @@
         "en": "Tons Duorum red wine"
       },
       "descricao": null,
-      "preco": 3.0,
-      "precoSecundario": null,
+      "preco": 3.2,
+      "precoSecundario": 11.5,
       "alergenios": [],
       "escondido": false
     },
@@ -1320,7 +1365,7 @@
         "en": "White or red Port"
       },
       "descricao": null,
-      "preco": 2.8,
+      "preco": 3.2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1346,7 +1391,7 @@
         "en": "Espresso with a drop of milk"
       },
       "descricao": null,
-      "preco": 1.2,
+      "preco": 1.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1359,7 +1404,7 @@
         "en": "Coffee with milk"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.4,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1372,7 +1417,7 @@
         "en": "Capuccino"
       },
       "descricao": null,
-      "preco": 2.5,
+      "preco": 2.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1381,11 +1426,11 @@
       "id": "caf-cafe-bz-bz",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Café BZ BZ",
-        "en": "Iced coffee slush"
+        "pt": "Café BZ BZ (café granizado)",
+        "en": "Café BZ BZ (iced coffee slush)"
       },
       "descricao": null,
-      "preco": 1.2,
+      "preco": 1.5,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1398,7 +1443,7 @@
         "en": "Hot chocolate"
       },
       "descricao": null,
-      "preco": 3.2,
+      "preco": 3.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1411,7 +1456,7 @@
         "en": "Hot chocolate with cream"
       },
       "descricao": null,
-      "preco": 3.6,
+      "preco": 4.3,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1420,11 +1465,11 @@
       "id": "caf-irish-coffee",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Irish coffee",
-        "en": "Irish coffee"
+        "pt": "Irish coffee (whisky)",
+        "en": "Irish coffee (whiskey)"
       },
       "descricao": null,
-      "preco": 5.2,
+      "preco": 6.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1433,11 +1478,11 @@
       "id": "caf-grog",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Grog",
+        "pt": "Grog (rum)",
         "en": "Grog (rum)"
       },
       "descricao": null,
-      "preco": 3.8,
+      "preco": 4.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1446,11 +1491,11 @@
       "id": "caf-gluehwein",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Gluehwein",
-        "en": "Mulled wine"
+        "pt": "Glühwein (vinho tinto)",
+        "en": "Glühwein (mulled red wine)"
       },
       "descricao": null,
-      "preco": 3.8,
+      "preco": 4.4,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1459,11 +1504,11 @@
       "id": "caf-skiwasser",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Skiwasser",
-        "en": "Hot raspberry tea"
+        "pt": "Skiwasser (chá quente de framboesa)",
+        "en": "Skiwasser (hot raspberry tea)"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.3,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1476,7 +1521,7 @@
         "en": "Lemon & ginger"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1489,7 +1534,7 @@
         "en": "Red berries"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1502,7 +1547,7 @@
         "en": "Apple & cinnamon"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1515,7 +1560,7 @@
         "en": "Linden"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1528,7 +1573,7 @@
         "en": "Black"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1541,7 +1586,7 @@
         "en": "Green"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1554,7 +1599,7 @@
         "en": "Mint"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1567,7 +1612,7 @@
         "en": "Camomile"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1580,7 +1625,20 @@
         "en": "Lemon balm"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 2.1,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "cha-gelado",
+      "categoria": "chas",
+      "nome": {
+        "pt": "Chá gelado",
+        "en": "Iced tea"
+      },
+      "descricao": null,
+      "preco": 2.4,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1596,40 +1654,27 @@
       "preco": 1.8,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": false
+      "escondido": true
     },
     {
-      "id": "agu-agua-luso",
+      "id": "agu-agua",
       "categoria": "aguas-e-refrigerantes",
       "nome": {
-        "pt": "Água Luso",
-        "en": "Still water"
+        "pt": "Água 33 cl",
+        "en": "Still water, 33 cl"
       },
       "descricao": null,
-      "preco": 1.2,
+      "preco": 1.3,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
     },
     {
-      "id": "agu-pedras",
+      "id": "agu-frize",
       "categoria": "aguas-e-refrigerantes",
       "nome": {
-        "pt": "Pedras",
-        "en": "Sparkling water"
-      },
-      "descricao": null,
-      "preco": 1.6,
-      "precoSecundario": null,
-      "alergenios": [],
-      "escondido": false
-    },
-    {
-      "id": "agu-pedras-limao",
-      "categoria": "aguas-e-refrigerantes",
-      "nome": {
-        "pt": "Pedras limão",
-        "en": "Sparkling water, lemon"
+        "pt": "Frize",
+        "en": "Frize sparkling water"
       },
       "descricao": null,
       "preco": 1.7,
@@ -1638,14 +1683,27 @@
       "escondido": false
     },
     {
-      "id": "agu-pedras-maracuja",
+      "id": "agu-frize-limao",
       "categoria": "aguas-e-refrigerantes",
       "nome": {
-        "pt": "Pedras maracujá",
-        "en": "Sparkling water, passion fruit"
+        "pt": "Frize limão",
+        "en": "Frize, lemon"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.8,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "agu-frize-maracuja",
+      "categoria": "aguas-e-refrigerantes",
+      "nome": {
+        "pt": "Frize maracujá",
+        "en": "Frize, passion fruit"
+      },
+      "descricao": null,
+      "preco": 1.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1658,7 +1716,7 @@
         "en": "Tonic water"
       },
       "descricao": null,
-      "preco": 1.7,
+      "preco": 1.8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1671,7 +1729,7 @@
         "en": "Coca-Cola"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 1.9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1684,7 +1742,7 @@
         "en": "Coke Zero"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 1.9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1697,7 +1755,7 @@
         "en": "Ginger ale"
       },
       "descricao": null,
-      "preco": 1.8,
+      "preco": 1.9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1710,7 +1768,7 @@
         "en": "Red Bull"
       },
       "descricao": null,
-      "preco": 2.9,
+      "preco": 3.6,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false

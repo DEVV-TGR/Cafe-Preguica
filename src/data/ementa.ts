@@ -157,6 +157,31 @@ export const ALERGENIOS = [
 
 export type Alergenio = (typeof ALERGENIOS)[number];
 
+/**
+ * O que é próprio de cada secção e não de cada artigo: a dose em que se serve, e
+ * o que querem dizer as duas colunas de preço (tostas e vinhos).
+ *
+ * Vem antes do esquema porque o esquema a usa: só uma secção com `colunas`
+ * aceita segundo preço.
+ *
+ * Vive aqui e não nas mensagens porque **é facto, não texto** — `5 cl` é `5 cl`
+ * em português e em inglês. O que muda com a língua são os nomes das secções, e
+ * esses estão em `messages/`.
+ *
+ * As categorias que não aparecem aqui não têm nada de especial a dizer, e o
+ * `Partial` é o que deixa isso ser verdade sem obrigar a escrever `undefined`
+ * dezoito vezes.
+ */
+export const METADADOS: Partial<
+  Record<Categoria, { dose?: string; colunas?: [string, string] }>
+> = {
+  "tostas-e-snacks": { colunas: ["Pão saloio", "Pão de forma"] },
+  vinhos: { colunas: ["Copo", "Garrafa"] },
+  gin: { dose: "5 cl" },
+  whisky: { dose: "5 cl" },
+  shots: { dose: "3 cl" },
+};
+
 /* Os tetos não vêm de nenhuma regra da casa — o nome mais comprido da carta tem
    42 letras e a descrição mais comprida 136. Existem por causa do painel: um
    texto colado de outro sítio sem querer passava a ser um artigo com um
@@ -192,13 +217,14 @@ const EsquemaArtigo = z
       .multipleOf(0.01, "no máximo duas casas decimais")
       .nullable(),
     /**
-     * O segundo preço, e existe por um motivo só: **as tostas vendem-se em pão
-     * saloio e em pão de forma, a preços diferentes.** No menu impresso são duas
-     * colunas de números à volta do mesmo nome.
+     * O segundo preço, para as secções que no menu impresso têm **duas colunas
+     * de números à volta do mesmo nome**: as tostas (pão saloio e pão de forma)
+     * e os vinhos (copo e garrafa).
      *
-     * Fica `null` em tudo o resto. O que cada coluna quer dizer não vive aqui —
-     * vive em `METADADOS`, por categoria, porque é uma propriedade da secção e
-     * não de cada artigo.
+     * Fica `null` em tudo o resto — e também num artigo dessas secções que não
+     * tem o segundo (o Vinho do Porto não se vende à garrafa). O que cada coluna
+     * quer dizer não vive aqui: vive em `METADADOS`, por categoria, porque é uma
+     * propriedade da secção e não de cada artigo.
      */
     precoSecundario: z
       .number()
@@ -236,14 +262,14 @@ const EsquemaArtigo = z
       });
     }
 
-    /* Um segundo preço fora das tostas é quase de certeza um engano de quem
-       copiou a linha de cima para criar a seguinte — e passaria despercebido,
-       porque a página simplesmente mostraria dois números sem dizer de quê. */
-    if (artigo.precoSecundario !== null && artigo.categoria !== "tostas-e-snacks") {
+    /* Um segundo preço numa secção sem colunas é quase de certeza um engano de
+       quem copiou a linha de cima para criar a seguinte — e passaria
+       despercebido, porque a página mostraria dois números sem dizer de quê. */
+    if (artigo.precoSecundario !== null && !METADADOS[artigo.categoria]?.colunas) {
       ctx.addIssue({
         code: "custom",
         path: ["precoSecundario"],
-        message: `só a categoria "tostas-e-snacks" tem dois preços; aqui tem de ser null`,
+        message: `a categoria "${artigo.categoria}" não tem duas colunas de preço; aqui tem de ser null`,
       });
     }
 
@@ -342,7 +368,7 @@ export const COM_SABORES: readonly Categoria[] = ["cocktail-preguica", "unicorni
 export const SABORES = [
   "surpresa",
   "limao",
-  "manga",
+  "matcha",
   "frutos-vermelhos",
   "caramelo",
   "menta",
@@ -357,27 +383,6 @@ export const SABORES = [
 ] as const;
 
 export type Sabor = (typeof SABORES)[number];
-
-/**
- * O que é próprio de cada secção e não de cada artigo: a dose em que se serve, e
- * o que querem dizer as duas colunas de preço das tostas.
- *
- * Vive aqui e não nas mensagens porque **é facto, não texto** — `5 cl` é `5 cl`
- * em português e em inglês. O que muda com a língua são os nomes das secções, e
- * esses estão em `messages/`.
- *
- * As categorias que não aparecem aqui não têm nada de especial a dizer, e o
- * `Partial` é o que deixa isso ser verdade sem obrigar a escrever `undefined`
- * dezoito vezes.
- */
-export const METADADOS: Partial<
-  Record<Categoria, { dose?: string; colunas?: [string, string] }>
-> = {
-  "tostas-e-snacks": { colunas: ["Pão saloio", "Pão de forma"] },
-  gin: { dose: "5 cl" },
-  whisky: { dose: "5 cl" },
-  shots: { dose: "3 cl" },
-};
 
 /**
  * Os capítulos com as suas secções já preenchidas, pela ordem de `CATEGORIAS`,

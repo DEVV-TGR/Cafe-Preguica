@@ -80,6 +80,20 @@ if (!bloco) {
   for (const s of sabores) exigir(`ementa.sabores.${s}`, `o sabor "${s}"`);
 }
 
+/* As secções com duas colunas de preço (`METADADOS` em `ementa.ts`) precisam
+   do nome de cada coluna — a página pede-o por categoria, e uma secção nova com
+   colunas e sem nomes escrevia a chave por cima dos preços. */
+const metadados = fonte.match(/export const METADADOS[\s\S]*?\n\};/);
+if (!metadados) {
+  problemas.push("não encontrei o METADADOS em src/data/ementa.ts — o padrão mudou?");
+} else {
+  const comColunas = [...metadados[0].matchAll(/"?([a-z-]+)"?:\s*\{[^}]*colunas:/g)].map((m) => m[1]);
+  for (const c of comColunas) {
+    exigir(`ementa.colunas.${c}.a`, `a primeira coluna de preço de "${c}"`);
+    exigir(`ementa.colunas.${c}.b`, `a segunda coluna de preço de "${c}"`);
+  }
+}
+
 /* ------------------------------------------------------------- relatório -- */
 
 if (problemas.length === 0) {

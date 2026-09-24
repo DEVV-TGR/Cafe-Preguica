@@ -24,6 +24,7 @@ import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
 import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
+import { DesenhoDaSeccao, DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
 import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
 import "../../catalogo.css";
 import "../../ementa.css";
@@ -253,6 +254,7 @@ export default async function Ementa({ params }: Props) {
               className="em-capitulo"
               aria-labelledby={`titulo-${capitulo}`}
             >
+              <DesenhosDoCapitulo capitulo={capitulo} />
               <header className="em-abertura">
                 <Carrossel
                   fotos={fotos}
@@ -305,7 +307,14 @@ export default async function Ementa({ params }: Props) {
                   locale={locale}
                   titulo={t(`categorias.${categoria}`)}
                   dose={comum("dose")}
-                  colunas={[t("colunaPreco"), t("colunaPrecoAlt")]}
+                  /* Só as secções com duas colunas de preço (`METADADOS`) têm
+                     nomes para elas nas mensagens — pedir os das outras dava o
+                     nome da chave no ecrã. */
+                  colunas={
+                    METADADOS[categoria]?.colunas
+                      ? [t(`colunas.${categoria}.a`), t(`colunas.${categoria}.b`)]
+                      : ["", ""]
+                  }
                   preco={preco}
                   extra={
                     COM_SABORES.includes(categoria) ? (
@@ -403,6 +412,7 @@ function Seccao({
     >
       <header className="em-seccao__cabeca">
         <h3 id={`seccao-${categoria}`}>{titulo}</h3>
+        <DesenhoDaSeccao categoria={categoria} />
         {/* A dose é propriedade da secção, não do artigo: o gin serve-se todo
             a 5 cl e repeti-lo em onze linhas era ruído. */}
         {meta?.dose && (

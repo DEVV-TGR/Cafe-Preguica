@@ -32,7 +32,7 @@ import { SABORES, type Sabor } from "@/data/ementa";
    copo — ver `Copo`. */
 const CORES: Record<Exclude<Sabor, "surpresa">, string> = {
   limao: "#e3d34a",
-  manga: "#f2a33a",
+  matcha: "#8fae4a",
   "frutos-vermelhos": "#a8203c",
   caramelo: "#b8742a",
   menta: "#5cc49a",

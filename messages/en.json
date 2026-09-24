@@ -178,13 +178,21 @@
       "unicornio": "Unicorn",
       "aguas-e-refrigerantes": "Water & soft drinks"
     },
-    "colunaPreco": "Country bread",
-    "colunaPrecoAlt": "Sliced bread",
+    "colunas": {
+      "tostas-e-snacks": {
+        "a": "Country bread",
+        "b": "Sliced bread"
+      },
+      "vinhos": {
+        "a": "Glass",
+        "b": "Bottle"
+      }
+    },
     "saboresTitulo": "Pick the flavour",
     "sabores": {
       "surpresa": "Surprise",
       "limao": "Lemon",
-      "manga": "Mango",
+      "matcha": "Matcha",
       "frutos-vermelhos": "Red berries",
       "caramelo": "Caramel",
       "menta": "Mint",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import { Link } from "@/i18n/navigation";
 
 /**
  * O botão "Confirmar inscrição" da página a que o email de confirmação leva.
@@ -19,6 +20,7 @@ export type TextosDaConfirmacao = {
   invalido: string;
   expirado: string;
   erro: string;
+  abrirCarta: string;
 };
 
 type Estado = "pronto" | "a-confirmar" | "feito" | "invalido" | "expirado" | "erro";
@@ -45,10 +47,15 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
       });
 
       if (resposta.ok) {
-        /* O mesmo sinal que o pop-up deixa: quem confirmou não volta a ser
-           convidado, mesmo que se tenha inscrito noutro aparelho. */
+        const { chaveDaCarta } = (await resposta.json().catch(() => ({}))) as {
+          chaveDaCarta?: string;
+        };
+        /* O mesmo sinal que o pop-up deixa — quem confirmou não volta a ser
+           convidado — e a chave da carta secreta, que a `/ementa` usa para a
+           abrir sozinha neste telemóvel. */
         try {
           localStorage.setItem("preguica:newsletter", "inscrito");
+          if (chaveDaCarta) localStorage.setItem("preguica:carta-secreta", chaveDaCarta);
         } catch {}
         /* Tira o convite do endereço: não há razão para ficar no histórico. */
         history.replaceState(null, "", window.location.pathname);
@@ -71,6 +78,13 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
         <div className="lt-seccao__texto">
           <p>{textos.feitoTexto}</p>
         </div>
+        {/* O prémio de ter confirmado — é o caminho que a carta secreta da
+            ementa promete. */}
+        <p className="lt-accao">
+          <Link href="/ementa#carta-secreta" className="pg-botao pg-botao--cheio">
+            {textos.abrirCarta}
+          </Link>
+        </p>
       </section>
     );
   }

@@ -43,6 +43,7 @@ export default async function ConfirmarNewsletter({ params }: Props) {
     invalido: t("invalido"),
     expirado: t("expirado"),
     erro: t("erro"),
+    abrirCarta: t("abrirCarta"),
   };
 
   return (

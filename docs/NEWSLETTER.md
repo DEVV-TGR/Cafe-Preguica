@@ -172,3 +172,39 @@ Framework). A página continua marcada como rascunho por isto e pelo resto.
 | O painel diz que não encontra a lista | `RESEND_NEWSLETTER_SEGMENTO` errado, ou o segmento foi apagado |
 | O painel diz que o remetente foi recusado | O domínio de `RESEND_NEWSLETTER_REMETENTE` não está *Verified* nessa conta, à letra |
 | Enviada, mas não aparece em "Enviadas" | O Resend ainda a está a processar; recarregar daqui a um minuto |
+
+---
+
+## A carta secreta
+
+O isco da newsletter: uma secção no fim da `/ementa`, a seguir aos chás, que só
+abre a quem está inscrito. Há três sinais que levam lá:
+- um aviso no topo da ementa;
+- um item "Carta secreta" no índice;
+- a linha "Há mais cocktails na carta secreta" no fim do capítulo dos cocktails.
+
+**Como abre:**
+
+1. A pessoa escreve o email. `/api/carta-secreta` pergunta ao Resend se está no
+   segmento e ativo (`estaInscrito`).
+2. **Se está,** a rota devolve os artigos e uma **chave** (o email assinado, 180
+   dias), que o telemóvel guarda no `localStorage`. Na visita seguinte a carta
+   abre sozinha, e **o servidor volta a perguntar ao Resend de cada vez**: quem
+   cancelar a newsletter perde a carta.
+3. **Se não está,** o formulário da newsletter aparece ali mesmo. Ao confirmar
+   no email, a página de confirmação guarda a chave e tem o botão "Abrir a carta
+   secreta".
+
+**Os artigos nunca estão no HTML** da `/ementa`, que é estática. Só saem da rota
+depois do "sim" do Resend. O repositório é público, por isso o segredo é "de bar",
+não de cofre.
+
+**Limite:** 10 pedidos por hora por ligação. A resposta diz se um email está na
+lista, e sem limite servia para testar listas de endereços.
+
+**Em desenvolvimento**, sem chave do Resend, conta como inscrito quem confirmou
+nesta sessão do `npm run dev` (o link de confirmação sai no terminal).
+
+⚠️ **Provisório:** os artigos são exemplos, em `src/lib/carta-secreta/artigos.ts`.
+O passo seguinte é um campo `secreto` em cada artigo do `ementa.json`, editável
+no painel. Como qualquer campo novo, o painel tem de o saber escrever.

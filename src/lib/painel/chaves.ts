@@ -11,6 +11,7 @@ import { ler, guardarSeNovo } from "./redis";
   | `desafio` | assinar o cookie que aponta ao código pendente | HMAC-SHA256 |
   | `aparelho` | assinar o "este aparelho já passou pelo email" | HMAC-SHA256 |
   | `newsletter` | assinar o link de confirmação da inscrição | HMAC-SHA256 |
+  | `carta` | assinar a chave da carta secreta guardada no telemóvel | HMAC-SHA256 |
 
   **Não podem ser a mesma chave.** Sem separação, um selo de sessão podia
   ser apresentado como selo de aparelho, e uma fraqueza num dos usos passava aos
@@ -67,7 +68,7 @@ async function segredo(): Promise<string> {
   return emCache;
 }
 
-export type Uso = "sessao" | "desafio" | "aparelho" | "newsletter";
+export type Uso = "sessao" | "desafio" | "aparelho" | "newsletter" | "carta";
 
 /*
   Sem sal: a separação que interessa é entre os usos, e essa é feita pelo

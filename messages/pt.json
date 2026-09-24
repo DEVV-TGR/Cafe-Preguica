@@ -263,6 +263,28 @@
       "facto": "Se quiser saber o que leva um prato ou uma bebida, ou que alergénios tem, pergunte a quem está ao balcão.",
       "topo": "Voltar ao topo",
       "inicio": "Conhecer a casa"
+    },
+    "secreta": {
+      "indice": "Carta secreta",
+      "sinal": "Há uma carta que não está aqui.",
+      "sinalLigacao": "Ver a carta secreta ↓",
+      "maisCocktails": "Há mais cocktails na carta secreta ↓",
+      "olho": "Só para quem está na lista",
+      "titulo": "A carta secreta",
+      "texto": "Os cocktails que não estão no papel. Abrem-se com o email em que recebe as novidades da casa.",
+      "etiqueta": "O seu email",
+      "marcador": "o-seu@email.pt",
+      "abrir": "Abrir",
+      "aAbrir": "A abrir…",
+      "naoInscritoTitulo": "Este email ainda não está na lista.",
+      "naoInscritoTexto": "Inscreva {email} nas novidades da casa. Confirme no email que lhe mandamos, e a carta abre-se sozinha.",
+      "inscrever": "Inscrever e abrir",
+      "aEnviar": "A enviar…",
+      "enviadoTitulo": "Falta um passo",
+      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está — volta aqui com a carta aberta.",
+      "outroEmail": "Escrever outro email",
+      "abertaTexto": "Está na lista, e isto é para si. Peça ao balcão pelo nome.",
+      "fechar": "Não é o seu telemóvel? Fechar a carta"
     }
   },
   "contactos": {
@@ -288,7 +310,7 @@
     },
     "newsletter": {
       "titulo": "A newsletter",
-      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou, e usamo-los só para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o no link que lhe enviamos. Sem essa confirmação o endereço não fica guardado. Cada email traz um link para cancelar a inscrição, que funciona de imediato. A lista é guardada até cancelar, e pode pedir-nos a qualquer momento para saber que dados temos ou para os apagar, pelos contactos da casa."
+      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou, e usamo-los só para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o no link que lhe enviamos. Sem essa confirmação o endereço não fica guardado. Cada email traz um link para cancelar a inscrição, que funciona de imediato. A lista é guardada até cancelar, e pode pedir-nos a qualquer momento para saber que dados temos ou para os apagar, pelos contactos da casa. O mesmo email serve para abrir a carta secreta da ementa: quando o escreve lá, perguntamos à lista se está inscrito, e mais nada."
     },
     "terceiros": {
       "titulo": "Serviços de terceiros",
@@ -336,7 +358,7 @@
     },
     "memoria": {
       "titulo": "E o convite da newsletter?",
-      "texto": "Para não o voltar a mostrar a quem já se inscreveu, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\". Quem fecha o convite leva outra nota, que o navegador apaga sozinho ao fechar o separador. Nenhuma das duas é um cookie: não identificam ninguém, não são enviadas ao servidor e não saem do seu aparelho. Se as apagar, o pior que acontece é o convite voltar a aparecer."
+      "texto": "Para não o voltar a mostrar a quem já se inscreveu, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\". Quem fecha o convite leva outra nota, que o navegador apaga sozinho ao fechar o separador. Estas duas não identificam ninguém e não saem do seu aparelho. Quem abre a carta secreta guarda também uma chave com o seu email, assinada por nós, que o site usa só para a voltar a abrir sem lhe pedir o email outra vez; o botão \"Fechar a carta\" apaga-a. Nenhuma destas notas é um cookie, e se as apagar o pior que acontece é o convite voltar a aparecer ou a carta pedir o email."
     },
     "equipa": {
       "titulo": "A área da equipa",
@@ -409,7 +431,8 @@
       "semConvite": "Este endereço não traz nenhuma inscrição para confirmar. Se chegou aqui a partir do email, abra o link outra vez — de preferência copiando-o por inteiro.",
       "invalido": "Este link não está completo ou já não serve. Abra-o outra vez a partir do email, ou inscreva-se de novo no site.",
       "expirado": "Este link já passou das 48 horas. Inscreva-se outra vez no site e chega um novo.",
-      "erro": "Não foi possível confirmar agora. Tente daqui a um bocado — o link continua a valer."
+      "erro": "Não foi possível confirmar agora. Tente daqui a um bocado — o link continua a valer.",
+      "abrirCarta": "Abrir a carta secreta"
     },
     "email": {
       "assunto": "Confirme a sua inscrição na newsletter do Café Preguiça",

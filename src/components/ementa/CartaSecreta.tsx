@@ -26,9 +26,11 @@ import { formatarPreco } from "@/lib/preco";
  *
  * ## O chamativo
  *
- * Quando a secção entra no ecrã pela primeira vez, a preguiça balança e o
- * cadeado dá dois saltos (`data-a-vista`, CSS). Uma vez por visita. Com
- * "reduzir movimento" não mexe nada — o `globals.css` corta as animações todas.
+ * Por cima da moldura há uns ramos cruzados, e a preguiça anda num deles de um
+ * lado para o outro, sempre a balançar, e passa por trás dos que estão à frente
+ * (`Ramos`, em baixo). Quando a secção entra no ecrã pela primeira vez, o
+ * cadeado dá dois saltos (`data-a-vista`, CSS). Com "reduzir movimento" não mexe
+ * nada — o `globals.css` corta as animações todas, e a preguiça fica a meio.
  */
 
 const CHAVE = "preguica:carta-secreta";
@@ -210,16 +212,9 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       data-aberta={aberta || undefined}
       aria-labelledby="titulo-carta-secreta"
     >
+      <Ramos />
       <div className="em-secreta__moldura">
         <header className="em-secreta__cabeca">
-          <img
-            className="em-secreta__preguica"
-            src="/marca/preguica.webp"
-            alt=""
-            width={325}
-            height={286}
-            loading="lazy"
-          />
           <Cadeado aberto={aberta} />
           <p className="em-olho">{textos.olho}</p>
           <h2 id="titulo-carta-secreta" className="em-secreta__titulo">
@@ -366,6 +361,69 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
         )}
       </div>
     </section>
+  );
+}
+
+/**
+ * Os ramos por cima da carta, em três camadas, de trás para a frente:
+ *
+ * 1. **atrás** — paus mais apagados, que descem e somem por trás da moldura;
+ * 2. **o trilho** — o ramo onde a preguiça anda, e ela pendurada nele;
+ * 3. **à frente** — paus mais claros, que cruzam o trilho: é por trás destes que
+ *    ela passa.
+ *
+ * Os paus de trás e da frente são um só desenho largo (`slice`): no telemóvel
+ * vê-se o meio, no computador quase tudo, e as inclinações não se deformam com
+ * a largura. O trilho é à parte porque a preguiça anda nele em px, de ponta a
+ * ponta da secção — ver `.em-ramos__trilho` no CSS.
+ */
+function Ramos() {
+  return (
+    <div className="em-ramos" aria-hidden="true">
+      <svg className="em-ramos__paus em-ramos__paus--atras" viewBox="0 0 1000 160" preserveAspectRatio="xMidYMin slice">
+        <path d="M150 196 Q 300 118 452 6" />
+        <path d="M548 10 Q 752 74 905 196" />
+        <path d="M20 30 Q 196 64 340 150" />
+        <path d="M760 128 q 26 -4 44 -24" />
+        <path d="M262 126 q -10 -22 -32 -34" />
+        <Folha x={236} y={92} rodar={-150} />
+        <Folha x={804} y={104} rodar={-40} />
+        <Folha x={420} y={26} rodar={-70} />
+      </svg>
+
+      <div className="em-ramos__trilho">
+        <svg viewBox="0 0 1000 20" preserveAspectRatio="none">
+          <path d="M-20 10 C 150 5, 300 14, 480 10 S 800 6, 1020 11" />
+        </svg>
+        <span className="em-ramos__preguica">
+          <span>
+            <img src="/marca/preguica.webp" width={325} height={286} alt="" loading="lazy" />
+          </span>
+        </span>
+      </div>
+
+      <svg className="em-ramos__paus em-ramos__paus--frente" viewBox="0 0 1000 160" preserveAspectRatio="xMidYMin slice">
+        <path d="M296 8 Q 432 52 520 146" />
+        <path d="M704 150 Q 812 50 952 8" />
+        <path d="M600 4 Q 606 74 662 122" />
+        <path d="M440 91 q 18 -2 30 -18" />
+        <path d="M868 58 q -6 -20 -24 -30" />
+        <Folha x={470} y={73} rodar={-50} />
+        <Folha x={844} y={28} rodar={-150} />
+        <Folha x={630} y={62} rodar={20} />
+      </svg>
+    </div>
+  );
+}
+
+/** Uma folha em gota, na ponta de um raminho. */
+function Folha({ x, y, rodar }: { x: number; y: number; rodar: number }) {
+  return (
+    <path
+      className="em-ramos__folha"
+      d="M0 0 q 9 -7 18 0 q -9 7 -18 0 Z"
+      transform={`translate(${x} ${y}) rotate(${rodar})`}
+    />
   );
 }
 

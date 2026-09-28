@@ -977,13 +977,17 @@ html:has(.em-pagina) {
   max-width: calc(var(--em-coluna) + 2 * var(--em-margem));
   margin: clamp(4rem, 10vh, 7rem) auto 0;
   padding-inline: var(--em-margem);
-  /* Espaço para a preguiça pendurada por cima da moldura. */
-  padding-top: 3.5rem;
+  /* Espaço para os ramos e a preguiça por cima da moldura. */
+  --em-ramos-altura: 9rem;
+  position: relative;
+  padding-top: var(--em-ramos-altura);
   scroll-margin-top: 7rem;
 }
 
 .em-secreta__moldura {
   position: relative;
+  /* Por cima dos paus de trás, que descem e somem por trás dela. */
+  z-index: 1;
   padding: clamp(1.5rem, 5vw, 2.5rem);
   border: 1.5px dashed color-mix(in oklab, var(--color-ouro) 75%, transparent);
   border-radius: 1.25rem;
@@ -997,23 +1001,14 @@ html:has(.em-pagina) {
   text-align: center;
 }
 
-/* Pendurada da moldura, a meio — balança quando a secção aparece. */
-.em-secreta__preguica {
-  position: absolute;
-  left: 50%;
-  top: calc(-1 * clamp(1.5rem, 5vw, 2.5rem) - 4.1rem);
-  width: 5.2rem;
-  height: auto;
-  translate: -50% 0;
-  transform-origin: 50% 8%;
-  pointer-events: none;
-}
-
 .em-secreta__cadeado {
   display: block;
   width: 2.4rem;
   height: 2.8rem;
   margin: 0.5rem auto 0.9rem;
+  /* Aberta, a haste sobe e roda para fora do desenho — sem isto ficava cortada
+     em cima. */
+  overflow: visible;
 }
 
 .em-secreta__haste {
@@ -1184,37 +1179,159 @@ html:has(.em-pagina) {
   }
 }
 
-/* ------------------------------------------------------------ o chamativo
-   Uma vez, quando a secção aparece: a preguiça balança presa pelo topo, e o
-   cadeado dá dois saltos. O `globals.css` corta tudo com "reduzir movimento". */
+/* ------------------------------------------------------------ os ramos
+   Três camadas (ver `Ramos` em `CartaSecreta.tsx`): os paus de trás, o trilho
+   com a preguiça, e os paus da frente, que ela passa por trás.
 
-.em-secreta[data-a-vista] .em-secreta__preguica {
-  animation: em-secreta-balancar 2.2s cubic-bezier(0.37, 0, 0.3, 1) 200ms both;
+   **Porque o trilho é inclinado com `rotate` e não desenhado inclinado:** a
+   preguiça anda nele em px, de 0 a `100cqw` (a largura do trilho). Se a
+   inclinação estivesse no desenho, a subida mudava com a largura do ecrã e ela
+   descolava-se do ramo. Rodando o trilho inteiro, ramo e preguiça rodam juntos
+   e ela nunca o larga, seja qual for a largura. */
+
+.em-ramos {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--em-ramos-altura);
+  pointer-events: none;
 }
+
+.em-ramos__paus {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Os de trás descem para além do fundo da cena e a moldura tapa-os. */
+  overflow: visible;
+}
+
+.em-ramos__paus path,
+.em-ramos__trilho path {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.em-ramos__paus--atras path {
+  stroke: color-mix(in oklab, var(--color-ouro) 38%, transparent);
+  stroke-width: 2.5;
+}
+
+.em-ramos__paus--frente {
+  z-index: 3;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.45));
+}
+
+.em-ramos__paus--frente path {
+  stroke: var(--color-ouro);
+  stroke-width: 4;
+}
+
+/* Os raminhos (do quarto `path` em diante) mais finos do que os paus. */
+.em-ramos__paus path:nth-of-type(n + 4) {
+  stroke-width: 2;
+}
+
+.em-ramos__paus path.em-ramos__folha {
+  stroke: none;
+  fill: color-mix(in oklab, var(--color-ouro) 70%, transparent);
+}
+
+.em-ramos__paus--atras path.em-ramos__folha {
+  fill: color-mix(in oklab, var(--color-ouro) 35%, transparent);
+}
+
+.em-ramos__trilho {
+  /* A largura da preguiça, e onde ela se agarra: a mão está a 30% da imagem. */
+  --w: 5.4rem;
+  position: absolute;
+  z-index: 2;
+  inset: 2.2rem 0 auto;
+  height: 14px;
+  container-type: inline-size;
+  rotate: -2.5deg;
+}
+
+.em-ramos__trilho svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.em-ramos__trilho path {
+  stroke: var(--color-ouro);
+  stroke-width: 4;
+}
+
+/* Anda de ponta a ponta e volta, com uma pausa em cada ponta. Parada (com
+   "reduzir movimento"), fica a meio. */
+.em-ramos__preguica {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--w);
+  margin-top: -4px;
+  translate: calc(50cqw - var(--w) / 2) 0;
+  animation: em-ramos-andar 34s ease-in-out infinite;
+}
+
+/* Vira-se nas pontas, à volta da mão, para não largar o ramo. */
+.em-ramos__preguica > span {
+  display: block;
+  transform-origin: 30% 0;
+  animation: em-ramos-virar 34s step-end infinite;
+}
+
+/* E balança sempre, presa pela mão. */
+.em-ramos__preguica img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 30% 0;
+  animation: em-ramos-balancar 1.3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
+}
+
+@keyframes em-ramos-andar {
+  0%,
+  6% {
+    translate: 0 0;
+  }
+  50%,
+  56% {
+    translate: calc(100cqw - var(--w)) 0;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes em-ramos-virar {
+  0% {
+    scale: 1 1;
+  }
+  53% {
+    scale: -1 1;
+  }
+}
+
+@keyframes em-ramos-balancar {
+  from {
+    rotate: -8deg;
+  }
+  to {
+    rotate: 9deg;
+  }
+}
+
+/* ------------------------------------------------------------ o chamativo
+   Uma vez, quando a secção aparece: o cadeado dá dois saltos. O `globals.css`
+   corta tudo com "reduzir movimento". */
 
 .em-secreta[data-a-vista]:not([data-aberta]) .em-secreta__cadeado {
   animation: em-secreta-saltar 1.1s ease-out 700ms both;
-}
-
-@keyframes em-secreta-balancar {
-  0% {
-    rotate: 0deg;
-  }
-  18% {
-    rotate: 14deg;
-  }
-  40% {
-    rotate: -10deg;
-  }
-  60% {
-    rotate: 6deg;
-  }
-  80% {
-    rotate: -3deg;
-  }
-  100% {
-    rotate: 0deg;
-  }
 }
 
 @keyframes em-secreta-saltar {

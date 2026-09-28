@@ -1214,13 +1214,6 @@ html:has(.em-pagina) {
   mask-image: linear-gradient(transparent, #000 14%, #000 80%, transparent);
 }
 
-.em-ramos__fundo path {
-  fill: none;
-  stroke: color-mix(in oklab, var(--color-ouro) 30%, transparent);
-  stroke-width: 3;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
 
 .em-ramos__cima {
   position: absolute;
@@ -1237,45 +1230,29 @@ html:has(.em-pagina) {
   overflow: visible;
 }
 
-.em-ramos__paus path,
-.em-ramos__trilho path {
+/* Todos os galhos iguais, na cor e na grossura: ela anda em todos, e nenhum é
+   "de fundo". A profundidade vem das camadas (passa por trás dos da frente) e
+   da moldura translúcida, que esbate os que passam por trás dela. */
+.em-ramos path {
   fill: none;
+  stroke: var(--color-ouro);
+  stroke-width: 3.5;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
-.em-ramos__paus--atras path {
-  stroke: color-mix(in oklab, var(--color-ouro) 38%, transparent);
-  stroke-width: 2.5;
-}
-
 .em-ramos__paus--frente {
   z-index: 3;
-  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.45));
 }
 
-.em-ramos__paus--frente path {
-  stroke: var(--color-ouro);
-  stroke-width: 4;
-}
-
-/* Os raminhos, mais finos do que os paus. */
+/* Os raminhos, mais finos do que os galhos. */
 .em-ramos path.em-ramos__raminho {
   stroke-width: 2;
 }
 
-.em-ramos__paus path.em-ramos__folha {
+.em-ramos path.em-ramos__folha {
   stroke: none;
-  fill: color-mix(in oklab, var(--color-ouro) 70%, transparent);
-}
-
-.em-ramos__paus--atras path.em-ramos__folha {
-  fill: color-mix(in oklab, var(--color-ouro) 35%, transparent);
-}
-
-.em-ramos__paus path.em-ramos__trilho {
-  stroke: var(--color-ouro);
-  stroke-width: 4;
+  fill: var(--color-ouro);
 }
 
 /* A preguiça: o JS põe-na no sítio (`translate`), roda o pêndulo e vira-a — ver

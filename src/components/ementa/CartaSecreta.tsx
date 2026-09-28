@@ -26,9 +26,9 @@ import { formatarPreco } from "@/lib/preco";
  *
  * ## O chamativo
  *
- * Por cima da moldura há uns ramos cruzados, e a preguiça anda num deles de um
- * lado para o outro, sempre a balançar, e passa por trás dos que estão à frente
- * (`Ramos`, em baixo). Quando a secção entra no ecrã pela primeira vez, o
+ * Por trás e por cima da moldura há ramos cruzados, de ponta a ponta da página,
+ * e a preguiça anda num deles de um lado para o outro, sempre a balançar, e
+ * passa por trás dos que estão à frente (`Ramos`, em baixo). Quando a secção entra no ecrã pela primeira vez, o
  * cadeado dá dois saltos (`data-a-vista`, CSS). Com "reduzir movimento" não mexe
  * nada — o `globals.css` corta as animações todas, e a preguiça fica a meio.
  */
@@ -365,53 +365,82 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
 }
 
 /**
- * Os ramos por cima da carta, em três camadas, de trás para a frente:
+ * Os ramos: um fundo de paus cruzados por trás da carta secreta, de ponta a
+ * ponta da página, e em cima dela a preguiça a andar. De trás para a frente:
  *
- * 1. **atrás** — paus mais apagados, que descem e somem por trás da moldura;
- * 2. **o trilho** — o ramo onde a preguiça anda, e ela pendurada nele;
- * 3. **à frente** — paus mais claros, que cruzam o trilho: é por trás destes que
+ * 1. **o fundo** — paus compridos e apagados, do tamanho da secção inteira. A
+ *    moldura é translúcida e deixa-os ver por trás;
+ * 2. **atrás** — paus no topo, que descem e somem por trás da moldura;
+ * 3. **o trilho** — o ramo onde a preguiça anda, e ela pendurada nele;
+ * 4. **à frente** — paus mais fortes que cruzam o trilho: é por trás destes que
  *    ela passa.
  *
- * Os paus de trás e da frente são um só desenho largo (`slice`): no telemóvel
- * vê-se o meio, no computador quase tudo, e as inclinações não se deformam com
- * a largura. O trilho é à parte porque a preguiça anda nele em px, de ponta a
- * ponta da secção — ver `.em-ramos__trilho` no CSS.
+ * O fundo estica (`none`) porque a altura da secção muda (fechada, aberta) e
+ * paus soltos não têm um ângulo certo. Os de cima têm folhas, que esticadas
+ * ficavam amassadas: por isso são um desenho largo (2000) em `slice` — no
+ * telemóvel vê-se o meio, num ecrã largo quase tudo. O trilho é à parte porque
+ * a preguiça anda nele em px — ver `.em-ramos__trilho` no CSS.
  */
 function Ramos() {
   return (
     <div className="em-ramos" aria-hidden="true">
-      <svg className="em-ramos__paus em-ramos__paus--atras" viewBox="0 0 1000 160" preserveAspectRatio="xMidYMin slice">
-        <path d="M150 196 Q 300 118 452 6" />
-        <path d="M548 10 Q 752 74 905 196" />
-        <path d="M20 30 Q 196 64 340 150" />
-        <path d="M760 128 q 26 -4 44 -24" />
-        <path d="M262 126 q -10 -22 -32 -34" />
-        <Folha x={236} y={92} rodar={-150} />
-        <Folha x={804} y={104} rodar={-40} />
-        <Folha x={420} y={26} rodar={-70} />
+      <svg className="em-ramos__fundo" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <path d="M-20 140 Q 300 420 520 1020" />
+        <path d="M1020 80 Q 700 380 380 1020" />
+        <path d="M-20 620 Q 380 700 1020 980" />
+        <path d="M1020 520 Q 640 600 -20 900" />
+        <path d="M180 -20 Q 120 400 260 1020" />
+        <path d="M840 -20 Q 900 500 760 1020" />
+        <path className="em-ramos__raminho" d="M150 330 q 60 -20 90 -70" />
+        <path className="em-ramos__raminho" d="M870 330 q -60 10 -80 -50" />
+        <path className="em-ramos__raminho" d="M300 760 q 40 -40 50 -100" />
+        <path className="em-ramos__raminho" d="M700 790 q -30 -50 -20 -110" />
       </svg>
 
-      <div className="em-ramos__trilho">
-        <svg viewBox="0 0 1000 20" preserveAspectRatio="none">
-          <path d="M-20 10 C 150 5, 300 14, 480 10 S 800 6, 1020 11" />
+      <div className="em-ramos__cima">
+        <svg className="em-ramos__paus em-ramos__paus--atras" viewBox="0 0 2000 160" preserveAspectRatio="xMidYMin slice">
+          <path d="M650 196 Q 800 118 952 6" />
+          <path d="M1048 10 Q 1252 74 1405 196" />
+          <path d="M520 30 Q 696 64 840 150" />
+          <path d="M60 196 Q 200 90 380 10" />
+          <path d="M1620 8 Q 1780 60 1960 196" />
+          <path d="M240 20 Q 380 70 470 170" />
+          <path className="em-ramos__raminho" d="M1260 128 q 26 -4 44 -24" />
+          <path className="em-ramos__raminho" d="M762 126 q -10 -22 -32 -34" />
+          <path className="em-ramos__raminho" d="M1840 104 q 20 -8 30 -30" />
+          <Folha x={736} y={92} rodar={-150} />
+          <Folha x={1304} y={104} rodar={-40} />
+          <Folha x={920} y={26} rodar={-70} />
+          <Folha x={1870} y={74} rodar={-60} />
+          <Folha x={300} y={52} rodar={160} />
         </svg>
-        <span className="em-ramos__preguica">
-          <span>
-            <img src="/marca/preguica.webp" width={325} height={286} alt="" loading="lazy" />
-          </span>
-        </span>
-      </div>
 
-      <svg className="em-ramos__paus em-ramos__paus--frente" viewBox="0 0 1000 160" preserveAspectRatio="xMidYMin slice">
-        <path d="M296 8 Q 432 52 520 146" />
-        <path d="M704 150 Q 812 50 952 8" />
-        <path d="M600 4 Q 606 74 662 122" />
-        <path d="M440 91 q 18 -2 30 -18" />
-        <path d="M868 58 q -6 -20 -24 -30" />
-        <Folha x={470} y={73} rodar={-50} />
-        <Folha x={844} y={28} rodar={-150} />
-        <Folha x={630} y={62} rodar={20} />
-      </svg>
+        <div className="em-ramos__trilho">
+          <svg viewBox="0 0 1000 20" preserveAspectRatio="none">
+            <path d="M-20 10 C 150 5, 300 14, 480 10 S 800 6, 1020 11" />
+          </svg>
+          <span className="em-ramos__preguica">
+            <span>
+              <img src="/marca/preguica.webp" width={325} height={286} alt="" loading="lazy" />
+            </span>
+          </span>
+        </div>
+
+        <svg className="em-ramos__paus em-ramos__paus--frente" viewBox="0 0 2000 160" preserveAspectRatio="xMidYMin slice">
+          <path d="M796 8 Q 932 52 1020 146" />
+          <path d="M1204 150 Q 1312 50 1452 8" />
+          <path d="M1100 4 Q 1106 74 1162 122" />
+          <path d="M360 150 Q 450 60 600 6" />
+          <path d="M1560 6 Q 1640 90 1700 150" />
+          <path className="em-ramos__raminho" d="M940 91 q 18 -2 30 -18" />
+          <path className="em-ramos__raminho" d="M1368 58 q -6 -20 -24 -30" />
+          <path className="em-ramos__raminho" d="M470 88 q 20 4 34 -8" />
+          <Folha x={970} y={73} rodar={-50} />
+          <Folha x={1344} y={28} rodar={-150} />
+          <Folha x={1130} y={62} rodar={20} />
+          <Folha x={504} y={80} rodar={-20} />
+        </svg>
+      </div>
     </div>
   );
 }

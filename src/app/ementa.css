@@ -86,6 +86,10 @@ html:has(.em-pagina) {
   --em-coluna: 46rem;
   --em-margem: clamp(1rem, 5vw, 3rem);
   padding-bottom: clamp(3rem, 8vh, 6rem);
+  /* Os ramos da carta secreta vão de ponta a ponta do ecrã (100vw, que no
+     computador inclui a barra de rolagem): corta-se o que sobra sem criar
+     scroll de lado. `clip`, e não `hidden`, para o índice continuar colado. */
+  overflow-x: clip;
 }
 
 /* ------------------------------------------------------------ o topo */
@@ -980,7 +984,10 @@ html:has(.em-pagina) {
   /* Espaço para os ramos e a preguiça por cima da moldura. */
   --em-ramos-altura: 9rem;
   position: relative;
+  /* Os ramos ficam por trás da moldura sem escaparem para trás da página. */
+  isolation: isolate;
   padding-top: var(--em-ramos-altura);
+  padding-bottom: clamp(2.5rem, 7vh, 4.5rem);
   scroll-margin-top: 7rem;
 }
 
@@ -991,9 +998,11 @@ html:has(.em-pagina) {
   padding: clamp(1.5rem, 5vw, 2.5rem);
   border: 1.5px dashed color-mix(in oklab, var(--color-ouro) 75%, transparent);
   border-radius: 1.25rem;
+  /* Translúcida, para os ramos do fundo se verem por trás dela. */
   background:
     radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--color-ouro) 9%, transparent), transparent 60%),
-    var(--color-superficie);
+    color-mix(in oklab, var(--color-superficie) 84%, transparent);
+  backdrop-filter: blur(2px);
 }
 
 .em-secreta__cabeca {
@@ -1191,9 +1200,35 @@ html:has(.em-pagina) {
 
 .em-ramos {
   position: absolute;
+  inset: 0 auto;
+  /* De ponta a ponta do ecrã, e não só da coluna. */
+  left: calc(50% - 50vw);
+  width: 100vw;
+  pointer-events: none;
+}
+
+.em-ramos__fundo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Esbatido em cima e em baixo: sem isto os paus acabavam num corte a direito
+     nas pontas da secção. */
+  mask-image: linear-gradient(transparent, #000 14%, #000 80%, transparent);
+}
+
+.em-ramos__fundo path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--color-ouro) 30%, transparent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.em-ramos__cima {
+  position: absolute;
   inset: 0 0 auto;
   height: var(--em-ramos-altura);
-  pointer-events: none;
 }
 
 .em-ramos__paus {
@@ -1227,8 +1262,8 @@ html:has(.em-pagina) {
   stroke-width: 4;
 }
 
-/* Os raminhos (do quarto `path` em diante) mais finos do que os paus. */
-.em-ramos__paus path:nth-of-type(n + 4) {
+/* Os raminhos, mais finos do que os paus. */
+.em-ramos path.em-ramos__raminho {
   stroke-width: 2;
 }
 
@@ -1249,7 +1284,9 @@ html:has(.em-pagina) {
   inset: 2.2rem 0 auto;
   height: 14px;
   container-type: inline-size;
-  rotate: -2.5deg;
+  /* Pouco: o trilho tem agora a largura do ecrã, e num ecrã largo as pontas
+     subiam e desciam demais. */
+  rotate: -1.5deg;
 }
 
 .em-ramos__trilho svg {
@@ -1274,14 +1311,14 @@ html:has(.em-pagina) {
   width: var(--w);
   margin-top: -4px;
   translate: calc(50cqw - var(--w) / 2) 0;
-  animation: em-ramos-andar 34s ease-in-out infinite;
+  animation: em-ramos-andar 44s ease-in-out infinite;
 }
 
 /* Vira-se nas pontas, à volta da mão, para não largar o ramo. */
 .em-ramos__preguica > span {
   display: block;
   transform-origin: 30% 0;
-  animation: em-ramos-virar 34s step-end infinite;
+  animation: em-ramos-virar 44s step-end infinite;
 }
 
 /* E balança sempre, presa pela mão. */

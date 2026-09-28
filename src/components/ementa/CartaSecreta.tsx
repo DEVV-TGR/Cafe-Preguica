@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { formatarPreco } from "@/lib/preco";
+import { Ramos } from "./Ramos";
 
 /**
  * # A carta secreta
@@ -26,9 +27,10 @@ import { formatarPreco } from "@/lib/preco";
  *
  * ## O chamativo
  *
- * Quando a secção entra no ecrã pela primeira vez, a preguiça balança e o
- * cadeado dá dois saltos (`data-a-vista`, CSS). Uma vez por visita. Com
- * "reduzir movimento" não mexe nada — o `globals.css` corta as animações todas.
+ * Por trás e por cima da moldura há ramos cruzados, de ponta a ponta da página,
+ * e a preguiça anda por eles e deixa-se agarrar e arrastar (`Ramos.tsx`).
+ * Quando a secção entra no ecrã pela primeira vez, o cadeado dá dois saltos
+ * (`data-a-vista`, CSS). Com "reduzir movimento", nada disto mexe sozinho.
  */
 
 const CHAVE = "preguica:carta-secreta";
@@ -210,16 +212,9 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       data-aberta={aberta || undefined}
       aria-labelledby="titulo-carta-secreta"
     >
+      <Ramos />
       <div className="em-secreta__moldura">
         <header className="em-secreta__cabeca">
-          <img
-            className="em-secreta__preguica"
-            src="/marca/preguica.webp"
-            alt=""
-            width={325}
-            height={286}
-            loading="lazy"
-          />
           <Cadeado aberto={aberta} />
           <p className="em-olho">{textos.olho}</p>
           <h2 id="titulo-carta-secreta" className="em-secreta__titulo">

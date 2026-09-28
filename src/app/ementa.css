@@ -86,6 +86,10 @@ html:has(.em-pagina) {
   --em-coluna: 46rem;
   --em-margem: clamp(1rem, 5vw, 3rem);
   padding-bottom: clamp(3rem, 8vh, 6rem);
+  /* Os ramos da carta secreta vão de ponta a ponta do ecrã (100vw, que no
+     computador inclui a barra de rolagem): corta-se o que sobra sem criar
+     scroll de lado. `clip`, e não `hidden`, para o índice continuar colado. */
+  overflow-x: clip;
 }
 
 /* ------------------------------------------------------------ o topo */
@@ -977,19 +981,28 @@ html:has(.em-pagina) {
   max-width: calc(var(--em-coluna) + 2 * var(--em-margem));
   margin: clamp(4rem, 10vh, 7rem) auto 0;
   padding-inline: var(--em-margem);
-  /* Espaço para a preguiça pendurada por cima da moldura. */
-  padding-top: 3.5rem;
+  /* Espaço para os ramos e a preguiça por cima da moldura. */
+  --em-ramos-altura: 9rem;
+  position: relative;
+  /* Os ramos ficam por trás da moldura sem escaparem para trás da página. */
+  isolation: isolate;
+  padding-top: var(--em-ramos-altura);
+  padding-bottom: clamp(2.5rem, 7vh, 4.5rem);
   scroll-margin-top: 7rem;
 }
 
 .em-secreta__moldura {
   position: relative;
+  /* Por cima dos paus de trás, que descem e somem por trás dela. */
+  z-index: 1;
   padding: clamp(1.5rem, 5vw, 2.5rem);
   border: 1.5px dashed color-mix(in oklab, var(--color-ouro) 75%, transparent);
   border-radius: 1.25rem;
+  /* Translúcida, para os ramos do fundo se verem por trás dela. */
   background:
     radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--color-ouro) 9%, transparent), transparent 60%),
-    var(--color-superficie);
+    color-mix(in oklab, var(--color-superficie) 84%, transparent);
+  backdrop-filter: blur(2px);
 }
 
 .em-secreta__cabeca {
@@ -997,23 +1010,14 @@ html:has(.em-pagina) {
   text-align: center;
 }
 
-/* Pendurada da moldura, a meio — balança quando a secção aparece. */
-.em-secreta__preguica {
-  position: absolute;
-  left: 50%;
-  top: calc(-1 * clamp(1.5rem, 5vw, 2.5rem) - 4.1rem);
-  width: 5.2rem;
-  height: auto;
-  translate: -50% 0;
-  transform-origin: 50% 8%;
-  pointer-events: none;
-}
-
 .em-secreta__cadeado {
   display: block;
   width: 2.4rem;
   height: 2.8rem;
   margin: 0.5rem auto 0.9rem;
+  /* Aberta, a haste sobe e roda para fora do desenho — sem isto ficava cortada
+     em cima. */
+  overflow: visible;
 }
 
 .em-secreta__haste {
@@ -1184,37 +1188,160 @@ html:has(.em-pagina) {
   }
 }
 
-/* ------------------------------------------------------------ o chamativo
-   Uma vez, quando a secção aparece: a preguiça balança presa pelo topo, e o
-   cadeado dá dois saltos. O `globals.css` corta tudo com "reduzir movimento". */
+/* ------------------------------------------------------------ os ramos
+   Um fundo de paus por trás da carta, paus no topo e a preguiça a andar por
+   todos eles. A lógica está em `components/ementa/Ramos.tsx`; aqui, as camadas:
+   o fundo e os paus de trás (sem `z-index`), a moldura (1), a preguiça (2), os
+   paus da frente (3), e a preguiça outra vez, por cima de tudo, enquanto
+   alguém a arrasta (4). */
 
-.em-secreta[data-a-vista] .em-secreta__preguica {
-  animation: em-secreta-balancar 2.2s cubic-bezier(0.37, 0, 0.3, 1) 200ms both;
+.em-ramos {
+  position: absolute;
+  inset: 0 auto;
+  /* De ponta a ponta do ecrã, e não só da coluna. */
+  left: calc(50% - 50vw);
+  width: 100vw;
+  pointer-events: none;
 }
+
+.em-ramos__fundo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Esbatido em cima e em baixo: sem isto os paus acabavam num corte a direito
+     nas pontas da secção. */
+  mask-image: linear-gradient(transparent, #000 14%, #000 80%, transparent);
+}
+
+
+.em-ramos__cima {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--em-ramos-altura);
+}
+
+.em-ramos__paus {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Os de trás descem para além do fundo da cena e a moldura tapa-os. */
+  overflow: visible;
+}
+
+/* Todos os galhos da mesma cor: ela anda em todos, e nenhum é "de fundo". A
+   grossura varia de galho para galho (`data-grossura`), espalhada pelo fundo e
+   pelo topo. A profundidade vem das camadas (passa por trás dos da frente) e da
+   moldura translúcida, que esbate os que passam por trás dela. */
+.em-ramos path {
+  fill: none;
+  stroke: var(--color-ouro);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Finos, como começaram: o mais grosso não passa do que o ramo do meio tinha.
+   E quanto mais fino, mais leve — só os grossos têm o dourado cheio; os outros
+   parecem mais longe, e a zona não fica dourada de mais. */
+.em-ramos path[data-grossura="grosso"] {
+  stroke-width: 3.5;
+}
+
+.em-ramos path[data-grossura="medio"] {
+  stroke: color-mix(in oklab, var(--color-ouro) 65%, transparent);
+}
+
+.em-ramos path[data-grossura="fino"] {
+  stroke: color-mix(in oklab, var(--color-ouro) 38%, transparent);
+  stroke-width: 1.6;
+}
+
+.em-ramos__paus--frente {
+  z-index: 3;
+}
+
+/* Os raminhos, mais finos do que os galhos. */
+.em-ramos path.em-ramos__raminho {
+  stroke: color-mix(in oklab, var(--color-ouro) 45%, transparent);
+  stroke-width: 1.2;
+}
+
+.em-ramos path.em-ramos__folha {
+  stroke: none;
+  fill: color-mix(in oklab, var(--color-ouro) 55%, transparent);
+}
+
+/* A preguiça: o JS põe-na no sítio (`translate`), roda o pêndulo e vira-a — ver
+   `components/ementa/Ramos.tsx`. Antes de o JS acordar, fica a meio do ramo do
+   meio, mais ou menos, e escondida até ele a pôr no sítio certo. */
+.em-ramos__preguica {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 5.4rem;
+  translate: calc(50vw - 1.6rem) 2.4rem;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: auto;
+  cursor: grab;
+  /* Arrastar com o dedo é arrastá-la a ela, não a página. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.em-ramos__preguica[data-pronta] {
+  opacity: 1;
+}
+
+/* Agarrada, passa por cima de tudo, até dos paus da frente. */
+.em-ramos__preguica[data-agarrada] {
+  z-index: 4;
+  cursor: grabbing;
+}
+
+@media (max-width: 40rem) {
+  .em-ramos__preguica {
+    width: 4.6rem;
+  }
+}
+
+/* O pêndulo e a volta, os dois à volta da mão (a 30% da imagem, no topo). */
+.em-ramos__preguica > span,
+.em-ramos__preguica > span > span {
+  display: block;
+  transform-origin: 30% 0;
+}
+
+/* E balança sempre um pouco, presa pela mão. */
+.em-ramos__preguica img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 30% 0;
+  animation: em-ramos-balancar 1.3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
+  pointer-events: none;
+}
+
+@keyframes em-ramos-balancar {
+  from {
+    rotate: -8deg;
+  }
+  to {
+    rotate: 9deg;
+  }
+}
+
+/* ------------------------------------------------------------ o chamativo
+   Uma vez, quando a secção aparece: o cadeado dá dois saltos. O `globals.css`
+   corta tudo com "reduzir movimento". */
 
 .em-secreta[data-a-vista]:not([data-aberta]) .em-secreta__cadeado {
   animation: em-secreta-saltar 1.1s ease-out 700ms both;
-}
-
-@keyframes em-secreta-balancar {
-  0% {
-    rotate: 0deg;
-  }
-  18% {
-    rotate: 14deg;
-  }
-  40% {
-    rotate: -10deg;
-  }
-  60% {
-    rotate: 6deg;
-  }
-  80% {
-    rotate: -3deg;
-  }
-  100% {
-    rotate: 0deg;
-  }
 }
 
 @keyframes em-secreta-saltar {

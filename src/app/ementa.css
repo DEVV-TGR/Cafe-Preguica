@@ -1242,12 +1242,19 @@ html:has(.em-pagina) {
   vector-effect: non-scaling-stroke;
 }
 
-/* Finos, como começaram: o mais grosso não passa do que o ramo do meio tinha. */
+/* Finos, como começaram: o mais grosso não passa do que o ramo do meio tinha.
+   E quanto mais fino, mais leve — só os grossos têm o dourado cheio; os outros
+   parecem mais longe, e a zona não fica dourada de mais. */
 .em-ramos path[data-grossura="grosso"] {
   stroke-width: 3.5;
 }
 
+.em-ramos path[data-grossura="medio"] {
+  stroke: color-mix(in oklab, var(--color-ouro) 65%, transparent);
+}
+
 .em-ramos path[data-grossura="fino"] {
+  stroke: color-mix(in oklab, var(--color-ouro) 38%, transparent);
   stroke-width: 1.6;
 }
 
@@ -1257,12 +1264,13 @@ html:has(.em-pagina) {
 
 /* Os raminhos, mais finos do que os galhos. */
 .em-ramos path.em-ramos__raminho {
+  stroke: color-mix(in oklab, var(--color-ouro) 45%, transparent);
   stroke-width: 1.2;
 }
 
 .em-ramos path.em-ramos__folha {
   stroke: none;
-  fill: var(--color-ouro);
+  fill: color-mix(in oklab, var(--color-ouro) 55%, transparent);
 }
 
 /* A preguiça: o JS põe-na no sítio (`translate`), roda o pêndulo e vira-a — ver

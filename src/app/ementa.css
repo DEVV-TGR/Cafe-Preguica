@@ -1237,17 +1237,18 @@ html:has(.em-pagina) {
 .em-ramos path {
   fill: none;
   stroke: var(--color-ouro);
-  stroke-width: 3.5;
+  stroke-width: 2.5;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
+/* Finos, como começaram: o mais grosso não passa do que o ramo do meio tinha. */
 .em-ramos path[data-grossura="grosso"] {
-  stroke-width: 5.5;
+  stroke-width: 3.5;
 }
 
 .em-ramos path[data-grossura="fino"] {
-  stroke-width: 2;
+  stroke-width: 1.6;
 }
 
 .em-ramos__paus--frente {
@@ -1256,7 +1257,7 @@ html:has(.em-pagina) {
 
 /* Os raminhos, mais finos do que os galhos. */
 .em-ramos path.em-ramos__raminho {
-  stroke-width: 1.6;
+  stroke-width: 1.2;
 }
 
 .em-ramos path.em-ramos__folha {

@@ -263,6 +263,28 @@
       "facto": "If you would like to know what is in a dish or a drink, or which allergens it has, ask at the bar.",
       "topo": "Back to top",
       "inicio": "About the place"
+    },
+    "secreta": {
+      "indice": "Secret menu",
+      "sinal": "There's a menu that isn't here.",
+      "sinalLigacao": "See the secret menu ↓",
+      "maisCocktails": "More cocktails in the secret menu ↓",
+      "olho": "Only for those on the list",
+      "titulo": "The secret menu",
+      "texto": "The cocktails that aren't on paper. They open with the email you get the house news at.",
+      "etiqueta": "Your email",
+      "marcador": "you@email.com",
+      "abrir": "Open",
+      "aAbrir": "Opening…",
+      "naoInscritoTitulo": "This email isn't on the list yet.",
+      "naoInscritoTexto": "Sign {email} up for the house news. Confirm in the email we send you, and the menu opens by itself.",
+      "inscrever": "Sign up and open",
+      "aEnviar": "Sending…",
+      "enviadoTitulo": "One more step",
+      "enviadoTexto": "We've sent you an email. Click the link in it — you'll come back here with the menu open.",
+      "outroEmail": "Use another email",
+      "abertaTexto": "You're on the list, and this is for you. Ask at the bar by name.",
+      "fechar": "Not your phone? Close the menu"
     }
   },
   "contactos": {
@@ -288,7 +310,7 @@
     },
     "newsletter": {
       "titulo": "The newsletter",
-      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you news from the house, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation the address is not kept. Every email has a link to unsubscribe, which takes effect immediately. The list is kept until you unsubscribe, and you can ask us at any time what data we hold or to delete it, through the contact details of the house."
+      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you news from the house, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation the address is not kept. Every email has a link to unsubscribe, which takes effect immediately. The list is kept until you unsubscribe, and you can ask us at any time what data we hold or to delete it, through the contact details of the house. The same email opens the secret menu: when you type it there, we ask the list whether you are subscribed, and nothing else."
     },
     "terceiros": {
       "titulo": "Third-party services",
@@ -336,7 +358,7 @@
     },
     "memoria": {
       "titulo": "What about the newsletter invitation?",
-      "texto": "So as not to show it again to someone who has signed up, the site leaves a note in the browser's storage that just says \"signed up\". Closing the invitation leaves another note, which the browser deletes by itself when the tab is closed. Neither is a cookie: they identify no one, are not sent to the server and never leave your device. If you delete them, the worst that happens is the invitation showing up again."
+      "texto": "So as not to show it again to someone who has signed up, the site leaves a note in the browser's storage that just says \"signed up\". Closing the invitation leaves another note, which the browser deletes by itself when the tab is closed. These two identify no one and never leave your device. Opening the secret menu also keeps a key with your email, signed by us, which the site uses only to open it again without asking for your email; the \"Close the menu\" button deletes it. None of these is a cookie, and if you delete them the worst that happens is the invitation showing up again or the menu asking for your email."
     },
     "equipa": {
       "titulo": "The staff area",
@@ -409,7 +431,8 @@
       "semConvite": "This address carries no sign-up to confirm. If you came from the email, open the link again — ideally copying it in full.",
       "invalido": "This link is incomplete or no longer valid. Open it again from the email, or sign up again on the site.",
       "expirado": "This link is more than 48 hours old. Sign up again on the site and a new one will arrive.",
-      "erro": "We couldn't confirm right now. Please try again shortly — the link is still valid."
+      "erro": "We couldn't confirm right now. Please try again shortly — the link is still valid.",
+      "abrirCarta": "Open the secret menu"
     },
     "email": {
       "assunto": "Confirm your subscription to the Café Preguiça newsletter",

@@ -175,8 +175,20 @@ export async function enviarConfirmacao({
   Nesse caso volta-se a pô-lo como inscrito e no segmento: quem confirma pela
   segunda vez está a dizer, de novo e por escrito, que quer receber.
 */
+/*
+  Os emails que confirmaram nesta sessão do `npm run dev`, sem chave do Resend.
+
+  É o que deixa experimentar a carta secreta na própria máquina do princípio ao
+  fim: convite → link no terminal → confirmar → a carta abre. Só existe em
+  desenvolvimento (ver `paraOTerminal`), e apaga-se ao reiniciar o servidor.
+*/
+const confirmadosEmDesenvolvimento = new Set<string>();
+
 export async function criarContacto(email: string): Promise<void> {
-  if (paraOTerminal(`${email} confirmou — em produção entrava agora no segmento.`)) return;
+  if (paraOTerminal(`${email} confirmou — em produção entrava agora no segmento.`)) {
+    confirmadosEmDesenvolvimento.add(email);
+    return;
+  }
 
   const { segmento } = configuracao();
 
@@ -207,12 +219,12 @@ export async function criarContacto(email: string): Promise<void> {
   Quem ainda não confirmou não está no Resend (ver `lib/newsletter/convite.ts`),
   e por isso responde `false`: pode pedir o email de confirmação outra vez.
 
-  Em desenvolvimento, sem chave, não há a quem perguntar: responde `false`, e o
-  convite porta-se como com um email novo.
+  Em desenvolvimento, sem chave, não há a quem perguntar: responde pelos emails
+  que confirmaram nesta sessão (`confirmadosEmDesenvolvimento`).
 */
 export async function estaInscrito(email: string): Promise<boolean> {
   if (process.env.NODE_ENV !== "production" && !process.env.RESEND_NEWSLETTER_API_KEY) {
-    return false;
+    return confirmadosEmDesenvolvimento.has(email);
   }
 
   const { segmento } = configuracao();

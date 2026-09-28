@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { abrirConvite } from "@/lib/newsletter/convite";
 import { criarContacto, ErroDaNewsletter } from "@/lib/newsletter/resend";
+import { criarChaveDaCarta } from "@/lib/carta-secreta/chave";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { meioEscondido } from "@/lib/painel/utilizadores";
 
@@ -19,6 +20,12 @@ import { meioEscondido } from "@/lib/painel/utilizadores";
 
   Não precisa de limite próprio: sem um convite assinado por nós não se chega ao
   Resend, e repetir um convite válido volta a pôr a mesma pessoa no mesmo sítio.
+
+  ## Devolve também a chave da carta secreta
+
+  Quem acabou de confirmar está inscrito, e a carta secreta é o prémio: a página
+  de confirmação guarda a chave e mostra "Abrir a carta secreta", e a `/ementa`
+  abre-a sozinha. Ver `lib/carta-secreta/chave.ts`.
 */
 
 const Pedido = z.object({ convite: z.string().max(2000) });
@@ -34,6 +41,7 @@ export async function POST(pedido: Request) {
 
     await criarContacto(convite.email);
     console.info(`[newsletter] inscrição confirmada — ${meioEscondido(convite.email)}`);
+    return Response.json({ ok: true, chaveDaCarta: await criarChaveDaCarta(convite.email) });
   } catch (erro) {
     if (erro instanceof ErroDoRedis || erro instanceof ErroDaNewsletter) {
       if (erro instanceof ErroDoRedis) console.error(`[newsletter] ${erro.message}`);
@@ -41,6 +49,4 @@ export async function POST(pedido: Request) {
     }
     throw erro;
   }
-
-  return Response.json({ ok: true });
 }

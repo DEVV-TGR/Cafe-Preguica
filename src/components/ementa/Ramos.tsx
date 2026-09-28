@@ -19,6 +19,9 @@ import { useEffect, useRef } from "react";
  * 3. **a preguiça** (`z-index: 2`);
  * 4. **à frente** (`z-index: 3`) — os paus por trás dos quais ela passa.
  *
+ * Todos da mesma cor; a grossura (`data-grossura`) varia de galho para galho e
+ * está espalhada pelas três camadas, para não serem grossos só em cima.
+ *
  * ## Como ela sabe onde estão os ramos
  *
  * Cada `path` com `data-andavel` é lido do próprio desenho: pontos a cada
@@ -365,12 +368,12 @@ export function Ramos() {
   return (
     <div ref={cena} className="em-ramos">
       <svg className="em-ramos__fundo" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-        <path data-andavel d="M-20 140 Q 300 420 520 1020" />
-        <path data-andavel d="M1020 80 Q 700 380 380 1020" />
-        <path data-andavel d="M-20 620 Q 380 700 1020 980" />
-        <path data-andavel d="M1020 520 Q 640 600 -20 900" />
-        <path data-andavel d="M180 -20 Q 120 400 260 1020" />
-        <path data-andavel d="M840 -20 Q 900 500 760 1020" />
+        <path data-andavel data-grossura="grosso" d="M-20 140 Q 300 420 520 1020" />
+        <path data-andavel data-grossura="fino" d="M1020 80 Q 700 380 380 1020" />
+        <path data-andavel data-grossura="medio" d="M-20 620 Q 380 700 1020 980" />
+        <path data-andavel data-grossura="grosso" d="M1020 520 Q 640 600 -20 900" />
+        <path data-andavel data-grossura="fino" d="M180 -20 Q 120 400 260 1020" />
+        <path data-andavel data-grossura="medio" d="M840 -20 Q 900 500 760 1020" />
         <path className="em-ramos__raminho" d="M150 330 q 60 -20 90 -70" />
         <path className="em-ramos__raminho" d="M870 330 q -60 10 -80 -50" />
         <path className="em-ramos__raminho" d="M300 760 q 40 -40 50 -100" />
@@ -383,12 +386,12 @@ export function Ramos() {
           viewBox="0 0 2000 160"
           preserveAspectRatio="xMidYMin slice"
         >
-          <path data-andavel d="M650 196 Q 800 118 952 6" />
-          <path data-andavel d="M1048 10 Q 1252 74 1405 196" />
-          <path data-andavel d="M520 30 Q 696 64 840 150" />
-          <path data-andavel d="M60 196 Q 200 90 380 10" />
-          <path data-andavel d="M1620 8 Q 1780 60 1960 196" />
-          <path data-andavel d="M240 20 Q 380 70 470 170" />
+          <path data-andavel data-grossura="medio" d="M650 196 Q 800 118 952 6" />
+          <path data-andavel data-grossura="grosso" d="M1048 10 Q 1252 74 1405 196" />
+          <path data-andavel data-grossura="fino" d="M520 30 Q 696 64 840 150" />
+          <path data-andavel data-grossura="grosso" d="M60 196 Q 200 90 380 10" />
+          <path data-andavel data-grossura="fino" d="M1620 8 Q 1780 60 1960 196" />
+          <path data-andavel data-grossura="medio" d="M240 20 Q 380 70 470 170" />
           <path className="em-ramos__raminho" d="M1260 128 q 26 -4 44 -24" />
           <path className="em-ramos__raminho" d="M762 126 q -10 -22 -32 -34" />
           <path className="em-ramos__raminho" d="M1840 104 q 20 -8 30 -30" />
@@ -401,7 +404,7 @@ export function Ramos() {
               ela começa (ver `recolocar`). */}
           <path
             data-andavel
-            className="em-ramos__trilho"
+            data-grossura="grosso"
             d="M-40 60 C 400 52, 700 64, 1000 54 S 1600 46, 2040 40"
           />
         </svg>
@@ -411,11 +414,11 @@ export function Ramos() {
           viewBox="0 0 2000 160"
           preserveAspectRatio="xMidYMin slice"
         >
-          <path data-andavel d="M796 8 Q 932 52 1020 146" />
-          <path data-andavel d="M1204 150 Q 1312 50 1452 8" />
-          <path data-andavel d="M1100 4 Q 1106 74 1162 122" />
-          <path data-andavel d="M360 150 Q 450 60 600 6" />
-          <path data-andavel d="M1560 6 Q 1640 90 1700 150" />
+          <path data-andavel data-grossura="fino" d="M796 8 Q 932 52 1020 146" />
+          <path data-andavel data-grossura="grosso" d="M1204 150 Q 1312 50 1452 8" />
+          <path data-andavel data-grossura="medio" d="M1100 4 Q 1106 74 1162 122" />
+          <path data-andavel data-grossura="fino" d="M360 150 Q 450 60 600 6" />
+          <path data-andavel data-grossura="grosso" d="M1560 6 Q 1640 90 1700 150" />
           <path className="em-ramos__raminho" d="M940 91 q 18 -2 30 -18" />
           <path className="em-ramos__raminho" d="M1368 58 q -6 -20 -24 -30" />
           <path className="em-ramos__raminho" d="M470 88 q 20 4 34 -8" />

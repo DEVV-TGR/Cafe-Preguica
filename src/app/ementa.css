@@ -1230,9 +1230,10 @@ html:has(.em-pagina) {
   overflow: visible;
 }
 
-/* Todos os galhos iguais, na cor e na grossura: ela anda em todos, e nenhum é
-   "de fundo". A profundidade vem das camadas (passa por trás dos da frente) e
-   da moldura translúcida, que esbate os que passam por trás dela. */
+/* Todos os galhos da mesma cor: ela anda em todos, e nenhum é "de fundo". A
+   grossura varia de galho para galho (`data-grossura`), espalhada pelo fundo e
+   pelo topo. A profundidade vem das camadas (passa por trás dos da frente) e da
+   moldura translúcida, que esbate os que passam por trás dela. */
 .em-ramos path {
   fill: none;
   stroke: var(--color-ouro);
@@ -1241,13 +1242,21 @@ html:has(.em-pagina) {
   vector-effect: non-scaling-stroke;
 }
 
+.em-ramos path[data-grossura="grosso"] {
+  stroke-width: 5.5;
+}
+
+.em-ramos path[data-grossura="fino"] {
+  stroke-width: 2;
+}
+
 .em-ramos__paus--frente {
   z-index: 3;
 }
 
 /* Os raminhos, mais finos do que os galhos. */
 .em-ramos path.em-ramos__raminho {
-  stroke-width: 2;
+  stroke-width: 1.6;
 }
 
 .em-ramos path.em-ramos__folha {

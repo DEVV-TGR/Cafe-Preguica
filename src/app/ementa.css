@@ -1189,14 +1189,11 @@ html:has(.em-pagina) {
 }
 
 /* ------------------------------------------------------------ os ramos
-   Três camadas (ver `Ramos` em `CartaSecreta.tsx`): os paus de trás, o trilho
-   com a preguiça, e os paus da frente, que ela passa por trás.
-
-   **Porque o trilho é inclinado com `rotate` e não desenhado inclinado:** a
-   preguiça anda nele em px, de 0 a `100cqw` (a largura do trilho). Se a
-   inclinação estivesse no desenho, a subida mudava com a largura do ecrã e ela
-   descolava-se do ramo. Rodando o trilho inteiro, ramo e preguiça rodam juntos
-   e ela nunca o larga, seja qual for a largura. */
+   Um fundo de paus por trás da carta, paus no topo e a preguiça a andar por
+   todos eles. A lógica está em `components/ementa/Ramos.tsx`; aqui, as camadas:
+   o fundo e os paus de trás (sem `z-index`), a moldura (1), a preguiça (2), os
+   paus da frente (3), e a preguiça outra vez, por cima de tudo, enquanto
+   alguém a arrasta (4). */
 
 .em-ramos {
   position: absolute;
@@ -1276,52 +1273,55 @@ html:has(.em-pagina) {
   fill: color-mix(in oklab, var(--color-ouro) 35%, transparent);
 }
 
-.em-ramos__trilho {
-  /* A largura da preguiça, e onde ela se agarra: a mão está a 30% da imagem. */
-  --w: 5.4rem;
-  position: absolute;
-  z-index: 2;
-  inset: 2.2rem 0 auto;
-  height: 14px;
-  container-type: inline-size;
-  /* Pouco: o trilho tem agora a largura do ecrã, e num ecrã largo as pontas
-     subiam e desciam demais. */
-  rotate: -1.5deg;
-}
-
-.em-ramos__trilho svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.em-ramos__trilho path {
+.em-ramos__paus path.em-ramos__trilho {
   stroke: var(--color-ouro);
   stroke-width: 4;
 }
 
-/* Anda de ponta a ponta e volta, com uma pausa em cada ponta. Parada (com
-   "reduzir movimento"), fica a meio. */
+/* A preguiça: o JS põe-na no sítio (`translate`), roda o pêndulo e vira-a — ver
+   `components/ementa/Ramos.tsx`. Antes de o JS acordar, fica a meio do ramo do
+   meio, mais ou menos, e escondida até ele a pôr no sítio certo. */
 .em-ramos__preguica {
   position: absolute;
-  top: 50%;
+  z-index: 2;
+  top: 0;
   left: 0;
-  width: var(--w);
-  margin-top: -4px;
-  translate: calc(50cqw - var(--w) / 2) 0;
-  animation: em-ramos-andar 44s ease-in-out infinite;
+  width: 5.4rem;
+  translate: calc(50vw - 1.6rem) 2.4rem;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: auto;
+  cursor: grab;
+  /* Arrastar com o dedo é arrastá-la a ela, não a página. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* Vira-se nas pontas, à volta da mão, para não largar o ramo. */
-.em-ramos__preguica > span {
+.em-ramos__preguica[data-pronta] {
+  opacity: 1;
+}
+
+/* Agarrada, passa por cima de tudo, até dos paus da frente. */
+.em-ramos__preguica[data-agarrada] {
+  z-index: 4;
+  cursor: grabbing;
+}
+
+@media (max-width: 40rem) {
+  .em-ramos__preguica {
+    width: 4.6rem;
+  }
+}
+
+/* O pêndulo e a volta, os dois à volta da mão (a 30% da imagem, no topo). */
+.em-ramos__preguica > span,
+.em-ramos__preguica > span > span {
   display: block;
   transform-origin: 30% 0;
-  animation: em-ramos-virar 44s step-end infinite;
 }
 
-/* E balança sempre, presa pela mão. */
+/* E balança sempre um pouco, presa pela mão. */
 .em-ramos__preguica img {
   display: block;
   width: 100%;
@@ -1329,29 +1329,7 @@ html:has(.em-pagina) {
   transform-origin: 30% 0;
   animation: em-ramos-balancar 1.3s ease-in-out infinite alternate;
   filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
-}
-
-@keyframes em-ramos-andar {
-  0%,
-  6% {
-    translate: 0 0;
-  }
-  50%,
-  56% {
-    translate: calc(100cqw - var(--w)) 0;
-  }
-  100% {
-    translate: 0 0;
-  }
-}
-
-@keyframes em-ramos-virar {
-  0% {
-    scale: 1 1;
-  }
-  53% {
-    scale: -1 1;
-  }
+  pointer-events: none;
 }
 
 @keyframes em-ramos-balancar {

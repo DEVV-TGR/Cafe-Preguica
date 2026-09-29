@@ -1359,3 +1359,280 @@ html:has(.em-pagina) {
     transform: translateY(0);
   }
 }
+
+/* ------------------------------------------------------------ o visor
+   Ver `components/ementa/Visor.tsx`. A fotografia inteira, como uma ficha do
+   catálogo: o capítulo e a contagem em cima, a fotografia sem cortes ao meio,
+   "Na fotografia" e o preço por baixo — as letras das legendas da abertura.
+   Nada de moldura branca nem de sombras de galeria: é a mesma casa escura, só
+   com a fotografia maior. */
+
+/* O botão à volta de uma fotografia não pode mudar nada no desenho dela. */
+.em-ampliar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: zoom-in;
+}
+
+.em-ampliar img {
+  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Um aceno ao rato, para se perceber que abre. No telemóvel ninguém precisa
+   dele — uma fotografia pede um toque. */
+@media (hover: hover) and (pointer: fine) {
+  .em-ampliar:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* O título e a legenda estão por cima da fotografia: um toque neles também é
+   um toque nela. */
+.em-abertura__titulo,
+.em-abertura__legenda {
+  pointer-events: none;
+}
+
+.em-artigo__ampliar {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+}
+
+/* A página por trás não rola enquanto a fotografia está aberta. */
+html:has(.em-visor[open]) {
+  overflow: hidden;
+}
+
+.em-visor {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  /* Opaco: com transparência, o texto da carta aparecia por trás da
+     fotografia. O desfoque no `::backdrop` que o disfarçava não existe no
+     Safari. */
+  background: var(--color-canvas);
+  color: var(--color-tinta);
+  overflow: hidden;
+}
+
+.em-visor:focus {
+  outline: none;
+}
+
+.em-visor[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+/* Sem View Transitions (ou com elas desligadas) o visor aparece a desvanecer.
+   Com elas, quem faz a entrada é a fotografia, e isto fica por baixo. */
+.em-visor[open] {
+  transition: opacity 240ms ease;
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.em-visor__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem clamp(1rem, 4vw, 2.5rem);
+}
+
+.em-visor__onde {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  min-width: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.em-visor__onde span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.em-visor__contagem {
+  flex: 0 0 auto;
+  color: var(--color-tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+/* O mesmo comprimido do índice da carta: é um botão da casa, não um ✕ solto
+   num canto que o polegar não acerta. */
+.em-visor__fechar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.em-visor__fechar:hover,
+.em-visor__fechar:focus-visible {
+  border-color: var(--color-ouro);
+  color: var(--color-ouro);
+}
+
+.em-visor__faixa {
+  display: flex;
+  min-height: 0;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.em-visor__faixa::-webkit-scrollbar {
+  display: none;
+}
+
+.em-visor__foto {
+  flex: 0 0 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 clamp(1rem, 4vw, 2.5rem) max(1.25rem, env(safe-area-inset-bottom));
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* A moldura é a área que sobra; a imagem cabe lá dentro sem cortes e com a
+   caixa do tamanho da fotografia — é essa caixa que a transição desdobra. */
+.em-visor__moldura {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Absoluta com `inset: 0` e margens automáticas: é a forma de uma imagem caber
+   numa caixa cuja altura vem da grelha. Um `max-height: 100%` em fluxo lê a
+   altura do pai como indefinida, e a fotografia passava por cima da legenda. */
+.em-visor__moldura img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 3px;
+  cursor: default;
+}
+
+.em-visor__legenda {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.em-visor__legenda span:first-child {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.em-visor__legenda span + span {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.2vw, 1.5rem);
+  line-height: 1.2;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* As setas só com rato: no telemóvel desliza-se, e duas setas por cima da
+   fotografia eram só ruído. */
+.em-visor__setas {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .em-visor__setas {
+    display: contents;
+  }
+
+  .em-visor__setas button {
+    position: fixed;
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--color-linha);
+    border-radius: 999px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: border-color 200ms ease, color 200ms ease, opacity 200ms ease;
+  }
+
+  .em-visor__setas button:first-child {
+    left: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .em-visor__setas button:last-child {
+    right: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .em-visor__setas button:hover:not(:disabled) {
+    border-color: var(--color-ouro);
+    color: var(--color-ouro);
+  }
+
+  .em-visor__setas button:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+}
+
+/* A transição da fotografia: do recorte (faixa ou círculo) à fotografia
+   inteira. As duas imagens enchem a caixa que cresce e cortam o que sobra, e é
+   isso que faz o recorte "abrir" em vez de a fotografia esticar. */
+::view-transition-group(em-visor-foto) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  overflow: clip;
+}
+
+::view-transition-old(em-visor-foto),
+::view-transition-new(em-visor-foto) {
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 58%;
+}
+
+/* O resto da página só desvanece, e mais depressa que a fotografia. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+}

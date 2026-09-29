@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Ampliar, type FotoDoVisor } from "@/components/ementa/Visor";
 
 /**
  * # As fotografias que abrem cada capítulo da carta
@@ -26,15 +27,13 @@ import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } fro
  * - Tem um botão de pausa, que é o que as regras de acessibilidade pedem a
  *   qualquer coisa que mexe sozinha mais de cinco segundos.
  * - Com "reduzir movimento" no sistema não arranca.
+ *
+ * Um toque numa fotografia abre-a inteira no `<Visor>` — e também conta como
+ * a pessoa ter tomado conta. Ao fechar, o carrossel fica na fotografia que se
+ * estava a ver lá dentro.
  */
 
-export type FotoDoCarrossel = {
-  src: string;
-  srcSet: string;
-  alt: string;
-  /** "Negroni · 7,00 €" — já escrito no servidor, com os escondidos de fora. */
-  legenda: string[];
-};
+export type FotoDoCarrossel = FotoDoVisor;
 
 export type TextosDoCarrossel = {
   naFotografia: string;
@@ -44,6 +43,8 @@ export type TextosDoCarrossel = {
   rotuloDaFoto: string;
   pausar: string;
   continuar: string;
+  /** "Ampliar a fotografia" — o nome do botão, seguido do que se vê nela. */
+  ampliar: string;
 };
 
 const INTERVALO_MS = 5000;
@@ -137,17 +138,35 @@ export function Carrossel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [varias, pausado, tomouConta, emCima, noEcra, reduzir, atual, total]);
 
+  const grupo = { nome: textos.nome, fotos };
+
+  /* Ao fechar o visor na fotografia `i`, a faixa salta para ela (sem
+     deslizar — a transição já está a levar a fotografia para lá). */
+  const origem = (i: number) => {
+    const el = faixa.current;
+    if (!el) return null;
+    el.scrollTo({ left: i * el.clientWidth, behavior: "instant" });
+    return el.querySelectorAll("img")[i] ?? null;
+  };
+
   const imagem = (f: FotoDoCarrossel, i: number) => (
-    <img
-      src={f.src}
-      srcSet={f.srcSet}
-      sizes={SIZES}
-      width={1080}
-      height={1440}
-      alt={f.alt}
-      loading={prioridade && i === 0 ? undefined : "lazy"}
-      decoding="async"
-    />
+    <Ampliar
+      grupo={grupo}
+      indice={i}
+      origem={varias ? origem : undefined}
+      rotulo={`${textos.ampliar}: ${f.legenda[0] ?? textos.nome}`}
+    >
+      <img
+        src={f.src}
+        srcSet={f.srcSet}
+        sizes={SIZES}
+        width={1080}
+        height={1440}
+        alt={f.alt}
+        loading={prioridade && i === 0 ? undefined : "lazy"}
+        decoding="async"
+      />
+    </Ampliar>
   );
 
   if (!varias) {
@@ -186,6 +205,7 @@ export function Carrossel({
         /* O que só uma pessoa faz: tocar, arrastar, rodar a roda do rato. O
            `scrollTo` do relógio não dispara nenhum destes. */
         onTouchStart={tomar}
+        onClick={tomar}
         onWheel={(e) => Math.abs(e.deltaX) > Math.abs(e.deltaY) && tomar()}
         onKeyDown={tomar}
       >

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { SABORES, type Sabor } from "@/data/ementa";
+import { SABORES, type Sabor } from "@/data/sabores";
 
 /**
  * # O jogo dos sabores

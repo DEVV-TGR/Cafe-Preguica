@@ -182,6 +182,37 @@ export const METADADOS: Partial<
   shots: { dose: "3 cl" },
 };
 
+/**
+ * Os artigos que as páginas pedem **pelo `id`**: as legendas das fotografias da
+ * inicial (o carril, "Para partilhar") e as aberturas de capítulo da ementa.
+ *
+ * Existe para o painel: **estes não se podem apagar por lá.** Apagar um deles
+ * partia o `build` da ementa ou deixava um buraco na página inicial, e quem
+ * está ao balcão não tem como saber que aquele cocktail tem fotografia. Podem
+ * ser escondidos, que não parte nada.
+ *
+ * ⚠️ Quem pede um `id` novo numa página tem de o pôr aqui — e se não puser, o
+ * `build` rebenta a dizer qual (ver as verificações em `CartaoCarril`, em
+ * `Pratos` e na página da ementa).
+ */
+export const EM_DESTAQUE: readonly string[] = [
+  "negroni",
+  "blue-lagoon",
+  "cocktail-preguica",
+  "bocadinhos-de-pao-com-chourico",
+  "torrada-com-compota",
+  "caf-chocolate-quente-com-chantilly",
+];
+
+/**
+ * As categorias de onde podem sair os cocktails da **carta secreta** — a que só
+ * abre a quem recebe a newsletter (`components/ementa/CartaSecreta.tsx`).
+ *
+ * Só cocktails, por decisão do Tomás. O Cocktail Preguiça fica de fora: é o da
+ * casa, tem o jogo dos sabores e fotografia na inicial.
+ */
+export const CATEGORIAS_SECRETAS: readonly Categoria[] = ["cocktails-classicos", "cocktails-special"];
+
 /* Os tetos não vêm de nenhuma regra da casa — o nome mais comprido da carta tem
    42 letras e a descrição mais comprida 136. Existem por causa do painel: um
    texto colado de outro sítio sem querer passava a ser um artigo com um
@@ -285,28 +316,56 @@ const EsquemaArtigo = z
 
 export type Artigo = z.infer<typeof EsquemaArtigo>;
 
-export const EsquemaEmenta = z.object({
-  confirmada: z.boolean(),
-  artigos: z
-    .array(EsquemaArtigo)
-    .min(1)
-    /* Um `id` repetido dá duas âncoras iguais e um aviso de `key` duplicada no
-       React — e é o erro mais fácil de cometer a copiar uma linha para criar a
-       seguinte. */
-    .superRefine((artigos, ctx) => {
-      const vistos = new Set<string>();
-      artigos.forEach((artigo, indice) => {
-        if (vistos.has(artigo.id)) {
-          ctx.addIssue({
-            code: "custom",
-            path: [indice, "id"],
-            message: `o id "${artigo.id}" está repetido`,
-          });
-        }
-        vistos.add(artigo.id);
-      });
-    }),
-});
+export const EsquemaEmenta = z
+  .object({
+    confirmada: z.boolean(),
+    /**
+     * Os `id` dos cocktails da **carta secreta**, pela ordem em que lá
+     * aparecem. Um artigo desta lista **sai da carta normal** e só se mostra a
+     * quem está na newsletter; tirá-lo daqui devolve-o à carta, no sítio onde
+     * estava. É o painel que a escreve.
+     *
+     * Uma lista, e não um campo em cada artigo, porque a carta secreta tem a sua
+     * própria ordem — e porque assim sair dela não mexe no artigo.
+     */
+    secretos: z.array(z.string()),
+    artigos: z
+      .array(EsquemaArtigo)
+      .min(1)
+      /* Um `id` repetido dá duas âncoras iguais e um aviso de `key` duplicada no
+         React — e é o erro mais fácil de cometer a copiar uma linha para criar a
+         seguinte. */
+      .superRefine((artigos, ctx) => {
+        const vistos = new Set<string>();
+        artigos.forEach((artigo, indice) => {
+          if (vistos.has(artigo.id)) {
+            ctx.addIssue({
+              code: "custom",
+              path: [indice, "id"],
+              message: `o id "${artigo.id}" está repetido`,
+            });
+          }
+          vistos.add(artigo.id);
+        });
+      }),
+  })
+  /* A carta secreta só com cocktails que existem, uma vez cada, e nenhum com
+     fotografia no site: a legenda da fotografia contava o segredo na inicial. */
+  .superRefine(({ secretos, artigos: lista }, ctx) => {
+    const porId = new Map(lista.map((a) => [a.id, a]));
+    secretos.forEach((id, indice) => {
+      const artigo = porId.get(id);
+      const erro = (message: string) =>
+        ctx.addIssue({ code: "custom", path: ["secretos", indice], message });
+      if (secretos.indexOf(id) !== indice) erro(`"${id}" está duas vezes na carta secreta`);
+      else if (!artigo) erro(`"${id}" está na carta secreta mas não existe na carta`);
+      else if (!CATEGORIAS_SECRETAS.includes(artigo.categoria)) {
+        erro(`"${artigo.nome.pt}" não é um cocktail — a carta secreta só leva cocktails`);
+      } else if (EM_DESTAQUE.includes(id)) {
+        erro(`"${artigo.nome.pt}" tem fotografia no site e não pode ir para a carta secreta`);
+      }
+    });
+  });
 
 export type Ementa = z.infer<typeof EsquemaEmenta>;
 
@@ -317,9 +376,25 @@ if (!validado.success) {
 
 export const artigos: Artigo[] = validado.data.artigos;
 
+const idsSecretos: string[] = validado.data.secretos;
+const secretos = new Set(idsSecretos);
+
 /**
- * Os artigos agrupados por categoria, **pela ordem do enum**, sem os escondidos
- * e já sem as categorias vazias — uma secção sem artigos não aparece na página em vez de
+ * Os cocktails da carta secreta, pela ordem dela, sem os escondidos.
+ *
+ * ⚠️ **Só para o servidor.** Quem os mostra é a `/api/carta-secreta`,
+ * depois de o Resend confirmar o email; a `/ementa` só pergunta se há algum
+ * (para mostrar ou não a secção), e nunca os põe no HTML.
+ */
+export function artigosDaCartaSecreta(): Artigo[] {
+  return idsSecretos
+    .map((id) => artigos.find((a) => a.id === id))
+    .filter((a): a is Artigo => a !== undefined && !a.escondido);
+}
+
+/**
+ * Os artigos agrupados por categoria, **pela ordem do enum**, sem os escondidos,
+ * sem os da carta secreta, e já sem as categorias vazias — uma secção sem artigos não aparece na página em vez de
  * aparecer como um título solto.
  *
  * É uma função e não uma constante porque depende do JSON validado acima; se
@@ -329,7 +404,8 @@ export function porCategoria(): { categoria: Categoria; artigos: Artigo[] }[] {
   return CATEGORIAS.map((categoria) => ({
     categoria,
     artigos: artigos.filter(
-      (artigo) => artigo.categoria === categoria && !artigo.escondido,
+      (artigo) =>
+        artigo.categoria === categoria && !artigo.escondido && !secretos.has(artigo.id),
     ),
   })).filter((seccao) => seccao.artigos.length > 0);
 }
@@ -353,36 +429,8 @@ export function temAlergeniosDeclarados(): boolean {
  */
 export const COM_SABORES: readonly Categoria[] = ["cocktail-preguica", "unicornio"];
 
-/**
- * Os catorze sabores do Cocktail Preguiça e do Unicórnio.
- *
- * ⚠️ **Não são catorze artigos da ementa, e é de propósito.** A casa vende duas
- * bebidas — uma com álcool a 5,00 €, outra sem a 1,70 € — e o sabor escolhe-se
- * depois, ao balcão. Pô-los como artigos dava vinte e oito entradas na carta
- * para duas bebidas, e vinte e oito sítios para o preço ficar desactualizado.
- *
- * A ordem é a do menu impresso, que lê em duas colunas: a coluna da esquerda
- * primeiro, depois a da direita. O `surpresa` vem à cabeça porque é assim que
- * está no papel, e porque é o que a casa quer que se peça.
- */
-export const SABORES = [
-  "surpresa",
-  "limao",
-  "matcha",
-  "frutos-vermelhos",
-  "caramelo",
-  "menta",
-  "ananas",
-  "pessego",
-  "morango",
-  "fumado",
-  "laranja",
-  "coco",
-  "framboesa",
-  "maracuja",
-] as const;
-
-export type Sabor = (typeof SABORES)[number];
+/* Os sabores vivem em `sabores.ts`, sem o JSON da carta — ver lá porquê. */
+export { SABORES, type Sabor } from "./sabores";
 
 /**
  * Os capítulos com as suas secções já preenchidas, pela ordem de `CATEGORIAS`,
@@ -411,27 +459,6 @@ export function artigoPorId(id: string): Artigo | undefined {
   return artigos.find((artigo) => artigo.id === id);
 }
 
-/**
- * Os artigos que as páginas pedem **pelo `id`**: as legendas das fotografias da
- * inicial (o carril, "Para partilhar") e as aberturas de capítulo da ementa.
- *
- * Existe para o painel: **estes não se podem apagar por lá.** Apagar um deles
- * partia o `build` da ementa ou deixava um buraco na página inicial, e quem
- * está ao balcão não tem como saber que aquele cocktail tem fotografia. Podem
- * ser escondidos, que não parte nada.
- *
- * ⚠️ Quem pede um `id` novo numa página tem de o pôr aqui — e se não puser, o
- * `build` rebenta a dizer qual (ver as verificações em `CartaoCarril`, em
- * `Pratos` e na página da ementa).
- */
-export const EM_DESTAQUE: readonly string[] = [
-  "negroni",
-  "blue-lagoon",
-  "cocktail-preguica",
-  "bocadinhos-de-pao-com-chourico",
-  "torrada-com-compota",
-  "caf-chocolate-quente-com-chantilly",
-];
 
 for (const id of EM_DESTAQUE) {
   if (!artigoPorId(id)) {

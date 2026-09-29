@@ -61,13 +61,15 @@ export async function publicarEmenta(
        validar, porque os problemas de uma versão velha já não interessam. */
     if (atual.sha !== sha) return { tipo: "erro", mensagem: CONFLITO };
 
-    const artigosRecebidos =
-      typeof recebida === "object" && recebida !== null && "artigos" in recebida
-        ? (recebida as { artigos: unknown }).artigos
-        : undefined;
+    const objeto = typeof recebida === "object" && recebida !== null ? recebida : {};
+    const artigosRecebidos = "artigos" in objeto ? objeto.artigos : undefined;
+    const secretosRecebidos = "secretos" in objeto ? objeto.secretos : undefined;
 
+    /* O `confirmada` vem do repositório; os artigos e a carta secreta, do
+       ecrã — são as duas coisas que o painel edita. */
     const validada = EsquemaEmenta.safeParse({
       confirmada: atual.dados.confirmada,
+      secretos: secretosRecebidos,
       artigos: artigosRecebidos,
     });
     if (!validada.success) {
@@ -92,7 +94,7 @@ export async function publicarEmenta(
       };
     }
 
-    const contas = compararCartas(atual.dados.artigos, ementa.artigos);
+    const contas = compararCartas(atual.dados, ementa);
     if (totalDeAlteracoes(contas) === 0) {
       return { tipo: "erro", mensagem: "Não há nada para publicar." };
     }

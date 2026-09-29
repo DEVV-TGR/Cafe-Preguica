@@ -20,7 +20,8 @@ export type TextosDaConfirmacao = {
   invalido: string;
   expirado: string;
   erro: string;
-  abrirCarta: string;
+  /** `null` quando a carta secreta está vazia: aí não há o que abrir. */
+  abrirCarta: string | null;
 };
 
 type Estado = "pronto" | "a-confirmar" | "feito" | "invalido" | "expirado" | "erro";
@@ -80,11 +81,13 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
         </div>
         {/* O prémio de ter confirmado — é o caminho que a carta secreta da
             ementa promete. */}
-        <p className="lt-accao">
-          <Link href="/ementa#carta-secreta" className="pg-botao pg-botao--cheio">
-            {textos.abrirCarta}
-          </Link>
-        </p>
+        {textos.abrirCarta ? (
+          <p className="lt-accao">
+            <Link href="/ementa#carta-secreta" className="pg-botao pg-botao--cheio">
+              {textos.abrirCarta}
+            </Link>
+          </p>
+        ) : null}
       </section>
     );
   }

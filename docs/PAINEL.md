@@ -51,6 +51,19 @@ build a partir dos JSON; só as rotas `/painel/*` são dinâmicas.
 - **Os links das redes.** Só são aceites endereços `https` da própria rede
   (`instagram.com`, `facebook.com`, `tiktok.com`, `open.spotify.com`).
 
+### A carta secreta
+
+O último capítulo do editor da ementa. Tem só cocktails, que se escolhem de um
+menu com os clássicos e os special da carta, ou se criam novos. Um cocktail novo
+pede a secção da carta onde fica, porque é para lá que volta se um dia sair da
+carta secreta.
+
+**Cada cocktail está num sítio só.** O que vai para a carta secreta sai da sua
+secção (no painel e na `/ementa`); o que se tira de lá volta ao lugar onde
+estava. No ficheiro é a lista `secretos` do `ementa.json`, e a ordem dela é a
+ordem da carta secreta. Os artigos com fotografia (`EM_DESTAQUE`) não aparecem
+no menu, e o esquema recusa-os. Ver `docs/NEWSLETTER.md`.
+
 ### Esconder vs. apagar
 
 Um artigo escondido (`"escondido": true`) sai da `/ementa`, mas fica no ficheiro

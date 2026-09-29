@@ -205,6 +205,16 @@ lista, e sem limite servia para testar listas de endereços.
 **Em desenvolvimento**, sem chave do Resend, conta como inscrito quem confirmou
 nesta sessão do `npm run dev` (o link de confirmação sai no terminal).
 
-⚠️ **Provisório:** os artigos são exemplos, em `src/lib/carta-secreta/artigos.ts`.
-O passo seguinte é um campo `secreto` em cada artigo do `ementa.json`, editável
-no painel. Como qualquer campo novo, o painel tem de o saber escrever.
+**O que está na carta** escolhe-se no painel, na secção "Carta secreta" do editor
+da ementa (ver `docs/PAINEL.md`). No `ementa.json` é a lista `secretos`, com os
+`id` dos cocktails pela ordem da carta secreta. Só cocktails clássicos ou special,
+e nenhum com fotografia no site (a legenda contava o segredo na inicial).
+
+**Sem nenhum cocktail na lista, a carta secreta não aparece:** nem a secção, nem os
+três sinais, nem o botão "Abrir a carta secreta" na confirmação da newsletter.
+
+⚠️ **O `ementa.json` não pode ir para o browser.** O jogo dos sabores
+(`components/ementa/Sabores.tsx`) importava `SABORES` de `data/ementa.ts`, e isso
+metia a carta inteira, secretos incluídos, no JavaScript da `/ementa`. Os sabores
+vivem agora em `data/sabores.ts`. Um componente `"use client"` que importe um
+valor de `data/ementa.ts` volta a abrir esta porta; `import type` não faz mal.

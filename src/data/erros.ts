@@ -25,8 +25,13 @@ export function erroDeFicheiro(
        dentro de um objeto, o `zod` devolve `["artigos", 12, "descricao"]`.
        Procurar o primeiro segmento numérico serve as duas formas. */
     const posicao = problema.path.findIndex((s) => typeof s === "number");
-    const indice = posicao === -1 ? null : (problema.path[posicao] as number);
-    const resto = posicao === -1 ? [] : problema.path.slice(posicao + 1);
+    /* O índice só é de um registo se o número vier logo no início ou a seguir a
+       "artigos": o `["secretos", 2]` da ementa é a terceira linha da carta
+       secreta, não o terceiro artigo, e dar-lhe o nome do terceiro artigo era
+       apontar para o sítio errado. */
+    const deRegisto = posicao === 0 || problema.path[posicao - 1] === "artigos";
+    const indice = posicao === -1 || !deRegisto ? null : (problema.path[posicao] as number);
+    const resto = indice === null ? [] : problema.path.slice(posicao + 1);
 
     const registo =
       indice !== null && registos

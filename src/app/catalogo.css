@@ -873,6 +873,32 @@
   width: min(30rem, 78vw);
 }
 
+/**
+ * ⚠️ **O espelho é o que põe os pratos a andar ao contrário dos cocktails.**
+ *
+ * O motor empurra o carril sempre para a esquerda. Virando o invólucro ao
+ * espelho, esse empurrão vê-se para a direita, e o primeiro elemento do HTML
+ * (o título) fica encostado à direita do ecrã. Cada painel vira-se outra vez lá
+ * dentro para o texto e as fotografias não aparecerem trocados.
+ *
+ * Só com movimento: com `reduce` o carril passa a rolagem normal, e aí a ordem
+ * natural (título à esquerda) é a que se lê.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .pg-pratos-espelho,
+  .pg-pratos > * {
+    transform: scaleX(-1);
+  }
+}
+
+/* ⚠️ O espelho vira à volta do seu centro, portanto tem de ter a largura do
+   ecrã. Como item da grelha do palco, esticava até à largura do carril inteiro
+   (o `min-width: auto`) e o centro ia parar ao meio dos pratos: a secção abria
+   pelo fim e acabava num ecrã vazio. */
+.pg-pratos-espelho {
+  min-width: 0;
+}
+
 /* ========================================================== OS PREGUIÇOSOS == */
 
 /* O palco do `pin`: a nota ao centro e os lugares à volta, num ecrã só.

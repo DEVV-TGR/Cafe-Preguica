@@ -215,7 +215,9 @@ export async function sair(): Promise<void> {
   */
   (await cookies()).delete({ name: NOME_DO_COOKIE, path: "/painel" });
 
-  redirect("/painel/entrar");
+  /* Para o site, e não para o ecrã de entrada: quem sai quer ir embora, e o
+     ecrã de entrada era mais um passo para o fazer. */
+  redirect("/");
 }
 
 /*

@@ -91,6 +91,24 @@ async function abrir(cookie: string | undefined): Promise<string | null> {
   return id;
 }
 
+/*
+  Um desafio que nenhum código abre, para quem não está na lista.
+
+  O ecrã de entrada tem de se portar igual para um email com acesso e para um
+  sem: os dois seguem para o ecrã do código, com o endereço mascarado. Se um
+  fosse para lá e o outro ficasse onde estava, bastava escrever um endereço
+  para saber se ele entra no painel — e a caixa de correio de quem entra é a
+  chave mestra.
+
+  O que se guarda é o hash de 32 bytes aleatórios, e não de seis algarismos: o
+  que se escreve no ecrã é reduzido a algarismos antes de ser comparado, e por
+  isso nenhum palpite pode dar certo. O `confirmarCodigo` confere a lista na
+  mesma, por cima disto.
+*/
+export async function criarIsco(email: string): Promise<string> {
+  return criarDesafio(email, randomBytes(32).toString("base64url"));
+}
+
 /** Guarda um código novo e devolve o cookie que aponta para ele. */
 export async function criarDesafio(email: string, codigo: string): Promise<string> {
   const id = randomBytes(16).toString("base64url");

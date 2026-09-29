@@ -57,9 +57,11 @@ export type TextosDaCartaSecreta = {
   erroEmail: string;
   erroLimite: string;
   erroServico: string;
+  /** O "—" da carta, para um cocktail com o preço por confirmar. */
+  precoPorConfirmar: string;
 };
 
-type ArtigoSecreto = { id: string; nome: string; descricao: string; preco: number };
+type ArtigoSecreto = { id: string; nome: string; descricao: string; preco: number | null };
 
 type Estado =
   | { tipo: "fechada"; erro?: string }
@@ -236,9 +238,11 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                     <p className="em-artigo__linha">
                       <span className="em-artigo__nome">{a.nome}</span>
                       <span className="em-artigo__pontos" aria-hidden="true" />
-                      <span className="em-artigo__preco">{formatarPreco(a.preco, locale)}</span>
+                      <span className="em-artigo__preco">
+                        {a.preco === null ? textos.precoPorConfirmar : formatarPreco(a.preco, locale)}
+                      </span>
                     </p>
-                    <p className="em-artigo__descricao">{a.descricao}</p>
+                    {a.descricao ? <p className="em-artigo__descricao">{a.descricao}</p> : null}
                   </div>
                 </li>
               ))}

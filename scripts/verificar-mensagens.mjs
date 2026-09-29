@@ -20,7 +20,7 @@
  *
  * Por isso a segunda verificação não compara as línguas uma com a outra:
  * compara-as com os **dados**. Cada categoria que existe em `ementa.json` tem de
- * ter nome nas duas línguas, e cada sabor declarado em `ementa.ts` também.
+ * ter nome nas duas línguas, e cada sabor declarado em `sabores.ts` também.
  */
 import { readFileSync } from "node:fs";
 
@@ -68,13 +68,13 @@ const ementa = JSON.parse(readFileSync("src/data/ementa.json", "utf8"));
 const categorias = [...new Set(ementa.artigos.map((a) => a.categoria))];
 for (const c of categorias) exigir(`ementa.categorias.${c}`, `a categoria "${c}"`);
 
-/* Os sabores vivem em `ementa.ts` e não no JSON. Ler o TypeScript com uma
+/* Os sabores vivem em `sabores.ts` e não no JSON. Ler o TypeScript com uma
    expressão regular é feio, e é menos feio do que manter a lista em dois sítios:
    um `SABORES` novo sem tradução volta a pôr o nome da chave no ecrã. */
-const fonte = readFileSync("src/data/ementa.ts", "utf8");
+const fonte = readFileSync("src/data/sabores.ts", "utf8");
 const bloco = fonte.match(/export const SABORES = \[([\s\S]*?)\] as const;/);
 if (!bloco) {
-  problemas.push("não encontrei o SABORES em src/data/ementa.ts — o padrão mudou?");
+  problemas.push("não encontrei o SABORES em src/data/sabores.ts — o padrão mudou?");
 } else {
   const sabores = [...bloco[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
   for (const s of sabores) exigir(`ementa.sabores.${s}`, `o sabor "${s}"`);
@@ -83,7 +83,8 @@ if (!bloco) {
 /* As secções com duas colunas de preço (`METADADOS` em `ementa.ts`) precisam
    do nome de cada coluna — a página pede-o por categoria, e uma secção nova com
    colunas e sem nomes escrevia a chave por cima dos preços. */
-const metadados = fonte.match(/export const METADADOS[\s\S]*?\n\};/);
+const fonteDaEmenta = readFileSync("src/data/ementa.ts", "utf8");
+const metadados = fonteDaEmenta.match(/export const METADADOS[\s\S]*?\n\};/);
 if (!metadados) {
   problemas.push("não encontrei o METADADOS em src/data/ementa.ts — o padrão mudou?");
 } else {

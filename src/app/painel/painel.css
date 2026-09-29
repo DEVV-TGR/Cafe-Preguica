@@ -838,3 +838,9 @@ select.pn-entrada {
   font-family: inherit;
   font-size: 0.95rem;
 }
+
+/* A carta secreta: o menu para escolher um cocktail, afastado da lista (ou do
+   "ainda não há nenhum") que fica por cima dele. */
+.pn-seccao-carta > .pn-campo {
+  margin-top: 1.25rem;
+}

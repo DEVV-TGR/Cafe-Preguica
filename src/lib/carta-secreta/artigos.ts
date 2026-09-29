@@ -1,72 +1,30 @@
 import "server-only";
 import type { Locale } from "@/i18n/routing";
+import { artigosDaCartaSecreta } from "@/data/ementa";
 
 /*
-  O que está na carta secreta.
+  O que está na carta secreta: os cocktails que o painel pôs na lista
+  `secretos` do `ementa.json` (ver `EsquemaEmenta`), já na língua pedida.
 
-  ⚠️ **Provisório: são exemplos, para se experimentar a secção.** Nenhum destes
-  cocktails existe. O passo seguinte é um campo `secreto` em cada artigo do
-  `ementa.json`, que o painel liga e desliga — e, como qualquer campo novo num
-  esquema de `src/data/`, **o painel tem de o saber escrever** (ver AGENTS.md).
+  ## Porque é que isto só corre no servidor
 
-  ## Porque é que vive aqui e não no `ementa.json`
+  A `/ementa` é estática, e o que ela põe no HTML qualquer pessoa lê no código
+  da página. Estes artigos só saem do servidor pela `/api/carta-secreta`, depois
+  de o Resend confirmar que o email está inscrito. O `server-only` faz o build
+  rebentar se algum componente do browser importar este ficheiro.
 
-  Porque o que está no `ementa.json` vai para o HTML da `/ementa`, que é
-  estático, e aí qualquer pessoa o lia no código da página. Isto só sai do
-  servidor pela `/api/carta-secreta`, depois de o Resend confirmar que o email
-  está inscrito. (O repositório é público, por isso o segredo é "de bar" — ver
-  `docs/NEWSLETTER.md`.)
+  (O repositório é público, e o `ementa.json` também — o segredo é "de bar",
+  não de cofre. Ver `docs/NEWSLETTER.md`.)
 */
 
-type Texto = Record<Locale, string>;
-
-export type ArtigoSecreto = { id: string; nome: Texto; descricao: Texto; preco: number };
-
-const ARTIGOS: ArtigoSecreto[] = [
-  {
-    id: "exemplo-noite-lenta",
-    nome: { pt: "Noite Lenta (exemplo)", en: "Slow Night (example)" },
-    descricao: {
-      pt: "Rum escuro, café, baunilha e casca de laranja.",
-      en: "Dark rum, coffee, vanilla and orange peel.",
-    },
-    preco: 7.5,
-  },
-  {
-    id: "exemplo-ramo-verde",
-    nome: { pt: "Ramo Verde (exemplo)", en: "Green Branch (example)" },
-    descricao: {
-      pt: "Gin, matcha, lima e água tónica.",
-      en: "Gin, matcha, lime and tonic water.",
-    },
-    preco: 7.0,
-  },
-  {
-    id: "exemplo-preguica-dourada",
-    nome: { pt: "Preguiça Dourada (exemplo)", en: "Golden Sloth (example)" },
-    descricao: {
-      pt: "Whisky, mel, gengibre e limão, servido com fumo.",
-      en: "Whisky, honey, ginger and lemon, served with smoke.",
-    },
-    preco: 8.0,
-  },
-  {
-    id: "exemplo-sem-pressa",
-    nome: { pt: "Sem Pressa (exemplo)", en: "No Rush (example)" },
-    descricao: {
-      pt: "Sem álcool: maracujá, manjericão e ginger ale.",
-      en: "Alcohol free: passion fruit, basil and ginger ale.",
-    },
-    preco: 5.0,
-  },
-];
+export type ArtigoSecreto = { id: string; nome: string; descricao: string; preco: number | null };
 
 /** Os artigos já na língua pedida — é assim que seguem para o browser. */
-export function artigosSecretos(lingua: Locale) {
-  return ARTIGOS.map(({ id, nome, descricao, preco }) => ({
+export function artigosSecretos(lingua: Locale): ArtigoSecreto[] {
+  return artigosDaCartaSecreta().map(({ id, nome, descricao, preco }) => ({
     id,
     nome: nome[lingua],
-    descricao: descricao[lingua],
+    descricao: descricao?.[lingua] ?? "",
     preco,
   }));
 }

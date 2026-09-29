@@ -6,6 +6,7 @@ import { EditorDeEmenta, type GrupoDeCategorias } from "@/components/painel/Edit
 import {
   CAPITULOS,
   CATEGORIAS,
+  CATEGORIAS_SECRETAS,
   EM_DESTAQUE,
   METADADOS,
   SEM_DESCRICAO,
@@ -75,6 +76,7 @@ export default async function PaginaDaEmenta() {
           sha={ficheiro.sha}
           grupos={grupos()}
           emDestaque={EM_DESTAQUE}
+          categoriasSecretas={CATEGORIAS_SECRETAS}
         />
       </main>
     </>

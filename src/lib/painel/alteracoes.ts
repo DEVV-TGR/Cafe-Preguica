@@ -19,14 +19,24 @@ export type Alteracoes = {
   mostrados: number;
   /** Quantas categorias mudaram de ordem. */
   ordem: number;
+  /** Cocktails que foram para a carta secreta, e que voltaram dela à carta. */
+  paraSecreta: number;
+  daSecreta: number;
+  /** 1 se a carta secreta mudou de ordem (e nada entrou nem saiu). */
+  ordemSecreta: number;
 };
+
+/** O que se compara: os artigos e a lista da carta secreta. */
+export type Carta = { artigos: Artigo[]; secretos?: string[] };
 
 function mesmoTexto(a: Artigo["nome"] | null, b: Artigo["nome"] | null): boolean {
   if (a === null || b === null) return a === b;
   return a.pt === b.pt && a.en === b.en;
 }
 
-export function compararCartas(antes: Artigo[], depois: Artigo[]): Alteracoes {
+export function compararCartas(cartaAntes: Carta, cartaDepois: Carta): Alteracoes {
+  const antes = cartaAntes.artigos;
+  const depois = cartaDepois.artigos;
   const anteriores = new Map(antes.map((a) => [a.id, a]));
   const atuais = new Set(depois.map((a) => a.id));
   const contas: Alteracoes = {
@@ -37,6 +47,9 @@ export function compararCartas(antes: Artigo[], depois: Artigo[]): Alteracoes {
     escondidos: 0,
     mostrados: 0,
     ordem: 0,
+    paraSecreta: 0,
+    daSecreta: 0,
+    ordemSecreta: 0,
   };
 
   for (const artigo of depois) {
@@ -71,6 +84,24 @@ export function compararCartas(antes: Artigo[], depois: Artigo[]): Alteracoes {
     if (ordemAntes.join() !== ordemDepois.join()) contas.ordem += 1;
   }
 
+  /* A carta secreta: quem entrou, quem saiu (menos os novos e os apagados, que
+     já contam como tal), e a ordem — só entre os que estão nas duas versões. A lista
+     pode faltar num ficheiro de antes de a carta secreta existir. */
+  const secretosAntes = cartaAntes.secretos ?? [];
+  const secretosDepois = cartaDepois.secretos ?? [];
+  const eraSecreto = new Set(secretosAntes);
+  const eSecreto = new Set(secretosDepois);
+  /* Um cocktail criado já na carta secreta conta uma vez, como artigo novo:
+     para quem o criou foi um gesto só. */
+  contas.paraSecreta = secretosDepois.filter(
+    (id) => !eraSecreto.has(id) && anteriores.has(id),
+  ).length;
+  contas.daSecreta = secretosAntes.filter((id) => !eSecreto.has(id) && atuais.has(id)).length;
+  const ficaram = (lista: string[], outra: Set<string>) => lista.filter((id) => outra.has(id)).join();
+  if (ficaram(secretosAntes, eSecreto) !== ficaram(secretosDepois, eraSecreto)) {
+    contas.ordemSecreta = 1;
+  }
+
   return contas;
 }
 
@@ -89,5 +120,8 @@ export function resumirAlteracoes(contas: Alteracoes): string {
   if (contas.escondidos) partes.push(plural(contas.escondidos, "escondido", "escondidos"));
   if (contas.mostrados) partes.push(plural(contas.mostrados, "de volta", "de volta"));
   if (contas.ordem) partes.push(`ordem de ${plural(contas.ordem, "categoria", "categorias")}`);
+  if (contas.paraSecreta) partes.push(`${contas.paraSecreta} para a carta secreta`);
+  if (contas.daSecreta) partes.push(`${contas.daSecreta} de volta da carta secreta`);
+  if (contas.ordemSecreta) partes.push("ordem da carta secreta");
   return partes.join(", ") || "sem alterações";
 }

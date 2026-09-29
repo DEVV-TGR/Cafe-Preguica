@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { metadataDaPagina } from "@/lib/metadata";
 import { Pagina } from "@/components/Pagina";
+import { artigosDaCartaSecreta } from "@/data/ementa";
 import {
   ConfirmarInscricao,
   type TextosDaConfirmacao,
@@ -43,7 +44,9 @@ export default async function ConfirmarNewsletter({ params }: Props) {
     invalido: t("invalido"),
     expirado: t("expirado"),
     erro: t("erro"),
-    abrirCarta: t("abrirCarta"),
+    /* Sem cocktails na carta secreta, a `/ementa` não a mostra — e o botão
+       levava a uma secção que não existe. */
+    abrirCarta: artigosDaCartaSecreta().length > 0 ? t("abrirCarta") : null,
   };
 
   return (

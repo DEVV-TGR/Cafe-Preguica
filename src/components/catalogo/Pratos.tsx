@@ -15,6 +15,17 @@ import type { Locale } from "@/i18n/routing";
  * É o mesmo dispositivo do motor (`pan`) e uma leitura completamente diferente,
  * e é a largura dos itens que faz toda a diferença.
  *
+ * ## Anda ao contrário dos cocktails
+ *
+ * Lá o carril corre para a esquerda; aqui corre para a **direita**, com o
+ * título a abrir do lado direito e os pratos a entrar pela esquerda. É o
+ * contraste entre as duas secções, pedido pelo Tomás.
+ *
+ * ⚠️ O motor só sabe andar para a esquerda, e o motor não se toca. Por isso o
+ * `.pg-pratos-espelho` vira o carril ao espelho e cada painel volta a virar-se
+ * lá dentro (ver `catalogo.css`): o motor continua a empurrar para a esquerda
+ * e o que se vê anda para a direita. O HTML fica na ordem de leitura.
+ *
  * ## ⚠️ Só há duas fotografias de comida
  *
  * A tábua e a tosta com compota. **Não são duas por escolha** — são as duas que
@@ -35,12 +46,22 @@ const PRATOS = [
   /* A travessa com as tostinhas, a taça de batata e o tabasco **é** este artigo:
      está tudo na descrição da carta. Não foi escolhido pela fotografia ficar
      bem — foi identificado por aquilo que se vê. */
-  { id: "bocadinhos-de-pao-com-chourico", foto: "/casa/tabua-partilha", pequena: 640, grande: 1080 },
+  {
+    id: "bocadinhos-de-pao-com-chourico",
+    foto: "/casa/tabua-partilha",
+    pequena: 640,
+    grande: 1080,
+  },
   /* Esta não tem descrição na carta (as tostas são uma lista de nome e preço),
      por isso leva uma linha das mensagens que descreve **a fotografia** — o
      chocolate quente que está ao lado é outro artigo, e o rótulo di-lo em vez
      de fingir que vem junto. */
-  { id: "torrada-com-compota", foto: "/reels/DVHIQ4CDHyc", pequena: 420, grande: 720 },
+  {
+    id: "torrada-com-compota",
+    foto: "/reels/DVHIQ4CDHyc",
+    pequena: 420,
+    grande: 720,
+  },
 ] as const;
 
 for (const { id } of PRATOS) exigirEmDestaque(id, "Pratos.tsx");
@@ -73,61 +94,63 @@ export function Pratos({
       data-sc-drift="#140d08"
     >
       <div data-sc-stage>
-        <div className="pg-pratos" data-sc-pan="0.04">
-          <div className="pg-pratos__abertura">
-            <div className="pg-rotulo">
-              <h2 className="pg-rotulo__nome">{nome}</h2>
-              <p className="pg-rotulo__facto">{facto}</p>
-              <p className="pg-rotulo__dado">{dado}</p>
+        <div className="pg-pratos-espelho">
+          <div className="pg-pratos" data-sc-pan="0.04">
+            <div className="pg-pratos__abertura">
+              <div className="pg-rotulo">
+                <h2 className="pg-rotulo__nome">{nome}</h2>
+                <p className="pg-rotulo__facto">{facto}</p>
+                <p className="pg-rotulo__dado">{dado}</p>
+              </div>
             </div>
-          </div>
 
-          {PRATOS.map(({ id, foto, pequena, grande }) => {
-            const artigo = artigos.find((a) => a.id === id);
-            /* Um `id` que deixou de existir na carta aparece como um painel em
+            {PRATOS.map(({ id, foto, pequena, grande }) => {
+              const artigo = artigos.find((a) => a.id === id);
+              /* Um `id` que deixou de existir na carta aparece como um painel em
                falta, não rebenta a página. */
-            if (!artigo) return null;
+              if (!artigo) return null;
 
-            return (
-              <article key={id} className="pg-prato">
-                <figure>
-                  <img
-                    src={`${foto}.webp`}
-                    srcSet={`${foto}-${pequena}.webp ${pequena}w, ${foto}.webp ${grande}w`}
-                    sizes="(min-width: 52rem) 45vw, 88vw"
-                    width={1080}
-                    height={1440}
-                    alt={alts[id] ?? ""}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </figure>
-                <div className="pg-prato__texto">
-                  <h3 className="pg-rotulo__nome">{artigo.nome[locale]}</h3>
-                  <p className="pg-rotulo__facto">
-                    {artigo.descricao?.[locale] ?? alts[`${id}-facto`]}
-                  </p>
-                  {artigo.preco !== null && (
-                    <p className="pg-prato__preco">
-                      {formatarPreco(artigo.preco, locale)}
+              return (
+                <article key={id} className="pg-prato">
+                  <figure>
+                    <img
+                      src={`${foto}.webp`}
+                      srcSet={`${foto}-${pequena}.webp ${pequena}w, ${foto}.webp ${grande}w`}
+                      sizes="(min-width: 52rem) 45vw, 88vw"
+                      width={1080}
+                      height={1440}
+                      alt={alts[id] ?? ""}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                  <div className="pg-prato__texto">
+                    <h3 className="pg-rotulo__nome">{artigo.nome[locale]}</h3>
+                    <p className="pg-rotulo__facto">
+                      {artigo.descricao?.[locale] ?? alts[`${id}-facto`]}
                     </p>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+                    {artigo.preco !== null && (
+                      <p className="pg-prato__preco">
+                        {formatarPreco(artigo.preco, locale)}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
 
-          {/* O fecho do carril: a continuação natural quando os pratos acabam. */}
-          <div className="pg-pratos__fecho">
-            <div className="pg-rotulo">
-              <h3 className="pg-rotulo__nome">{verMais}</h3>
-              <p className="pg-rotulo__facto">{verMaisFacto}</p>
+            {/* O fecho do carril: a continuação natural quando os pratos acabam. */}
+            <div className="pg-pratos__fecho">
+              <div className="pg-rotulo">
+                <h3 className="pg-rotulo__nome">{verMais}</h3>
+                <p className="pg-rotulo__facto">{verMaisFacto}</p>
+              </div>
+              <p className="mt-5">
+                <Link href="/ementa" className="pg-botao">
+                  {verMaisAcao}
+                </Link>
+              </p>
             </div>
-            <p className="mt-5">
-              <Link href="/ementa" className="pg-botao">
-                {verMaisAcao}
-              </Link>
-            </p>
           </div>
         </div>
       </div>

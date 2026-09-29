@@ -1,6 +1,9 @@
 {
   "confirmada": true,
-  "secretos": [],
+  "secretos": [
+    "mojito-melancia",
+    "preguica-mule"
+  ],
   "artigos": [
     {
       "id": "queijo-fiambre",
@@ -569,7 +572,7 @@
         "pt": "Sem álcool. Escolhe-se o sabor.",
         "en": "Alcohol free. You pick the flavour."
       },
-      "preco": 2.0,
+      "preco": 2,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -755,7 +758,7 @@
         "en": "Bulldog"
       },
       "descricao": null,
-      "preco": 8.0,
+      "preco": 8,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -768,7 +771,7 @@
         "en": "Hendrick's"
       },
       "descricao": null,
-      "preco": 9.0,
+      "preco": 9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -781,7 +784,7 @@
         "en": "Beefeater"
       },
       "descricao": null,
-      "preco": 7.0,
+      "preco": 7,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -794,7 +797,7 @@
         "en": "Nordés"
       },
       "descricao": null,
-      "preco": 9.0,
+      "preco": 9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -833,7 +836,7 @@
         "en": "Tanqueray"
       },
       "descricao": null,
-      "preco": 7.0,
+      "preco": 7,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -885,7 +888,7 @@
         "en": "Adamus"
       },
       "descricao": null,
-      "preco": 9.0,
+      "preco": 9,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1067,7 +1070,7 @@
         "en": "Amaretto"
       },
       "descricao": null,
-      "preco": 3.0,
+      "preco": 3,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false
@@ -1379,7 +1382,7 @@
         "en": "Espresso or decaf"
       },
       "descricao": null,
-      "preco": 1.0,
+      "preco": 1,
       "precoSecundario": null,
       "alergenios": [],
       "escondido": false

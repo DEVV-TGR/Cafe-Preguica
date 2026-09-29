@@ -11,19 +11,21 @@ import {
   type ReactNode,
 } from "react";
 import { flushSync } from "react-dom";
+import "../app/visor.css";
 
 /**
  * # A fotografia inteira
  *
- * Na carta as fotografias aparecem cortadas: em faixa na abertura de cada
- * capítulo, num círculo ao lado do artigo. São todas retratos, e o copo inteiro
+ * Comum à ementa e à página inicial. Nas duas as fotografias aparecem
+ * cortadas: em faixa na abertura de cada capítulo da carta, num círculo ao
+ * lado do artigo, nos cartões do carril, nos painéis dos pratos. São todas retratos, e o copo inteiro
  * só se vê aqui. Um toque abre-a como uma ficha do catálogo — a fotografia sem
  * cortes, o capítulo e a contagem em cima, "Na fotografia" e o preço por baixo,
  * com as mesmas letras das legendas da página.
  *
  * ## Um visor para a página toda
  *
- * O `<Visor>` embrulha a carta e tem o único `<dialog>`; cada fotografia só leva
+ * O `<Visor>` embrulha a página e tem o único `<dialog>`; cada fotografia só leva
  * um `<Ampliar>` à volta. Assim a página continua a ser do servidor, e duas
  * fotografias abertas ao mesmo tempo não são uma possibilidade.
  *
@@ -49,7 +51,7 @@ import { flushSync } from "react-dom";
  * nela e as patas a cair por cima. Chega depois da fotografia — desce devagar, como
  * é dela — e fica a respirar, com uns "z" a subir. Cada fotografia tem a sua, e
  * a da fotografia que se está a ver volta a chegar quando se desliza para ela:
- * é o `data-atual` da `<figure>` que dispara as animações (ver `ementa.css`).
+ * é o `data-atual` da `<figure>` que dispara as animações (ver `visor.css`).
  * O desenho é um recorte da preguiça da casa (`public/marca/preguica-deitada.webp`).
  *
  * ## A moldura e a cor
@@ -93,7 +95,7 @@ type Abrir = (grupo: GrupoDoVisor, indice: number, origem: Origem) => void;
 
 const ContextoDoVisor = createContext<Abrir | null>(null);
 
-const NOME_DA_TRANSICAO = "em-visor-foto";
+const NOME_DA_TRANSICAO = "visor-foto";
 
 /* Com o separador escondido o browser aborta a transição logo à cabeça — e
    rejeita o `ready`. Não vale a pena pedi-la. */
@@ -114,7 +116,7 @@ function transicao(mudar: () => void, depois: () => void) {
 
 /** A imagem `i` do visor aberto. */
 function fotoNoVisor(faixa: HTMLDivElement | null, i: number) {
-  return faixa?.querySelectorAll<HTMLElement>(".em-visor__imagem")[i] ?? null;
+  return faixa?.querySelectorAll<HTMLElement>(".visor__imagem")[i] ?? null;
 }
 
 /**
@@ -124,7 +126,7 @@ function fotoNoVisor(faixa: HTMLDivElement | null, i: number) {
  * ecrã. Até haver medida, a preguiça não aparece.
  */
 function medirMoldura(moldura: HTMLDivElement | null) {
-  const foto = moldura?.querySelector<HTMLImageElement>(".em-visor__imagem");
+  const foto = moldura?.querySelector<HTMLImageElement>(".visor__imagem");
   if (!moldura || !foto) return;
   const medir = () => {
     if (!foto.offsetWidth) return;
@@ -257,7 +259,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
 
       <dialog
         ref={dialogo}
-        className="em-visor"
+        className="visor"
         aria-label={grupo?.nome}
         tabIndex={-1}
         /* O Esc do browser fecharia o diálogo sem passar pelo histórico, e a
@@ -291,18 +293,18 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
       >
         {grupo && (
           <>
-            <div className="em-visor__topo">
-              <p className="em-visor__onde">
+            <div className="visor__topo">
+              <p className="visor__onde">
                 <span>{grupo.nome}</span>
                 {total > 1 && (
-                  <span className="em-visor__contagem" aria-hidden="true">
+                  <span className="visor__contagem" aria-hidden="true">
                     {contagem(atual + 1)} / {contagem(total)}
                   </span>
                 )}
               </p>
               <button
                 type="button"
-                className="em-visor__fechar"
+                className="visor__fechar"
                 onClick={pedirFecho}
               >
                 {textos.fechar}
@@ -312,7 +314,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
 
             <div
               ref={faixa}
-              className="em-visor__faixa"
+              className="visor__faixa"
               onScroll={(e) => {
                 const el = e.currentTarget;
                 setAtual(Math.min(total - 1, Math.round(el.scrollLeft / el.clientWidth)));
@@ -321,7 +323,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
               {grupo.fotos.map((f, i) => (
                 <figure
                   key={f.src}
-                  className="em-visor__foto"
+                  className="visor__foto"
                   data-atual={i === atual || undefined}
                   /* A versão pequena chega para um fundo desfocado, e é a que
                      a página já descarregou para o recorte. */
@@ -334,9 +336,9 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                     .replace("{n}", String(i + 1))
                     .replace("{total}", String(total))}
                 >
-                  <div className="em-visor__moldura" ref={medirMoldura}>
+                  <div className="visor__moldura" ref={medirMoldura}>
                     <img
-                      className="em-visor__imagem"
+                      className="visor__imagem"
                       src={f.src}
                       srcSet={f.srcSet}
                       sizes="(min-width: 48rem) 60vh, 100vw"
@@ -346,7 +348,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                       loading={i === atual ? undefined : "lazy"}
                       decoding="async"
                     />
-                    <span className="em-visor__preguica" aria-hidden="true">
+                    <span className="visor__preguica" aria-hidden="true">
                       <img
                         src="/marca/preguica-deitada.webp"
                         width={720}
@@ -354,7 +356,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                         alt=""
                         decoding="async"
                       />
-                      <span className="em-visor__zzz">
+                      <span className="visor__zzz">
                         <span>z</span>
                         <span>z</span>
                         <span>z</span>
@@ -362,7 +364,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                     </span>
                   </div>
                   {f.legenda.length > 0 && (
-                    <figcaption className="em-visor__legenda">
+                    <figcaption className="visor__legenda">
                       <span>{textos.naFotografia}</span>
                       {f.legenda.map((linha) => (
                         <span key={linha}>{linha}</span>
@@ -374,7 +376,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
             </div>
 
             {total > 1 && (
-              <div className="em-visor__setas">
+              <div className="visor__setas">
                 <button
                   type="button"
                   aria-label={textos.anterior}
@@ -429,7 +431,7 @@ export function Ampliar({
     <button
       ref={botao}
       type="button"
-      className={className ? `em-ampliar ${className}` : "em-ampliar"}
+      className={className ? `visor-ampliar ${className}` : "visor-ampliar"}
       aria-label={rotulo}
       aria-haspopup="dialog"
       onClick={() =>

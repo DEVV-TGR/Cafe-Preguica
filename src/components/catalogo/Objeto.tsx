@@ -1,6 +1,7 @@
 import { artigos, exigirEmDestaque, type Artigo } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import type { Locale } from "@/i18n/routing";
+import { Ampliar, type GrupoDoVisor } from "@/components/Visor";
 
 /**
  * O rótulo. **É o mesmo esquema em todos os objectos da colecção, sem
@@ -42,6 +43,9 @@ export function Rotulo({
  * `facto` permite substituir a descrição da carta quando o cartão diz outra
  * coisa: os três cocktails de cor não se identificam ao certo na fotografia, e
  * o rótulo diz só o que se sabe em vez de adivinhar o sabor.
+ *
+ * Com `visor`, um toque na fotografia abre-a inteira (`components/Visor.tsx`),
+ * e dali desliza-se pelas outras do carril.
  */
 export function CartaoCarril({
   id,
@@ -50,6 +54,7 @@ export function CartaoCarril({
   locale,
   nome,
   facto,
+  visor,
 }: {
   /**
    * O `id` do artigo em `ementa.json`. Omite-se quando o cartão **não é um
@@ -63,6 +68,9 @@ export function CartaoCarril({
   locale: Locale;
   nome?: string;
   facto?: string;
+  /** O grupo do carril inteiro, a posição deste cartão nele, e o "Ampliar a
+      fotografia" para o nome do botão. */
+  visor?: { grupo: GrupoDoVisor; indice: number; ampliar: string };
 }) {
   /* Rebenta o `build` se o `id` não estiver protegido contra o painel. */
   if (id) exigirEmDestaque(id, "CartaoCarril");
@@ -78,19 +86,29 @@ export function CartaoCarril({
   const titulo = nome ?? artigo?.nome[locale];
   if (!titulo) return null;
 
+  const imagem = (
+    <img
+      src={`/casa/${foto}.webp`}
+      srcSet={`/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`}
+      sizes="(min-width: 48rem) 23rem, 62vw"
+      width={1080}
+      height={1440}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+
   return (
     <article className="pg-carril__item">
       <figure>
-        <img
-          src={`/casa/${foto}.webp`}
-          srcSet={`/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`}
-          sizes="(min-width: 48rem) 23rem, 62vw"
-          width={1080}
-          height={1440}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-        />
+        {visor ? (
+          <Ampliar grupo={visor.grupo} indice={visor.indice} rotulo={`${visor.ampliar}: ${titulo}`}>
+            {imagem}
+          </Ampliar>
+        ) : (
+          imagem
+        )}
       </figure>
       <Rotulo
         nome={titulo}

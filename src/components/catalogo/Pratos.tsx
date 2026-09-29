@@ -2,6 +2,8 @@ import { artigos, exigirEmDestaque } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { Ampliar, type GrupoDoVisor } from "@/components/Visor";
+import { fotoDoVisor } from "@/lib/visor";
 
 /**
  * # Para partilhar: um prato de cada vez
@@ -39,6 +41,9 @@ import type { Locale } from "@/i18n/routing";
  *
  * O preço e o nome vêm da carta, nunca escritos aqui à mão — senão passava a
  * haver dois preços para o mesmo prato, o do site e o do balcão.
+ *
+ * Um toque num prato abre-o inteiro no visor (`components/Visor.tsx`), com os
+ * outros pratos ao lado para deslizar.
  */
 
 /** O `id` do artigo em `ementa.json` e a fotografia que lhe corresponde. */
@@ -75,6 +80,7 @@ export function Pratos({
   verMais,
   verMaisFacto,
   verMaisAcao,
+  ampliar,
 }: {
   locale: Locale;
   nome: string;
@@ -85,7 +91,32 @@ export function Pratos({
   verMais: string;
   verMaisFacto: string;
   verMaisAcao: string;
+  /** "Ampliar a fotografia" — o começo do nome do botão de cada prato. */
+  ampliar: string;
 }) {
+  /* Só os pratos que existem na carta: o grupo do visor e os painéis saem da
+     mesma lista, para a posição de cada um no visor bater certo. */
+  const presentes = PRATOS.flatMap((prato) => {
+    const artigo = artigos.find((a) => a.id === prato.id);
+    return artigo ? [{ ...prato, artigo }] : [];
+  });
+  const grupo: GrupoDoVisor = {
+    nome,
+    fotos: presentes.map(({ id, foto, pequena, grande, artigo }) =>
+      fotoDoVisor(
+        foto,
+        alts[id] ?? "",
+        [
+          artigo.preco === null
+            ? artigo.nome[locale]
+            : `${artigo.nome[locale]} · ${formatarPreco(artigo.preco, locale)}`,
+        ],
+        pequena,
+        grande,
+      ),
+    ),
+  };
+
   return (
     <section
       id="partilhar"
@@ -104,25 +135,24 @@ export function Pratos({
               </div>
             </div>
 
-            {PRATOS.map(({ id, foto, pequena, grande }) => {
-              const artigo = artigos.find((a) => a.id === id);
-              /* Um `id` que deixou de existir na carta aparece como um painel em
-               falta, não rebenta a página. */
-              if (!artigo) return null;
-
+            {/* Um `id` que deixou de existir na carta aparece como um painel em
+                falta, não rebenta a página — ficou de fora em `presentes`. */}
+            {presentes.map(({ id, foto, pequena, grande, artigo }, i) => {
               return (
                 <article key={id} className="pg-prato">
                   <figure>
-                    <img
-                      src={`${foto}.webp`}
-                      srcSet={`${foto}-${pequena}.webp ${pequena}w, ${foto}.webp ${grande}w`}
-                      sizes="(min-width: 52rem) 45vw, 88vw"
-                      width={1080}
-                      height={1440}
-                      alt={alts[id] ?? ""}
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <Ampliar grupo={grupo} indice={i} rotulo={`${ampliar}: ${artigo.nome[locale]}`}>
+                      <img
+                        src={`${foto}.webp`}
+                        srcSet={`${foto}-${pequena}.webp ${pequena}w, ${foto}.webp ${grande}w`}
+                        sizes="(min-width: 52rem) 45vw, 88vw"
+                        width={1080}
+                        height={1440}
+                        alt={alts[id] ?? ""}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </Ampliar>
                   </figure>
                   <div className="pg-prato__texto">
                     <h3 className="pg-rotulo__nome">{artigo.nome[locale]}</h3>

@@ -40,7 +40,15 @@
     "cozinhaBloco": "{dias} until {hora}",
     "diasAte": "{de} to {ate}",
     "diasE": "{a} and {b}",
-    "cozinhaNota": "The kitchen closes before the bar: food orders are taken until the time shown."
+    "cozinhaNota": "The kitchen closes before the bar: food orders are taken until the time shown.",
+    "visor": {
+      "ampliar": "Enlarge the photo",
+      "fechar": "Close",
+      "anterior": "Previous photo",
+      "seguinte": "Next photo",
+      "naFotografia": "In the photo",
+      "foto": "Photo {n} of {total}"
+    }
   },
   "metadata": {
     "inicio": {
@@ -213,12 +221,6 @@
       "foto": "Photo {n} of {total}",
       "pausar": "Pause the photos",
       "continuar": "Resume the photos"
-    },
-    "visor": {
-      "ampliar": "Enlarge the photo",
-      "fechar": "Close",
-      "anterior": "Previous photo",
-      "seguinte": "Next photo"
     },
     "capitulos": {
       "comer": {

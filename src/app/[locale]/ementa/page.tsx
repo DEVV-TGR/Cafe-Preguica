@@ -25,7 +25,8 @@ import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
 import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
-import { Ampliar, Visor, type GrupoDoVisor } from "@/components/ementa/Visor";
+import { Ampliar, Visor, type GrupoDoVisor } from "@/components/Visor";
+import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
 import { DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
 import { CartaSecreta } from "@/components/ementa/CartaSecreta";
 import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
@@ -161,6 +162,7 @@ export default async function Ementa({ params }: Props) {
   const t = await getTranslations("ementa");
   const comum = await getTranslations("comum");
   const convite = await getTranslations("newsletter.convite");
+  const visor = await textosDoVisor();
 
   const capitulos = porCapitulo();
   /* Sem cocktails na carta secreta, a secção e os três sinais que levam lá não
@@ -181,12 +183,9 @@ export default async function Ementa({ params }: Props) {
     return {
       nome: artigo.nome[locale],
       fotos: [
-        {
-          src: `/casa/${foto}.webp`,
-          srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
-          alt: t(`fotos.${foto}`),
-          legenda: [`${artigo.nome[locale]} · ${preco(artigo.preco)}`],
-        },
+        fotoDoVisor(`/casa/${foto}`, t(`fotos.${foto}`), [
+          `${artigo.nome[locale]} · ${preco(artigo.preco)}`,
+        ]),
       ],
     };
   };
@@ -220,15 +219,7 @@ export default async function Ementa({ params }: Props) {
         ]}
       />
 
-      <Visor
-        textos={{
-          naFotografia: t("naFotografia"),
-          fechar: t("visor.fechar"),
-          anterior: t("visor.anterior"),
-          seguinte: t("visor.seguinte"),
-          rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
-        }}
-      >
+      <Visor textos={visor.textos}>
         <main id="conteudo" className="em-pagina">
           <header className="em-topo">
             <div className="em-topo__texto">
@@ -321,7 +312,7 @@ export default async function Ementa({ params }: Props) {
                       rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
                       pausar: t("carrossel.pausar"),
                       continuar: t("carrossel.continuar"),
-                      ampliar: t("visor.ampliar"),
+                      ampliar: visor.ampliar,
                     }}
                     /* A `key` não é decoração: um elemento criado aqui e desenhado
                        dentro de um componente de cliente passa pela fronteira do
@@ -374,7 +365,7 @@ export default async function Ementa({ params }: Props) {
                     }
                     preco={preco}
                     grupoDoArtigo={grupoDoArtigo}
-                    ampliar={t("visor.ampliar")}
+                    ampliar={visor.ampliar}
                     extra={
                       COM_SABORES.includes(categoria) ? (
                         <Sabores

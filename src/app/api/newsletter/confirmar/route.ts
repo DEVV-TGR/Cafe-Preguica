@@ -4,6 +4,7 @@ import { criarContacto, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { criarChaveDaCarta } from "@/lib/carta-secreta/chave";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { meioEscondido } from "@/lib/painel/utilizadores";
+import { lerJson } from "@/lib/pedido";
 
 /*
   O segundo passo: o link do email chegou à página de confirmação, e a pessoa
@@ -31,7 +32,12 @@ import { meioEscondido } from "@/lib/painel/utilizadores";
 const Pedido = z.object({ convite: z.string().max(2000) });
 
 export async function POST(pedido: Request) {
-  const lido = Pedido.safeParse(await pedido.json().catch(() => null));
+  const corpo = await lerJson(pedido);
+  if (!corpo.ok && corpo.estado !== 400) {
+    return Response.json({ erro: "invalido" }, { status: corpo.estado });
+  }
+
+  const lido = Pedido.safeParse(corpo.ok ? corpo.valor : null);
   if (!lido.success) return Response.json({ erro: "invalido" }, { status: 400 });
 
   try {

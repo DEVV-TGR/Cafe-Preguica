@@ -5,6 +5,7 @@ import { abrirChaveDaCarta, criarChaveDaCarta } from "@/lib/carta-secreta/chave"
 import { estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { somar, ErroDoRedis } from "@/lib/painel/redis";
 import { rede } from "@/lib/painel/limites";
+import { lerJson } from "@/lib/pedido";
 
 /*
   Abrir a carta secreta: está inscrito na newsletter, ou não está?
@@ -45,11 +46,13 @@ const POR_IP = 10;
 const HORA_S = 60 * 60;
 
 export async function POST(pedido: Request) {
-  if (!pedido.headers.get("content-type")?.includes("application/json")) {
-    return Response.json({ erro: "formato" }, { status: 415 });
+  const corpo = await lerJson(pedido);
+  if (!corpo.ok) {
+    if (corpo.estado === 415) return Response.json({ erro: "formato" }, { status: 415 });
+    if (corpo.estado === 413) return Response.json({ erro: "tamanho" }, { status: 413 });
   }
 
-  const lido = Pedido.safeParse(await pedido.json().catch(() => null));
+  const lido = Pedido.safeParse(corpo.ok ? corpo.valor : null);
   if (!lido.success) return Response.json({ erro: "email" }, { status: 400 });
 
   try {

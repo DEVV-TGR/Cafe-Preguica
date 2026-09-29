@@ -76,8 +76,16 @@ export const EsquemaCafe = z.object({
     .nullable(),
   cidade: z.string().min(1).nullable(),
   /* Guardado como o cliente o diz, para o `tel:` limpar os espaços à frente.
-     Ver `telefoneParaLigar`. */
-  telefone: z.string().min(9).nullable(),
+     Ver `telefoneParaLigar`.
+
+     Só os caracteres de um número, e não "qualquer texto com nove letras": o
+     painel grava isto, e daqui segue para o `tel:` e para os dados
+     estruturados de todas as páginas. Um campo livre era um sítio onde caber
+     um `</script>`. */
+  telefone: z
+    .string()
+    .regex(/^\+?[\d\s().-]{9,20}$/, "só algarismos, espaços e + ( ) - .")
+    .nullable(),
   email: z.email().nullable(),
   /**
    * Se a casa já disse que o horário está certo.

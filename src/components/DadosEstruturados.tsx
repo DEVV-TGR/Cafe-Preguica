@@ -94,10 +94,29 @@ export function DadosEstruturados({ descricao }: { descricao: string }) {
   return (
     <script
       type="application/ld+json"
-      /* Alimentado por `cafe.json` e `marca.json`, os dois validados por `zod`
-         e sem entrada de utilizador. É o único `dangerouslySetInnerHTML` do
-         site — ver o comentário da CSP em `src/lib/cabecalhos.ts`. */
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(dados) }}
+      /* Alimentado por `cafe.json` e `marca.json`, os dois validados por `zod`.
+         É o único `dangerouslySetInnerHTML` do site — ver o comentário da CSP
+         em `src/lib/cabecalhos.ts`. */
+      dangerouslySetInnerHTML={{ __html: jsonParaScript(dados) }}
     />
   );
+}
+
+/**
+ * `JSON.stringify` com os caracteres que fecham um `<script>` escapados.
+ *
+ * O `JSON.stringify` sozinho não chega: um valor com `</script>` fecha a
+ * etiqueta a meio e o que vem a seguir é HTML — e, com o `'unsafe-inline'` da
+ * CSP pública, um script que corre. Estes ficheiros **são escritos pelo
+ * painel**, e por isso "não há entrada de utilizador" deixou de ser verdade no
+ * dia em que ele entrou. `<` e companhia são JSON válido, e quem lê os
+ * dados estruturados recebe os caracteres originais.
+ */
+export function jsonParaScript(valor: unknown): string {
+  return JSON.stringify(valor)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/ /g, "\\u2028")
+    .replace(/ /g, "\\u2029");
 }

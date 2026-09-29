@@ -102,4 +102,3 @@ export function DadosEstruturados({ descricao }: { descricao: string }) {
     />
   );
 }
-

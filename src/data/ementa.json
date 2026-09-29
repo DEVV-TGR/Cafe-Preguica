@@ -1,9 +1,6 @@
 {
   "confirmada": true,
-  "secretos": [
-    "mojito-melancia",
-    "preguica-mule"
-  ],
+  "secretos": [],
   "artigos": [
     {
       "id": "queijo-fiambre",

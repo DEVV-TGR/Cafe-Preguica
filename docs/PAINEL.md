@@ -81,8 +81,12 @@ durante 30 dias e deixa de pedir o código; o botão "Esquecer este aparelho", n
 fundo do painel, desfaz isso.
 
 **Só entra quem estiver em `PAINEL_EMAILS`.** Um email que lá não esteja não
-recebe nada, e o ecrã responde exatamente o mesmo. Se respondesse outra coisa,
+recebe nada, e o ecrã responde exatamente o mesmo: segue para o ecrã do código,
+com o endereço mascarado, e nenhum código o abre. Se respondesse outra coisa,
 o formulário servia para descobrir quem tem acesso.
+
+Tirar alguém do `PAINEL_EMAILS` (e fazer redeploy) põe-no fora na hora: a
+sessão confere a lista a cada pedido.
 
 > **É autenticação de fator único: a caixa de correio é a chave mestra.** O email
 > de quem entra tem de ter, ele próprio, verificação em dois passos. É uma
@@ -172,8 +176,9 @@ própria página). Sem ele, quem só abre o ecrã também gasta o limite.
 | Regra | Limite | Janela | Onde |
 |---|---|---|---|
 | Tentativas por código | 5 | vida do código | Upstash |
+| Códigos errados por email | 20 | 24 h | Upstash |
 | Pedidos de código por email | 3 | 15 min | Upstash |
-| Pedidos por IP | 10 | 15 min | Upstash |
+| Pedidos por IP (IPv6 por /64) | 10 | 15 min | Upstash |
 | Pedidos por IP, na borda | 5 | 60 s | Vercel Firewall |
 | Envios ao todo | 40 | 24 h | Upstash |
 | Validade do código | — | 10 min | Upstash |

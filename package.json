@@ -10,6 +10,8 @@
     "lint": "eslint",
     "tipos": "tsc --noEmit",
     "mensagens": "node scripts/verificar-mensagens.mjs",
+    "testes": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"testes/*.test.mjs\"",
+    "segredos": "node scripts/verificar-segredos.mjs",
     "fotos": "node scripts/importar-fotos.mjs",
     "mapa": "node scripts/desenhar-mapa.mjs"
   },

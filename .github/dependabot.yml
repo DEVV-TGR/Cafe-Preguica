@@ -44,7 +44,8 @@ updates:
         update-types: [version-update:semver-major]
 
   # As próprias actions do CI são dependências como as outras — e correm com
-  # acesso ao repositório.
+  # acesso ao repositório. Estão fixadas por SHA no `ci.yml`, com a versão num
+  # comentário ao lado; o Dependabot atualiza os dois juntos.
   - package-ecosystem: github-actions
     directory: /
     schedule:

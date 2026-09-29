@@ -88,7 +88,7 @@
         "en": "Mixed board"
       },
       "descricao": {
-        "pt": "Fuet, queijo da ilha, presunto e cesto de pão. Com compota e extra presunto, 11,60 €.",
+        "pt": "Fuet, queijo da ilha, presunto e cesto de pão. Com compota e presunto extra, 11,60 €.",
         "en": "Fuet, island cheese, cured ham and a bread basket. With jam and extra ham, €11.60."
       },
       "preco": 8.8,
@@ -104,7 +104,7 @@
         "en": "Preguiça board"
       },
       "descricao": {
-        "pt": "Fuet, queijo da ilha, presunto, bocadinhos de pão com chouriço e queijo, cesto de pão e crackers. Com compota e extra presunto, 16,20 €.",
+        "pt": "Fuet, queijo da ilha, presunto, bocadinhos de pão com chouriço e queijo, cesto de pão e crackers. Com compota e presunto extra, 16,20 €.",
         "en": "Fuet, island cheese, cured ham, bread pieces with chouriço and cheese, bread basket and crackers. With jam and extra ham, €16.20."
       },
       "preco": 14.5,
@@ -200,8 +200,8 @@
       "id": "petit-gateau-com-gelado-de-baunilha",
       "categoria": "sobremesas",
       "nome": {
-        "pt": "Petit gateau com gelado de baunilha",
-        "en": "Petit gateau with vanilla ice cream"
+        "pt": "Petit gâteau com gelado de baunilha",
+        "en": "Petit gâteau with vanilla ice cream"
       },
       "descricao": null,
       "preco": 4.8,
@@ -214,7 +214,7 @@
       "categoria": "sobremesas",
       "nome": {
         "pt": "Affogato al caffè com gelado e chantilly",
-        "en": "Affogato al caffè with ice cream and cream"
+        "en": "Affogato al caffè with ice cream and whipped cream"
       },
       "descricao": null,
       "preco": 4.8,
@@ -278,8 +278,8 @@
         "en": "Blue Lagoon"
       },
       "descricao": {
-        "pt": "Vodka, blue curaçao, sprite e goma.",
-        "en": "Vodka, blue curaçao, sprite and gum syrup."
+        "pt": "Vodka, blue curaçao, Sprite e xarope de goma.",
+        "en": "Vodka, blue curaçao, Sprite and gum syrup."
       },
       "preco": 5.6,
       "precoSecundario": null,
@@ -338,7 +338,7 @@
       "id": "caipi-maracuja",
       "categoria": "cocktails-classicos",
       "nome": {
-        "pt": "Caipi maracujá",
+        "pt": "Caipi de maracujá",
         "en": "Passion fruit caipi"
       },
       "descricao": {
@@ -370,7 +370,7 @@
       "id": "mojito-melancia",
       "categoria": "cocktails-special",
       "nome": {
-        "pt": "Mojito melancia",
+        "pt": "Mojito de melancia",
         "en": "Watermelon mojito"
       },
       "descricao": {
@@ -498,8 +498,8 @@
       "id": "long-island-ice-tea",
       "categoria": "cocktails-special",
       "nome": {
-        "pt": "Long Island Ice Tea",
-        "en": "Long Island Ice Tea"
+        "pt": "Long Island Iced Tea",
+        "en": "Long Island Iced Tea"
       },
       "descricao": {
         "pt": "Gin, vodka, rum, tequila, triple sec, sumo de limão, açúcar e cola.",
@@ -550,8 +550,8 @@
         "en": "Cocktail Preguiça"
       },
       "descricao": {
-        "pt": "Gin, vodka, rum e unicórnio. Escolhe-se o sabor.",
-        "en": "Gin, vodka, rum and unicorn. You pick the flavour."
+        "pt": "Gin, vodka, rum e Unicórnio. Escolhe-se o sabor.",
+        "en": "Gin, vodka, rum and Unicorn. You pick the flavour."
       },
       "preco": 5.6,
       "precoSecundario": null,
@@ -630,8 +630,8 @@
         "en": "Virgin Blue Lagoon"
       },
       "descricao": {
-        "pt": "Blue curaçao, sprite, sumo de limão fresco e goma.",
-        "en": "Blue curaçao, sprite, fresh lemon juice and gum syrup."
+        "pt": "Blue curaçao, Sprite, sumo de limão fresco e xarope de goma.",
+        "en": "Blue curaçao, Sprite, fresh lemon juice and gum syrup."
       },
       "preco": 4.6,
       "precoSecundario": null,
@@ -691,7 +691,7 @@
       "categoria": "sangrias-e-espumantes",
       "nome": {
         "pt": "Espumante Preguiça",
-        "en": "Preguiça sparkling"
+        "en": "Preguiça sparkling wine"
       },
       "descricao": {
         "pt": "Maracujá e hortelã. Garrafão de 1,75 l, 22,80 €.",
@@ -706,8 +706,8 @@
       "id": "espumante-frutos-vermelhos",
       "categoria": "sangrias-e-espumantes",
       "nome": {
-        "pt": "Espumante frutos vermelhos",
-        "en": "Red berry sparkling"
+        "pt": "Espumante de frutos vermelhos",
+        "en": "Red berry sparkling wine"
       },
       "descricao": {
         "pt": "Frutos vermelhos e canela. Garrafão de 1,75 l, 22,80 €.",
@@ -722,8 +722,8 @@
       "id": "espumante-melancia",
       "categoria": "sangrias-e-espumantes",
       "nome": {
-        "pt": "Espumante melancia",
-        "en": "Watermelon sparkling"
+        "pt": "Espumante de melancia",
+        "en": "Watermelon sparkling wine"
       },
       "descricao": {
         "pt": "Hortelã e lima. Garrafão de 1,75 l, 23,80 €.",
@@ -921,7 +921,7 @@
       "categoria": "whisky",
       "nome": {
         "pt": "Old Parr 12 anos",
-        "en": "Old Parr 12 year"
+        "en": "Old Parr 12 Year Old"
       },
       "descricao": null,
       "preco": 9.5,
@@ -934,7 +934,7 @@
       "categoria": "whisky",
       "nome": {
         "pt": "Macallan 12 anos",
-        "en": "Macallan 12 year"
+        "en": "Macallan 12 Year Old"
       },
       "descricao": null,
       "preco": 14.8,
@@ -1414,8 +1414,8 @@
       "id": "caf-capuccino",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Capuccino",
-        "en": "Capuccino"
+        "pt": "Cappuccino",
+        "en": "Cappuccino"
       },
       "descricao": null,
       "preco": 2.8,
@@ -1454,7 +1454,7 @@
       "categoria": "cafetaria",
       "nome": {
         "pt": "Chocolate quente com chantilly",
-        "en": "Hot chocolate with cream"
+        "en": "Hot chocolate with whipped cream"
       },
       "descricao": null,
       "preco": 4.3,
@@ -1492,7 +1492,7 @@
       "id": "caf-gluehwein",
       "categoria": "cafetaria",
       "nome": {
-        "pt": "Glühwein (vinho tinto)",
+        "pt": "Glühwein (vinho tinto quente)",
         "en": "Glühwein (mulled red wine)"
       },
       "descricao": null,
@@ -1648,7 +1648,7 @@
       "id": "cha-curcuma",
       "categoria": "chas",
       "nome": {
-        "pt": "Curcuma",
+        "pt": "Cúrcuma",
         "en": "Turmeric"
       },
       "descricao": null,
@@ -1739,7 +1739,7 @@
       "id": "agu-coca-cola-zero",
       "categoria": "aguas-e-refrigerantes",
       "nome": {
-        "pt": "Coca-Cola zero",
+        "pt": "Coca-Cola Zero",
         "en": "Coke Zero"
       },
       "descricao": null,

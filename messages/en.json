@@ -13,7 +13,7 @@
     "reservar": "Book a table",
     "mudarIdiomaCurto": "PT",
     "seccoes": {
-      "casa": "The room",
+      "casa": "The place",
       "carril": "The cocktails",
       "partilhar": "To share"
     }
@@ -45,7 +45,7 @@
   "metadata": {
     "inicio": {
       "titulo": "Café Preguiça",
-      "descricao": "Café Preguiça — breakfast, coffee and snacks."
+      "descricao": "Café Preguiça in Ermesinde: cocktails, toasties and snacks to share, from afternoon into the night."
     },
     "ementa": {
       "titulo": "Menu",
@@ -53,7 +53,7 @@
     },
     "contactos": {
       "titulo": "Contact",
-      "descricao": "Where we are, when we open and how to reach us."
+      "descricao": "Where we are, when we're open and how to reach us."
     },
     "sobre": {
       "titulo": "The place",
@@ -65,7 +65,7 @@
     },
     "cookies": {
       "titulo": "Cookies",
-      "descricao": "This site uses no cookies. This page explains why."
+      "descricao": "This site sets no cookies for its visitors. This page explains why."
     },
     "informacaoLegal": {
       "titulo": "Dispute resolution",
@@ -79,14 +79,14 @@
   "inicio": {
     "heroi": {
       "onde": "Ermesinde · Valongo",
-      "linha": "Cocktails and snacks. The most intimate room in Ermesinde.",
+      "linha": "Cocktails and snacks. The most intimate bar in Ermesinde.",
       "acao": "See the menu",
       "alt": "The front of Café Preguiça on a sunny morning, with a tree in blossom above the roof.",
       "ondeEstamos": "Find us"
     },
     "casa": {
-      "nome": "The room",
-      "facto": "Solid wood, bare granite and the name chalked on a blackboard. A small room where everyone knows everyone, open afternoons and evenings.",
+      "nome": "The place",
+      "facto": "Solid wood, exposed granite and the name chalked on a slate. A small room where everyone knows everyone, open afternoons and evenings.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
       "animais": "Dogs come in too. If you bring yours, there's no need to leave it at the door.",
       "alt": "The house menu standing on a wooden table, against the granite block wall."
@@ -96,25 +96,25 @@
     },
     "carril": {
       "nome": "Twenty-four cocktails",
-      "facto": "Nine classics, ten specials and five without alcohol. Made at the counter, one at a time.",
+      "facto": "Nine classics, ten specials and five alcohol-free. Made at the bar, one at a time.",
       "dado": "From €4.20",
-      "ilustrativa": "The photographs are the house's own. Where the cocktail cannot be identified for certain, the label says only what is known.",
-      "balcaoNome": "At the counter",
-      "balcaoFacto": "Lime squeezed by hand over the glass. Every one is made in front of the person drinking it.",
+      "ilustrativa": "The photos are our own. Where we can't say for sure which cocktail it is, the caption only says what we know.",
+      "balcaoNome": "At the bar",
+      "balcaoFacto": "Lime squeezed by hand, straight over the glass. Every cocktail is made in front of whoever is drinking it.",
       "balcaoAlt": "A hand squeezing half a lime over a tall glass of ice.",
-      "fechoNome": "And the rest of the list",
-      "fechoFacto": "Gin, whisky, shots, sangria by the jug, beer, tea and the coffee counter.",
+      "fechoNome": "And the rest of the menu",
+      "fechoFacto": "Gin, whisky, shots, sangria by the jug, beer, tea and coffee.",
       "fechoDado": "See the menu"
     },
     "reels": {
-      "nome": "The house, moving",
-      "facto": "What happens at the counter, filmed by the house and posted on Instagram. Tap one to watch it there.",
+      "nome": "Preguiça in motion",
+      "facto": "What goes on behind the bar, filmed by us and posted on Instagram. Tap a video to watch it there.",
       "noInstagram": "opens on Instagram",
       "legendas": {
         "masterclass": "Hera × Preguiça masterclass",
         "tosta": "Toast with jam and hot chocolate",
         "negroni": "A negroni being served",
-        "valentim": "Valentine's at the house",
+        "valentim": "Valentine's Day at Preguiça",
         "menu": "The menu, against the granite wall",
         "lima": "Lime squeezed by hand"
       },
@@ -125,15 +125,15 @@
       "facto": "What you eat with your hands, in the middle of the table, while the conversation keeps going.",
       "dado": "From €1.70",
       "altTabua": "A round platter of small toasts with chouriço and cheese, a bowl of crisps and a bottle of tabasco, on wood.",
-      "altTosta": "Toast with strawberry jam beside a hot chocolate topped with cream and a cinnamon stick.",
-      "factoTosta": "In the photograph, next to a hot chocolate with cream — ordered separately, at €3.60.",
-      "verMais": "And the rest of the list",
+      "altTosta": "Toast with strawberry jam beside a hot chocolate topped with whipped cream and a cinnamon stick.",
+      "factoTosta": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately at €3.60.",
+      "verMais": "And the rest of the menu",
       "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
       "verMaisAcao": "See the menu"
     },
     "preguicosos": {
       "nome": "The Preguiçosos",
-      "facto": "It's what the house calls its regulars. This is what they write afterwards.",
+      "facto": "‘The lazy ones’: that's what we call everyone who comes in. This is what they write afterwards.",
       "contagem": "{total} reviews on Google",
       "estrelas": "{nota} out of 5 stars",
       "verTodas": "Read them all on Google"
@@ -143,10 +143,10 @@
       "horario": "Opening hours",
       "direcoes": "Open in Google Maps",
       "chamada": {
-        "fixa": "Call to the Portuguese landline network",
-        "movel": "Call to the Portuguese mobile network"
+        "fixa": "Call to a Portuguese landline",
+        "movel": "Call to a Portuguese mobile"
       },
-      "horarioPorConfirmar": "These hours have not been confirmed by the house yet. Best to call before you come.",
+      "horarioPorConfirmar": "These hours have not been confirmed yet. It's best to call ahead.",
       "animais": "Dogs are welcome. Bring yours along.",
       "mapaAlt": "Map of the streets around Café Preguiça in Ermesinde, with the house marked by the sloth from the logo.",
       "credito": "© OpenStreetMap contributors"
@@ -154,9 +154,9 @@
   },
   "ementa": {
     "titulo": "The menu",
-    "introducao": "Toasties and boards to share, cocktails made at the bar one at a time, and the rest of the bottles.",
-    "avisoProvisoria": "Menu transcribed from the house menu and not yet confirmed. If in doubt, ask at the bar.",
-    "avisoAlergenios": "Allergen information is available at the counter. Please ask before ordering.",
+    "introducao": "Toasties and boards to share, cocktails made at the bar one at a time, and everything else behind the counter.",
+    "avisoProvisoria": "Transcribed from our printed menu and not yet confirmed. If in doubt, ask at the bar.",
+    "avisoAlergenios": "Allergen information is available at the bar. Please ask before ordering.",
     "categorias": {
       "tostas-e-snacks": "Toasties & snacks",
       "tabuas": "Boards",
@@ -165,8 +165,8 @@
       "cocktail-preguica": "Cocktail Preguiça",
       "cocktails-classicos": "Classic cocktails",
       "cocktails-special": "Specials",
-      "mocktails": "Mocktails, alcohol free",
-      "sangrias-e-espumantes": "Sangrias & sparkling",
+      "mocktails": "Mocktails, alcohol-free",
+      "sangrias-e-espumantes": "Sangria & sparkling wine",
       "gin": "Gin",
       "whisky": "Whisky",
       "shots": "Shots",
@@ -188,7 +188,7 @@
         "b": "Bottle"
       }
     },
-    "saboresTitulo": "Pick the flavour",
+    "saboresTitulo": "Pick a flavour",
     "sabores": {
       "surpresa": "Surprise",
       "limao": "Lemon",
@@ -207,12 +207,12 @@
     },
     "olho": "Café Preguiça · Ermesinde",
     "contagem": "{artigos} items · {seccoes} sections",
-    "indice": "Menu chapters",
+    "indice": "Menu sections",
     "naFotografia": "In the photo",
     "carrossel": {
       "foto": "Photo {n} of {total}",
       "pausar": "Pause the photos",
-      "continuar": "Play the photos"
+      "continuar": "Resume the photos"
     },
     "visor": {
       "ampliar": "Enlarge the photo",
@@ -223,23 +223,23 @@
     "capitulos": {
       "comer": {
         "nome": "To eat",
-        "facto": "Toasties, boards for the middle of the table, bowls to nibble and dessert."
+        "facto": "Toasties, boards for the middle of the table, bowls of nibbles and dessert."
       },
       "cocktails": {
         "nome": "Cocktails & sangrias",
-        "facto": "The house one, the classics, the specials and sangria by the jug."
+        "facto": "Our signature cocktail, the classics, the specials and sangria by the jug."
       },
       "mocktails": {
         "nome": "Mocktails",
         "facto": "The house cocktails, without alcohol."
       },
       "garrafeira": {
-        "nome": "Spirits & beers",
-        "facto": "Gin, whisky, shots, liqueurs, beers and wines."
+        "nome": "Spirits & beer",
+        "facto": "Gin, whisky, shots, liqueurs, beer and wine."
       },
       "aguas": {
         "nome": "Water & soft drinks",
-        "facto": "The Unicorn — the Cocktail Preguiça without alcohol, in a flavour of your choice —, water and soft drinks."
+        "facto": "The Unicorn (an alcohol-free Cocktail Preguiça in the flavour of your choice), water and soft drinks."
       },
       "cafetaria": {
         "nome": "Coffee & hot drinks",
@@ -249,21 +249,21 @@
     "fotos": {
       "tabua-partilha": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
       "negroni-salpico": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
-      "cocktail-turquesa": "A balloon glass with a turquoise drink, crushed ice, a strawberry, mint and a blue striped straw, on a wooden table.",
+      "cocktail-turquesa": "A balloon glass with a turquoise drink, crushed ice, a strawberry, mint and a blue-striped straw, on a wooden table.",
       "lima-espremida": "A hand squeezing half a lime over a tall glass with ice.",
-      "cocktail-amarelo": "A balloon glass with a yellow drink, a slice of kiwi and a green striped straw, on a wooden table.",
-      "tosta-chocolate": "A hot chocolate with whipped cream and a cinnamon stick, next to a toast with jam.",
-      "cocktail-rosa": "A balloon glass with a pink drink, a dried orange slice and a yellow striped straw, on a wooden table.",
-      "cocktail-azul": "A balloon glass with a blue drink, a slice of lemon and a green striped straw, on a wooden table.",
+      "cocktail-amarelo": "A balloon glass with a yellow drink, a slice of kiwi and a green-striped straw, on a wooden table.",
+      "tosta-chocolate": "A hot chocolate with whipped cream and a cinnamon stick, next to a slice of toast with jam.",
+      "cocktail-rosa": "A balloon glass with a pink drink, a dried orange slice and a yellow-striped straw, on a wooden table.",
+      "cocktail-azul": "A balloon glass with a blue drink, a slice of lemon and a green-striped straw, on a wooden table.",
       "negroni-fumo": "A negroni in a short glass with ice and orange peel, wrapped in smoke, on the bar.",
-      "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red striped straw, next to a coconut, on a wooden table."
+      "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red-striped straw, next to a coconut, on a wooden table."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",
     "escolheu": "The sloth chose",
     "escolhido": "You chose",
     "nenhumSabor": "Tap a flavour, or let the sloth choose for you.",
-    "saboresNota": "This doesn't place the order: tell the flavour to whoever takes it.",
+    "saboresNota": "Picking here doesn't place an order: tell whoever takes your order which flavour you want.",
     "fecho": {
       "nome": "Questions?",
       "facto": "If you would like to know what is in a dish or a drink, or which allergens it has, ask at the bar.",
@@ -277,19 +277,19 @@
       "maisCocktails": "More cocktails in the secret menu ↓",
       "olho": "Only for those on the list",
       "titulo": "The secret menu",
-      "texto": "The cocktails that aren't on paper. They open with the email you get the house news at.",
+      "texto": "The cocktails that aren't on paper. To see them, enter the email address you get our news at.",
       "etiqueta": "Your email",
       "marcador": "you@email.com",
       "abrir": "Open",
       "aAbrir": "Opening…",
       "naoInscritoTitulo": "This email isn't on the list yet.",
-      "naoInscritoTexto": "Sign {email} up for the house news. Confirm in the email we send you, and the menu opens by itself.",
+      "naoInscritoTexto": "Sign {email} up for our news. Confirm through the email we'll send you, and the menu will open by itself.",
       "inscrever": "Sign up and open",
       "aEnviar": "Sending…",
       "enviadoTitulo": "One more step",
       "enviadoTexto": "We've sent you an email. Click the link in it — you'll come back here with the menu open.",
       "outroEmail": "Use another email",
-      "abertaTexto": "You're on the list, and this is for you. Ask at the bar by name.",
+      "abertaTexto": "You're on the list, so this is for you. Just ask for them at the bar by name.",
       "fechar": "Not your email? Close the menu"
     }
   },
@@ -312,23 +312,23 @@
     "atualizado": "Last updated: draft, to be reviewed before publishing.",
     "recolha": {
       "titulo": "What data we collect",
-      "texto": "About people who only visit, none: the site has no accounts or analytics tools, and stores nothing about the people who open it. The one exception is the newsletter, and only for those who sign up — it is explained in the next section."
+      "texto": "From people who just visit, none: the site has no accounts or analytics tools, and keeps nothing about the people who open it. The only exception is the newsletter, and only for those who sign up — it is explained in the next section."
     },
     "newsletter": {
       "titulo": "The newsletter",
-      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you news from the house, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation the address is not kept. Every email has a link to unsubscribe, which takes effect immediately. The list is kept until you unsubscribe, and you can ask us at any time what data we hold or to delete it, through the contact details of the house. The same email opens the secret menu: when you type it there, we ask the list whether you are subscribed, and nothing else."
+      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you our news, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation, the address is not kept. Every email includes a link to unsubscribe, which takes effect immediately. Your address stays on the list until you unsubscribe, and you can ask us at any time what data we hold about you, or ask us to delete it, using our contact details. The same email opens the secret menu: when you type it there, we only check whether it is on the list."
     },
     "terceiros": {
       "titulo": "Third-party services",
-      "texto": "None that load code in your browser: fonts and images are served by this domain, there is no embedded map and no social buttons. Links to Google Maps and to social networks are plain links, only followed if you click them. Newsletter emails are sent through Resend, which keeps the contact list on our behalf; your browser never talks to it — the site's server does."
+      "texto": "None that load code in your browser: fonts and images are served from this domain, and there are no embedded maps or social media buttons. Links to Google Maps and to social media are plain links, which only open if you click them. Newsletter emails are sent through Resend, which keeps the contact list on our behalf; your browser never talks to it — the site's server does."
     },
     "alojamento": {
       "titulo": "Hosting",
-      "texto": "The site is hosted by Vercel, which logs server requests in order to serve and protect it. Those logs belong to the platform and are not used by us to identify anyone."
+      "texto": "The site is hosted by Vercel, which logs requests to its servers in order to deliver and protect the site. Those logs belong to the platform, and we do not use them to identify anyone."
     },
     "equipa": {
       "titulo": "The staff area",
-      "texto": "Staff sign in to a reserved area with a code sent to their email. For that, the staff member's email address is used to send the code (through Resend), and the sign-in record is kept for at most 30 days (at Upstash) to limit attempts and remember the device. It does not concern visitors to the site."
+      "texto": "Staff sign in to a private area with a code sent to their email. To do this, we use each staff member's email address to send them the code (through Resend), and we keep the sign-in record for up to 30 days (at Upstash) to limit attempts and recognise the device. None of this concerns visitors to the site."
     },
     "contacto": {
       "titulo": "Questions",
@@ -360,19 +360,19 @@
     },
     "lingua": {
       "titulo": "What about the language you chose?",
-      "texto": "It lives in the address, not in a cookie: the English version is under /en. It stays as you browse the site. If you type the address again without /en, the site opens in your browser's language."
+      "texto": "It lives in the address, not in a cookie: the English version is under /en, and it stays that way as you browse. If you type the address again without /en, the site opens in your browser's language."
     },
     "memoria": {
       "titulo": "What about the newsletter invitation?",
-      "texto": "So as not to show it again to someone who has signed up, the site leaves a note in the browser's storage that just says \"signed up\". Closing the invitation leaves another note, which the browser deletes by itself when the tab is closed. These two identify no one and never leave your device. Opening the secret menu also keeps a key with your email, signed by us, which the site uses only to open it again without asking for your email; the \"Close the menu\" button deletes it. None of these is a cookie, and if you delete them the worst that happens is the invitation showing up again or the menu asking for your email."
+      "texto": "So as not to show it again to someone who has already signed up, the site leaves a note in your browser's storage that just says \"signed up\". Closing the invitation leaves another note, which the browser deletes by itself when you close the tab. Neither of them identifies anyone, and neither leaves your device. Opening the secret menu also stores a key with your email, signed by us, which the site uses only to open the menu again without asking for your email; the \"Close the menu\" button deletes it. None of these is a cookie, and if you delete them, the worst that can happen is the invitation showing up again or the menu asking for your email again."
     },
     "equipa": {
       "titulo": "The staff area",
-      "texto": "There is an area reserved for the people who work here, to update the menu and opening hours. Whoever signs in there receives two strictly necessary cookies — one to keep the session open, another so the device doesn't ask for the sign-in code every time — and only in that area. Visitors never receive them."
+      "texto": "There is an area reserved for the people who work here, to update the menu and the opening hours. Anyone who signs in there receives two strictly necessary cookies — one to keep the session open, the other so that the same device isn't asked for a sign-in code every time — and only in that area. Visitors never receive them."
     },
     "verificar": {
       "titulo": "How to check",
-      "texto": "You do not have to take our word for it: open your browser's developer tools, Application tab, and see the cookie list for this domain empty."
+      "texto": "You don't have to take our word for it: open your browser's developer tools, go to the Application tab, and you will see that the cookie list for this domain is empty."
     }
   },
   "informacaoLegal": {
@@ -409,19 +409,19 @@
   "newsletter": {
     "convite": {
       "olho": "Newsletter",
-      "titulo": "News from the house",
+      "titulo": "News from Preguiça",
       "texto": "New cocktails, special nights and what changes on the menu — only when there's something to tell. Written in Portuguese.",
       "etiqueta": "Your email",
       "marcador": "you@email.com",
       "botao": "Sign up",
       "aEnviar": "Sending…",
       "fechar": "Close",
-      "consentimento": "By signing up, you agree to receive news from the house by email. You can unsubscribe at any time.",
+      "consentimento": "By signing up, you agree to receive our news by email. You can unsubscribe at any time.",
       "privacidade": "How we handle your email",
       "enviadoTitulo": "One more step",
       "enviadoTexto": "We've sent you an email. Click the link in it to confirm — until then, you're not signed up.",
       "jaTitulo": "You're already signed up",
-      "jaTexto": "This email already gets the house news. There's nothing else to do.",
+      "jaTexto": "This email address is already on our list. There's nothing else to do.",
       "erroEmail": "That email doesn't look complete.",
       "erroLimite": "Too many requests in the last few minutes. Please try again shortly.",
       "erroServico": "We couldn't send it right now. Please try again shortly."
@@ -429,20 +429,20 @@
     "confirmar": {
       "olho": "Newsletter",
       "titulo": "Confirm your sign-up",
-      "texto": "Just this: press the button to start receiving news from Café Preguiça at this email.",
+      "texto": "One last step: press the button to start receiving news from Café Preguiça at this address.",
       "botao": "Confirm sign-up",
       "aConfirmar": "Confirming…",
       "feitoTitulo": "You're signed up",
-      "feitoTexto": "You'll get the house news by email. Every email has a link to unsubscribe, should you change your mind.",
-      "semConvite": "This address carries no sign-up to confirm. If you came from the email, open the link again — ideally copying it in full.",
+      "feitoTexto": "You'll get our news by email. Every email has a link to unsubscribe, should you change your mind.",
+      "semConvite": "This link has no sign-up to confirm. If you came from the email, open the link again — ideally by copying it in full.",
       "invalido": "This link is incomplete or no longer valid. Open it again from the email, or sign up again on the site.",
-      "expirado": "This link is more than 48 hours old. Sign up again on the site and a new one will arrive.",
+      "expirado": "This link was only valid for 48 hours and has expired. Sign up again on the site to get a new one.",
       "erro": "We couldn't confirm right now. Please try again shortly — the link is still valid.",
       "abrirCarta": "Open the secret menu"
     },
     "email": {
       "assunto": "Confirm your subscription to the Café Preguiça newsletter",
-      "texto": "Hello,\n\nYou asked to receive news from Café Preguiça. To confirm, open this link:\n\n{link}\n\nThe link is valid for 48 hours. If this wasn't you, ignore this email: without confirmation, the address is neither subscribed nor stored.\n\nCafé Preguiça · Ermesinde"
+      "texto": "Hello,\n\nYou asked to receive news from Café Preguiça. To confirm, open this link:\n\n{link}\n\nThe link is valid for 48 hours. If you didn't make this request, just ignore this email: without confirmation, the address is neither subscribed nor stored.\n\nCafé Preguiça · Ermesinde"
     }
   }
 }

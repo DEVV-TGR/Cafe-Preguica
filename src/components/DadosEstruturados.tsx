@@ -1,6 +1,7 @@
 import { cafe, DIAS, type DiaDaSemana } from "@/data/cafe";
 import { marca, redes } from "@/data/marca";
 import { URL_SITE } from "@/lib/site";
+import { jsonParaScript } from "@/lib/json-em-script";
 
 /**
  * `schema.org/CafeOrCoffeeShop`.
@@ -94,10 +95,10 @@ export function DadosEstruturados({ descricao }: { descricao: string }) {
   return (
     <script
       type="application/ld+json"
-      /* Alimentado por `cafe.json` e `marca.json`, os dois validados por `zod`
-         e sem entrada de utilizador. É o único `dangerouslySetInnerHTML` do
-         site — ver o comentário da CSP em `src/lib/cabecalhos.ts`. */
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(dados) }}
+      /* Alimentado por `cafe.json` e `marca.json`, os dois validados por `zod`.
+         É o único `dangerouslySetInnerHTML` do site — ver o comentário da CSP
+         em `src/lib/cabecalhos.ts`. */
+      dangerouslySetInnerHTML={{ __html: jsonParaScript(dados) }}
     />
   );
 }

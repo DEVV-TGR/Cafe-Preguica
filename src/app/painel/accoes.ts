@@ -16,6 +16,7 @@ import {
 import {
   gerarCodigo,
   criarDesafio,
+  criarIsco,
   conferirCodigo,
   emailDoDesafio,
   apagarDesafio,
@@ -34,19 +35,39 @@ import { exigirSessaoNaAccao } from "@/lib/painel/porta";
   aparelho que já tenha passado pelo código salta-o durante 30 dias.
 */
 
-export type EstadoDaEntrada = { erro?: string; enviado?: boolean };
+export type EstadoDaEntrada = { erro?: string };
+
+type Frasco = Awaited<ReturnType<typeof cookies>>;
 
 /*
   A resposta é sempre a mesma, e é o ponto mais delicado deste ficheiro.
 
-  Um email que tem acesso e um que não tem saem daqui com `{ enviado: true }`, e
-  o ecrã escreve a mesma frase nos dois casos. Se a resposta distinguisse —
-  *"esse email não está autorizado"* — o formulário passava a ser uma ferramenta
-  para qualquer pessoa descobrir quem entra no painel.
+  Um email que tem acesso e um que não tem seguem os dois para o ecrã do
+  código. Se a resposta distinguisse — *"esse email não está autorizado"*, ou
+  simplesmente ficar neste ecrã num caso e saltar para o outro no outro — o
+  formulário passava a ser uma ferramenta para qualquer pessoa descobrir quem
+  entra no painel. Já foi assim: o de dentro saltava, o de fora ficava, e
+  bastava olhar.
 
-  E não é só o texto. Um email de fora **consome na mesma** o orçamento de
+  E não é só o ecrã. Um email de fora **consome na mesma** o orçamento de
   pedidos, para o comportamento a partir do quarto ser igual nos dois casos.
 */
+
+/*
+  Para quem não recebe código — fora da lista, ou com os pedidos esgotados.
+
+  Aponta o cookie a um desafio que nenhum código abre (`criarIsco`), para o
+  ecrã seguinte ser igual ao de quem recebeu um. Se o cookie já aponta a um
+  desafio **deste** email, fica como está: quem esgotou os pedidos continua a
+  poder usar o último código que lhe chegou.
+*/
+async function semCodigo(frasco: Frasco, email: string): Promise<void> {
+  const cookie = frasco.get(NOME_DO_DESAFIO)?.value;
+  if ((await emailDoDesafio(cookie)) === email) return;
+
+  await apagarDesafio(cookie);
+  frasco.set(NOME_DO_DESAFIO, await criarIsco(email), opcoesDoCookie(VALIDADE_DO_DESAFIO));
+}
 export async function pedirCodigo(
   _estado: EstadoDaEntrada,
   dados: FormData,
@@ -67,40 +88,51 @@ export async function pedirCodigo(
     booleano, e o salto dá-se lá em baixo.
   */
   try {
-    /*
-      Conta antes de saber se o email existe — ver o comentário do
-      `lib/painel/limites.ts`. Esgotado o orçamento, responde-se a mesma coisa de
-      sempre: quem está a sondar não fica a saber se parou por causa do limite ou
-      por o email não existir.
-    */
-    if (!(await podePedirCodigo(email))) {
-      await anotar("limite de pedidos esgotado", email);
-      return { enviado: true };
-    }
-
     const quem = autorizado(email);
 
-    if (!quem) {
-      await anotar("pedido para email fora da lista", email);
-      return { enviado: true };
-    }
+    /*
+      Já passou pelo código neste aparelho — entra sem repetir, e **sem gastar
+      os limites**.
 
-    /* Já passou pelo código neste aparelho — entra sem repetir. */
-    if (await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email)) {
+      Vem antes dos limites de propósito. Quem quiser trancar o dono da casa só
+      precisa de escrever o email dele no ecrã de entrada umas quantas vezes; se
+      os limites viessem primeiro, o aparelho lembrado ficava trancado com ele.
+      Assim, o que se esgota é o envio de códigos, e quem já tem o aparelho
+      lembrado nem dá pelo ataque.
+
+      Não abre porta nenhuma a quem sonda: sem um cookie de aparelho assinado
+      por nós e ainda registado para **este** email, o caminho é o de baixo,
+      igual para toda a gente.
+    */
+    if (quem && (await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email))) {
       frasco.set(NOME_DO_COOKIE, await selar(quem.email), opcoesDoCookie());
       jaConhecido = true;
     } else {
-      /* Pedir outro código invalida o anterior, para não haver dois válidos. */
-      await apagarDesafio(frasco.get(NOME_DO_DESAFIO)?.value);
+      /*
+        Conta antes de saber se o email existe — ver o comentário do
+        `lib/painel/limites.ts`. Esgotado o orçamento, responde-se a mesma coisa
+        de sempre: quem está a sondar não fica a saber se parou por causa do
+        limite ou por o email não existir.
+      */
+      if (!(await podePedirCodigo(email))) {
+        await anotar("limite de pedidos esgotado", email);
+        await semCodigo(frasco, email);
+      } else if (!quem) {
+        await anotar("pedido para email fora da lista", email);
+        await semCodigo(frasco, email);
+      } else {
+        /* Pedir outro código invalida o anterior, para não haver dois válidos. */
+        await apagarDesafio(frasco.get(NOME_DO_DESAFIO)?.value);
 
-      const codigo = gerarCodigo();
-      await enviarCodigo({ para: quem.email, codigo });
+        const codigo = gerarCodigo();
+        await enviarCodigo({ para: quem.email, codigo });
 
-      frasco.set(
-        NOME_DO_DESAFIO,
-        await criarDesafio(quem.email, codigo),
-        opcoesDoCookie(VALIDADE_DO_DESAFIO),
-      );
+        frasco.set(
+          NOME_DO_DESAFIO,
+          await criarDesafio(quem.email, codigo),
+          opcoesDoCookie(VALIDADE_DO_DESAFIO),
+        );
+      }
     }
   } catch (erro) {
     /*
@@ -136,14 +168,33 @@ export async function confirmarCodigo(
       return { erro: "O código expirou ou já não serve. Pede outro." };
     }
 
+    /* A mesma frase para um email da lista e para um isco: os dois contam as
+       tentativas de código do dia, e os dois chegam aqui ao fim de vinte. */
+    if (veredicto.estado === "bloqueado") {
+      frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
+      await anotar("teto de tentativas de código esgotado na confirmação", veredicto.email);
+      return {
+        erro:
+          "Demasiadas tentativas de código hoje para este email. Tenta amanhã, ou entra " +
+          "por um aparelho que já tenha passado pelo código.",
+      };
+    }
+
     if (veredicto.estado === "errado") {
-      await anotar("código errado", "—");
+      await anotar("código errado", veredicto.email);
       return {
         erro:
           veredicto.restam > 0
             ? `Código errado. Faltam ${veredicto.restam} tentativas.`
             : "Código errado, e acabaram as tentativas. Pede outro.",
       };
+    }
+
+    /* O isco não abre com código nenhum (ver `criarIsco`); isto é o cinto por
+       cima dos suspensórios, e responde o mesmo que um código errado. */
+    if (!autorizado(veredicto.email)) {
+      await anotar("código certo para email fora da lista", veredicto.email);
+      return { erro: "O código expirou ou já não serve. Pede outro." };
     }
 
     frasco.set(NOME_DO_COOKIE, await selar(veredicto.email), opcoesDoCookie());
@@ -179,6 +230,15 @@ export async function reenviarCodigo(): Promise<EstadoDoCodigo> {
     if (!(await podePedirCodigo(email))) {
       await anotar("limite de pedidos esgotado no reenvio", email);
       return { erro: "Já pediste códigos demais. Espera uns minutos." };
+    }
+
+    /* Um isco reenviado continua a ser um isco: quem não está na lista não
+       recebe email nenhum, e o ecrã diz o mesmo que diria a quem está. */
+    if (!autorizado(email)) {
+      await anotar("reenvio para email fora da lista", email);
+      await apagarDesafio(frasco.get(NOME_DO_DESAFIO)?.value);
+      frasco.set(NOME_DO_DESAFIO, await criarIsco(email), opcoesDoCookie(VALIDADE_DO_DESAFIO));
+      return { reenviado: true };
     }
 
     await apagarDesafio(frasco.get(NOME_DO_DESAFIO)?.value);

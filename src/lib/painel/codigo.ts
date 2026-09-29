@@ -2,6 +2,7 @@ import "server-only";
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import { chave } from "./chaves";
 import { ler, guardar, apagar, somar } from "./redis";
+import { gastarTentativaDoDia } from "./limites";
 
 /*
   O código de seis algarismos.
@@ -91,6 +92,24 @@ async function abrir(cookie: string | undefined): Promise<string | null> {
   return id;
 }
 
+/*
+  Um desafio que nenhum código abre, para quem não está na lista.
+
+  O ecrã de entrada tem de se portar igual para um email com acesso e para um
+  sem: os dois seguem para o ecrã do código, com o endereço mascarado. Se um
+  fosse para lá e o outro ficasse onde estava, bastava escrever um endereço
+  para saber se ele entra no painel — e a caixa de correio de quem entra é a
+  chave mestra.
+
+  O que se guarda é o hash de 32 bytes aleatórios, e não de seis algarismos: o
+  que se escreve no ecrã é reduzido a algarismos antes de ser comparado, e por
+  isso nenhum palpite pode dar certo. O `confirmarCodigo` confere a lista na
+  mesma, por cima disto.
+*/
+export async function criarIsco(email: string): Promise<string> {
+  return criarDesafio(email, randomBytes(32).toString("base64url"));
+}
+
 /** Guarda um código novo e devolve o cookie que aponta para ele. */
 export async function criarDesafio(email: string, codigo: string): Promise<string> {
   const id = randomBytes(16).toString("base64url");
@@ -106,8 +125,9 @@ export async function criarDesafio(email: string, codigo: string): Promise<strin
 
 export type Veredicto =
   | { estado: "certo"; email: string }
-  | { estado: "errado"; restam: number }
+  | { estado: "errado"; restam: number; email: string }
   | { estado: "expirado" }
+  | { estado: "bloqueado"; email: string }
   | { estado: "sem-desafio" };
 
 export async function conferirCodigo(
@@ -136,6 +156,14 @@ export async function conferirCodigo(
     return { estado: "expirado" };
   }
 
+  /* O teto de tentativas do dia, pela mesma razão e da mesma forma: gasto
+     antes de comparar, certa ou errada. Esgotado, o código queima-se e não é
+     comparado — ver `gastarTentativaDoDia`. */
+  if (!(await gastarTentativaDoDia(guardado.email))) {
+    await apagar(`otp:${id}`);
+    return { estado: "bloqueado", email: guardado.email };
+  }
+
   const esperado = Buffer.from(guardado.hash);
   const obtido = Buffer.from(hashDoCodigo(escrito.replace(/\D/g, "")));
   const bate = esperado.length === obtido.length && timingSafeEqual(esperado, obtido);
@@ -143,7 +171,7 @@ export async function conferirCodigo(
   if (!bate) {
     const restam = TENTATIVAS - tentativa;
     if (restam <= 0) await apagar(`otp:${id}`);
-    return { estado: "errado", restam: Math.max(0, restam) };
+    return { estado: "errado", restam: Math.max(0, restam), email: guardado.email };
   }
 
   /* Uso único: entrou, acabou. */

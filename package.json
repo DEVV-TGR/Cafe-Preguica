@@ -10,11 +10,13 @@
     "lint": "eslint",
     "tipos": "tsc --noEmit",
     "mensagens": "node scripts/verificar-mensagens.mjs",
+    "testes": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --import ./testes/apoio/carregador.mjs --test \"testes/*.test.mjs\"",
+    "segredos": "node scripts/verificar-segredos.mjs",
     "fotos": "node scripts/importar-fotos.mjs",
     "mapa": "node scripts/desenhar-mapa.mjs"
   },
   "dependencies": {
-    "next": "16.3.5",
+    "next": "16.3.7",
     "next-intl": "^4.14.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -27,7 +29,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.5",
+    "eslint-config-next": "16.3.7",
     "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"

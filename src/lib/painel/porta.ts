@@ -3,6 +3,7 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { abrir, NOME_DO_COOKIE } from "./sessao";
+import { autorizado } from "./utilizadores";
 
 /*
   A porta do painel — e é esta a fechadura, não o `proxy.ts`.
@@ -29,9 +30,16 @@ import { abrir, NOME_DO_COOKIE } from "./sessao";
   sessão e o cookie só é aberto uma vez. Não é cache entre pedidos.
 */
 
+/*
+  O selo prova que fomos nós a emitir a sessão; a lista diz se a pessoa ainda
+  pode entrar. São duas perguntas, e a segunda muda: tirar alguém do
+  `PAINEL_EMAILS` tem de o pôr fora já, e não daqui a oito horas, quando o
+  cookie caducar sozinho.
+*/
 export const sessao = cache(async () => {
   const valor = (await cookies()).get(NOME_DO_COOKIE)?.value;
-  return abrir(valor);
+  const aberta = await abrir(valor);
+  return aberta && autorizado(aberta.email) ? aberta : null;
 });
 
 /** Para páginas. Quem não tem sessão vai para o ecrã de entrada. */

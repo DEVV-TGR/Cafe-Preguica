@@ -19,14 +19,8 @@ export function FormularioDeEntrada() {
     <form action={accao} className="pn-pilha">
       {estado.erro ? <Aviso tom="mau">{estado.erro}</Aviso> : null}
 
-      {/* A mesma frase para quem tem acesso e para quem não tem. Se dissesse
-          "esse email não está autorizado", o formulário servia para descobrir
-          quem entra no painel. */}
-      {estado.enviado ? (
-        <Aviso tom="bom">
-          Se este email tiver acesso ao painel, o código chega em instantes. Vale 10 minutos.
-        </Aviso>
-      ) : null}
+      {/* Não há frase de "enviado": com acesso ou sem ele, o passo seguinte é
+          sempre o ecrã do código — ver `pedirCodigo`. */}
 
       <Campo
         etiqueta="Email"

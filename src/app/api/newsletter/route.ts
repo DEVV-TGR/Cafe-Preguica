@@ -6,6 +6,7 @@ import { criarConvite } from "@/lib/newsletter/convite";
 import { podeConvidar } from "@/lib/newsletter/limites";
 import { enviarConfirmacao, estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { ErroDoRedis } from "@/lib/painel/redis";
+import { lerJson } from "@/lib/pedido";
 
 /*
   O pop-up escreve aqui: pede o email de confirmação, e mais nada.
@@ -75,11 +76,13 @@ function linkDeConfirmacao(pedido: Request, lingua: (typeof routing.locales)[num
 }
 
 export async function POST(pedido: Request) {
-  if (!pedido.headers.get("content-type")?.includes("application/json")) {
-    return Response.json({ erro: "formato" }, { status: 415 });
+  const corpo = await lerJson(pedido);
+  if (!corpo.ok) {
+    if (corpo.estado === 415) return Response.json({ erro: "formato" }, { status: 415 });
+    if (corpo.estado === 413) return Response.json({ erro: "tamanho" }, { status: 413 });
   }
 
-  const lido = Pedido.safeParse(await pedido.json().catch(() => null));
+  const lido = Pedido.safeParse(corpo.ok ? corpo.valor : null);
   if (!lido.success) return Response.json({ erro: "email" }, { status: 400 });
 
   const { email, lingua, sitio } = lido.data;

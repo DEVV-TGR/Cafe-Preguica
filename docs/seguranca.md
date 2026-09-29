@@ -59,9 +59,12 @@ gerar um *nonce* por pedido no `src/proxy.ts` — o que tornava dinâmicas todas
 páginas, que hoje saem do CDN estáticas.
 
 Para este site é a troca certa, e a razão é a da primeira secção: não há
-conteúdo de terceiros nem entrada de utilizador a chegar ao HTML. O único
+conteúdo de terceiros nem entrada de visitantes a chegar ao HTML. O único
 `dangerouslySetInnerHTML` é o JSON-LD em `src/components/DadosEstruturados.tsx`,
-alimentado por ficheiros que o `zod` valida no build.
+alimentado por `cafe.json` e `marca.json` — que **o painel escreve**. Por isso
+passa pelo `jsonParaScript()` (`src/lib/json-em-script.ts`), que escapa `<`,
+`>` e `&`: um telefone ou um link de rede com `</script>` não fecha a etiqueta.
+O esquema do telefone também só aceita os caracteres de um número.
 
 **Se um dia entrar um CMS, comentários ou testemunhos submetidos, esta conta
 muda e volta-se a fazê-la.** O painel não a muda: quem lá escreve entrou com um
@@ -140,6 +143,29 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
 - O token do CI corre com `permissions: contents: read`. Nenhum dos passos
   escreve no repositório.
 
+## A entrada do painel, e o que foi apertado na auditoria de 2026-09
+
+- **O ecrã de entrada não diz quem tem acesso.** Um email da lista e um de fora
+  seguem os dois para o ecrã do código. O de fora fica com um desafio-isco que
+  nenhum código de seis algarismos abre, e o "reenviar" não lhe manda nada.
+  Até aqui, o de dentro saltava e o de fora ficava — bastava olhar.
+  - O que sobra é o **tempo de resposta**: quem está na lista espera pelo envio
+    do email. É uma diferença de centenas de milissegundos, com os limites por
+    IP e por dia por cima.
+- **A sessão confere o `PAINEL_EMAILS` a cada pedido.** Tirar alguém da lista
+  põe-no fora já, e não quando o cookie caducar.
+- **20 tentativas de código por email em 24 h**, certas ou erradas, contadas
+  antes de comparar. A partir daí esse email deixa de receber códigos e o que
+  tiver a meio deixa de ser conferido, até ao dia seguinte. Antes eram até 200
+  palpites por dia, todos os dias.
+- **O aparelho lembrado entra antes dos limites.** Quem enchesse o ecrã com o
+  email do dono trancava-o também a ele.
+- **Os limites por IP contam o IPv6 por /64** (`src/lib/rede.ts`): cada ligação
+  IPv6 tem 2⁶⁴ endereços, e contar por endereço dava um limite novo a cada
+  pedido.
+- **As rotas públicas leem o JSON com teto de 4 KB** e só aceitam
+  `application/json` (`src/lib/pedido.ts`).
+
 ## Dados pessoais
 
 Nenhuns são recolhidos sobre quem visita o site: não há formulários, contas nem
@@ -192,6 +218,13 @@ sinal de que um segredo está a passar pelo cliente.
     - nenhuma rota dele é estática.
 11. O HTML não carrega nenhum recurso de terceiros
 12. Nenhuma página pública grava cookies
+13. Os testes unitários de segurança (`npm run testes`, em `testes/`)
+14. O build corre com valores sentinela nas variáveis sensíveis, e
+    `npm run segredos` procura-os no que vai para o browser — com os endereços
+    das APIs que usam chaves e os nomes da carta secreta
+15. Sem `X-Powered-By`; `/painelx` e afins com os cabeçalhos do site
+16. As três rotas públicas recusam o que não é JSON (415) e corpos acima de
+    4 KB (413)
 
 Configuração parte-se sem ninguém dar por isso. Aqui, parte-se com o CI
 vermelho.

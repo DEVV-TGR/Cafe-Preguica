@@ -1,8 +1,9 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
-import { somar } from "./redis";
+import { ler, somar } from "./redis";
 import { meioEscondido } from "./utilizadores";
+import { redeDe } from "@/lib/rede";
 
 /*
   Quantas vezes se pode pedir um código, e de onde.
@@ -45,6 +46,15 @@ import { meioEscondido } from "./utilizadores";
   alguma vez for atingido em condições normais, o número está errado; se for
   atingido por ataque, fica no registo a dizê-lo.
 
+  **Por email, 20 tentativas de código em 24 horas** — certas ou erradas. Os
+  limites de cima travam o ritmo, mas não o total: com o teto de 40 envios,
+  eram até 200 palpites por dia contra o mesmo endereço, todos os dias — pouco
+  por dia, e uma conta que vai somando. Vinte confirmações num dia não são uso
+  normal, nem com dedos grossos. A partir daí esse email não recebe códigos
+  novos **e o código que tiver a meio deixa de ser conferido**, mesmo que ainda
+  lhe restem tentativas. Quem tem o aparelho lembrado não dá por isso, porque
+  entra sem pedir código (ver `pedirCodigo`).
+
   ## O que isto não faz, e quem faz
 
   Não trava volume bruto na borda: para isso está a regra do Vercel Firewall
@@ -59,6 +69,8 @@ const POR_IP = 10;
 const TETO_DIARIO = 40;
 const DIA_S = 24 * 60 * 60;
 
+const TETO_DE_TENTATIVAS = 20;
+
 /*
   O email vai em hash para a chave do Redis.
 
@@ -66,9 +78,16 @@ const DIA_S = 24 * 60 * 60;
   legível em texto no armazenamento, onde não faz falta nenhuma. Quem tiver as
   chaves do Redis vê `pedidos:9f86d0…` e não `pedidos:maria@…`.
 */
+function resumoDoEmail(email: string): string {
+  return createHash("sha256").update(email.toLowerCase()).digest("hex").slice(0, 32);
+}
+
 function chaveDoEmail(email: string): string {
-  const digest = createHash("sha256").update(email.toLowerCase()).digest("hex");
-  return `pedidos:${digest.slice(0, 32)}`;
+  return `pedidos:${resumoDoEmail(email)}`;
+}
+
+function chaveDasTentativas(email: string): string {
+  return `tentativas-codigo:${resumoDoEmail(email)}`;
 }
 
 /*
@@ -89,6 +108,15 @@ function chaveDoDia(): string {
   vale o que valer, e é por isso que o limite por IP é o terceiro da lista e não
   o primeiro.
 */
+/*
+  A chave dos limites por ligação: o IPv4 tal e qual, o IPv6 pelo /64. Ver
+  `lib/rede.ts`. O `origem()` de cima continua a ser o que vai para o registo,
+  por extenso.
+*/
+export async function rede(): Promise<string> {
+  return redeDe(await origem());
+}
+
 export async function origem(): Promise<string> {
   const cabecalhos = await headers();
   return (
@@ -108,10 +136,11 @@ export async function origem(): Promise<string> {
   evitar.
 */
 export async function podePedirCodigo(email: string): Promise<boolean> {
-  const [porEmail, porIp, noDia] = await Promise.all([
+  const [porEmail, porIp, noDia, tentativas] = await Promise.all([
     somar(chaveDoEmail(email), JANELA_S),
-    somar(`pedidos-ip:${await origem()}`, JANELA_S),
+    somar(`pedidos-ip:${await rede()}`, JANELA_S),
     somar(chaveDoDia(), DIA_S),
+    tentativasDoDia(email),
   ]);
 
   /*
@@ -127,7 +156,39 @@ export async function podePedirCodigo(email: string): Promise<boolean> {
     return false;
   }
 
+  if (tentativas >= TETO_DE_TENTATIVAS) {
+    await anotar(`teto de tentativas de código esgotado (${tentativas})`, email);
+    return false;
+  }
+
   return porEmail <= POR_EMAIL && porIp <= POR_IP;
+}
+
+/*
+  Gasta uma tentativa de código do dia **antes** de o código ser comparado, e
+  diz se ainda havia.
+
+  Contar só os erros, depois de comparar, deixava duas brechas: pedidos em
+  paralelo comparavam todos antes de algum somar, e o teto só travava o pedido
+  de códigos novos — o código a meio continuava a aceitar as tentativas que lhe
+  restavam. Com o `INCR` à cabeça, a vigésima primeira nem chega a ser
+  comparada.
+
+  **As certas também contam, e não se devolvem.** Devolver a unidade de uma
+  tentativa certa (`DECR`) parecia mais justo, e trazia três problemas: um
+  `DECR` depois de a chave caducar cria-a com `-1` e **sem prazo**, a conta
+  podia ficar abaixo de zero, e gastar-comparar-devolver deixava de ser uma
+  operação só. Um só `INCR` não tem nenhum dos três. O preço é uma entrada
+  certa gastar uma das vinte do dia — e ninguém entra vinte vezes por dia com
+  código, que o aparelho lembrado dispensa.
+*/
+export async function gastarTentativaDoDia(email: string): Promise<boolean> {
+  return (await somar(chaveDasTentativas(email), DIA_S)) <= TETO_DE_TENTATIVAS;
+}
+
+/** Quantas tentativas de código este email já gastou hoje. */
+export async function tentativasDoDia(email: string): Promise<number> {
+  return Number((await ler(chaveDasTentativas(email))) ?? 0);
 }
 
 /*

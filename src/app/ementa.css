@@ -1049,8 +1049,15 @@ html:has(.em-pagina) {
 /* ------------------------------------------------------------ fechada */
 
 .em-secreta__fechada {
-  position: relative;
+  /* A carta desfocada e a porta na mesma célula, uma por cima da outra: a
+     moldura cresce até à mais alta. Com a porta em `position: absolute`, o
+     formulário "não inscrito" (mais alto do que a carta) saía do picotado. */
+  display: grid;
   margin-top: 1.75rem;
+}
+
+.em-secreta__fechada > * {
+  grid-area: 1 / 1;
 }
 
 /* A carta por trás do vidro: barras, não nomes. */
@@ -1082,8 +1089,7 @@ html:has(.em-pagina) {
 
 /* A porta, por cima da carta desfocada. */
 .em-secreta__porta {
-  position: absolute;
-  inset: 0;
+  position: relative;
   display: grid;
   place-items: center;
   padding: 0.5rem;
@@ -1153,15 +1159,6 @@ html:has(.em-pagina) {
 .em-secreta__ligacao:hover,
 .em-secreta__ligacao:focus-visible {
   color: var(--color-ouro-claro);
-}
-
-/* O formulário "não inscrito" é mais alto do que a carta desfocada: no
-   telemóvel sai de cima dela e fica por baixo, em vez de a transbordar. */
-@media (max-width: 40rem) {
-  .em-secreta__porta:has(.em-secreta__estado) {
-    position: static;
-    margin-top: 1rem;
-  }
 }
 
 /* ------------------------------------------------------------ aberta */

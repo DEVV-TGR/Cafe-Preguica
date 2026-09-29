@@ -25,6 +25,7 @@ import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
 import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
+import { Ampliar, Visor, type GrupoDoVisor } from "@/components/ementa/Visor";
 import { DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
 import { CartaSecreta } from "@/components/ementa/CartaSecreta";
 import { HorarioDaCozinha } from "@/components/HorarioDaCozinha";
@@ -172,6 +173,24 @@ export default async function Ementa({ params }: Props) {
   const preco = (valor: number | null) =>
     valor === null ? comum("precoPorConfirmar") : formatarPreco(valor, locale);
 
+  /* A fotografia de um artigo, para o visor: a mesma que aparece no círculo,
+     inteira, com o nome e o preço por baixo. */
+  const grupoDoArtigo = (artigo: Artigo): GrupoDoVisor | null => {
+    const foto = FOTOS_ARTIGO[artigo.id];
+    if (!foto) return null;
+    return {
+      nome: artigo.nome[locale],
+      fotos: [
+        {
+          src: `/casa/${foto}.webp`,
+          srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
+          alt: t(`fotos.${foto}`),
+          legenda: [`${artigo.nome[locale]} · ${preco(artigo.preco)}`],
+        },
+      ],
+    };
+  };
+
   const nomesSabores = Object.fromEntries(
     SABORES.map((s) => [s, t(`sabores.${s}`)]),
   ) as Record<Sabor, string>;
@@ -201,232 +220,245 @@ export default async function Ementa({ params }: Props) {
         ]}
       />
 
-      <main id="conteudo" className="em-pagina">
-        <header className="em-topo">
-          <div className="em-topo__texto">
-            <p className="em-olho">{t("olho")}</p>
-            <h1 className="em-topo__titulo">{t("titulo")}</h1>
-            <p className="em-topo__intro">{t("introducao")}</p>
-            <p className="pg-rotulo__dado">
-              {t("contagem", { artigos: totalArtigos, seccoes: seccoes.length })}
-            </p>
+      <Visor
+        textos={{
+          naFotografia: t("naFotografia"),
+          fechar: t("visor.fechar"),
+          anterior: t("visor.anterior"),
+          seguinte: t("visor.seguinte"),
+          rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
+        }}
+      >
+        <main id="conteudo" className="em-pagina">
+          <header className="em-topo">
+            <div className="em-topo__texto">
+              <p className="em-olho">{t("olho")}</p>
+              <h1 className="em-topo__titulo">{t("titulo")}</h1>
+              <p className="em-topo__intro">{t("introducao")}</p>
+              <p className="pg-rotulo__dado">
+                {t("contagem", { artigos: totalArtigos, seccoes: seccoes.length })}
+              </p>
 
-            <div className="em-avisos">
-              {!CARTA_CONFIRMADA && (
-                /* `role="status"` e não `alert`: é informação sobre o estado
-                   da página, não uma emergência que interrompa quem usa leitor
-                   de ecrã. */
-                <p role="status" className="em-aviso">
-                  {t("avisoProvisoria")}
-                </p>
-              )}
-              {!temAlergeniosDeclarados() && (
-                <p className="em-aviso">{t("avisoAlergenios")}</p>
+              <div className="em-avisos">
+                {!CARTA_CONFIRMADA && (
+                  /* `role="status"` e não `alert`: é informação sobre o estado
+                     da página, não uma emergência que interrompa quem usa leitor
+                     de ecrã. */
+                  <p role="status" className="em-aviso">
+                    {t("avisoProvisoria")}
+                  </p>
+                )}
+                {!temAlergeniosDeclarados() && (
+                  <p className="em-aviso">{t("avisoAlergenios")}</p>
+                )}
+              </div>
+
+              {/* O sinal, lá em cima: quem leu o QR fica a saber no primeiro
+                  segundo que há mais do que isto. A carta está no fim. */}
+              {haCartaSecreta && (
+                <a href="#carta-secreta" className="em-sinal-secreto">
+                  <svg viewBox="0 0 48 56" aria-hidden="true">
+                    <path d="M14 26 V17 a10 10 0 0 1 20 0 V26" />
+                    <rect x="7" y="25" width="34" height="26" rx="5" />
+                  </svg>
+                  <span>
+                    <strong>{t("secreta.sinal")}</strong> {t("secreta.sinalLigacao")}
+                  </span>
+                </a>
               )}
             </div>
 
-            {/* O sinal, lá em cima: quem leu o QR fica a saber no primeiro
-                segundo que há mais do que isto. A carta está no fim. */}
-            {haCartaSecreta && (
-              <a href="#carta-secreta" className="em-sinal-secreto">
-                <svg viewBox="0 0 48 56" aria-hidden="true">
-                  <path d="M14 26 V17 a10 10 0 0 1 20 0 V26" />
-                  <rect x="7" y="25" width="34" height="26" rx="5" />
-                </svg>
-                <span>
-                  <strong>{t("secreta.sinal")}</strong> {t("secreta.sinalLigacao")}
-                </span>
-              </a>
-            )}
-          </div>
-
-          <div className="em-leque" aria-hidden="true">
-            {LEQUE.map((foto, i) => (
-              /* Fora do computador o leque não aparece (ver `.em-leque` em
-                 `ementa.css`), e o `<source>` troca cada copo por um pixel
-                 transparente: um `display: none` sozinho não impede o
-                 telemóvel de descarregar as cinco fotografias. A condição é a
-                 do CSS, negada. */
-              <picture key={foto}>
-                <source media={FORA_DO_COMPUTADOR} srcSet={PIXEL} />
-                <img
-                  src={`/casa/${foto}-640.webp`}
-                  width={640}
-                  height={853}
-                  alt=""
-                  style={{ "--i": i - (LEQUE.length - 1) / 2 } as React.CSSProperties}
-                  fetchPriority={i === 2 ? "high" : undefined}
-                />
-              </picture>
-            ))}
-          </div>
-        </header>
-
-        {capitulos.map(({ capitulo, seccoes }, i) => {
-          const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, artigos }) => ({
-            src: `/casa/${foto}.webp`,
-            srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
-            alt: t(`fotos.${foto}`),
-            legenda: artigos
-              .map(artigoPorId)
-              /* Um artigo escondido pelo painel não está na lista por baixo, e
-                 a legenda não o pode anunciar. */
-              .filter((a): a is Artigo => a !== undefined && !a.escondido)
-              .map((a) => `${a.nome[locale]} · ${preco(a.preco)}`),
-          }));
-
-          return (
-            <section
-              key={capitulo}
-              id={capitulo}
-              className="em-capitulo"
-              aria-labelledby={`titulo-${capitulo}`}
-            >
-              <DesenhosDoCapitulo capitulo={capitulo} />
-              <header className="em-abertura">
-                <Carrossel
-                  fotos={fotos}
-                  prioridade={i === 0}
-                  textos={{
-                    naFotografia: t("naFotografia"),
-                    nome: t(`capitulos.${capitulo}.nome`),
-                    rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
-                    pausar: t("carrossel.pausar"),
-                    continuar: t("carrossel.continuar"),
-                  }}
-                  /* A `key` não é decoração: um elemento criado aqui e desenhado
-                     dentro de um componente de cliente passa pela fronteira do
-                     servidor, e o React avisa se ele vier sem ela. */
-                  titulo={
-                    <div key="titulo" className="em-abertura__titulo">
-                      <span className="em-abertura__numero" aria-hidden="true">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <h2 id={`titulo-${capitulo}`}>{t(`capitulos.${capitulo}.nome`)}</h2>
-                    </div>
-                  }
-                />
-
-                <p className="em-abertura__facto">{t(`capitulos.${capitulo}.facto`)}</p>
-                {/* Onde se escolhe a comida é onde tem de estar a hora a que a
-                    cozinha fecha — pedido da casa. */}
-                {capitulo === "comer" && (
-                  <HorarioDaCozinha locale={locale} className="em-abertura__cozinha" />
-                )}
-                {/* O sub-índice do capítulo: salta para a secção. Com uma
-                    secção só não aparece — era um botão para o sítio onde já
-                    se está. */}
-                {seccoes.length > 1 && (
-                  <ul className="em-abertura__seccoes">
-                    {seccoes.map(({ categoria }) => (
-                      <li key={categoria}>
-                        <a href={`#${categoria}`}>{t(`categorias.${categoria}`)}</a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </header>
-
-              {seccoes.map(({ categoria, artigos }) => (
-                <Seccao
-                  key={categoria}
-                  categoria={categoria}
-                  artigos={artigos}
-                  locale={locale}
-                  titulo={t(`categorias.${categoria}`)}
-                  dose={comum("dose")}
-                  /* Só as secções com duas colunas de preço (`METADADOS`) têm
-                     nomes para elas nas mensagens — pedir os das outras dava o
-                     nome da chave no ecrã. */
-                  colunas={
-                    METADADOS[categoria]?.colunas
-                      ? [t(`colunas.${categoria}.a`), t(`colunas.${categoria}.b`)]
-                      : ["", ""]
-                  }
-                  preco={preco}
-                  extra={
-                    COM_SABORES.includes(categoria) ? (
-                      <Sabores
-                        nomes={nomesSabores}
-                        textos={{
-                          titulo: t("saboresTitulo"),
-                          sortear: t("sortear"),
-                          aRodar: t("aRodar"),
-                          escolheu: t("escolheu"),
-                          escolhido: t("escolhido"),
-                          nenhum: t("nenhumSabor"),
-                          nota: t("saboresNota"),
-                        }}
-                      />
-                    ) : null
-                  }
-                />
+            <div className="em-leque" aria-hidden="true">
+              {LEQUE.map((foto, i) => (
+                /* Fora do computador o leque não aparece (ver `.em-leque` em
+                   `ementa.css`), e o `<source>` troca cada copo por um pixel
+                   transparente: um `display: none` sozinho não impede o
+                   telemóvel de descarregar as cinco fotografias. A condição é a
+                   do CSS, negada. */
+                <picture key={foto}>
+                  <source media={FORA_DO_COMPUTADOR} srcSet={PIXEL} />
+                  <img
+                    src={`/casa/${foto}-640.webp`}
+                    width={640}
+                    height={853}
+                    alt=""
+                    style={{ "--i": i - (LEQUE.length - 1) / 2 } as React.CSSProperties}
+                    fetchPriority={i === 2 ? "high" : undefined}
+                  />
+                </picture>
               ))}
+            </div>
+          </header>
 
-              {/* "São cocktails, não deviam estar aqui?" — estão lá em baixo,
-                  e esta linha é o caminho. */}
-              {capitulo === "cocktails" && haCartaSecreta && (
-                <p className="em-mais-secretos">
-                  <a href="#carta-secreta">{t("secreta.maisCocktails")}</a>
-                </p>
-              )}
-            </section>
-          );
-        })}
+          {capitulos.map(({ capitulo, seccoes }, i) => {
+            const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, artigos }) => ({
+              src: `/casa/${foto}.webp`,
+              srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
+              alt: t(`fotos.${foto}`),
+              legenda: artigos
+                .map(artigoPorId)
+                /* Um artigo escondido pelo painel não está na lista por baixo, e
+                   a legenda não o pode anunciar. */
+                .filter((a): a is Artigo => a !== undefined && !a.escondido)
+                .map((a) => `${a.nome[locale]} · ${preco(a.preco)}`),
+            }));
 
-        {haCartaSecreta && (
-          <CartaSecreta
-            locale={locale}
-            textos={{
-              olho: t("secreta.olho"),
-              titulo: t("secreta.titulo"),
-              texto: t("secreta.texto"),
-              etiqueta: t("secreta.etiqueta"),
-              marcador: t("secreta.marcador"),
-              abrir: t("secreta.abrir"),
-              aAbrir: t("secreta.aAbrir"),
-              naoInscritoTitulo: t("secreta.naoInscritoTitulo"),
-              naoInscritoTexto: t("secreta.naoInscritoTexto", { email: "{email}" }),
-              inscrever: t("secreta.inscrever"),
-              aEnviar: t("secreta.aEnviar"),
-              consentimento: convite("consentimento"),
-              privacidade: convite("privacidade"),
-              enviadoTitulo: t("secreta.enviadoTitulo"),
-              enviadoTexto: t("secreta.enviadoTexto"),
-              outroEmail: t("secreta.outroEmail"),
-              abertaTexto: t("secreta.abertaTexto"),
-              fechar: t("secreta.fechar"),
-              erroEmail: convite("erroEmail"),
-              erroLimite: convite("erroLimite"),
-              erroServico: convite("erroServico"),
-              precoPorConfirmar: comum("precoPorConfirmar"),
-            }}
-          />
-        )}
+            return (
+              <section
+                key={capitulo}
+                id={capitulo}
+                className="em-capitulo"
+                aria-labelledby={`titulo-${capitulo}`}
+              >
+                <DesenhosDoCapitulo capitulo={capitulo} />
+                <header className="em-abertura">
+                  <Carrossel
+                    fotos={fotos}
+                    prioridade={i === 0}
+                    textos={{
+                      naFotografia: t("naFotografia"),
+                      nome: t(`capitulos.${capitulo}.nome`),
+                      rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
+                      pausar: t("carrossel.pausar"),
+                      continuar: t("carrossel.continuar"),
+                      ampliar: t("visor.ampliar"),
+                    }}
+                    /* A `key` não é decoração: um elemento criado aqui e desenhado
+                       dentro de um componente de cliente passa pela fronteira do
+                       servidor, e o React avisa se ele vier sem ela. */
+                    titulo={
+                      <div key="titulo" className="em-abertura__titulo">
+                        <span className="em-abertura__numero" aria-hidden="true">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <h2 id={`titulo-${capitulo}`}>{t(`capitulos.${capitulo}.nome`)}</h2>
+                      </div>
+                    }
+                  />
 
-        <section className="em-fecho" aria-labelledby="titulo-fecho">
-          <img
-            className="em-fecho__preguica"
-            src="/marca/preguica.webp"
-            alt=""
-            width={325}
-            height={286}
-            loading="lazy"
-          />
-          <h2 id="titulo-fecho" className="pg-rotulo__nome">
-            {t("fecho.nome")}
-          </h2>
-          <p className="pg-rotulo__facto">{t("fecho.facto")}</p>
-          <p className="em-fecho__botoes">
-            <a href="#conteudo" className="pg-botao">
-              {t("fecho.topo")} <span aria-hidden="true">↑</span>
-            </a>
-            <Link href="/" className="pg-botao">
-              {t("fecho.inicio")}
-            </Link>
-          </p>
-        </section>
-      </main>
+                  <p className="em-abertura__facto">{t(`capitulos.${capitulo}.facto`)}</p>
+                  {/* Onde se escolhe a comida é onde tem de estar a hora a que a
+                      cozinha fecha — pedido da casa. */}
+                  {capitulo === "comer" && (
+                    <HorarioDaCozinha locale={locale} className="em-abertura__cozinha" />
+                  )}
+                  {/* O sub-índice do capítulo: salta para a secção. Com uma
+                      secção só não aparece — era um botão para o sítio onde já
+                      se está. */}
+                  {seccoes.length > 1 && (
+                    <ul className="em-abertura__seccoes">
+                      {seccoes.map(({ categoria }) => (
+                        <li key={categoria}>
+                          <a href={`#${categoria}`}>{t(`categorias.${categoria}`)}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </header>
+
+                {seccoes.map(({ categoria, artigos }) => (
+                  <Seccao
+                    key={categoria}
+                    categoria={categoria}
+                    artigos={artigos}
+                    locale={locale}
+                    titulo={t(`categorias.${categoria}`)}
+                    dose={comum("dose")}
+                    /* Só as secções com duas colunas de preço (`METADADOS`) têm
+                       nomes para elas nas mensagens — pedir os das outras dava o
+                       nome da chave no ecrã. */
+                    colunas={
+                      METADADOS[categoria]?.colunas
+                        ? [t(`colunas.${categoria}.a`), t(`colunas.${categoria}.b`)]
+                        : ["", ""]
+                    }
+                    preco={preco}
+                    grupoDoArtigo={grupoDoArtigo}
+                    ampliar={t("visor.ampliar")}
+                    extra={
+                      COM_SABORES.includes(categoria) ? (
+                        <Sabores
+                          nomes={nomesSabores}
+                          textos={{
+                            titulo: t("saboresTitulo"),
+                            sortear: t("sortear"),
+                            aRodar: t("aRodar"),
+                            escolheu: t("escolheu"),
+                            escolhido: t("escolhido"),
+                            nenhum: t("nenhumSabor"),
+                            nota: t("saboresNota"),
+                          }}
+                        />
+                      ) : null
+                    }
+                  />
+                ))}
+
+                {/* "São cocktails, não deviam estar aqui?" — estão lá em baixo,
+                    e esta linha é o caminho. */}
+                {capitulo === "cocktails" && haCartaSecreta && (
+                  <p className="em-mais-secretos">
+                    <a href="#carta-secreta">{t("secreta.maisCocktails")}</a>
+                  </p>
+                )}
+              </section>
+            );
+          })}
+
+          {haCartaSecreta && (
+            <CartaSecreta
+              locale={locale}
+              textos={{
+                olho: t("secreta.olho"),
+                titulo: t("secreta.titulo"),
+                texto: t("secreta.texto"),
+                etiqueta: t("secreta.etiqueta"),
+                marcador: t("secreta.marcador"),
+                abrir: t("secreta.abrir"),
+                aAbrir: t("secreta.aAbrir"),
+                naoInscritoTitulo: t("secreta.naoInscritoTitulo"),
+                naoInscritoTexto: t("secreta.naoInscritoTexto", { email: "{email}" }),
+                inscrever: t("secreta.inscrever"),
+                aEnviar: t("secreta.aEnviar"),
+                consentimento: convite("consentimento"),
+                privacidade: convite("privacidade"),
+                enviadoTitulo: t("secreta.enviadoTitulo"),
+                enviadoTexto: t("secreta.enviadoTexto"),
+                outroEmail: t("secreta.outroEmail"),
+                abertaTexto: t("secreta.abertaTexto"),
+                fechar: t("secreta.fechar"),
+                erroEmail: convite("erroEmail"),
+                erroLimite: convite("erroLimite"),
+                erroServico: convite("erroServico"),
+                precoPorConfirmar: comum("precoPorConfirmar"),
+              }}
+            />
+          )}
+
+          <section className="em-fecho" aria-labelledby="titulo-fecho">
+            <img
+              className="em-fecho__preguica"
+              src="/marca/preguica.webp"
+              alt=""
+              width={325}
+              height={286}
+              loading="lazy"
+            />
+            <h2 id="titulo-fecho" className="pg-rotulo__nome">
+              {t("fecho.nome")}
+            </h2>
+            <p className="pg-rotulo__facto">{t("fecho.facto")}</p>
+            <p className="em-fecho__botoes">
+              <a href="#conteudo" className="pg-botao">
+                {t("fecho.topo")} <span aria-hidden="true">↑</span>
+              </a>
+              <Link href="/" className="pg-botao">
+                {t("fecho.inicio")}
+              </Link>
+            </p>
+          </section>
+        </main>
+      </Visor>
 
       <RodapeSite />
     </>
@@ -453,6 +485,8 @@ function Seccao({
   dose,
   colunas,
   preco,
+  grupoDoArtigo,
+  ampliar,
   extra,
 }: {
   categoria: Categoria;
@@ -462,6 +496,8 @@ function Seccao({
   dose: string;
   colunas: [string, string];
   preco: (valor: number | null) => string;
+  grupoDoArtigo: (artigo: Artigo) => GrupoDoVisor | null;
+  ampliar: string;
   extra: React.ReactNode;
 }) {
   const meta = METADADOS[categoria];
@@ -496,19 +532,28 @@ function Seccao({
       <div className="em-seccao__corpo">
         <ul className="em-lista">
           {artigos.map((artigo) => {
-            const foto = FOTOS_ARTIGO[artigo.id];
+            const grupo = grupoDoArtigo(artigo);
             return (
-              <li key={artigo.id} className="em-artigo" data-foto={foto ? true : undefined}>
-                {foto && (
-                  <img
-                    className="em-artigo__foto"
-                    src={`/casa/${foto}-640.webp`}
-                    width={640}
-                    height={853}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                  />
+              <li key={artigo.id} className="em-artigo" data-foto={grupo ? true : undefined}>
+                {grupo && (
+                  /* A imagem continua sem `alt`: o nome está logo ao lado, e
+                     o botão já diz o que abre. A descrição vai no visor. */
+                  <Ampliar
+                    grupo={grupo}
+                    indice={0}
+                    rotulo={`${ampliar}: ${artigo.nome[locale]}`}
+                    className="em-artigo__ampliar"
+                  >
+                    <img
+                      className="em-artigo__foto"
+                      src={`/casa/${FOTOS_ARTIGO[artigo.id]}-640.webp`}
+                      width={640}
+                      height={853}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </Ampliar>
                 )}
                 <div className="em-artigo__texto">
                   <p className="em-artigo__linha">

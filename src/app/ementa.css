@@ -1359,3 +1359,524 @@ html:has(.em-pagina) {
     transform: translateY(0);
   }
 }
+
+/* ------------------------------------------------------------ o visor
+   Ver `components/ementa/Visor.tsx`. A fotografia inteira, como uma ficha do
+   catálogo: o capítulo e a contagem em cima, a fotografia sem cortes ao meio,
+   "Na fotografia" e o preço por baixo — as letras das legendas da abertura.
+   Nada de moldura branca nem de sombras de galeria: é a mesma casa escura, só
+   com a fotografia maior. */
+
+/* O botão à volta de uma fotografia não pode mudar nada no desenho dela. */
+.em-ampliar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: zoom-in;
+}
+
+.em-ampliar img {
+  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Um aceno ao rato, para se perceber que abre. No telemóvel ninguém precisa
+   dele — uma fotografia pede um toque. */
+@media (hover: hover) and (pointer: fine) {
+  .em-ampliar:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* O título e a legenda estão por cima da fotografia: um toque neles também é
+   um toque nela. */
+.em-abertura__titulo,
+.em-abertura__legenda {
+  pointer-events: none;
+}
+
+.em-artigo__ampliar {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+}
+
+/* A página por trás não rola enquanto a fotografia está aberta. */
+html:has(.em-visor[open]) {
+  overflow: hidden;
+}
+
+.em-visor {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  /* Opaco: com transparência, o texto da carta aparecia por trás da
+     fotografia. O desfoque no `::backdrop` que o disfarçava não existe no
+     Safari. */
+  background: var(--color-canvas);
+  color: var(--color-tinta);
+  overflow: hidden;
+}
+
+.em-visor:focus {
+  outline: none;
+}
+
+/* A barra de cima e a faixa ocupam a mesma célula: a barra fica por cima, e
+   o brilho de cada fotografia vai até ao topo do ecrã em vez de parar numa
+   faixa preta à altura dela. */
+.em-visor[open] {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}
+
+.em-visor[open] > * {
+  grid-area: 1 / 1;
+}
+
+/* Sem View Transitions (ou com elas desligadas) o visor aparece a desvanecer.
+   Com elas, quem faz a entrada é a fotografia, e isto fica por baixo. */
+.em-visor[open] {
+  transition: opacity 240ms ease;
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.em-visor__topo {
+  --altura-topo: 4.25rem;
+  z-index: 1;
+  align-self: start;
+  min-height: var(--altura-topo);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem clamp(1rem, 4vw, 2.5rem);
+}
+
+.em-visor__onde {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  min-width: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.em-visor__onde span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.em-visor__contagem {
+  flex: 0 0 auto;
+  color: var(--color-tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+/* O mesmo comprimido do índice da carta: é um botão da casa, não um ✕ solto
+   num canto que o polegar não acerta. */
+.em-visor__fechar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.em-visor__fechar:hover,
+.em-visor__fechar:focus-visible {
+  border-color: var(--color-ouro);
+  color: var(--color-ouro);
+}
+
+.em-visor__faixa {
+  display: flex;
+  min-height: 0;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.em-visor__faixa::-webkit-scrollbar {
+  display: none;
+}
+
+.em-visor__foto {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  flex: 0 0 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: 1rem;
+  margin: 0;
+  /* Em cima, o lugar da barra, que está por cima da faixa. */
+  padding: 4.25rem clamp(1rem, 4vw, 2.5rem) max(1.25rem, env(safe-area-inset-bottom));
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* A cor do fundo: a própria fotografia, desfocada ao ponto de só sobrar a
+   cor, e esbatida para não competir com ela. Aumentada para as bordas do
+   desfoque (que puxam para o transparente) ficarem fora do ecrã. */
+.em-visor__foto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--fundo) center / cover no-repeat;
+  filter: blur(48px) saturate(1.4);
+  opacity: 0.5;
+  transform: scale(1.25);
+  pointer-events: none;
+}
+
+/* O escuro da casa por cima do brilho, mais cerrado em baixo e em cima:
+   a legenda e a barra ficam sobre escuro e lêem-se sempre. */
+.em-visor__foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 80% 65% at 50% 45%,
+    transparent 0%,
+    color-mix(in oklab, var(--color-canvas) 50%, transparent) 100%
+  );
+  pointer-events: none;
+}
+
+/* A moldura é a área que sobra; a imagem cabe lá dentro sem cortes e com a
+   caixa do tamanho da fotografia — é essa caixa que a transição desdobra.
+   Em cima fica uma folga para a preguiça: a parte dela que fica acima da
+   borda. */
+.em-visor__moldura {
+  /* A parte da preguiça acima da borda (0,517 × 8,5rem ≈ 4,4rem) e um pouco
+     de ar para os "z" — que não podem passar daqui: a faixa corta o que sai
+     por cima dela. */
+  --folga: 5.5rem;
+  position: relative;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Absoluta com `inset: 0` e margens automáticas: é a forma de uma imagem caber
+   numa caixa cuja altura vem da grelha. Um `max-height: 100%` em fluxo lê a
+   altura do pai como indefinida, e a fotografia passava por cima da legenda. */
+.em-visor__imagem {
+  position: absolute;
+  inset: var(--folga) 0 0 0;
+  margin: auto;
+  max-width: 100%;
+  /* A percentagem de um elemento absoluto mede-se pela moldura toda, não pela
+     área abaixo da folga — sem descontar, a fotografia subia para cima dela e
+     tapava a legenda. */
+  max-height: calc(100% - var(--folga));
+  width: auto;
+  height: auto;
+  cursor: default;
+  /* A moldura: madeira à volta (o tom das mesas, de onde vem o
+     `--color-superficie`), um filete dourado encostado à fotografia e outro
+     por fora. É tudo da própria `<img>` — padding, contorno e borda — para a
+     caixa medida pelo `medirMoldura` e desdobrada pela transição ser a do
+     quadro inteiro, com a preguiça deitada na borda de cima dele. */
+  --madeira: clamp(0.5rem, 2.2vw, 0.9rem);
+  padding: var(--madeira);
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 70%, transparent);
+  border-radius: 4px;
+  outline: 1px solid color-mix(in oklab, var(--color-ouro-claro) 75%, transparent);
+  outline-offset: calc(var(--madeira) * -1);
+  background:
+    /* os veios, finos e na diagonal */
+    repeating-linear-gradient(
+      100deg,
+      rgb(255 220 170 / 0.05) 0 2px,
+      transparent 2px 7px
+    ),
+    linear-gradient(135deg, #7a4520 0%, #5a3114 38%, #6a3914 62%, #43240d 100%);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.6),
+    0 28px 60px -18px rgb(0 0 0 / 0.85);
+}
+
+.em-visor__legenda {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.em-visor__legenda span {
+  display: block;
+}
+
+.em-visor__legenda span:first-child {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+}
+
+.em-visor__legenda span + span {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.2vw, 1.5rem);
+  line-height: 1.2;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* ------------------------------------------------ a preguiça no visor
+   Deitada na borda de cima da fotografia: a barriga (a 66% da altura do
+   desenho, onde as patas se separam do corpo) fica em cima da borda, e as
+   patas caem por cima da fotografia. O desenho é 720 × 564, por isso a altura
+   é 0,783 da largura, e 0,66 × 0,783 ≈ 0,517. A caixa da fotografia vem do
+   `medirMoldura` em `--foto-x`, `--foto-y` e `--foto-l`. */
+
+.em-visor__preguica {
+  --largura: min(calc(var(--foto-l) * 0.45), 8.5rem);
+  position: absolute;
+  left: calc(var(--foto-x) + var(--foto-l) * 0.04);
+  top: calc(var(--foto-y) - var(--largura) * 0.517);
+  width: var(--largura);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.em-visor__moldura[data-medida] .em-visor__preguica {
+  visibility: visible;
+}
+
+.em-visor__preguica > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Uma sombra curta por baixo, para as patas não parecerem coladas à
+     fotografia. */
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.45));
+  /* A respiração: o eixo é a barriga, que fica quieta em cima da borda; o
+     dorso sobe e desce. Devagar — é uma preguiça a dormir. */
+  transform-origin: 50% 66%;
+}
+
+/* Os "z" nascem por cima da cabeça (à esquerda) e sobem na diagonal, pelo ar
+   livre — por cima do pelo preto não se viam. */
+.em-visor__zzz {
+  position: absolute;
+  left: 16%;
+  top: -4%;
+}
+
+.em-visor__zzz span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  line-height: 1;
+  color: var(--color-ouro-claro);
+  opacity: 0;
+}
+
+.em-visor__zzz span:nth-child(1) {
+  font-size: 0.9rem;
+}
+
+.em-visor__zzz span:nth-child(2) {
+  font-size: 1.15rem;
+}
+
+.em-visor__zzz span:nth-child(3) {
+  font-size: 1.4rem;
+}
+
+/* Tudo o que mexe só mexe na fotografia que se está a ver: é o `data-atual`
+   que o dispara, por isso deslizar para outra fotografia faz a preguiça dela
+   chegar outra vez. */
+.em-visor__foto[data-atual] .em-visor__preguica {
+  /* Espera que a fotografia acabe de crescer (a transição leva 420 ms). */
+  animation: em-preguica-chega 1100ms 380ms cubic-bezier(0.3, 0.9, 0.35, 1) both;
+}
+
+.em-visor__foto[data-atual] .em-visor__preguica > img {
+  animation: em-preguica-respira 4.8s 1.5s ease-in-out infinite;
+}
+
+.em-visor__foto[data-atual] .em-visor__zzz span {
+  animation: em-preguica-zzz 4.8s ease-out infinite;
+}
+
+.em-visor__foto[data-atual] .em-visor__zzz span:nth-child(1) {
+  animation-delay: 1.6s;
+}
+
+.em-visor__foto[data-atual] .em-visor__zzz span:nth-child(2) {
+  animation-delay: 2.4s;
+}
+
+.em-visor__foto[data-atual] .em-visor__zzz span:nth-child(3) {
+  animation-delay: 3.2s;
+}
+
+/* A legenda entra a seguir à preguiça, linha a linha. */
+.em-visor__foto[data-atual] .em-visor__legenda span {
+  animation: em-legenda-sobe 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.em-visor__foto[data-atual] .em-visor__legenda span:nth-child(1) {
+  animation-delay: 450ms;
+}
+
+.em-visor__foto[data-atual] .em-visor__legenda span:nth-child(n + 2) {
+  animation-delay: 560ms;
+}
+
+/* Desce de cima, pousa, afunda um pouco na borda e assenta. */
+@keyframes em-preguica-chega {
+  0% {
+    opacity: 0;
+    transform: translateY(-2.5rem) rotate(-4deg);
+  }
+  45% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(0.25rem) rotate(0.5deg) scaleY(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes em-preguica-respira {
+  0%,
+  100% {
+    transform: none;
+  }
+  45% {
+    transform: scale(1.012, 1.035);
+  }
+}
+
+@keyframes em-preguica-zzz {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-8deg);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  60% {
+    opacity: 0;
+    transform: translate(1.5rem, -1rem) rotate(6deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(1.5rem, -1rem) rotate(6deg);
+  }
+}
+
+@keyframes em-legenda-sobe {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Com "reduzir movimento", a regra global encurta tudo para o fim: a preguiça
+   aparece já deitada e quieta, e os "z" ficam escondidos. */
+
+/* As setas só com rato: no telemóvel desliza-se, e duas setas por cima da
+   fotografia eram só ruído. */
+.em-visor__setas {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .em-visor__setas {
+    display: contents;
+  }
+
+  .em-visor__setas button {
+    position: fixed;
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--color-linha);
+    border-radius: 999px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: border-color 200ms ease, color 200ms ease, opacity 200ms ease;
+  }
+
+  .em-visor__setas button:first-child {
+    left: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .em-visor__setas button:last-child {
+    right: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .em-visor__setas button:hover:not(:disabled) {
+    border-color: var(--color-ouro);
+    color: var(--color-ouro);
+  }
+
+  .em-visor__setas button:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+}
+
+/* A transição da fotografia: do recorte (faixa ou círculo) à fotografia
+   inteira. As duas imagens enchem a caixa que cresce e cortam o que sobra, e é
+   isso que faz o recorte "abrir" em vez de a fotografia esticar. */
+::view-transition-group(em-visor-foto) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  overflow: clip;
+}
+
+::view-transition-old(em-visor-foto),
+::view-transition-new(em-visor-foto) {
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 58%;
+}
+
+/* O resto da página só desvanece, e mais depressa que a fotografia. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+}

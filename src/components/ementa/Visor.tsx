@@ -51,6 +51,13 @@ import { flushSync } from "react-dom";
  * a da fotografia que se está a ver volta a chegar quando se desliza para ela:
  * é o `data-atual` da `<figure>` que dispara as animações (ver `ementa.css`).
  * O desenho é um recorte da preguiça da casa (`public/marca/preguica-deitada.webp`).
+ *
+ * ## A moldura e a cor
+ *
+ * A fotografia fica numa moldura de madeira com um filete dourado — a
+ * preguiça dorme em cima dela, como em cima de um quadro. Por trás, a própria
+ * fotografia muito desfocada dá a cor ao fundo: rosa no Cocktail Preguiça, azul
+ * no Blue Lagoon. Cada fotografia leva a sua, e deslizar muda a cor com ela.
  */
 
 export type FotoDoVisor = {
@@ -316,6 +323,11 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                   key={f.src}
                   className="em-visor__foto"
                   data-atual={i === atual || undefined}
+                  /* A versão pequena chega para um fundo desfocado, e é a que
+                     a página já descarregou para o recorte. */
+                  style={
+                    { "--fundo": `url(${f.srcSet.split(" ")[0]})` } as React.CSSProperties
+                  }
                   role="group"
                   aria-roledescription="fotografia"
                   aria-label={textos.rotuloDaFoto

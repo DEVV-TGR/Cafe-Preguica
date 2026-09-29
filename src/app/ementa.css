@@ -1432,9 +1432,16 @@ html:has(.em-visor[open]) {
   outline: none;
 }
 
+/* A barra de cima e a faixa ocupam a mesma célula: a barra fica por cima, e
+   o brilho de cada fotografia vai até ao topo do ecrã em vez de parar numa
+   faixa preta à altura dela. */
 .em-visor[open] {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}
+
+.em-visor[open] > * {
+  grid-area: 1 / 1;
 }
 
 /* Sem View Transitions (ou com elas desligadas) o visor aparece a desvanecer.
@@ -1447,6 +1454,10 @@ html:has(.em-visor[open]) {
 }
 
 .em-visor__topo {
+  --altura-topo: 4.25rem;
+  z-index: 1;
+  align-self: start;
+  min-height: var(--altura-topo);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1513,15 +1524,49 @@ html:has(.em-visor[open]) {
 }
 
 .em-visor__foto {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   flex: 0 0 100%;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   justify-items: center;
   gap: 1rem;
   margin: 0;
-  padding: 0 clamp(1rem, 4vw, 2.5rem) max(1.25rem, env(safe-area-inset-bottom));
+  /* Em cima, o lugar da barra, que está por cima da faixa. */
+  padding: 4.25rem clamp(1rem, 4vw, 2.5rem) max(1.25rem, env(safe-area-inset-bottom));
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+/* A cor do fundo: a própria fotografia, desfocada ao ponto de só sobrar a
+   cor, e esbatida para não competir com ela. Aumentada para as bordas do
+   desfoque (que puxam para o transparente) ficarem fora do ecrã. */
+.em-visor__foto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--fundo) center / cover no-repeat;
+  filter: blur(48px) saturate(1.4);
+  opacity: 0.5;
+  transform: scale(1.25);
+  pointer-events: none;
+}
+
+/* O escuro da casa por cima do brilho, mais cerrado em baixo e em cima:
+   a legenda e a barra ficam sobre escuro e lêem-se sempre. */
+.em-visor__foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 80% 65% at 50% 45%,
+    transparent 0%,
+    color-mix(in oklab, var(--color-canvas) 50%, transparent) 100%
+  );
+  pointer-events: none;
 }
 
 /* A moldura é a área que sobra; a imagem cabe lá dentro sem cortes e com a
@@ -1552,8 +1597,29 @@ html:has(.em-visor[open]) {
   max-height: calc(100% - var(--folga));
   width: auto;
   height: auto;
-  border-radius: 3px;
   cursor: default;
+  /* A moldura: madeira à volta (o tom das mesas, de onde vem o
+     `--color-superficie`), um filete dourado encostado à fotografia e outro
+     por fora. É tudo da própria `<img>` — padding, contorno e borda — para a
+     caixa medida pelo `medirMoldura` e desdobrada pela transição ser a do
+     quadro inteiro, com a preguiça deitada na borda de cima dele. */
+  --madeira: clamp(0.5rem, 2.2vw, 0.9rem);
+  padding: var(--madeira);
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 70%, transparent);
+  border-radius: 4px;
+  outline: 1px solid color-mix(in oklab, var(--color-ouro-claro) 75%, transparent);
+  outline-offset: calc(var(--madeira) * -1);
+  background:
+    /* os veios, finos e na diagonal */
+    repeating-linear-gradient(
+      100deg,
+      rgb(255 220 170 / 0.05) 0 2px,
+      transparent 2px 7px
+    ),
+    linear-gradient(135deg, #7a4520 0%, #5a3114 38%, #6a3914 62%, #43240d 100%);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.6),
+    0 28px 60px -18px rgb(0 0 0 / 0.85);
 }
 
 .em-visor__legenda {

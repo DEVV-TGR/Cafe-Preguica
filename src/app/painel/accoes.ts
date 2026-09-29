@@ -24,7 +24,7 @@ import {
 } from "@/lib/painel/codigo";
 import { enviarCodigo, ErroAoEnviar } from "@/lib/painel/email";
 import { ErroDoRedis } from "@/lib/painel/redis";
-import { podePedirCodigo, anotar } from "@/lib/painel/limites";
+import { podePedirCodigo, anotar, registarFalha } from "@/lib/painel/limites";
 import { exigirSessaoNaAccao } from "@/lib/painel/porta";
 
 /*
@@ -67,29 +67,42 @@ export async function pedirCodigo(
     booleano, e o salto dá-se lá em baixo.
   */
   try {
-    /*
-      Conta antes de saber se o email existe — ver o comentário do
-      `lib/painel/limites.ts`. Esgotado o orçamento, responde-se a mesma coisa de
-      sempre: quem está a sondar não fica a saber se parou por causa do limite ou
-      por o email não existir.
-    */
-    if (!(await podePedirCodigo(email))) {
-      await anotar("limite de pedidos esgotado", email);
-      return { enviado: true };
-    }
-
     const quem = autorizado(email);
 
-    if (!quem) {
-      await anotar("pedido para email fora da lista", email);
-      return { enviado: true };
-    }
+    /*
+      Já passou pelo código neste aparelho — entra sem repetir, e **sem gastar
+      os limites**.
 
-    /* Já passou pelo código neste aparelho — entra sem repetir. */
-    if (await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email)) {
+      Vem antes dos limites de propósito. Quem quiser trancar o dono da casa só
+      precisa de escrever o email dele no ecrã de entrada umas quantas vezes; se
+      os limites viessem primeiro, o aparelho lembrado ficava trancado com ele.
+      Assim, o que se esgota é o envio de códigos, e quem já tem o aparelho
+      lembrado nem dá pelo ataque.
+
+      Não abre porta nenhuma a quem sonda: sem um cookie de aparelho assinado
+      por nós e ainda registado para **este** email, o caminho é o de baixo,
+      igual para toda a gente.
+    */
+    if (quem && (await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email))) {
       frasco.set(NOME_DO_COOKIE, await selar(quem.email), opcoesDoCookie());
       jaConhecido = true;
     } else {
+      /*
+        Conta antes de saber se o email existe — ver o comentário do
+        `lib/painel/limites.ts`. Esgotado o orçamento, responde-se a mesma coisa
+        de sempre: quem está a sondar não fica a saber se parou por causa do
+        limite ou por o email não existir.
+      */
+      if (!(await podePedirCodigo(email))) {
+        await anotar("limite de pedidos esgotado", email);
+        return { enviado: true };
+      }
+
+      if (!quem) {
+        await anotar("pedido para email fora da lista", email);
+        return { enviado: true };
+      }
+
       /* Pedir outro código invalida o anterior, para não haver dois válidos. */
       await apagarDesafio(frasco.get(NOME_DO_DESAFIO)?.value);
 
@@ -137,7 +150,7 @@ export async function confirmarCodigo(
     }
 
     if (veredicto.estado === "errado") {
-      await anotar("código errado", "—");
+      await Promise.all([registarFalha(veredicto.email), anotar("código errado", veredicto.email)]);
       return {
         erro:
           veredicto.restam > 0

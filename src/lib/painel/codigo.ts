@@ -106,7 +106,7 @@ export async function criarDesafio(email: string, codigo: string): Promise<strin
 
 export type Veredicto =
   | { estado: "certo"; email: string }
-  | { estado: "errado"; restam: number }
+  | { estado: "errado"; restam: number; email: string }
   | { estado: "expirado" }
   | { estado: "sem-desafio" };
 
@@ -143,7 +143,7 @@ export async function conferirCodigo(
   if (!bate) {
     const restam = TENTATIVAS - tentativa;
     if (restam <= 0) await apagar(`otp:${id}`);
-    return { estado: "errado", restam: Math.max(0, restam) };
+    return { estado: "errado", restam: Math.max(0, restam), email: guardado.email };
   }
 
   /* Uso único: entrou, acabou. */

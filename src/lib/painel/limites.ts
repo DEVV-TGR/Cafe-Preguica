@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
-import { somar } from "./redis";
+import { ler, somar } from "./redis";
 import { meioEscondido } from "./utilizadores";
 
 /*
@@ -45,6 +45,14 @@ import { meioEscondido } from "./utilizadores";
   alguma vez for atingido em condições normais, o número está errado; se for
   atingido por ataque, fica no registo a dizê-lo.
 
+  **Por email, 20 códigos errados em 24 horas.** Os limites de cima travam o
+  ritmo, mas não o total: com o teto de 40 envios, eram até 200 palpites por
+  dia contra o mesmo endereço, todos os dias — pouco por dia, e uma conta que
+  vai somando. Vinte erros num dia não são dedos grossos; a partir daí esse
+  email deixa de receber códigos até ao dia seguinte, com a mesma resposta de
+  sempre no ecrã. Quem tem o aparelho lembrado não dá por isso, porque entra
+  sem pedir código (ver `pedirCodigo`).
+
   ## O que isto não faz, e quem faz
 
   Não trava volume bruto na borda: para isso está a regra do Vercel Firewall
@@ -59,6 +67,8 @@ const POR_IP = 10;
 const TETO_DIARIO = 40;
 const DIA_S = 24 * 60 * 60;
 
+const TETO_DE_FALHAS = 20;
+
 /*
   O email vai em hash para a chave do Redis.
 
@@ -66,9 +76,16 @@ const DIA_S = 24 * 60 * 60;
   legível em texto no armazenamento, onde não faz falta nenhuma. Quem tiver as
   chaves do Redis vê `pedidos:9f86d0…` e não `pedidos:maria@…`.
 */
+function resumoDoEmail(email: string): string {
+  return createHash("sha256").update(email.toLowerCase()).digest("hex").slice(0, 32);
+}
+
 function chaveDoEmail(email: string): string {
-  const digest = createHash("sha256").update(email.toLowerCase()).digest("hex");
-  return `pedidos:${digest.slice(0, 32)}`;
+  return `pedidos:${resumoDoEmail(email)}`;
+}
+
+function chaveDasFalhas(email: string): string {
+  return `falhas:${resumoDoEmail(email)}`;
 }
 
 /*
@@ -108,10 +125,11 @@ export async function origem(): Promise<string> {
   evitar.
 */
 export async function podePedirCodigo(email: string): Promise<boolean> {
-  const [porEmail, porIp, noDia] = await Promise.all([
+  const [porEmail, porIp, noDia, falhas] = await Promise.all([
     somar(chaveDoEmail(email), JANELA_S),
     somar(`pedidos-ip:${await origem()}`, JANELA_S),
     somar(chaveDoDia(), DIA_S),
+    ler(chaveDasFalhas(email)),
   ]);
 
   /*
@@ -127,7 +145,17 @@ export async function podePedirCodigo(email: string): Promise<boolean> {
     return false;
   }
 
+  if (Number(falhas ?? 0) >= TETO_DE_FALHAS) {
+    await anotar(`teto de códigos errados esgotado (${falhas})`, email);
+    return false;
+  }
+
   return porEmail <= POR_EMAIL && porIp <= POR_IP;
+}
+
+/** Um código errado para este email. Conta para o `TETO_DE_FALHAS`. */
+export async function registarFalha(email: string): Promise<void> {
+  await somar(chaveDasFalhas(email), DIA_S);
 }
 
 /*

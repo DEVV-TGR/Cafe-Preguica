@@ -1680,7 +1680,23 @@ html:has(.em-visor[open]) {
   /* A respiração: o eixo é a barriga, que fica quieta em cima da borda; o
      dorso sobe e desce. Devagar — é uma preguiça a dormir. */
   transform-origin: 50% 66%;
-}
+  /* Só as patas de cá caem por cima da moldura: a segunda a contar da
+     esquerda (40–57% da largura) e a de trás, à direita (76–93%). As outras
+     duas — a de debaixo da cabeça (13–30%) e a terceira (60–72%) — são as do
+     lado de lá: a partir da borda (66% da altura) cortam-se, e parecem passar
+     por trás do quadro. */
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    74% 100%,
+    74% 66%,
+    58.6% 66%,
+    58.6% 100%,
+    33.5% 100%,
+    33.5% 66%,
+    0 66%
+  );}
 
 /* Os "z" nascem por cima da cabeça (à esquerda) e sobem na diagonal, pelo ar
    livre — por cima do pelo preto não se viam. */

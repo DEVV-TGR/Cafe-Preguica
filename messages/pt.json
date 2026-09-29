@@ -45,7 +45,7 @@
   "metadata": {
     "inicio": {
       "titulo": "Café Preguiça",
-      "descricao": "Café Preguiça — pequenos-almoços, cafetaria e petiscos."
+      "descricao": "Café Preguiça, em Ermesinde: cocktails, tostas e petiscos para partilhar, de tarde e à noite."
     },
     "ementa": {
       "titulo": "Ementa",
@@ -65,7 +65,7 @@
     },
     "cookies": {
       "titulo": "Cookies",
-      "descricao": "Este site não usa cookies. Esta página explica porquê."
+      "descricao": "Este site não põe cookies a quem o visita. Esta página explica porquê."
     },
     "informacaoLegal": {
       "titulo": "Resolução de litígios",
@@ -96,11 +96,11 @@
     },
     "carril": {
       "nome": "Vinte e quatro cocktails",
-      "facto": "Nove clássicos, dez special's e cinco sem álcool. Feitos ao balcão, um a um.",
+      "facto": "Nove clássicos, dez especiais e cinco sem álcool. Feitos ao balcão, um a um.",
       "dado": "Desde 4,20 €",
-      "ilustrativa": "As fotografias são da casa. Onde o cocktail não se identifica ao certo, o rótulo diz apenas o que se sabe.",
+      "ilustrativa": "As fotografias são da casa. Quando não se sabe ao certo que cocktail é, a legenda diz apenas o que se sabe.",
       "balcaoNome": "Ao balcão",
-      "balcaoFacto": "Lima espremida à mão, sobre o copo. Todos são feitos à frente de quem os bebe.",
+      "balcaoFacto": "Lima espremida à mão, sobre o copo. Todos os cocktails são feitos à frente de quem os bebe.",
       "balcaoAlt": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
       "fechoNome": "E ainda a carta toda",
       "fechoFacto": "Gin, whisky, shots, sangrias em garrafão, cervejas, chás e a cafetaria.",
@@ -108,13 +108,13 @@
     },
     "reels": {
       "nome": "A casa em movimento",
-      "facto": "O que se passa ao balcão, filmado pela casa e publicado no Instagram. Carregue num para o ver lá.",
+      "facto": "O que se passa ao balcão, filmado pela casa e publicado no Instagram. Carregue num vídeo para o ver lá.",
       "noInstagram": "abre no Instagram",
       "legendas": {
         "masterclass": "Masterclass Hera × Preguiça",
-        "tosta": "Tosta com compota e chocolate quente",
+        "tosta": "Torrada com compota e chocolate quente",
         "negroni": "Um negroni a ser servido",
-        "valentim": "São Valentim na casa",
+        "valentim": "Dia dos Namorados na casa",
         "menu": "A carta, na parede de granito",
         "lima": "Lima espremida à mão"
       },
@@ -125,7 +125,7 @@
       "facto": "O que se come com as mãos, no meio da mesa, enquanto a conversa não acaba.",
       "dado": "Desde 1,70 €",
       "altTabua": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
-      "altTosta": "Uma tosta com compota de morango ao lado de um chocolate quente com chantilly e um pau de canela.",
+      "altTosta": "Uma torrada com compota de morango ao lado de um chocolate quente com chantilly e um pau de canela.",
       "factoTosta": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte, por 3,60 €.",
       "verMais": "E o resto da carta",
       "verMaisFacto": "Tábuas, preguiçinhas, sobremesas e as taças para petiscar. Tudo com preço.",
@@ -133,7 +133,7 @@
     },
     "preguicosos": {
       "nome": "Os Preguiçosos",
-      "facto": "É como a casa trata quem lá vai. Isto é o que eles escrevem depois.",
+      "facto": "É assim que a casa trata quem lá vai. E isto é o que escrevem depois.",
       "contagem": "{total} avaliações no Google",
       "estrelas": "{nota} em 5 estrelas",
       "verTodas": "Ler todas no Google"
@@ -147,7 +147,7 @@
         "movel": "Chamada para a rede móvel nacional"
       },
       "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir.",
-      "animais": "Os cães são bem-vindos. Traz o teu.",
+      "animais": "Os cães são bem-vindos. Traga o seu.",
       "mapaAlt": "Mapa das ruas à volta do Café Preguiça, em Ermesinde, com a casa assinalada pela preguiça do logótipo.",
       "credito": "© contribuidores do OpenStreetMap"
     }
@@ -156,7 +156,7 @@
     "titulo": "A carta",
     "introducao": "Tostas e tábuas para partilhar, cocktails feitos ao balcão, um a um, e o resto da garrafeira.",
     "avisoProvisoria": "Carta transcrita do menu da casa e ainda por confirmar. Em caso de dúvida, pergunte ao balcão.",
-    "avisoAlergenios": "Informação sobre alergénios disponível no balcão. Peça-nos antes de pedir.",
+    "avisoAlergenios": "A informação sobre alergénios está disponível no balcão. Pergunte-nos antes de fazer o pedido.",
     "categorias": {
       "tostas-e-snacks": "Tostas & snacks",
       "tabuas": "Tábuas",
@@ -221,7 +221,7 @@
       },
       "cocktails": {
         "nome": "Cocktails & sangrias",
-        "facto": "O da casa, os clássicos, os special's e as sangrias em garrafão."
+        "facto": "O da casa, os clássicos, os especiais e as sangrias em garrafão."
       },
       "mocktails": {
         "nome": "Mocktails",
@@ -252,12 +252,12 @@
       "negroni-fumo": "Um negroni num copo baixo com gelo e casca de laranja, envolto em fumo, em cima do balcão.",
       "cocktail-coco": "Um copo balão com uma bebida branca e gelo, um guarda-chuva amarelo e uma palhinha às riscas vermelhas, ao lado de um coco, sobre uma mesa de madeira."
     },
-    "sortear": "Deixa a preguiça escolher",
+    "sortear": "Deixe a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",
     "escolheu": "A preguiça escolheu",
-    "escolhido": "Escolheste",
+    "escolhido": "Escolheu",
     "nenhumSabor": "Toque num sabor, ou deixe a preguiça escolher por si.",
-    "saboresNota": "Isto não faz o pedido: diga o sabor a quem o anotar.",
+    "saboresNota": "Escolher aqui não faz o pedido: diga o sabor a quem o vier anotar.",
     "fecho": {
       "nome": "Dúvidas?",
       "facto": "Se quiser saber o que leva um prato ou uma bebida, ou que alergénios tem, pergunte a quem está ao balcão.",
@@ -271,19 +271,19 @@
       "maisCocktails": "Há mais cocktails na carta secreta ↓",
       "olho": "Só para quem está na lista",
       "titulo": "A carta secreta",
-      "texto": "Os cocktails que não estão no papel. Abrem-se com o email em que recebe as novidades da casa.",
+      "texto": "Os cocktails que não estão no papel. Para os ver, escreva o email em que recebe as novidades da casa.",
       "etiqueta": "O seu email",
       "marcador": "o-seu@email.pt",
       "abrir": "Abrir",
       "aAbrir": "A abrir…",
       "naoInscritoTitulo": "Este email ainda não está na lista.",
-      "naoInscritoTexto": "Inscreva {email} nas novidades da casa. Confirme no email que lhe mandamos, e a carta abre-se sozinha.",
+      "naoInscritoTexto": "Inscreva {email} nas novidades da casa. Confirme no email que lhe vamos enviar e a carta abre-se sozinha.",
       "inscrever": "Inscrever e abrir",
       "aEnviar": "A enviar…",
       "enviadoTitulo": "Falta um passo",
-      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está — volta aqui com a carta aberta.",
+      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está e volta aqui com a carta já aberta.",
       "outroEmail": "Escrever outro email",
-      "abertaTexto": "Está na lista, e isto é para si. Peça ao balcão pelo nome.",
+      "abertaTexto": "Está na lista, por isso isto é para si. Peça-os ao balcão pelo nome.",
       "fechar": "Não é o seu email? Fechar a carta"
     }
   },
@@ -310,19 +310,19 @@
     },
     "newsletter": {
       "titulo": "A newsletter",
-      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou, e usamo-los só para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o no link que lhe enviamos. Sem essa confirmação o endereço não fica guardado. Cada email traz um link para cancelar a inscrição, que funciona de imediato. A lista é guardada até cancelar, e pode pedir-nos a qualquer momento para saber que dados temos ou para os apagar, pelos contactos da casa. O mesmo email serve para abrir a carta secreta da ementa: quando o escreve lá, perguntamos à lista se está inscrito, e mais nada."
+      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou a inscrição, e usamo-los apenas para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o através do link que lhe enviamos. Sem essa confirmação, o endereço não fica guardado. Cada email traz um link para cancelar a inscrição, que tem efeito imediato. O seu endereço fica na lista até cancelar a inscrição e, a qualquer momento, pode perguntar-nos que dados temos sobre si ou pedir que os apaguemos, pelos contactos da casa. O mesmo email serve para abrir a carta secreta da ementa: quando o escreve lá, apenas verificamos se está inscrito na lista."
     },
     "terceiros": {
       "titulo": "Serviços de terceiros",
-      "texto": "Nenhum que carregue código no seu navegador: as fontes e as imagens são servidas por este domínio, não há mapa embebido nem botões de redes sociais. As ligações para o Google Maps e para as redes sociais são links normais, só seguidos se carregar neles. Os emails da newsletter são enviados pela Resend, que guarda a lista de contactos em nosso nome; o seu navegador nunca fala com ela, é o servidor do site que o faz."
+      "texto": "Nenhum que carregue código no seu navegador: as fontes e as imagens são servidas por este domínio, e não há mapas incorporados nem botões de redes sociais. As ligações para o Google Maps e para as redes sociais são links normais, que só abrem se carregar neles. Os emails da newsletter são enviados pela Resend, que guarda a lista de contactos em nosso nome; o seu navegador nunca comunica com ela, quem o faz é o servidor do site."
     },
     "alojamento": {
       "titulo": "Alojamento",
-      "texto": "O site é alojado pela Vercel, que regista pedidos ao servidor para o poder servir e proteger. Esses registos são da plataforma e não são usados por nós para identificar ninguém."
+      "texto": "O site está alojado na Vercel, que regista os pedidos feitos ao servidor para poder disponibilizar e proteger o site. Esses registos pertencem à plataforma e não os usamos para identificar ninguém."
     },
     "equipa": {
       "titulo": "A área da equipa",
-      "texto": "Quem trabalha na casa entra numa área reservada com um código enviado para o seu email. Para isso, o endereço de email da equipa é usado para enviar o código (pela Resend) e o registo de entrada fica guardado no máximo 30 dias (na Upstash), para limitar tentativas e lembrar o aparelho. Não diz respeito a quem visita o site."
+      "texto": "Quem trabalha na casa entra numa área reservada com um código que recebe por email. Para isso, usamos o endereço de email de cada pessoa da equipa para lhe enviar o código (através da Resend) e guardamos o registo de entrada durante 30 dias, no máximo (na Upstash), para limitar tentativas e reconhecer o aparelho. Nada disto diz respeito a quem visita o site."
     },
     "contacto": {
       "titulo": "Dúvidas",
@@ -354,19 +354,19 @@
     },
     "lingua": {
       "titulo": "E a língua que escolheu?",
-      "texto": "Fica no endereço, e não num cookie: a versão inglesa vive em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre na língua do seu navegador."
+      "texto": "Fica no endereço, e não num cookie: a versão inglesa está em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre na língua do seu navegador."
     },
     "memoria": {
       "titulo": "E o convite da newsletter?",
-      "texto": "Para não o voltar a mostrar a quem já se inscreveu, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\". Quem fecha o convite leva outra nota, que o navegador apaga sozinho ao fechar o separador. Estas duas não identificam ninguém e não saem do seu aparelho. Quem abre a carta secreta guarda também uma chave com o seu email, assinada por nós, que o site usa só para a voltar a abrir sem lhe pedir o email outra vez; o botão \"Fechar a carta\" apaga-a. Nenhuma destas notas é um cookie, e se as apagar o pior que acontece é o convite voltar a aparecer ou a carta pedir o email."
+      "texto": "Para não voltar a mostrar o convite a quem já se inscreveu, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\". Se fechar o convite, fica outra nota, que o navegador apaga sozinho quando fechar o separador. Nenhuma das duas identifica ninguém, e nenhuma sai do seu aparelho. Se abrir a carta secreta, fica também guardada uma chave com o seu email, assinada por nós, que o site usa apenas para a voltar a abrir sem lhe pedir o email outra vez; o botão \"Fechar a carta\" apaga-a. Nenhuma destas notas é um cookie e, se as apagar, o pior que pode acontecer é o convite voltar a aparecer ou a carta voltar a pedir o email."
     },
     "equipa": {
       "titulo": "A área da equipa",
-      "texto": "Há uma área reservada a quem trabalha na casa, para atualizar a carta e o horário. Quem lá entra recebe dois cookies estritamente necessários — um para manter a sessão aberta, outro para o aparelho não pedir o código de entrada todas as vezes — e só nessa área. Quem visita o site nunca os recebe."
+      "texto": "Há uma área reservada a quem trabalha na casa, para atualizar a carta e o horário. Quem lá entra recebe dois cookies estritamente necessários — um para manter a sessão aberta, outro para não ter de pedir o código de entrada sempre que volta ao mesmo aparelho — e só nessa área. Quem visita o site nunca os recebe."
     },
     "verificar": {
       "titulo": "Como confirmar",
-      "texto": "Não é preciso acreditar em nós: abra as ferramentas de programador do navegador, separador Aplicação, e veja a lista de cookies deste domínio vazia."
+      "texto": "Não precisa de acreditar em nós: abra as ferramentas para programadores do navegador, vá ao separador Aplicação e verá que a lista de cookies deste domínio está vazia."
     }
   },
   "informacaoLegal": {
@@ -417,8 +417,8 @@
       "jaTitulo": "Já está inscrito",
       "jaTexto": "Este email já recebe as novidades da casa. Não é preciso fazer mais nada.",
       "erroEmail": "Esse email não parece estar completo.",
-      "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente daqui a um bocado.",
-      "erroServico": "Não foi possível enviar agora. Tente daqui a um bocado."
+      "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente novamente daqui a pouco.",
+      "erroServico": "Não foi possível enviar agora. Tente novamente daqui a pouco."
     },
     "confirmar": {
       "olho": "Newsletter",
@@ -428,15 +428,15 @@
       "aConfirmar": "A confirmar…",
       "feitoTitulo": "Está inscrito",
       "feitoTexto": "Vai receber as novidades da casa no seu email. Cada envio traz um link para cancelar, se mudar de ideias.",
-      "semConvite": "Este endereço não traz nenhuma inscrição para confirmar. Se chegou aqui a partir do email, abra o link outra vez — de preferência copiando-o por inteiro.",
+      "semConvite": "Este link não traz nenhuma inscrição para confirmar. Se chegou aqui a partir do email, abra o link outra vez — de preferência, copiando-o por inteiro.",
       "invalido": "Este link não está completo ou já não serve. Abra-o outra vez a partir do email, ou inscreva-se de novo no site.",
-      "expirado": "Este link já passou das 48 horas. Inscreva-se outra vez no site e chega um novo.",
-      "erro": "Não foi possível confirmar agora. Tente daqui a um bocado — o link continua a valer.",
+      "expirado": "Este link só era válido durante 48 horas e já expirou. Inscreva-se outra vez no site para receber um novo.",
+      "erro": "Não foi possível confirmar agora. Tente novamente daqui a pouco — o link continua válido.",
       "abrirCarta": "Abrir a carta secreta"
     },
     "email": {
       "assunto": "Confirme a sua inscrição na newsletter do Café Preguiça",
-      "texto": "Olá,\n\nPediu para receber as novidades do Café Preguiça. Para confirmar, abra este link:\n\n{link}\n\nO link vale 48 horas. Se não foi você, ignore este email: sem confirmação, o endereço não fica inscrito nem guardado.\n\nCafé Preguiça · Ermesinde"
+      "texto": "Olá,\n\nPediu para receber as novidades do Café Preguiça. Para confirmar, abra este link:\n\n{link}\n\nO link é válido durante 48 horas. Se não fez este pedido, ignore este email: sem confirmação, o endereço não fica inscrito nem guardado.\n\nCafé Preguiça · Ermesinde"
     }
   }
 }

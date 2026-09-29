@@ -42,6 +42,15 @@ import { flushSync } from "react-dom";
  * desdobra-se até ao tamanho inteiro, e ao fechar volta para o recorte da
  * fotografia que se estiver a ver — o carrossel anda até ela antes. Sem elas, ou
  * com "reduzir movimento", o visor aparece por cima com um desvanecer.
+ *
+ * ## A preguiça em cima da fotografia
+ *
+ * Deitada na borda de cima da fotografia, como num ramo: a barriga assente
+ * nela e as patas a cair por cima. Chega depois da fotografia — desce devagar, como
+ * é dela — e fica a respirar, com uns "z" a subir. Cada fotografia tem a sua, e
+ * a da fotografia que se está a ver volta a chegar quando se desliza para ela:
+ * é o `data-atual` da `<figure>` que dispara as animações (ver `ementa.css`).
+ * O desenho é um recorte da preguiça da casa (`public/marca/preguica-deitada.webp`).
  */
 
 export type FotoDoVisor = {
@@ -98,7 +107,29 @@ function transicao(mudar: () => void, depois: () => void) {
 
 /** A imagem `i` do visor aberto. */
 function fotoNoVisor(faixa: HTMLDivElement | null, i: number) {
-  return faixa?.querySelectorAll<HTMLElement>(".em-visor__foto img")[i] ?? null;
+  return faixa?.querySelectorAll<HTMLElement>(".em-visor__imagem")[i] ?? null;
+}
+
+/**
+ * Onde está a fotografia dentro da moldura, em variáveis de CSS, para a
+ * preguiça se deitar em cima dela. A fotografia cabe sem cortes e fica ao
+ * centro, por isso a caixa dela só se sabe depois de carregar — e muda com o
+ * ecrã. Até haver medida, a preguiça não aparece.
+ */
+function medirMoldura(moldura: HTMLDivElement | null) {
+  const foto = moldura?.querySelector<HTMLImageElement>(".em-visor__imagem");
+  if (!moldura || !foto) return;
+  const medir = () => {
+    if (!foto.offsetWidth) return;
+    moldura.style.setProperty("--foto-x", `${foto.offsetLeft}px`);
+    moldura.style.setProperty("--foto-y", `${foto.offsetTop}px`);
+    moldura.style.setProperty("--foto-l", `${foto.offsetWidth}px`);
+    moldura.dataset.medida = "";
+  };
+  const observador = new ResizeObserver(medir);
+  observador.observe(moldura);
+  observador.observe(foto);
+  return () => observador.disconnect();
 }
 
 function nomear(el: HTMLElement | null | undefined, nome: string) {
@@ -284,14 +315,16 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                 <figure
                   key={f.src}
                   className="em-visor__foto"
+                  data-atual={i === atual || undefined}
                   role="group"
                   aria-roledescription="fotografia"
                   aria-label={textos.rotuloDaFoto
                     .replace("{n}", String(i + 1))
                     .replace("{total}", String(total))}
                 >
-                  <div className="em-visor__moldura">
+                  <div className="em-visor__moldura" ref={medirMoldura}>
                     <img
+                      className="em-visor__imagem"
                       src={f.src}
                       srcSet={f.srcSet}
                       sizes="(min-width: 48rem) 60vh, 100vw"
@@ -301,6 +334,20 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                       loading={i === atual ? undefined : "lazy"}
                       decoding="async"
                     />
+                    <span className="em-visor__preguica" aria-hidden="true">
+                      <img
+                        src="/marca/preguica-deitada.webp"
+                        width={720}
+                        height={564}
+                        alt=""
+                        decoding="async"
+                      />
+                      <span className="em-visor__zzz">
+                        <span>z</span>
+                        <span>z</span>
+                        <span>z</span>
+                      </span>
+                    </span>
                   </div>
                   {f.legenda.length > 0 && (
                     <figcaption className="em-visor__legenda">

@@ -47,10 +47,6 @@
   font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
-.pn-topo__site {
-  white-space: nowrap;
-}
-
 .pn-topo__sair {
   display: flex;
   align-items: center;

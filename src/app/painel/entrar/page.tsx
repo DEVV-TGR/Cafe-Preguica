@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { sessao } from "@/lib/painel/porta";
 import { FormularioDeEntrada } from "@/components/painel/FormularioDeEntrada";
@@ -32,6 +33,13 @@ export default async function Entrar() {
         <p className="pn-nota pn-centro">
           Não há palavra-passe para decorar. Se o código não chegar, confirma o endereço e vê o
           spam.
+        </p>
+
+        {/* Quem chegou aqui por engano (ou desistiu) tem o caminho de volta. */}
+        <p className="pn-centro">
+          <Link href="/" className="pn-ligacao">
+            Voltar ao site
+          </Link>
         </p>
       </div>
     </main>

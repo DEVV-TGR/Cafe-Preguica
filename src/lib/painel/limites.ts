@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
-import { ler, somar } from "./redis";
+import { descontar, ler, somar } from "./redis";
 import { meioEscondido } from "./utilizadores";
 import { redeDe } from "@/lib/rede";
 
@@ -49,10 +49,10 @@ import { redeDe } from "@/lib/rede";
   **Por email, 20 códigos errados em 24 horas.** Os limites de cima travam o
   ritmo, mas não o total: com o teto de 40 envios, eram até 200 palpites por
   dia contra o mesmo endereço, todos os dias — pouco por dia, e uma conta que
-  vai somando. Vinte erros num dia não são dedos grossos; a partir daí esse
-  email deixa de receber códigos até ao dia seguinte, com a mesma resposta de
-  sempre no ecrã. Quem tem o aparelho lembrado não dá por isso, porque entra
-  sem pedir código (ver `pedirCodigo`).
+  vai somando. Vinte erros num dia não são dedos grossos. A partir daí esse
+  email não recebe códigos novos **e o código que tiver a meio deixa de ser
+  conferido**, mesmo que ainda lhe restem tentativas. Quem tem o aparelho
+  lembrado não dá por isso, porque entra sem pedir código (ver `pedirCodigo`).
 
   ## O que isto não faz, e quem faz
 
@@ -163,9 +163,23 @@ export async function podePedirCodigo(email: string): Promise<boolean> {
   return porEmail <= POR_EMAIL && porIp <= POR_IP;
 }
 
-/** Um código errado para este email. Conta para o `TETO_DE_FALHAS`. */
-export async function registarFalha(email: string): Promise<void> {
-  await somar(chaveDasFalhas(email), DIA_S);
+/*
+  Gasta uma tentativa do dia **antes** de o código ser comparado, e diz se
+  ainda havia.
+
+  Contar só os erros, depois de comparar, deixava duas brechas: pedidos em
+  paralelo comparavam todos antes de algum somar, e o teto só travava o pedido
+  de códigos novos — o código a meio continuava a aceitar as tentativas que lhe
+  restavam. Com o `INCR` à cabeça, a vigésima primeira nem chega a ser
+  comparada. Uma tentativa certa devolve a unidade (`devolverTentativaDoDia`),
+  e por isso o contador é, no fim, o número de erros.
+*/
+export async function gastarTentativaDoDia(email: string): Promise<boolean> {
+  return (await somar(chaveDasFalhas(email), DIA_S)) <= TETO_DE_FALHAS;
+}
+
+export async function devolverTentativaDoDia(email: string): Promise<void> {
+  await descontar(chaveDasFalhas(email));
 }
 
 /*

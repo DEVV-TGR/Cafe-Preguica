@@ -25,7 +25,7 @@ import {
 } from "@/lib/painel/codigo";
 import { enviarCodigo, ErroAoEnviar } from "@/lib/painel/email";
 import { ErroDoRedis } from "@/lib/painel/redis";
-import { podePedirCodigo, anotar, registarFalha } from "@/lib/painel/limites";
+import { podePedirCodigo, anotar } from "@/lib/painel/limites";
 import { exigirSessaoNaAccao } from "@/lib/painel/porta";
 
 /*
@@ -168,8 +168,20 @@ export async function confirmarCodigo(
       return { erro: "O código expirou ou já não serve. Pede outro." };
     }
 
+    /* A mesma frase para um email da lista e para um isco: os dois contam as
+       tentativas do dia, e os dois chegam aqui ao fim de vinte erros. */
+    if (veredicto.estado === "bloqueado") {
+      frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
+      await anotar("teto de códigos errados esgotado na confirmação", veredicto.email);
+      return {
+        erro:
+          "Demasiados códigos errados hoje para este email. Tenta amanhã, ou entra " +
+          "por um aparelho que já tenha passado pelo código.",
+      };
+    }
+
     if (veredicto.estado === "errado") {
-      await Promise.all([registarFalha(veredicto.email), anotar("código errado", veredicto.email)]);
+      await anotar("código errado", veredicto.email);
       return {
         erro:
           veredicto.restam > 0

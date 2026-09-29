@@ -2,6 +2,7 @@ import "server-only";
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import { chave } from "./chaves";
 import { ler, guardar, apagar, somar } from "./redis";
+import { gastarTentativaDoDia, devolverTentativaDoDia } from "./limites";
 
 /*
   O código de seis algarismos.
@@ -126,6 +127,7 @@ export type Veredicto =
   | { estado: "certo"; email: string }
   | { estado: "errado"; restam: number; email: string }
   | { estado: "expirado" }
+  | { estado: "bloqueado"; email: string }
   | { estado: "sem-desafio" };
 
 export async function conferirCodigo(
@@ -154,6 +156,14 @@ export async function conferirCodigo(
     return { estado: "expirado" };
   }
 
+  /* O teto do dia, pela mesma razão e da mesma forma: gasto antes de
+     comparar. Esgotado, o código queima-se e não é comparado — ver
+     `gastarTentativaDoDia`. */
+  if (!(await gastarTentativaDoDia(guardado.email))) {
+    await apagar(`otp:${id}`);
+    return { estado: "bloqueado", email: guardado.email };
+  }
+
   const esperado = Buffer.from(guardado.hash);
   const obtido = Buffer.from(hashDoCodigo(escrito.replace(/\D/g, "")));
   const bate = esperado.length === obtido.length && timingSafeEqual(esperado, obtido);
@@ -164,8 +174,12 @@ export async function conferirCodigo(
     return { estado: "errado", restam: Math.max(0, restam), email: guardado.email };
   }
 
-  /* Uso único: entrou, acabou. */
-  await Promise.all([apagar(`otp:${id}`), apagar(`otp-tentativas:${id}`)]);
+  /* Uso único: entrou, acabou. E a tentativa certa não conta como erro. */
+  await Promise.all([
+    apagar(`otp:${id}`),
+    apagar(`otp-tentativas:${id}`),
+    devolverTentativaDoDia(guardado.email),
+  ]);
   return { estado: "certo", email: guardado.email };
 }
 

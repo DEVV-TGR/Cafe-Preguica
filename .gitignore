@@ -11,10 +11,11 @@ next-env.d.ts
 # produção
 /build
 
-# ambiente — os segredos nunca entram no repositório
-.env
-.env.local
-.env*.local
+# ambiente — os segredos nunca entram no repositório. `.env*` inteiro, e não
+# só os `.local`: um `.env.production` criado à mão também tem de ficar de fora,
+# e o repositório é público. A lista de variáveis vive no `.env.example`.
+.env*
+!.env.example
 
 # vercel
 .vercel

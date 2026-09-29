@@ -47,12 +47,19 @@ const CABECALHOS_DO_PAINEL = [...cabecalhosDoPainel, ...cabecalhosComuns];
  * domínio a mais aqui é também um domínio a mais na CSP.
  */
 const nextConfig: NextConfig = {
+  /* O `X-Powered-By: Next.js` só serve para dizer a quem procura alvos que
+     versão de framework está do outro lado. */
+  poweredByHeader: false,
+
   async headers() {
     return [
       /* Sem CSP: a do painel leva nonce e é o `src/proxy.ts` que a emite. */
       { source: "/painel", headers: CABECALHOS_DO_PAINEL },
       { source: "/painel/:caminho*", headers: CABECALHOS_DO_PAINEL },
-      { source: "/((?!painel).*)", headers: CABECALHOS_DO_SITE },
+      /* "Tudo menos o painel" tem de ser **o painel**, e não "tudo o que comece
+         por painel": com `(?!painel)`, um `/painelqualquer` ficava fora das
+         três regras e o 404 saía sem cabeçalho de segurança nenhum. */
+      { source: "/((?!painel$|painel/).*)", headers: CABECALHOS_DO_SITE },
     ];
   },
 };

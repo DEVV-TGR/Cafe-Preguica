@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { Ampliar, type FotoDoVisor } from "@/components/ementa/Visor";
+import { Ampliar, type FotoDoVisor } from "@/components/Visor";
 
 /**
  * # As fotografias que abrem cada capítulo da carta

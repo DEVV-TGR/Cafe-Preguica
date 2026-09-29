@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { somar } from "@/lib/painel/redis";
-import { origem } from "@/lib/painel/limites";
+import { origem, rede } from "@/lib/painel/limites";
 import { meioEscondido } from "@/lib/painel/utilizadores";
 
 /*
@@ -44,7 +44,7 @@ export async function podeConvidar(email: string): Promise<boolean> {
   const ip = await origem();
   const [porEmail, porIp, noDia] = await Promise.all([
     somar(chaveDoEmail(email), DIA_S),
-    somar(`newsletter:ip:${ip}`, HORA_S),
+    somar(`newsletter:ip:${await rede()}`, HORA_S),
     somar(`newsletter:dia:${new Date().toISOString().slice(0, 10)}`, DIA_S),
   ]);
 

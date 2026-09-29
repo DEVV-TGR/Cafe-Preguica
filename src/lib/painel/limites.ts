@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 import { ler, somar } from "./redis";
 import { meioEscondido } from "./utilizadores";
+import { redeDe } from "@/lib/rede";
 
 /*
   Quantas vezes se pode pedir um código, e de onde.
@@ -106,6 +107,15 @@ function chaveDoDia(): string {
   vale o que valer, e é por isso que o limite por IP é o terceiro da lista e não
   o primeiro.
 */
+/*
+  A chave dos limites por ligação: o IPv4 tal e qual, o IPv6 pelo /64. Ver
+  `lib/rede.ts`. O `origem()` de cima continua a ser o que vai para o registo,
+  por extenso.
+*/
+export async function rede(): Promise<string> {
+  return redeDe(await origem());
+}
+
 export async function origem(): Promise<string> {
   const cabecalhos = await headers();
   return (
@@ -127,7 +137,7 @@ export async function origem(): Promise<string> {
 export async function podePedirCodigo(email: string): Promise<boolean> {
   const [porEmail, porIp, noDia, falhas] = await Promise.all([
     somar(chaveDoEmail(email), JANELA_S),
-    somar(`pedidos-ip:${await origem()}`, JANELA_S),
+    somar(`pedidos-ip:${await rede()}`, JANELA_S),
     somar(chaveDoDia(), DIA_S),
     ler(chaveDasFalhas(email)),
   ]);

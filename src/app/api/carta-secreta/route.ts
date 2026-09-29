@@ -4,7 +4,7 @@ import { artigosSecretos } from "@/lib/carta-secreta/artigos";
 import { abrirChaveDaCarta, criarChaveDaCarta } from "@/lib/carta-secreta/chave";
 import { estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { somar, ErroDoRedis } from "@/lib/painel/redis";
-import { origem } from "@/lib/painel/limites";
+import { rede } from "@/lib/painel/limites";
 
 /*
   Abrir a carta secreta: está inscrito na newsletter, ou não está?
@@ -53,7 +53,7 @@ export async function POST(pedido: Request) {
   if (!lido.success) return Response.json({ erro: "email" }, { status: 400 });
 
   try {
-    if ((await somar(`carta:ip:${await origem()}`, HORA_S)) > POR_IP) {
+    if ((await somar(`carta:ip:${await rede()}`, HORA_S)) > POR_IP) {
       return Response.json({ erro: "limite" }, { status: 429 });
     }
 

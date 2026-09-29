@@ -176,7 +176,7 @@ própria página). Sem ele, quem só abre o ecrã também gasta o limite.
 | Regra | Limite | Janela | Onde |
 |---|---|---|---|
 | Tentativas por código | 5 | vida do código | Upstash |
-| Códigos errados por email | 20 | 24 h | Upstash |
+| Tentativas de código por email (certas ou erradas) | 20 | 24 h | Upstash |
 | Pedidos de código por email | 3 | 15 min | Upstash |
 | Pedidos por IP (IPv6 por /64) | 10 | 15 min | Upstash |
 | Pedidos por IP, na borda | 5 | 60 s | Vercel Firewall |

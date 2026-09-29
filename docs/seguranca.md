@@ -154,9 +154,10 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
     IP e por dia por cima.
 - **A sessão confere o `PAINEL_EMAILS` a cada pedido.** Tirar alguém da lista
   põe-no fora já, e não quando o cookie caducar.
-- **20 códigos errados por email em 24 h** e esse email deixa de receber
-  códigos até ao dia seguinte. Antes eram até 200 palpites por dia, todos os
-  dias.
+- **20 tentativas de código por email em 24 h**, certas ou erradas, contadas
+  antes de comparar. A partir daí esse email deixa de receber códigos e o que
+  tiver a meio deixa de ser conferido, até ao dia seguinte. Antes eram até 200
+  palpites por dia, todos os dias.
 - **O aparelho lembrado entra antes dos limites.** Quem enchesse o ecrã com o
   email do dono trancava-o também a ele.
 - **Os limites por IP contam o IPv6 por /64** (`src/lib/rede.ts`): cada ligação

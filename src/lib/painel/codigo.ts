@@ -2,7 +2,7 @@ import "server-only";
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import { chave } from "./chaves";
 import { ler, guardar, apagar, somar } from "./redis";
-import { gastarTentativaDoDia, devolverTentativaDoDia } from "./limites";
+import { gastarTentativaDoDia } from "./limites";
 
 /*
   O código de seis algarismos.
@@ -156,9 +156,9 @@ export async function conferirCodigo(
     return { estado: "expirado" };
   }
 
-  /* O teto do dia, pela mesma razão e da mesma forma: gasto antes de
-     comparar. Esgotado, o código queima-se e não é comparado — ver
-     `gastarTentativaDoDia`. */
+  /* O teto de tentativas do dia, pela mesma razão e da mesma forma: gasto
+     antes de comparar, certa ou errada. Esgotado, o código queima-se e não é
+     comparado — ver `gastarTentativaDoDia`. */
   if (!(await gastarTentativaDoDia(guardado.email))) {
     await apagar(`otp:${id}`);
     return { estado: "bloqueado", email: guardado.email };
@@ -174,12 +174,8 @@ export async function conferirCodigo(
     return { estado: "errado", restam: Math.max(0, restam), email: guardado.email };
   }
 
-  /* Uso único: entrou, acabou. E a tentativa certa não conta como erro. */
-  await Promise.all([
-    apagar(`otp:${id}`),
-    apagar(`otp-tentativas:${id}`),
-    devolverTentativaDoDia(guardado.email),
-  ]);
+  /* Uso único: entrou, acabou. */
+  await Promise.all([apagar(`otp:${id}`), apagar(`otp-tentativas:${id}`)]);
   return { estado: "certo", email: guardado.email };
 }
 

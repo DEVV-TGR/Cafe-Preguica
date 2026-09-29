@@ -219,17 +219,3 @@ export async function somar(chave: string, segundos: number): Promise<number> {
   if (total === 1) await comando(["EXPIRE", chave, segundos]);
   return total;
 }
-
-/*
-  Tira um ao contador — para devolver uma unidade gasta à cabeça por uma
-  operação que afinal correu bem (ver `devolverTentativaDoDia`). Não mexe no
-  prazo, que ficou posto pelo `somar`.
-*/
-export async function descontar(chave: string): Promise<void> {
-  if (!ligacao() && emMemoria()) {
-    const registo = memoria.get(chave);
-    if (registo) registo.valor = String(Number(registo.valor) - 1);
-    return;
-  }
-  await comando(["DECR", chave]);
-}

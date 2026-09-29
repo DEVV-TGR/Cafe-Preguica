@@ -169,13 +169,13 @@ export async function confirmarCodigo(
     }
 
     /* A mesma frase para um email da lista e para um isco: os dois contam as
-       tentativas do dia, e os dois chegam aqui ao fim de vinte erros. */
+       tentativas de código do dia, e os dois chegam aqui ao fim de vinte. */
     if (veredicto.estado === "bloqueado") {
       frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
-      await anotar("teto de códigos errados esgotado na confirmação", veredicto.email);
+      await anotar("teto de tentativas de código esgotado na confirmação", veredicto.email);
       return {
         erro:
-          "Demasiados códigos errados hoje para este email. Tenta amanhã, ou entra " +
+          "Demasiadas tentativas de código hoje para este email. Tenta amanhã, ou entra " +
           "por um aparelho que já tenha passado pelo código.",
       };
     }

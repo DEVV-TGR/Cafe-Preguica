@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { SABORES, type Sabor } from "@/data/sabores";
 
 /**
  * # O jogo dos sabores
  *
- * O Cocktail Preguiça e o Unicórnio vendem-se num sabor à escolha, entre
- * catorze, e cada um tem o seu jogo — o Cocktail nos cocktails, o Unicórnio nas
+ * O Cocktail Preguiça e o Unicórnio vendem-se num sabor à escolha, e cada um tem o seu jogo — o Cocktail nos cocktails, o Unicórnio nas
  * águas (ver `COM_SABORES` em `data/ementa.ts`). Na mesa, com a carta no telemóvel, **escolher é a parte difícil** —
  * e é aí que a preguiça ajuda: roda pelos sabores, cada vez mais devagar, e
  * pára num. O abrandar não é enfeite; é o nome da casa outra vez.
@@ -28,32 +26,25 @@ import { SABORES, type Sabor } from "@/data/sabores";
  * global já corta as transições; isto corta a sequência de passos, que é JS.
  */
 
-/* O `surpresa` é um gradiente do SVG, e o endereço dele depende do id de cada
-   copo — ver `Copo`. */
-const CORES: Record<Exclude<Sabor, "surpresa">, string> = {
-  limao: "#e3d34a",
-  matcha: "#8fae4a",
-  "frutos-vermelhos": "#a8203c",
-  caramelo: "#b8742a",
-  menta: "#5cc49a",
-  ananas: "#efc53d",
-  pessego: "#f3a37b",
-  morango: "#e0455c",
-  fumado: "#7a5f4d",
-  laranja: "#ef8526",
-  coco: "#ece3d2",
-  framboesa: "#cf3a6c",
-  maracuja: "#e3ab1e",
-};
+/**
+ * Um sabor já na língua da página. Os sabores vêm do `ementa.json` (o painel
+ * muda-os), mas chegam aqui por props, já traduzidos: importar o módulo da carta
+ * metia o ficheiro inteiro no JavaScript da `/ementa`, incluindo os artigos da
+ * carta secreta.
+ *
+ * `cor` a `null` é o arco-íris da "Surpresa" — um gradiente do SVG, cujo
+ * endereço depende do id de cada copo (ver `Copo`).
+ */
+export type SaborDoJogo = { id: string; nome: string; cor: string | null };
 
 /** Quantas trocas a roleta dá antes de parar. */
 const PASSOS = 16;
 
 export function Sabores({
-  nomes,
+  sabores,
   textos,
 }: {
-  nomes: Record<Sabor, string>;
+  sabores: SaborDoJogo[];
   textos: {
     titulo: string;
     sortear: string;
@@ -64,14 +55,14 @@ export function Sabores({
     nota: string;
   };
 }) {
-  const [sabor, setSabor] = useState<Sabor | null>(null);
+  const [sabor, setSabor] = useState<SaborDoJogo | null>(null);
   const [aRodar, setARodar] = useState(false);
   const [quem, setQuem] = useState<"preguica" | "pessoa">("pessoa");
   const temporizador = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => () => clearTimeout(temporizador.current), []);
 
-  function escolher(s: Sabor) {
+  function escolher(s: SaborDoJogo) {
     clearTimeout(temporizador.current);
     setARodar(false);
     setQuem("pessoa");
@@ -80,7 +71,7 @@ export function Sabores({
 
   function sortear() {
     if (aRodar) return;
-    const final = SABORES[Math.floor(Math.random() * SABORES.length)];
+    const final = sabores[Math.floor(Math.random() * sabores.length)];
     setQuem("preguica");
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -99,8 +90,9 @@ export function Sabores({
       }
       /* Nunca o mesmo duas vezes seguidas: parecia que a roleta encravou. */
       setSabor((anterior) => {
-        const outros = SABORES.filter((s) => s !== anterior);
-        return outros[Math.floor(Math.random() * outros.length)];
+        const outros = sabores.filter((s) => s.id !== anterior?.id);
+        /* Com um sabor só não há outro para onde saltar. */
+        return outros.length > 0 ? outros[Math.floor(Math.random() * outros.length)] : anterior;
       });
       /* O intervalo cresce com o quadrado do passo: começa a 40 ms e acaba
          perto de meio segundo, ~2,5 s ao todo. Linear parecia um relógio. */
@@ -113,7 +105,7 @@ export function Sabores({
      no SVG repetiam-se, e o gradiente de um copo podia vir do outro. */
   const id = useId().replace(/[^a-zA-Z0-9-]/g, "");
   const gradiente = `em-surpresa-${id}`;
-  const cor = !sabor ? "transparent" : sabor === "surpresa" ? `url(#${gradiente})` : CORES[sabor];
+  const cor = !sabor ? "transparent" : (sabor.cor ?? `url(#${gradiente})`);
   const olho = aRodar
     ? textos.aRodar
     : sabor
@@ -129,33 +121,33 @@ export function Sabores({
         <div className="em-sabores__leitura">
           <p className="em-sabores__olho">{olho}</p>
           <p className="em-sabores__nome" aria-hidden="true">
-            {sabor ? nomes[sabor] : "?"}
+            {sabor ? sabor.nome : "?"}
           </p>
           {/* Só o resultado final é anunciado — anunciar os dezasseis passos
               da roleta a um leitor de ecrã era uma lista de frutas a metralhar. */}
           <p className="sr-only" aria-live="polite">
-            {!aRodar && sabor ? `${olho}: ${nomes[sabor]}` : ""}
+            {!aRodar && sabor ? `${olho}: ${sabor.nome}` : ""}
           </p>
         </div>
       </div>
 
       <p className="em-sabores__titulo">{textos.titulo}</p>
       <div className="pg-sabores" role="group" aria-label={textos.titulo}>
-        {SABORES.map((s) => (
+        {sabores.map((s) => (
           <button
-            key={s}
+            key={s.id}
             type="button"
             className="pg-sabor"
-            aria-pressed={sabor === s && !aRodar}
+            aria-pressed={sabor?.id === s.id && !aRodar}
             onClick={() => escolher(s)}
           >
             <span
               className="em-sabor__ponto"
-              style={{ background: s === "surpresa" ? undefined : CORES[s] }}
-              data-surpresa={s === "surpresa" || undefined}
+              style={{ background: s.cor ?? undefined }}
+              data-surpresa={s.cor === null || undefined}
               aria-hidden="true"
             />
-            {nomes[s]}
+            {s.nome}
           </button>
         ))}
       </div>

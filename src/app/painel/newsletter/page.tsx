@@ -2,7 +2,7 @@ import { exigirSessao } from "@/lib/painel/porta";
 import { URL_SITE } from "@/lib/site";
 import Link from "next/link";
 import { rodapeDaCasa } from "@/lib/newsletter/casa";
-import { CAMINHO_DO_LOGO } from "@/lib/newsletter/corpo";
+import { CAMINHO_DO_ESTUDIO, CAMINHO_DO_LOGO } from "@/lib/newsletter/corpo";
 import { dataDoResend as data, ESTADOS_DO_ENVIO as ESTADOS } from "@/lib/newsletter/datas";
 import {
   listarContactos,
@@ -70,7 +70,12 @@ export default async function PaginaDaNewsletter() {
             podeEnviar={!falta && !erro}
             /* O logótipo relativo: a CSP do painel só deixa carregar imagens do
                 próprio domínio, e a pré-visualização vive dentro dela. */
-            moldura={{ logo: CAMINHO_DO_LOGO, remetente: rodapeDaCasa(), cancelar: URL_SITE }}
+            moldura={{
+              logo: CAMINHO_DO_LOGO,
+              estudio: CAMINHO_DO_ESTUDIO,
+              remetente: rodapeDaCasa(),
+              cancelar: URL_SITE,
+            }}
           />
         </section>
 

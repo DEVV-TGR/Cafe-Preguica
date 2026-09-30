@@ -197,22 +197,6 @@
       }
     },
     "saboresTitulo": "Pick a flavour",
-    "sabores": {
-      "surpresa": "Surprise",
-      "limao": "Lemon",
-      "matcha": "Matcha",
-      "frutos-vermelhos": "Red berries",
-      "caramelo": "Caramel",
-      "menta": "Mint",
-      "ananas": "Pineapple",
-      "pessego": "Peach",
-      "morango": "Strawberry",
-      "fumado": "Smoked",
-      "laranja": "Orange",
-      "coco": "Coconut",
-      "framboesa": "Raspberry",
-      "maracuja": "Passion fruit"
-    },
     "olho": "Café Preguiça · Ermesinde",
     "contagem": "{artigos} items · {seccoes} sections",
     "indice": "Menu sections",
@@ -391,7 +375,7 @@
   },
   "rodape": {
     "direitos": "All rights reserved.",
-    "feitoPor": "Site by",
+    "feitoPor": "Made with <sem>zero sloth</sem> by",
     "privacidade": "Privacy",
     "cookies": "Cookies",
     "legal": "Legal information",

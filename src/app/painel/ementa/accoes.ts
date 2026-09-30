@@ -64,12 +64,14 @@ export async function publicarEmenta(
     const objeto = typeof recebida === "object" && recebida !== null ? recebida : {};
     const artigosRecebidos = "artigos" in objeto ? objeto.artigos : undefined;
     const secretosRecebidos = "secretos" in objeto ? objeto.secretos : undefined;
+    const saboresRecebidos = "sabores" in objeto ? objeto.sabores : undefined;
 
-    /* O `confirmada` vem do repositório; os artigos e a carta secreta, do
-       ecrã — são as duas coisas que o painel edita. */
+    /* O `confirmada` vem do repositório; os artigos, a carta secreta e os
+       sabores, do ecrã — são as três coisas que o painel edita. */
     const validada = EsquemaEmenta.safeParse({
       confirmada: atual.dados.confirmada,
       secretos: secretosRecebidos,
+      sabores: saboresRecebidos,
       artigos: artigosRecebidos,
     });
     if (!validada.success) {

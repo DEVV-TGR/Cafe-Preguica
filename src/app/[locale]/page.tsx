@@ -274,9 +274,24 @@ export default async function Inicio({ params }: Props) {
               alt={t("onde.mapaAlt")}
               loading="lazy"
             />
-            <span className="pg-onde__alfinete" aria-hidden="true">
-              <img src="/marca/preguica.webp" alt="" width={325} height={286} />
-            </span>
+            {/* A preguiça é o sítio da casa no mapa, e é o primeiro sítio onde se
+                toca: por isso leva ao Google Maps, como o botão do cartão. Sem
+                direções confirmadas fica só o desenho. */}
+            {direcoes ? (
+              <a
+                className="pg-onde__alfinete"
+                href={direcoes}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t("onde.direcoes")}
+              >
+                <img src="/marca/preguica.webp" alt="" width={325} height={286} />
+              </a>
+            ) : (
+              <span className="pg-onde__alfinete" aria-hidden="true">
+                <img src="/marca/preguica.webp" alt="" width={325} height={286} />
+              </span>
+            )}
             {/* O crédito é condição da licença ODbL, não decoração. */}
             <p className="pg-onde__credito">
               <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">

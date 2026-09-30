@@ -316,6 +316,36 @@ const EsquemaArtigo = z
 
 export type Artigo = z.infer<typeof EsquemaArtigo>;
 
+/**
+ * Um sabor do Cocktail Preguiça e do Unicórnio.
+ *
+ * ⚠️ **Não são artigos da ementa, e é de propósito.** A casa vende duas bebidas
+ * — uma com álcool, outra sem — e o sabor escolhe-se depois, ao balcão. Pô-los
+ * como artigos dava duas entradas por sabor e outros tantos sítios para o preço
+ * ficar desactualizado. A lista é **uma só para as duas bebidas**, como no menu
+ * impresso.
+ *
+ * Viviam no código (`sabores.ts`) e passaram para aqui para o painel os poder
+ * mudar, acrescentar e tirar.
+ */
+const EsquemaSabor = z.object({
+  /* Só para o `key` do React; o painel tira-o do nome. */
+  id: z.string().regex(/^[a-z0-9-]+$/, "só minúsculas, números e hífenes"),
+  nome: texto(30),
+  /**
+   * A cor do copo no jogo dos sabores. **É decoração, não a cor da bebida** —
+   * ninguém a mediu (ver `components/ementa/Sabores.tsx`).
+   *
+   * `null` é o arco-íris da "Surpresa": não há uma cor que diga "qualquer um".
+   */
+  cor: z
+    .string()
+    .regex(/^#[0-9a-f]{6}$/i, "uma cor como #e3d34a")
+    .nullable(),
+});
+
+export type Sabor = z.infer<typeof EsquemaSabor>;
+
 export const EsquemaEmenta = z
   .object({
     confirmada: z.boolean(),
@@ -329,6 +359,27 @@ export const EsquemaEmenta = z
      * própria ordem — e porque assim sair dela não mexe no artigo.
      */
     secretos: z.array(z.string()),
+    /**
+     * Os sabores, pela ordem em que aparecem no jogo — a do menu impresso, que
+     * lê em duas colunas. Pelo menos um: o jogo sem sabores era um botão que
+     * não fazia nada.
+     */
+    sabores: z
+      .array(EsquemaSabor)
+      .min(1, "tem de haver pelo menos um sabor")
+      .superRefine((sabores, ctx) => {
+        const vistos = new Set<string>();
+        sabores.forEach((sabor, indice) => {
+          if (vistos.has(sabor.id)) {
+            ctx.addIssue({
+              code: "custom",
+              path: [indice, "id"],
+              message: `o sabor "${sabor.nome.pt}" está repetido`,
+            });
+          }
+          vistos.add(sabor.id);
+        });
+      }),
     artigos: z
       .array(EsquemaArtigo)
       .min(1)
@@ -375,6 +426,9 @@ if (!validado.success) {
 }
 
 export const artigos: Artigo[] = validado.data.artigos;
+
+/** Os sabores do jogo, pela ordem do ficheiro. */
+export const sabores: Sabor[] = validado.data.sabores;
 
 const idsSecretos: string[] = validado.data.secretos;
 const secretos = new Set(idsSecretos);
@@ -428,9 +482,6 @@ export function temAlergeniosDeclarados(): boolean {
  * álcool, o Unicórnio sem — e cada uma vive no seu capítulo.
  */
 export const COM_SABORES: readonly Categoria[] = ["cocktail-preguica", "unicornio"];
-
-/* Os sabores vivem em `sabores.ts`, sem o JSON da carta — ver lá porquê. */
-export { SABORES, type Sabor } from "./sabores";
 
 /**
  * Os capítulos com as suas secções já preenchidas, pela ordem de `CATEGORIAS`,

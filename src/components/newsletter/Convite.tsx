@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
@@ -38,6 +38,14 @@ import type { Locale } from "@/i18n/routing";
  * Não escurece a página, não prende o foco e não obriga a responder. Quem está a
  * ler continua a ler; quem usa leitor de ecrã não é arrancado do sítio onde
  * estava. Fecha-se com o ×, com o Esc, ou ignorando-o.
+ *
+ * ## Pára no rodapé
+ *
+ * O cartão fica fixo no canto de baixo, e no fim da página é aí que está o
+ * rodapé — com o "feito por" da DevPlus. Quando o rodapé entra no ecrã, o cartão
+ * sobe o mesmo que ele e fica pousado por cima, como se o rodapé o empurrasse:
+ * desce com a página até lá chegar, e dali não passa. Sem espaço acrescentado
+ * à página.
  */
 
 const MEMORIA = "preguica:newsletter";
@@ -95,6 +103,7 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   const [passouOTempo, setPassouOTempo] = useState(false);
   const [estado, setEstado] = useState<Estado>({ tipo: "formulario" });
   const idTitulo = useId();
+  const cartao = useRef<HTMLElement>(null);
 
   /* O relógio conta uma vez por visita: o layout não volta a montar ao mudar de
      página, portanto este efeito também não. */
@@ -125,6 +134,31 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
     window.addEventListener("keydown", aoTeclar);
     return () => window.removeEventListener("keydown", aoTeclar);
   });
+
+  /* Quanto do rodapé já entrou no ecrã é o quanto o cartão sobe. Mexe-se no
+     estilo direto, e não em estado do React: corre a cada evento de rolagem. */
+  useEffect(() => {
+    const elemento = cartao.current;
+    if (!visivel || !elemento) return;
+    let pedido = 0;
+    const ajustar = () => {
+      cancelAnimationFrame(pedido);
+      pedido = requestAnimationFrame(() => {
+        const rodape = document.querySelector(".pg-rodape");
+        const dentro = rodape ? window.innerHeight - rodape.getBoundingClientRect().top : 0;
+        elemento.style.translate = dentro > 0 ? `0 ${-Math.ceil(dentro)}px` : "";
+      });
+    };
+    ajustar();
+    window.addEventListener("scroll", ajustar, { passive: true });
+    window.addEventListener("resize", ajustar);
+    return () => {
+      cancelAnimationFrame(pedido);
+      window.removeEventListener("scroll", ajustar);
+      window.removeEventListener("resize", ajustar);
+    };
+    /* O caminho conta: mudar de página troca o rodapé. */
+  }, [visivel, caminho]);
 
   async function inscrever(dados: FormData) {
     setEstado({ tipo: "a-enviar" });
@@ -167,7 +201,7 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   if (!visivel) return null;
 
   return (
-    <section className="pg-convite" role="dialog" aria-labelledby={idTitulo}>
+    <section ref={cartao} className="pg-convite" role="dialog" aria-labelledby={idTitulo}>
       {/* A preguiça pendurada na borda, como no topo da inicial. É decorativa,
           e por isso `alt` vazio. */}
       <img

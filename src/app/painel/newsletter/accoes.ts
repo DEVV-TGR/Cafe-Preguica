@@ -7,6 +7,7 @@ import { meioEscondido } from "@/lib/painel/utilizadores";
 import { URL_SITE } from "@/lib/site";
 import { rodapeDaCasa, responderPara } from "@/lib/newsletter/casa";
 import {
+  CAMINHO_DO_ESTUDIO,
   CAMINHO_DO_LOGO,
   emailEmHtml,
   emailEmTexto,
@@ -38,7 +39,10 @@ const MAX_TEXTO = 20_000;
 /* O logótipo por endereço absoluto, do site em produção: é de lá que o
    programa de email de quem recebe o vai buscar. */
 function moldura(cancelar: string): Moldura {
-  return { logo: `${URL_SITE}${CAMINHO_DO_LOGO}`, remetente: rodapeDaCasa(), cancelar };
+  return {
+    logo: `${URL_SITE}${CAMINHO_DO_LOGO}`,
+    estudio: `${URL_SITE}${CAMINHO_DO_ESTUDIO}`,
+    remetente: rodapeDaCasa(), cancelar };
 }
 
 function lerMensagem(dados: FormData): { assunto: string; texto: string } | string {

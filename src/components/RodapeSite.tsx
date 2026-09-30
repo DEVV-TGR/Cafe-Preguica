@@ -63,12 +63,18 @@ export function RodapeSite({ comContactos = false }: { comContactos?: boolean })
         </a>
       </nav>
       <p>
-        © {new Date().getFullYear()} {marca.nome}. {t("direitos")} {t("feitoPor")}{" "}
-        <a href={URL_ESTUDIO} target="_blank" rel="noopener noreferrer">
-          DevPlus
-        </a>
-        .
+        © {new Date().getFullYear()} {marca.nome}. {t("direitos")}
       </p>
+      {/* O crédito da DevPlus à parte, e não no fim da frase do copyright,
+          onde ninguém o lia. O ícone é servido do próprio site, para não furar
+          a CSP. */}
+      <a className="pg-estudio" href={URL_ESTUDIO} target="_blank" rel="noopener noreferrer">
+        <img src="/marca/devplus.png" alt="" width={120} height={120} className="pg-estudio__icone" />
+        <span>
+          {t.rich("feitoPor", { sem: (texto) => <em>{texto}</em> })}{" "}
+          <strong className="pg-estudio__nome">DevPlus</strong>
+        </span>
+      </a>
     </footer>
   );
 }

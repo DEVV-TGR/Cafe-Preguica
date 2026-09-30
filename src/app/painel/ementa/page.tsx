@@ -7,6 +7,7 @@ import {
   CAPITULOS,
   CATEGORIAS,
   CATEGORIAS_SECRETAS,
+  COM_SABORES,
   EM_DESTAQUE,
   METADADOS,
   SEM_DESCRICAO,
@@ -77,6 +78,7 @@ export default async function PaginaDaEmenta() {
           grupos={grupos()}
           emDestaque={EM_DESTAQUE}
           categoriasSecretas={CATEGORIAS_SECRETAS}
+          comSabores={COM_SABORES}
         />
       </main>
     </>

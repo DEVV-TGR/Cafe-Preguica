@@ -203,6 +203,35 @@
   color: var(--color-ouro-claro);
 }
 
+/* O crédito da DevPlus — ver `RodapeSite`. Discreto como o resto do rodapé; o
+   que o distingue é o ícone e o fio laranja (o da marca da DevPlus, que só
+   aparece aqui) por baixo do nome. Já foi um selo com moldura e brilho, e
+   gritava mais do que a própria casa. */
+.pg-estudio {
+  --laranja-devplus: #ff780a;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pg-estudio__icone {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 0.25rem;
+}
+
+.pg-estudio__nome {
+  font-weight: 600;
+  color: var(--color-tinta);
+  border-bottom: 1px solid var(--laranja-devplus);
+}
+
+/* O `.pg-rodape a:hover` pinta o texto todo de ouro; o nome fica laranja. */
+.pg-estudio:hover .pg-estudio__nome,
+.pg-estudio:focus-visible .pg-estudio__nome {
+  color: var(--laranja-devplus);
+}
+
 /* Só nas páginas de leitura — ver `RodapeSite`. Ocupa a linha inteira, por
    cima dos links legais, e separa-se deles por um ponto dourado. */
 .pg-rodape__contactos {

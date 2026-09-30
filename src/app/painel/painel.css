@@ -844,3 +844,90 @@ select.pn-entrada {
 .pn-seccao-carta > .pn-campo {
   margin-top: 1.25rem;
 }
+
+/* =========================================================== OS SABORES ===
+   Ver `EditorDeSabores` em `EditorDeEmenta.tsx`. Uma linha por sabor: a cor, os
+   dois nomes e as setas. No telemóvel os nomes descem para a linha de baixo. */
+
+.pn-sabores {
+  margin-top: 1.25rem;
+}
+
+.pn-sabores__lista {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.pn-sabor {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-linha);
+}
+
+@media (max-width: 40rem) {
+  .pn-sabor {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .pn-sabor > .pn-entrada[lang="en"] {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+}
+
+.pn-sabor__accoes {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.pn-sabor__accoes .pn-icone {
+  width: 2.5rem;
+  border-color: transparent;
+  color: var(--color-tinta-suave);
+}
+
+.pn-sabor__cor,
+.pn-campo--cor {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.pn-sabor__cor {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.pn-sabor__cor input,
+.pn-campo--cor input {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.2rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 0.6rem;
+  background: var(--color-canvas);
+  cursor: pointer;
+}
+
+.pn-campo--cor {
+  flex: 0 0 auto;
+  justify-items: start;
+}
+
+/* A "Surpresa" não tem cor: mostra o mesmo arco-íris da ementa, e o seletor
+   fica por cima, invisível — escolher uma cor tira-lhe o arco-íris. */
+.pn-sabor__arco-iris {
+  position: absolute;
+  inset: 0.2rem;
+  border-radius: 0.45rem;
+  background: conic-gradient(#e0455c, #efc53d, #5cc49a, #3f8fd8, #e0455c);
+  pointer-events: none;
+}
+
+.pn-sabor__cor input[data-escondido] {
+  opacity: 0;
+}

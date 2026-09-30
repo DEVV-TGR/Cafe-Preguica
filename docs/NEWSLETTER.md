@@ -97,8 +97,14 @@ O plano gratuito do Resend deixa ter até 1000 contactos.
 - **O formato é texto simples:** linha em branco = parágrafo, `**negrito**`, e
   endereços `https://` ficam clicáveis. O rodapé (morada da casa e link de
   cancelar) é posto sozinho.
-- **O logótipo vai numa faixa escura no topo** (`public/marca/email.png`, por
-  endereço absoluto do site em produção — um email não tem ficheiros relativos).
+- **O logótipo vai numa faixa escura no topo**, e a faixa inteira é uma imagem
+  (`public/marca/email-cabecalho.png`, feita por
+  `scripts/desenhar-cabecalho-email.mjs`): como célula com fundo escuro, o Gmail
+  do telemóvel em modo escuro invertia o fundo para branco. Vai por endereço
+  absoluto do site em produção — um email não tem ficheiros relativos —, e por
+  isso a faixa nova só aparece nos emails depois de o site com ela estar no ar.
+- **Assina a DevPlus no fim**, com o ícone (`public/marca/devplus.png`) e um
+  trocadilho: "Site feito sem preguiça nenhuma pela DevPlus".
 - **As enviadas abrem-se** em `/painel/newsletter/enviada/<id>`, tal como
   saíram, só para ler. O conteúdo é pedido ao Resend, não guardado por nós.
 - **As respostas vão para o email da casa** (`email` do `cafe.json`), não para a
@@ -216,5 +222,6 @@ três sinais, nem o botão "Abrir a carta secreta" na confirmação da newslette
 ⚠️ **O `ementa.json` não pode ir para o browser.** O jogo dos sabores
 (`components/ementa/Sabores.tsx`) importava `SABORES` de `data/ementa.ts`, e isso
 metia a carta inteira, secretos incluídos, no JavaScript da `/ementa`. Os sabores
-vivem agora em `data/sabores.ts`. Um componente `"use client"` que importe um
+vivem agora no `ementa.json` (o painel edita-os) e chegam ao jogo **por props**,
+já traduzidos pela página, que corre no servidor. Um componente `"use client"` que importe um
 valor de `data/ementa.ts` volta a abrir esta porta; `import type` não faz mal.

@@ -1,4 +1,4 @@
-import type { Artigo } from "@/data/ementa";
+import type { Artigo, Sabor } from "@/data/ementa";
 
 /**
  * O que mudou na carta entre duas versões, contado em **gestos** e não em
@@ -24,10 +24,12 @@ export type Alteracoes = {
   daSecreta: number;
   /** 1 se a carta secreta mudou de ordem (e nada entrou nem saiu). */
   ordemSecreta: number;
+  /** Sabores novos, tirados ou mudados (nome ou cor), mais 1 se mudou a ordem. */
+  sabores: number;
 };
 
-/** O que se compara: os artigos e a lista da carta secreta. */
-export type Carta = { artigos: Artigo[]; secretos?: string[] };
+/** O que se compara: os artigos, a lista da carta secreta e os sabores. */
+export type Carta = { artigos: Artigo[]; secretos?: string[]; sabores?: Sabor[] };
 
 function mesmoTexto(a: Artigo["nome"] | null, b: Artigo["nome"] | null): boolean {
   if (a === null || b === null) return a === b;
@@ -50,6 +52,7 @@ export function compararCartas(cartaAntes: Carta, cartaDepois: Carta): Alteracoe
     paraSecreta: 0,
     daSecreta: 0,
     ordemSecreta: 0,
+    sabores: 0,
   };
 
   for (const artigo of depois) {
@@ -102,6 +105,26 @@ export function compararCartas(cartaAntes: Carta, cartaDepois: Carta): Alteracoe
     contas.ordemSecreta = 1;
   }
 
+  /* Os sabores, pelo `id`. Um ficheiro de antes de os sabores estarem no JSON
+     não traz a lista. */
+  const saboresAntes = cartaAntes.sabores ?? [];
+  const saboresDepois = cartaDepois.sabores ?? [];
+  const saborAntes = new Map(saboresAntes.map((s) => [s.id, s]));
+  const idsDepois = new Set(saboresDepois.map((s) => s.id));
+  for (const sabor of saboresDepois) {
+    const era = saborAntes.get(sabor.id);
+    if (!era || !mesmoTexto(era.nome, sabor.nome) || era.cor !== sabor.cor) contas.sabores += 1;
+  }
+  contas.sabores += saboresAntes.filter((s) => !idsDepois.has(s.id)).length;
+  const ordemDos = (lista: Sabor[], outra: Set<string>) =>
+    lista.filter((s) => outra.has(s.id)).map((s) => s.id).join();
+  if (
+    ordemDos(saboresAntes, idsDepois) !==
+    ordemDos(saboresDepois, new Set(saborAntes.keys()))
+  ) {
+    contas.sabores += 1;
+  }
+
   return contas;
 }
 
@@ -123,5 +146,6 @@ export function resumirAlteracoes(contas: Alteracoes): string {
   if (contas.paraSecreta) partes.push(`${contas.paraSecreta} para a carta secreta`);
   if (contas.daSecreta) partes.push(`${contas.daSecreta} de volta da carta secreta`);
   if (contas.ordemSecreta) partes.push("ordem da carta secreta");
+  if (contas.sabores) partes.push(plural(contas.sabores, "sabor", "sabores"));
   return partes.join(", ") || "sem alterações";
 }

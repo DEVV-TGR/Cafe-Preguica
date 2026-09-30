@@ -41,8 +41,6 @@ gravidade:
       que o Instagram serve. Chegam para os cartões do carril; não chegam para um
       herói de ecrã inteiro. Os ficheiros da máquina de quem as tirou valem muito
       mais, e permitem fotografias maiores na página.
-- [ ] **Código postal.** Está a `null` em `src/data/cafe.json` e por isso não
-      aparece nem entra nos dados estruturados.
 - [ ] **Logótipo em vetor.** O de `public/marca/` foi recortado de um JPEG por
       luminância. Funciona, mas um SVG dava contornos limpos em qualquer tamanho
       — e a preguiça é o elemento que mais cresce na página.

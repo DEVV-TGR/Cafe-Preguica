@@ -203,64 +203,33 @@
   color: var(--color-ouro-claro);
 }
 
-/* O selo da DevPlus — ver `RodapeSite`. O laranja é o da marca da DevPlus, e só
-   aparece aqui: no resto do site manda o ouro da casa. */
+/* O crédito da DevPlus — ver `RodapeSite`. Discreto como o resto do rodapé; o
+   que o distingue é o ícone e o fio laranja (o da marca da DevPlus, que só
+   aparece aqui) por baixo do nome. Já foi um selo com moldura e brilho, e
+   gritava mais do que a própria casa. */
 .pg-estudio {
   --laranja-devplus: #ff780a;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.35rem 0.9rem 0.35rem 0.35rem;
-  border: 1px solid color-mix(in oklab, var(--laranja-devplus) 45%, transparent);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--laranja-devplus) 7%, transparent);
-  color: var(--color-tinta);
-  font-size: 0.8rem;
-  transition:
-    border-color 250ms ease,
-    box-shadow 250ms ease,
-    background 250ms ease;
-}
-
-.pg-estudio em {
-  font-style: italic;
-  color: var(--color-ouro-claro);
+  gap: 0.45rem;
 }
 
 .pg-estudio__icone {
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 0.45rem;
-  transition: rotate 300ms ease;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 0.25rem;
 }
 
 .pg-estudio__nome {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-tinta);
-  background: linear-gradient(var(--laranja-devplus), var(--laranja-devplus)) 0 100% / 100% 2px
-    no-repeat;
-  padding-bottom: 1px;
+  border-bottom: 1px solid var(--laranja-devplus);
 }
 
-/* O `.pg-rodape a:hover` pintava o texto de ouro; aqui quem muda é a moldura. */
-.pg-rodape .pg-estudio:hover,
-.pg-rodape .pg-estudio:focus-visible {
-  color: var(--color-tinta);
-  border-color: var(--laranja-devplus);
-  background: color-mix(in oklab, var(--laranja-devplus) 14%, transparent);
-  box-shadow: 0 0 1.25rem -0.25rem color-mix(in oklab, var(--laranja-devplus) 60%, transparent);
-}
-
-.pg-estudio:hover .pg-estudio__icone,
-.pg-estudio:focus-visible .pg-estudio__icone {
-  rotate: -8deg;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pg-estudio,
-  .pg-estudio__icone {
-    transition: none;
-  }
+/* O `.pg-rodape a:hover` pinta o texto todo de ouro; o nome fica laranja. */
+.pg-estudio:hover .pg-estudio__nome,
+.pg-estudio:focus-visible .pg-estudio__nome {
+  color: var(--laranja-devplus);
 }
 
 /* Só nas páginas de leitura — ver `RodapeSite`. Ocupa a linha inteira, por

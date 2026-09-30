@@ -197,22 +197,6 @@
       }
     },
     "saboresTitulo": "Escolha o sabor",
-    "sabores": {
-      "surpresa": "Surpresa",
-      "limao": "Limão",
-      "matcha": "Matcha",
-      "frutos-vermelhos": "Frutos vermelhos",
-      "caramelo": "Caramelo",
-      "menta": "Menta",
-      "ananas": "Ananás",
-      "pessego": "Pêssego",
-      "morango": "Morango",
-      "fumado": "Fumado",
-      "laranja": "Laranja",
-      "coco": "Coco",
-      "framboesa": "Framboesa",
-      "maracuja": "Maracujá"
-    },
     "olho": "Café Preguiça · Ermesinde",
     "contagem": "{artigos} artigos · {seccoes} secções",
     "indice": "Capítulos da carta",

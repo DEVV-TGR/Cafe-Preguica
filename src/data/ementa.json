@@ -1,6 +1,120 @@
 {
   "confirmada": true,
   "secretos": [],
+  "sabores": [
+    {
+      "id": "surpresa",
+      "nome": {
+        "pt": "Surpresa",
+        "en": "Surprise"
+      },
+      "cor": null
+    },
+    {
+      "id": "limao",
+      "nome": {
+        "pt": "Limão",
+        "en": "Lemon"
+      },
+      "cor": "#e3d34a"
+    },
+    {
+      "id": "matcha",
+      "nome": {
+        "pt": "Matcha",
+        "en": "Matcha"
+      },
+      "cor": "#8fae4a"
+    },
+    {
+      "id": "frutos-vermelhos",
+      "nome": {
+        "pt": "Frutos vermelhos",
+        "en": "Red berries"
+      },
+      "cor": "#a8203c"
+    },
+    {
+      "id": "caramelo",
+      "nome": {
+        "pt": "Caramelo",
+        "en": "Caramel"
+      },
+      "cor": "#b8742a"
+    },
+    {
+      "id": "menta",
+      "nome": {
+        "pt": "Menta",
+        "en": "Mint"
+      },
+      "cor": "#5cc49a"
+    },
+    {
+      "id": "ananas",
+      "nome": {
+        "pt": "Ananás",
+        "en": "Pineapple"
+      },
+      "cor": "#efc53d"
+    },
+    {
+      "id": "pessego",
+      "nome": {
+        "pt": "Pêssego",
+        "en": "Peach"
+      },
+      "cor": "#f3a37b"
+    },
+    {
+      "id": "morango",
+      "nome": {
+        "pt": "Morango",
+        "en": "Strawberry"
+      },
+      "cor": "#e0455c"
+    },
+    {
+      "id": "fumado",
+      "nome": {
+        "pt": "Fumado",
+        "en": "Smoked"
+      },
+      "cor": "#7a5f4d"
+    },
+    {
+      "id": "laranja",
+      "nome": {
+        "pt": "Laranja",
+        "en": "Orange"
+      },
+      "cor": "#ef8526"
+    },
+    {
+      "id": "coco",
+      "nome": {
+        "pt": "Coco",
+        "en": "Coconut"
+      },
+      "cor": "#ece3d2"
+    },
+    {
+      "id": "framboesa",
+      "nome": {
+        "pt": "Framboesa",
+        "en": "Raspberry"
+      },
+      "cor": "#cf3a6c"
+    },
+    {
+      "id": "maracuja",
+      "nome": {
+        "pt": "Maracujá",
+        "en": "Passion fruit"
+      },
+      "cor": "#e3ab1e"
+    }
+  ],
   "artigos": [
     {
       "id": "queijo-fiambre",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
@@ -38,6 +38,14 @@ import type { Locale } from "@/i18n/routing";
  * Não escurece a página, não prende o foco e não obriga a responder. Quem está a
  * ler continua a ler; quem usa leitor de ecrã não é arrancado do sítio onde
  * estava. Fecha-se com o ×, com o Esc, ou ignorando-o.
+ *
+ * ## Não tapa o fim da página
+ *
+ * Ignorá-lo tinha um custo: o cartão fica fixo no canto de baixo, e no fim da
+ * página é aí que está o rodapé — com o "feito por" da DevPlus por baixo dele,
+ * a toda a largura no telemóvel e à direita no computador. Enquanto está
+ * aberto, deixa no fim da página um espaço vazio da altura que ocupa no ecrã,
+ * e o rodapé sobe até ficar à vista por cima dele.
  */
 
 const MEMORIA = "preguica:newsletter";
@@ -95,6 +103,8 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   const [passouOTempo, setPassouOTempo] = useState(false);
   const [estado, setEstado] = useState<Estado>({ tipo: "formulario" });
   const idTitulo = useId();
+  const cartao = useRef<HTMLElement>(null);
+  const [folga, setFolga] = useState(0);
 
   /* O relógio conta uma vez por visita: o layout não volta a montar ao mudar de
      página, portanto este efeito também não. */
@@ -125,6 +135,34 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
     window.addEventListener("keydown", aoTeclar);
     return () => window.removeEventListener("keydown", aoTeclar);
   });
+
+  /* A folga é o que vai do topo do cartão ao fundo do ecrã — altura e margem
+     de baixo juntas, que mudam com a largura e com o estado (o "obrigado" é
+     mais baixo que o formulário). Conta desde a cabeça da preguiça pendurada,
+     que sai por cima do cartão, e mais um palmo de ar. */
+  useEffect(() => {
+    const elemento = cartao.current;
+    if (!visivel || !elemento) return;
+    const preguica = elemento.querySelector("img");
+    const medir = () => {
+      const topo = Math.min(
+        elemento.getBoundingClientRect().top,
+        preguica?.getBoundingClientRect().top ?? Infinity,
+      );
+      setFolga(Math.ceil(window.innerHeight - topo + 12));
+    };
+    /* A primeira medida espera pelo fim da entrada: a animação sobe o cartão
+       1,5rem, e medir a meio dava uma folga curta. */
+    elemento.addEventListener("animationend", medir);
+    const observador = new ResizeObserver(medir);
+    observador.observe(elemento);
+    window.addEventListener("resize", medir);
+    return () => {
+      elemento.removeEventListener("animationend", medir);
+      observador.disconnect();
+      window.removeEventListener("resize", medir);
+    };
+  }, [visivel]);
 
   async function inscrever(dados: FormData) {
     setEstado({ tipo: "a-enviar" });
@@ -167,88 +205,91 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   if (!visivel) return null;
 
   return (
-    <section className="pg-convite" role="dialog" aria-labelledby={idTitulo}>
-      {/* A preguiça pendurada na borda, como no topo da inicial. É decorativa,
-          e por isso `alt` vazio. */}
-      <img
-        className="pg-convite__preguica"
-        src="/marca/preguica.webp"
-        alt=""
-        width={325}
-        height={286}
-      />
+    <>
+      <div className="pg-convite__folga" style={{ height: folga }} aria-hidden="true" />
+      <section ref={cartao} className="pg-convite" role="dialog" aria-labelledby={idTitulo}>
+        {/* A preguiça pendurada na borda, como no topo da inicial. É decorativa,
+            e por isso `alt` vazio. */}
+        <img
+          className="pg-convite__preguica"
+          src="/marca/preguica.webp"
+          alt=""
+          width={325}
+          height={286}
+        />
 
-      <button type="button" className="pg-convite__fechar" onClick={fechar} aria-label={textos.fechar}>
-        <span aria-hidden="true">×</span>
-      </button>
+        <button type="button" className="pg-convite__fechar" onClick={fechar} aria-label={textos.fechar}>
+          <span aria-hidden="true">×</span>
+        </button>
 
-      {estado.tipo === "enviado" || estado.tipo === "ja-inscrito" ? (
-        <div role="status">
-          <p className="pg-convite__olho">{textos.olho}</p>
-          <h2 id={idTitulo} className="pg-convite__titulo">
-            {estado.tipo === "enviado" ? textos.enviadoTitulo : textos.jaTitulo}
-          </h2>
-          <p className="pg-convite__texto">
-            {estado.tipo === "enviado" ? textos.enviadoTexto : textos.jaTexto}
-          </p>
-        </div>
-      ) : (
-        <>
-          <p className="pg-convite__olho">{textos.olho}</p>
-          <h2 id={idTitulo} className="pg-convite__titulo">
-            {textos.titulo}
-          </h2>
-          <p className="pg-convite__texto">{textos.texto}</p>
-
-          <form action={inscrever} className="pg-convite__form">
-            <label className="pg-convite__campo">
-              <span className="sr-only">{textos.etiqueta}</span>
-              <input
-                type="email"
-                name="email"
-                required
-                autoComplete="email"
-                inputMode="email"
-                placeholder={textos.marcador}
-                aria-invalid={estado.tipo === "formulario" && estado.erro ? true : undefined}
-                className="pg-convite__entrada"
-              />
-            </label>
-
-            {/* O isco para robôs — ver `app/api/newsletter/route.ts`. Fora do
-                ecrã e fora do tabulador, e o leitor de ecrã também o salta. */}
-            <input
-              type="text"
-              name="sitio"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              className="pg-convite__isco"
-            />
-
-            <button
-              type="submit"
-              className="pg-botao pg-botao--cheio pg-convite__botao"
-              disabled={estado.tipo === "a-enviar"}
-            >
-              {estado.tipo === "a-enviar" ? textos.aEnviar : textos.botao}
-            </button>
-          </form>
-
-          {estado.tipo === "formulario" && estado.erro ? (
-            <p className="pg-convite__erro" role="alert">
-              {estado.erro}
+        {estado.tipo === "enviado" || estado.tipo === "ja-inscrito" ? (
+          <div role="status">
+            <p className="pg-convite__olho">{textos.olho}</p>
+            <h2 id={idTitulo} className="pg-convite__titulo">
+              {estado.tipo === "enviado" ? textos.enviadoTitulo : textos.jaTitulo}
+            </h2>
+            <p className="pg-convite__texto">
+              {estado.tipo === "enviado" ? textos.enviadoTexto : textos.jaTexto}
             </p>
-          ) : null}
+          </div>
+        ) : (
+          <>
+            <p className="pg-convite__olho">{textos.olho}</p>
+            <h2 id={idTitulo} className="pg-convite__titulo">
+              {textos.titulo}
+            </h2>
+            <p className="pg-convite__texto">{textos.texto}</p>
 
-          {/* O que a pessoa aceita, escrito antes de carregar no botão — é isto
-              que faz a inscrição ser um consentimento informado, sem precisar
-              de uma caixa para marcar. Ver `docs/NEWSLETTER.md`. */}
-          <p className="pg-convite__nota">
-            {textos.consentimento} <Link href="/privacidade">{textos.privacidade}</Link>
-          </p>
-        </>
-      )}
-    </section>
+            <form action={inscrever} className="pg-convite__form">
+              <label className="pg-convite__campo">
+                <span className="sr-only">{textos.etiqueta}</span>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder={textos.marcador}
+                  aria-invalid={estado.tipo === "formulario" && estado.erro ? true : undefined}
+                  className="pg-convite__entrada"
+                />
+              </label>
+
+              {/* O isco para robôs — ver `app/api/newsletter/route.ts`. Fora do
+                  ecrã e fora do tabulador, e o leitor de ecrã também o salta. */}
+              <input
+                type="text"
+                name="sitio"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="pg-convite__isco"
+              />
+
+              <button
+                type="submit"
+                className="pg-botao pg-botao--cheio pg-convite__botao"
+                disabled={estado.tipo === "a-enviar"}
+              >
+                {estado.tipo === "a-enviar" ? textos.aEnviar : textos.botao}
+              </button>
+            </form>
+
+            {estado.tipo === "formulario" && estado.erro ? (
+              <p className="pg-convite__erro" role="alert">
+                {estado.erro}
+              </p>
+            ) : null}
+
+            {/* O que a pessoa aceita, escrito antes de carregar no botão — é isto
+                que faz a inscrição ser um consentimento informado, sem precisar
+                de uma caixa para marcar. Ver `docs/NEWSLETTER.md`. */}
+            <p className="pg-convite__nota">
+              {textos.consentimento} <Link href="/privacidade">{textos.privacidade}</Link>
+            </p>
+          </>
+        )}
+      </section>
+    </>
   );
 }

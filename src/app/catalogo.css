@@ -1184,6 +1184,19 @@
 .pg-onde__alfinete img {
   width: 78%;
   height: auto;
+  transition: scale 300ms ease;
+}
+
+/* É um link (ver a página): cresce um pouco ao passar o rato, para se perceber
+   que se toca. */
+a.pg-onde__alfinete:hover img,
+a.pg-onde__alfinete:focus-visible img {
+  scale: 1.12;
+}
+
+a.pg-onde__alfinete:focus-visible {
+  outline: 2px solid var(--color-ouro-claro);
+  outline-offset: 4px;
 }
 
 @keyframes pg-halo {

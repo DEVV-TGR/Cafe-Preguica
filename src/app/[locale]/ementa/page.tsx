@@ -12,12 +12,11 @@ import {
   CARTA_CONFIRMADA,
   COM_SABORES,
   METADADOS,
-  SABORES,
+  sabores,
   temAlergeniosDeclarados,
   type Artigo,
   type Capitulo,
   type Categoria,
-  type Sabor,
 } from "@/data/ementa";
 import { BarraSite } from "@/components/BarraSite";
 import { Preguica } from "@/components/catalogo/Preguica";
@@ -190,9 +189,7 @@ export default async function Ementa({ params }: Props) {
     };
   };
 
-  const nomesSabores = Object.fromEntries(
-    SABORES.map((s) => [s, t(`sabores.${s}`)]),
-  ) as Record<Sabor, string>;
+  const saboresDoJogo = sabores.map((s) => ({ id: s.id, nome: s.nome[locale], cor: s.cor }));
 
   return (
     <>
@@ -369,7 +366,7 @@ export default async function Ementa({ params }: Props) {
                     extra={
                       COM_SABORES.includes(categoria) ? (
                         <Sabores
-                          nomes={nomesSabores}
+                          sabores={saboresDoJogo}
                           textos={{
                             titulo: t("saboresTitulo"),
                             sortear: t("sortear"),

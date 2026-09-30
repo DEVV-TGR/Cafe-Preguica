@@ -8,7 +8,10 @@ Aqui a casa muda a carta e o horário sem depender de nós: **`/painel`**.
   - editar o nome e a descrição em português e inglês;
   - **esconder** um artigo sem o apagar (acabou, é da estação);
   - mudar a ordem dentro de cada categoria;
-  - apagar.
+  - apagar;
+  - os **sabores** do Cocktail Preguiça e do Unicórnio (uma lista só para os
+    dois): mudar o nome e a cor, reordenar, tirar e acrescentar. Editam-se na
+    secção do Cocktail Preguiça; a cor é só a do copo no jogo da `/ementa`.
 - **Casa:** horário de cada dia (e a hora a que a cozinha fecha), telefone, email
   e as quatro redes.
 - **Newsletter:** escrever e enviar a quem se inscreveu no site, e ver a lista

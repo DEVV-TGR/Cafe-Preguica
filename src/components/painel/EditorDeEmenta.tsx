@@ -8,7 +8,7 @@ import { escreverPreco, identificadorLivre, lerPreco } from "./preco";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { publicarEmenta, type EstadoDaEmenta } from "@/app/painel/ementa/accoes";
 import { compararCartas, totalDeAlteracoes, type Carta } from "@/lib/painel/alteracoes";
-import type { Artigo, Categoria, Ementa } from "@/data/ementa";
+import type { Artigo, Categoria, Ementa, Sabor } from "@/data/ementa";
 
 /**
  * A carta, para editar — **com a forma da carta que os clientes veem.**
@@ -38,6 +38,13 @@ import type { Artigo, Categoria, Ementa } from "@/data/ementa";
  * vai para a carta secreta sai da sua secção aqui em cima (e da `/ementa`), e o
  * que se tira de lá volta à secção, no lugar onde estava. No ficheiro é a lista
  * `secretos` — ver `EsquemaEmenta`.
+ *
+ * ## Os sabores
+ *
+ * O Cocktail Preguiça e o Unicórnio vendem-se num sabor à escolha, e a lista é
+ * uma só para os dois. Edita-se na secção do Cocktail Preguiça
+ * (`EditorDeSabores`); a do Unicórnio só aponta para lá, para não haver dois
+ * sítios a mexer na mesma lista.
  *
  * ## Porque é que este componente não importa `src/data/ementa.ts`
  *
@@ -72,6 +79,7 @@ export function EditorDeEmenta({
   grupos,
   emDestaque,
   categoriasSecretas,
+  comSabores,
 }: {
   inicial: Ementa;
   sha: string;
@@ -79,6 +87,8 @@ export function EditorDeEmenta({
   emDestaque: readonly string[];
   /** De onde podem sair os cocktails da carta secreta. */
   categoriasSecretas: readonly Categoria[];
+  /** As secções com o jogo dos sabores; a primeira é a que os edita. */
+  comSabores: readonly Categoria[];
 }) {
   /* A versão publicada contra a qual se conta — muda depois de cada publicação,
      tal como o `sha`, para se poder publicar duas vezes seguidas sem recarregar. */
@@ -88,6 +98,7 @@ export function EditorDeEmenta({
   /* Um ficheiro de antes da carta secreta não traz a lista. */
   const [secretos, setSecretos] = useState<string[]>(inicial.secretos ?? []);
   const [aCriarSecreto, setACriarSecreto] = useState(false);
+  const [sabores, setSabores] = useState<Sabor[]>(inicial.sabores ?? []);
 
   const [aEditar, setAEditar] = useState<string | null>(null);
   const [aApagar, setAApagar] = useState<string | null>(null);
@@ -115,8 +126,8 @@ export function EditorDeEmenta({
   );
 
   const alteracoes = useMemo(
-    () => totalDeAlteracoes(compararCartas(base, { artigos, secretos })),
-    [base, artigos, secretos],
+    () => totalDeAlteracoes(compararCartas(base, { artigos, secretos, sabores })),
+    [base, artigos, secretos, sabores],
   );
 
   useEffect(() => {
@@ -549,7 +560,7 @@ export function EditorDeEmenta({
       }}
     >
       <input type="hidden" name="sha" value={shaAtual} />
-      <input type="hidden" name="ementa" value={JSON.stringify({ artigos, secretos })} />
+      <input type="hidden" name="ementa" value={JSON.stringify({ artigos, secretos, sabores })} />
 
       <IndiceCapitulos itens={indice} etiqueta="Capítulos da carta" />
 
@@ -627,6 +638,18 @@ export function EditorDeEmenta({
                       linha(artigo, categoria, posicao, daCategoria.length, false),
                     )}
                   </ol>
+
+                  {categoria.id === comSabores[0] ? (
+                    <EditorDeSabores sabores={sabores} aoMudar={setSabores} />
+                  ) : comSabores.includes(categoria.id) ? (
+                    <p className="pn-nota">
+                      Os sabores são os mesmos do{" "}
+                      <a href={`#${ancora(comSabores[0])}`}>
+                        {infoDe.get(comSabores[0])?.nome}
+                      </a>{" "}
+                      — mudam-se lá, e mudam nos dois.
+                    </p>
+                  ) : null}
 
                   {aCriarEm === categoria.id ? (
                     <ArtigoNovo
@@ -854,6 +877,176 @@ function ArtigoNovo({
         </button>
       </div>
       <p className="pn-nota">Só aparece no site depois de publicares.</p>
+    </div>
+  );
+}
+
+/** A cor com que nasce um sabor novo: o ouro da casa, até alguém a escolher. */
+const COR_DE_UM_SABOR_NOVO = "#c9a227";
+
+/**
+ * Os sabores do Cocktail Preguiça e do Unicórnio: mudar o nome e a cor,
+ * reordenar, tirar e acrescentar.
+ *
+ * Mexe-se direto na linha, sem "Editar" — são duas palavras e uma cor, e abrir
+ * cada um era mais um toque para nada. A cor é a do copo no jogo da `/ementa`,
+ * e não a da bebida.
+ */
+function EditorDeSabores({
+  sabores,
+  aoMudar,
+}: {
+  sabores: Sabor[];
+  aoMudar: (sabores: Sabor[]) => void;
+}) {
+  const [nomePt, setNomePt] = useState("");
+  const [nomeEn, setNomeEn] = useState("");
+  const [cor, setCor] = useState(COR_DE_UM_SABOR_NOVO);
+  const [erro, setErro] = useState<string | null>(null);
+
+  function mudar(id: string, alteracao: (sabor: Sabor) => Sabor) {
+    aoMudar(sabores.map((s) => (s.id === id ? alteracao(s) : s)));
+  }
+
+  function mover(i: number, sentido: -1 | 1) {
+    const j = i + sentido;
+    if (j < 0 || j >= sabores.length) return;
+    const lista = [...sabores];
+    [lista[i], lista[j]] = [lista[j], lista[i]];
+    aoMudar(lista);
+  }
+
+  function juntar() {
+    const pt = nomePt.trim();
+    if (!pt) return setErro("Falta o nome do sabor.");
+    if (sabores.some((s) => s.nome.pt.trim().toLowerCase() === pt.toLowerCase())) {
+      return setErro(`Já há um sabor "${pt}".`);
+    }
+    aoMudar([
+      ...sabores,
+      {
+        id: identificadorLivre(pt, new Set(sabores.map((s) => s.id))),
+        nome: { pt, en: nomeEn.trim() || pt },
+        cor,
+      },
+    ]);
+    setNomePt("");
+    setNomeEn("");
+    setCor(COR_DE_UM_SABOR_NOVO);
+    setErro(null);
+  }
+
+  return (
+    <div className="pn-sabores" role="group" aria-label="Sabores">
+      <p className="pn-olho">Sabores · {sabores.length}</p>
+      <p className="pn-nota">
+        Os mesmos no Cocktail Preguiça e no Unicórnio. A cor é só a do copo no jogo da ementa.
+      </p>
+
+      <ol className="pn-sabores__lista">
+        {sabores.map((sabor, i) => (
+          <li key={sabor.id} className="pn-sabor">
+            <label className="pn-sabor__cor" title="Cor do copo">
+              <span className="sr-only">Cor de {sabor.nome.pt}</span>
+              {sabor.cor === null ? (
+                <span className="pn-sabor__arco-iris" aria-hidden="true" />
+              ) : null}
+              <input
+                type="color"
+                value={sabor.cor ?? COR_DE_UM_SABOR_NOVO}
+                onChange={(e) => mudar(sabor.id, (s) => ({ ...s, cor: e.target.value }))}
+                data-escondido={sabor.cor === null || undefined}
+              />
+            </label>
+            <input
+              className="pn-entrada"
+              value={sabor.nome.pt}
+              maxLength={30}
+              aria-label={`Nome em português (${sabor.nome.pt})`}
+              aria-invalid={!sabor.nome.pt.trim() || undefined}
+              onChange={(e) =>
+                mudar(sabor.id, (s) => ({ ...s, nome: { ...s.nome, pt: e.target.value } }))
+              }
+            />
+            <input
+              className="pn-entrada"
+              lang="en"
+              value={sabor.nome.en}
+              maxLength={30}
+              aria-label={`Nome em inglês (${sabor.nome.pt})`}
+              aria-invalid={!sabor.nome.en.trim() || undefined}
+              onChange={(e) =>
+                mudar(sabor.id, (s) => ({ ...s, nome: { ...s.nome, en: e.target.value } }))
+              }
+            />
+            <span className="pn-sabor__accoes">
+              <button
+                type="button"
+                className="pn-icone"
+                onClick={() => mover(i, -1)}
+                disabled={i === 0}
+                aria-label={`Subir ${sabor.nome.pt}`}
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                className="pn-icone"
+                onClick={() => mover(i, 1)}
+                disabled={i === sabores.length - 1}
+                aria-label={`Descer ${sabor.nome.pt}`}
+              >
+                ↓
+              </button>
+              {/* Sem confirmação: é uma palavra e uma cor, volta-se a escrever,
+                  e nada sai do site antes de publicar. O último não se tira —
+                  o jogo sem sabores era um botão que não fazia nada. */}
+              <button
+                type="button"
+                className="pn-icone"
+                onClick={() => aoMudar(sabores.filter((s) => s.id !== sabor.id))}
+                disabled={sabores.length === 1}
+                aria-label={`Tirar ${sabor.nome.pt}`}
+              >
+                ×
+              </button>
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <div className="pn-cartao pn-pilha pn-novo" role="group" aria-label="Sabor novo">
+        <p className="pn-olho">Sabor novo</p>
+        {erro ? <Aviso tom="mau">{erro}</Aviso> : null}
+        <div className="pn-linha">
+          <Campo
+            etiqueta="Nome"
+            value={nomePt}
+            maxLength={30}
+            onChange={(e) => setNomePt(e.target.value)}
+          />
+          <Campo
+            etiqueta="Nome em inglês"
+            lang="en"
+            value={nomeEn}
+            maxLength={30}
+            placeholder={nomePt}
+            onChange={(e) => setNomeEn(e.target.value)}
+          />
+          <label className="pn-campo pn-campo--cor">
+            <span className="pn-campo__etiqueta">Cor</span>
+            <input type="color" value={cor} onChange={(e) => setCor(e.target.value)} />
+          </label>
+        </div>
+        <div className="pn-linha">
+          <button type="button" className="pg-botao pg-botao--cheio" onClick={juntar}>
+            Juntar sabor
+          </button>
+        </div>
+        <p className="pn-nota">
+          Se o nome em inglês ficar vazio, vai o português. Só aparece no site depois de publicares.
+        </p>
+      </div>
     </div>
   );
 }

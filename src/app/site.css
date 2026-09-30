@@ -203,6 +203,66 @@
   color: var(--color-ouro-claro);
 }
 
+/* O selo da DevPlus — ver `RodapeSite`. O laranja é o da marca da DevPlus, e só
+   aparece aqui: no resto do site manda o ouro da casa. */
+.pg-estudio {
+  --laranja-devplus: #ff780a;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.35rem;
+  border: 1px solid color-mix(in oklab, var(--laranja-devplus) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--laranja-devplus) 7%, transparent);
+  color: var(--color-tinta);
+  font-size: 0.8rem;
+  transition:
+    border-color 250ms ease,
+    box-shadow 250ms ease,
+    background 250ms ease;
+}
+
+.pg-estudio em {
+  font-style: italic;
+  color: var(--color-ouro-claro);
+}
+
+.pg-estudio__icone {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.45rem;
+  transition: rotate 300ms ease;
+}
+
+.pg-estudio__nome {
+  font-weight: 700;
+  color: var(--color-tinta);
+  background: linear-gradient(var(--laranja-devplus), var(--laranja-devplus)) 0 100% / 100% 2px
+    no-repeat;
+  padding-bottom: 1px;
+}
+
+/* O `.pg-rodape a:hover` pintava o texto de ouro; aqui quem muda é a moldura. */
+.pg-rodape .pg-estudio:hover,
+.pg-rodape .pg-estudio:focus-visible {
+  color: var(--color-tinta);
+  border-color: var(--laranja-devplus);
+  background: color-mix(in oklab, var(--laranja-devplus) 14%, transparent);
+  box-shadow: 0 0 1.25rem -0.25rem color-mix(in oklab, var(--laranja-devplus) 60%, transparent);
+}
+
+.pg-estudio:hover .pg-estudio__icone,
+.pg-estudio:focus-visible .pg-estudio__icone {
+  rotate: -8deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-estudio,
+  .pg-estudio__icone {
+    transition: none;
+  }
+}
+
 /* Só nas páginas de leitura — ver `RodapeSite`. Ocupa a linha inteira, por
    cima dos links legais, e separa-se deles por um ponto dourado. */
 .pg-rodape__contactos {

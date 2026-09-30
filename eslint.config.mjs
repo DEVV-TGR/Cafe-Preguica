@@ -60,6 +60,7 @@ const eslintConfig = [
       "src/components/ementa/**",
       "src/components/BarraSite.tsx",
       "src/components/Pagina.tsx",
+      "src/components/RodapeSite.tsx",
       "src/components/Transicao.tsx",
       "src/components/Visor.tsx",
       "src/components/newsletter/Convite.tsx",

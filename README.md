@@ -36,11 +36,11 @@ gravidade:
       cozinha fecha meia hora antes. `horarioConfirmado: true`.
 - [ ] **Confirmar que a casa está aberta.** Um agregador marca-a como
       *temporariamente encerrada*. Pode ser dado velho, mas convém perguntar.
-- [ ] **Fotografias originais.** As 38 imagens de `public/casa/` saíram das 19
-      fotografias do Instagram da casa, **a 1080 px de largura**, que é o tecto do
-      que o Instagram serve. Chegam para os cartões do carril; não chegam para um
-      herói de ecrã inteiro. Os ficheiros da máquina de quem as tirou valem muito
-      mais, e permitem fotografias maiores na página.
+- [ ] **Fotografias originais.** O herói e a sala já vêm de originais
+      (`fotos/site/`). As dos cocktails e dos pratos continuam a sair do Instagram,
+      **a 1080 px de largura**, que é o tecto do que o Instagram serve: chegam para
+      os cartões do carril, mas os ficheiros da máquina de quem as tirou valem
+      muito mais.
 - [ ] **Código postal.** Está a `null` em `src/data/cafe.json` e por isso não
       aparece nem entra nos dados estruturados.
 - [ ] **Logótipo em vetor.** O de `public/marca/` foi recortado de um JPEG por

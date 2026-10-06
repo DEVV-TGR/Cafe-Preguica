@@ -37,11 +37,7 @@ import { Ampliar, type FotoDoVisor } from "@/components/Visor";
  * estava a ver lá dentro.
  */
 
-export type FotoDoCarrossel = FotoDoVisor & {
-  /** O `object-position` desta fotografia na moldura, quando o meio não serve
-   *  — uma fotografia ao alto num quadro deitado perde dois terços da altura. */
-  posicao?: string;
-};
+export type FotoDoCarrossel = FotoDoVisor;
 
 export type TextosDoCarrossel = {
   naFotografia: string;
@@ -177,7 +173,6 @@ export function Carrossel({
         sizes={sizes}
         width={dimensoes[0]}
         height={dimensoes[1]}
-        style={f.posicao ? { objectPosition: f.posicao } : undefined}
         alt={f.alt}
         loading={prioridade && i === 0 ? undefined : "lazy"}
         decoding="async"

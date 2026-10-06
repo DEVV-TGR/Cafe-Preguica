@@ -312,8 +312,7 @@ html:has(.em-pagina) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Ao centro: as aberturas foram refeitas a 16:9 com a bebida no meio. A que
-     ainda é ao alto diz que faixa fica (`altura`, em `ementa/page.tsx`). */
+  /* Ao centro: as aberturas foram refeitas a 16:9 com a bebida no meio. */
   object-position: 50% 50%;
 }
 

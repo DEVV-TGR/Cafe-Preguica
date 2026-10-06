@@ -15,7 +15,9 @@
  *
  * - `fotos/site/` — as que o cliente mandou para um sítio certo do site (a
  *   fachada do herói, a sala). **O nome do ficheiro já é o nome com que sai**:
- *   `fachada.png` → `public/casa/fachada.webp`.
+ *   `fachada.png` → `public/casa/fachada.webp`. Em `fotos/site/originais/`
+ *   fica a versão de antes de um retoque (a `casa-candeeiro` tem a palavra-passe
+ *   do Wi-Fi tapada na ardósia); o script não entra lá.
  * - `fotos/instagram/` — derivadas do Instagram, a 1080 px de largura, que é o
  *   tecto do que o Instagram serve a quem não tem sessão iniciada. Chegam para
  *   os cartões do carril e para blocos de meia página, não para um ecrã

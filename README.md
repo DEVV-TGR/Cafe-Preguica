@@ -121,7 +121,7 @@ O material em bruto vive em `fotos/`, **fora do git**:
 
 | Pasta | O que tem |
 |---|---|
-| `fotos/site/` | As fotografias que o cliente mandou para um sítio certo (a fachada do herói, horizontal e vertical, e a sala). O nome do ficheiro é o nome com que sai. |
+| `fotos/site/` | As fotografias que o cliente mandou para um sítio certo (a fachada do herói, horizontal e vertical, a sala e o carrossel de "A casa"). O nome do ficheiro é o nome com que sai. Em `originais/`, a versão de antes de um retoque (a palavra-passe do Wi-Fi tapada). |
 | `fotos/instagram/` | Derivadas do Instagram, a 1080 px. Os nomes estão em `scripts/importar-fotos.mjs`. |
 | `fotos/instagram/nao-usadas/` | As que o site deixou de usar. O script não entra lá. |
 | `fotos/Fotografias/` | A sessão fotográfica do Rafael, originais da máquina. Só sai o que está em `NOMES_SESSAO`; o resto espera confirmação (ver `IDENTIFICACAO.md` na pasta). |

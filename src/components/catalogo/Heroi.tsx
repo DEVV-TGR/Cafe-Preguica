@@ -3,7 +3,8 @@ import { Link } from "@/i18n/navigation";
 /**
  * # O herói: a fachada
  *
- * A primeira coisa que se vê é a casa, de dia, com a árvore florida por cima.
+ * A primeira coisa que se vê é a casa, de dia, vista do outro lado da rua por
+ * entre as folhas de uma árvore.
  * Por cima dela apenas quatro coisas: o logótipo, onde fica, uma linha, e os
  * dois botões — a ementa e "onde estamos". Mais do que isso e a fotografia
  * deixa de ser a primeira impressão para ser o fundo de um cartaz.
@@ -16,10 +17,11 @@ import { Link } from "@/i18n/navigation";
  * ## A fotografia é de dia e a página é de noite
  *
  * ⚠️ **Não se resolve escurecendo a imagem toda.** É o atalho óbvio e mata
- * exactamente o que a torna boa: a árvore em flor e o céu azul. O que está aqui
- * é um **véu só onde o texto assenta** — um gradiente que sobe do fundo da
- * página e se desvanece a meia altura, como o `taste.md` manda (uma cortina só
- * onde o texto se senta, nunca sobre o quadro inteiro).
+ * exactamente o que a torna boa: a parede cor de pêssego ao sol, o verde das
+ * folhas e o céu. O que está aqui é um **véu só onde o texto assenta** — um
+ * gradiente que sobe do fundo da página e se desvanece a meia altura, como o
+ * `taste.md` manda (uma cortina só onde o texto se senta, nunca sobre o quadro
+ * inteiro). Calha bem nesta fotografia: o terço de baixo é rua e passeio.
  *
  * O acto seguinte volta ao escuro, e é por isso que isto funciona: a fachada
  * fica a ser a única coisa clara do site. Abre-se a porta e entra-se para
@@ -50,17 +52,32 @@ export function Heroi({
   return (
     <section className="pg-heroi" data-sc-act="flow">
       <div className="pg-heroi__foto" data-sc-parallax="0.16">
-        <img
-          src="/casa/fachada.webp"
-          srcSet="/casa/fachada-640.webp 640w, /casa/fachada-1280.webp 1280w, /casa/fachada.webp 2000w"
-          sizes="100vw"
-          width={2000}
-          height={1993}
-          alt={alt}
-          /* A única imagem da página que não é `lazy`: é a primeira coisa no
-             ecrã e o que o browser mede para o LCP. */
-          fetchPriority="high"
-        />
+        {/* Duas fotografias da mesma fachada, e não uma recortada: a horizontal
+            num telemóvel ficava com um terço da casa e esticada três vezes.
+            O corte é pela orientação e não pela largura, porque um tablet ao
+            alto também é um ecrã vertical. */}
+        <picture>
+          {/* `170vw` e não `100vw`: o `cover` preenche a altura do ecrã, e
+              num telemóvel a fotografia sai bem mais larga do que ele. */}
+          <source
+            media="(orientation: portrait)"
+            srcSet="/casa/fachada-vertical-640.webp 640w, /casa/fachada-vertical-1080.webp 1080w, /casa/fachada-vertical.webp 1600w"
+            sizes="170vw"
+            width={1600}
+            height={2400}
+          />
+          <img
+            src="/casa/fachada.webp"
+            srcSet="/casa/fachada-640.webp 640w, /casa/fachada-1280.webp 1280w, /casa/fachada.webp 1586w"
+            sizes="100vw"
+            width={1586}
+            height={992}
+            alt={alt}
+            /* A única imagem da página que não é `lazy`: é a primeira coisa no
+               ecrã e o que o browser mede para o LCP. */
+            fetchPriority="high"
+          />
+        </picture>
       </div>
 
       {/* O véu. `aria-hidden` porque é pintura e não conteúdo. */}

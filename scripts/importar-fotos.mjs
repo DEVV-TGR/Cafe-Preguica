@@ -29,6 +29,11 @@
  *   da máquina, a ~4600 × 6900. Só sai o que está em `NOMES_SESSAO`; o resto
  *   fica à espera de alguém confirmar o que é (ver `IDENTIFICACAO.md` na
  *   própria pasta).
+ * - `fotos/ementa-aberturas/` — as fotografias das aberturas dos capítulos da
+ *   ementa, refeitas deitadas (16:9) para a moldura, a partir das da sessão e
+ *   do Instagram. Saem como `abertura-<nome>`, para não pisarem as originais ao
+ *   alto com o mesmo nome, que continuam a ser as do círculo e do visor de cada
+ *   artigo. Em `a-refazer/` fica o que voltou errado; o script não entra lá.
  * - `fotos/reels/` — as capas dos reels, mais abaixo.
  */
 import sharp from "sharp";
@@ -38,6 +43,7 @@ import { join, parse } from "node:path";
 const ORIGEM = "fotos/instagram";
 const ORIGEM_SITE = "fotos/site";
 const ORIGEM_SESSAO = "fotos/Fotografias";
+const ORIGEM_ABERTURAS = "fotos/ementa-aberturas";
 const DESTINO = "public/casa";
 const ORIGEM_REELS = "fotos/reels";
 const DESTINO_REELS = "public/reels";
@@ -139,8 +145,11 @@ const LARGURAS_ESPECIAIS = {
   "fachada-vertical": [640, 1080, 1600],
   "sala-madeira": [640, 1080, 2400],
 };
+/* As aberturas ocupam a largura da carta (72rem) no computador: três tamanhos,
+   e o maior é o original. */
 const larguraDe = (nome) =>
-  LARGURAS_ESPECIAIS[nome] ?? (nome.startsWith("casa-") ? [640, 1600] : LARGURAS);
+  LARGURAS_ESPECIAIS[nome] ??
+  (nome.startsWith("casa-") ? [640, 1600] : nome.startsWith("abertura-") ? [640, 1080, 1920] : LARGURAS);
 
 /**
  * As capas dos reels vêm em 9:16 e a **três mil e novecentos píxeis de largura**,
@@ -168,6 +177,7 @@ const ficheiros = [
      estão à espera de confirmação, e um aviso por cada uma afogava os que
      interessam. */
   ...(await imagens(ORIGEM_SESSAO)).filter(({ ficheiro }) => parse(ficheiro).name in NOMES_SESSAO),
+  ...(await imagens(ORIGEM_ABERTURAS)),
 ];
 if (ficheiros.length === 0) {
   console.error(`✖ nada em ${ORIGEM}/ nem em ${ORIGEM_SITE}/ — é lá que entra o material em bruto.`);
@@ -178,7 +188,13 @@ let escritos = 0;
 for (const { pasta, ficheiro } of ficheiros) {
   const base = parse(ficheiro).name;
   const nome =
-    pasta === ORIGEM_SITE ? base : pasta === ORIGEM_SESSAO ? NOMES_SESSAO[base] : NOMES[base];
+    pasta === ORIGEM_SITE
+      ? base
+      : pasta === ORIGEM_ABERTURAS
+        ? `abertura-${base}`
+        : pasta === ORIGEM_SESSAO
+          ? NOMES_SESSAO[base]
+          : NOMES[base];
   if (!nome) {
     /* Um ficheiro novo sem nome atribuído não passa em silêncio: sairia para
        `public/` com o nome do Instagram e ninguém saberia o que é. */

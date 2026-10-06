@@ -78,61 +78,73 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * que não têm artigos não têm legenda: a da garrafeira é o balcão, e os copos
  * balão dos mocktails e das águas são da casa mas ninguém disse que bebida são.
  *
- * ## A `altura`
+ * ## Deitadas, do tamanho da moldura
  *
- * As fotografias são ao alto e a moldura é deitada (21:9 no computador), por
- * isso só se vê pouco mais de um quarto da altura de cada uma. A `altura` é o
- * `object-position` vertical: que faixa fica. Sem ela, ficava a do meio — e
- * na dos bocadinhos via-se o frasco de tabasco em vez da comida. Escolhe-se a
- * olhar para o capítulo no computador, que é onde a faixa é mais estreita.
+ * A moldura é deitada (21:9 no computador, 4:3 no telemóvel), e as fotografias
+ * da sessão são ao alto: recortadas, via-se pouco mais de um quarto de cada
+ * uma. As `abertura-*` foram refeitas a 16:9 para a moldura (`fotos/
+ * ementa-aberturas/`), com a bebida ao centro — o computador corta um pouco em
+ * cima e em baixo, o telemóvel dos lados, e o copo fica inteiro nos dois.
+ *
+ * ⚠️ São versões estendidas com IA: **só o fundo** pode ter mudado. Antes de
+ * uma entrar, compara-se com o original — a guarnição, a cor, o gelo. Uma
+ * fotografia de carta com uma laranja a mais promete ao cliente o que não se
+ * serve. As originais ao alto continuam a ser as do círculo e do visor de cada
+ * artigo (`FOTOS_ARTIGO`).
+ *
+ * A `altura`, quando existe, é o `object-position` vertical de uma que ainda é
+ * ao alto: que faixa fica à vista.
  *
  * ## Juntar uma fotografia
  *
- * 1. `npm run fotos` com o original, para sair em `public/casa/` nas duas
- *    larguras (`nome.webp` e `nome-640.webp`).
- * 2. Acrescentá-la à lista do capítulo, com a `altura` e os `id` do que se vê
- *    nela — e esses `id` em `EM_DESTAQUE` (`data/ementa.ts`), senão o `build`
- *    rebenta a dizê-lo.
- * 3. Texto alternativo em `ementa.fotos.<nome>`, nas duas línguas.
+ * 1. A versão deitada (16:9) em `fotos/ementa-aberturas/<nome>.png`, e
+ *    `npm run fotos`: sai como `public/casa/abertura-<nome>.webp`.
+ * 2. Acrescentá-la à lista do capítulo, com os `id` do que se vê nela — e esses
+ *    `id` em `EM_DESTAQUE` (`data/ementa.ts`), senão o `build` rebenta a dizê-lo.
+ * 3. Texto alternativo em `ementa.fotos.<nome>` (sem o `abertura-`), nas duas
+ *    línguas.
  *
  * ⚠️ Fotografias com caras de clientes não entram sem a casa confirmar que tem
  * autorização de quem aparece.
  */
-const ABERTURAS: Record<Capitulo, { foto: string; altura: string; artigos: string[] }[]> = {
+const ABERTURAS: Record<Capitulo, { foto: string; altura?: string; artigos: string[] }[]> = {
   comer: [
-    { foto: "bocadinhos-chourico", altura: "78%", artigos: ["bocadinhos-de-pao-com-chourico"] },
-    { foto: "preguicinhas", altura: "58%", artigos: ["preguicinhas-com-queijo"] },
-    { foto: "petit-gateau", altura: "45%", artigos: ["petit-gateau-com-gelado-de-baunilha"] },
+    { foto: "abertura-bocadinhos-chourico", artigos: ["bocadinhos-de-pao-com-chourico"] },
+    { foto: "abertura-preguicinhas", artigos: ["preguicinhas-com-queijo"] },
+    { foto: "abertura-petit-gateau", artigos: ["petit-gateau-com-gelado-de-baunilha"] },
     {
-      foto: "torrada-chocolate-quente", altura: "52%",
+      foto: "abertura-torrada-chocolate-quente",
       artigos: ["torrada-com-compota", "caf-chocolate-quente-com-chantilly"],
     },
   ],
   cocktails: [
-    { foto: "aperol-garrafa", altura: "55%", artigos: ["aperol-spritz"] },
-    { foto: "negroni-fumado", altura: "48%", artigos: ["negroni"] },
-    { foto: "mojito", altura: "45%", artigos: ["mojito"] },
-    { foto: "cocktail-rosa", altura: "42%", artigos: ["cocktail-preguica"] },
-    { foto: "blue-lagoon", altura: "60%", artigos: ["blue-lagoon"] },
-    { foto: "mojito-melancia", altura: "35%", artigos: ["mojito-melancia"] },
-    { foto: "long-island", altura: "40%", artigos: ["long-island-ice-tea"] },
-    { foto: "margarita", altura: "42%", artigos: ["margarita"] },
+    { foto: "abertura-aperol-garrafa", artigos: ["aperol-spritz"] },
+    { foto: "abertura-negroni-fumado", artigos: ["negroni"] },
+    { foto: "abertura-mojito", artigos: ["mojito"] },
+    { foto: "abertura-cocktail-rosa", artigos: ["cocktail-preguica"] },
+    { foto: "abertura-blue-lagoon", artigos: ["blue-lagoon"] },
+    { foto: "abertura-mojito-melancia", artigos: ["mojito-melancia"] },
+    { foto: "abertura-long-island", artigos: ["long-island-ice-tea"] },
+    { foto: "abertura-margarita", artigos: ["margarita"] },
   ],
+  /* Ainda a do Instagram, ao alto: a versão deitada voltou com outra bebida
+     (o copo azul) e está em `fotos/ementa-aberturas/a-refazer/`. */
   mocktails: [{ foto: "cocktail-turquesa", altura: "40%", artigos: [] }],
   garrafeira: [
-    { foto: "gin-tanqueray-sevilla", altura: "50%", artigos: ["gin-tanqueray-sevilla"] },
-    { foto: "b52", altura: "45%", artigos: ["sho-b52"] },
-    { foto: "gin-tanqueray", altura: "32%", artigos: ["gin-tanqueray"] },
+    { foto: "abertura-gin-tanqueray-sevilla", artigos: ["gin-tanqueray-sevilla"] },
+    { foto: "abertura-b52", artigos: ["sho-b52"] },
+    { foto: "abertura-gin-tanqueray", artigos: ["gin-tanqueray"] },
   ],
   aguas: [
-    { foto: "cocktail-amarelo", altura: "40%", artigos: [] },
-    { foto: "cocktail-coco", altura: "42%", artigos: [] },
+    { foto: "abertura-cocktail-amarelo", artigos: [] },
+    { foto: "abertura-cocktail-coco", artigos: [] },
   ],
   cafetaria: [
-    { foto: "chocolate-chantilly", altura: "32%", artigos: ["caf-chocolate-quente-com-chantilly"] },
-    { foto: "gluehwein", altura: "50%", artigos: ["caf-gluehwein"] },
+    { foto: "abertura-chocolate-chantilly", artigos: ["caf-chocolate-quente-com-chantilly"] },
+    { foto: "abertura-gluehwein", artigos: ["caf-gluehwein"] },
   ],
 };
+
 
 /**
  * Os artigos que têm fotografia da casa, e quais. **A primeira é a do círculo**
@@ -319,10 +331,14 @@ export default async function Ementa({ params }: Props) {
 
           {capitulos.map(({ capitulo, seccoes }, i) => {
             const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, altura, artigos }) => ({
-              posicao: `50% ${altura}`,
+              posicao: altura ? `50% ${altura}` : undefined,
               src: `/casa/${foto}.webp`,
-              srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
-              alt: t(`fotos.${foto}`),
+              /* As deitadas têm três larguras e a maior é a do original (1672);
+                 as que ainda são do Instagram, duas. */
+              srcSet: foto.startsWith("abertura-")
+                ? `/casa/${foto}-640.webp 640w, /casa/${foto}-1080.webp 1080w, /casa/${foto}.webp 1672w`
+                : `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
+              alt: t(`fotos.${foto.replace(/^abertura-/, "")}`),
               legenda: artigos
                 .map(artigoPorId)
                 /* Um artigo escondido pelo painel não está na lista por baixo, e
@@ -343,6 +359,10 @@ export default async function Ementa({ params }: Props) {
                   <Carrossel
                     fotos={fotos}
                     prioridade={i === 0}
+                    dimensoes={[1672, 941]}
+                    /* No telemóvel a moldura é 4:3 e a fotografia 16:9: cobre-a
+                       pela altura, e sai um terço mais larga do que o ecrã. */
+                    sizes="(min-width: 72rem) 72rem, (min-width: 48rem) 100vw, 134vw"
                     textos={{
                       naFotografia: t("naFotografia"),
                       nome: t(`capitulos.${capitulo}.nome`),

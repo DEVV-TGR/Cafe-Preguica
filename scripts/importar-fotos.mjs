@@ -11,19 +11,26 @@
  *
  *   npm run fotos
  *
- * ⚠️ **As fotografias de hoje são derivadas do Instagram, a 1080 px de
- * largura.** É o tecto do que o Instagram serve a quem não tem sessão iniciada.
- * Chegam para os cartões do carril e para os blocos de meia página; **não
- * chegam para um herói de ecrã inteiro** num monitor grande, e é por isso que o
- * primeiro acto da página é tipográfico. Quando chegarem os originais, este
- * script volta a correr e os tamanhos abaixo passam a ter matéria-prima a
- * sério.
+ * As pastas:
+ *
+ * - `fotos/site/` — as que o cliente mandou para um sítio certo do site (a
+ *   fachada do herói, a sala). **O nome do ficheiro já é o nome com que sai**:
+ *   `fachada.png` → `public/casa/fachada.webp`.
+ * - `fotos/instagram/` — derivadas do Instagram, a 1080 px de largura, que é o
+ *   tecto do que o Instagram serve a quem não tem sessão iniciada. Chegam para
+ *   os cartões do carril e para blocos de meia página, não para um ecrã
+ *   inteiro. Os nomes vêm na tabela `NOMES`, abaixo.
+ * - `fotos/instagram/nao-usadas/` — as que o site deixou de usar. Ficam como
+ *   material, mas o script não entra lá: gerá-las era pôr em `public/`
+ *   ficheiros que nenhuma página pede.
+ * - `fotos/reels/` — as capas dos reels, mais abaixo.
  */
 import sharp from "sharp";
 import { readdir, mkdir } from "node:fs/promises";
 import { join, parse } from "node:path";
 
 const ORIGEM = "fotos/instagram";
+const ORIGEM_SITE = "fotos/site";
 const DESTINO = "public/casa";
 const ORIGEM_REELS = "fotos/reels";
 const DESTINO_REELS = "public/reels";
@@ -33,21 +40,13 @@ const DESTINO_REELS = "public/reels";
  * fotografia é** e não em que ordem foi descarregada. `post-13.jpg` obriga a
  * abrir a pasta para saber o que lá está; `cocktail-coco.webp` não.
  *
- * A ordem aqui não importa; a ordem da página vive nos componentes.
+ * A ordem aqui não importa; a ordem da página vive nos componentes. As de
+ * `fotos/site/` não precisam de entrada: já chegam com o nome certo.
  */
 const NOMES = {
-  "post-01": "cartaz-masterclass",
-  "post-02": "masterclass-mesa",
-  "post-03": "canecas-ardosia",
-  "post-04": "telemovel-cocktail",
-  "post-05": "menu-granito",
-  "post-06": "mesa-tres",
   "post-07": "tosta-chocolate",
-  "post-08": "boas-historias",
   "post-09": "negroni-salpico",
-  "post-10": "balao-coracao",
   "post-11": "tabua-partilha",
-  "post-12": "menu-mesa",
   "post-13": "cocktail-coco",
   "post-14": "cocktail-rosa",
   "post-15": "cocktail-amarelo",
@@ -55,9 +54,6 @@ const NOMES = {
   "post-17": "cocktail-azul",
   "post-18": "lima-espremida",
   "post-19": "negroni-fumo",
-  /* A fachada, que o cliente mandou à parte. É a única fotografia de dia do
-     site inteiro, e é de propósito: é a primeira coisa que se vê. */
-  image: "fachada",
 };
 
 /**
@@ -71,10 +67,25 @@ const NOMES = {
 const LARGURAS = [640, 1080];
 
 /**
- * A fachada é o herói e ocupa o ecrã inteiro, portanto precisa de mais largura
- * do que os cartões — e o original tem 2204 px, ao contrário das do Instagram.
+ * As que pedem mais largura do que os cartões. O último número é um **tecto**:
+ * se o original for mais estreito, o maior tamanho sai com a largura do
+ * original. Os `srcSet` em `Heroi.tsx` e em `page.tsx` escrevem essas larguras
+ * à mão, por isso uma fotografia nova pede que se olhe para lá também.
+ *
+ * - A fachada é o herói e ocupa o ecrã inteiro, e é a única fotografia de dia
+ *   do site — de propósito, é a primeira coisa que se vê. Há duas: a vertical
+ *   é a mesma casa tirada ao alto, para ecrãs verticais, porque a horizontal
+ *   cortada para um telemóvel ficava com um terço da casa, esticado. A vertical
+ *   fica abaixo dos 2000 px: o herói é o que o telemóvel espera para pintar o
+ *   primeiro ecrã, e 1600 já passa dos 2× de um ecrã de telemóvel.
+ * - A sala fica em meia página no PC, que num ecrã retina são uns 1800 px, e
+ *   abre-se inteira no visor.
  */
-const LARGURAS_FACHADA = [640, 1280, 2000];
+const LARGURAS_ESPECIAIS = {
+  fachada: [640, 1280, 2560],
+  "fachada-vertical": [640, 1080, 1600],
+  "sala-madeira": [640, 1080, 2400],
+};
 
 /**
  * As capas dos reels vêm em 9:16 e a **três mil e novecentos píxeis de largura**,
@@ -91,16 +102,20 @@ const LARGURAS_REELS = [420, 720];
 await mkdir(DESTINO, { recursive: true });
 
 /* PNG além de JPEG: a fachada veio em PNG e ficava de fora em silêncio. */
-const ficheiros = (await readdir(ORIGEM)).filter((f) => /\.(jpe?g|png)$/i.test(f));
+const imagens = async (pasta) =>
+  (await readdir(pasta))
+    .filter((f) => /\.(jpe?g|png)$/i.test(f))
+    .map((f) => ({ pasta, ficheiro: f }));
+const ficheiros = [...(await imagens(ORIGEM)), ...(await imagens(ORIGEM_SITE))];
 if (ficheiros.length === 0) {
-  console.error(`✖ nada em ${ORIGEM}/ — é lá que entra o material em bruto.`);
+  console.error(`✖ nada em ${ORIGEM}/ nem em ${ORIGEM_SITE}/ — é lá que entra o material em bruto.`);
   process.exit(1);
 }
 
 let escritos = 0;
-for (const ficheiro of ficheiros.sort()) {
+for (const { pasta, ficheiro } of ficheiros) {
   const base = parse(ficheiro).name;
-  const nome = NOMES[base];
+  const nome = pasta === ORIGEM_SITE ? base : NOMES[base];
   if (!nome) {
     /* Um ficheiro novo sem nome atribuído não passa em silêncio: sairia para
        `public/` com o nome do Instagram e ninguém saberia o que é. */
@@ -108,14 +123,20 @@ for (const ficheiro of ficheiros.sort()) {
     continue;
   }
 
-  const entrada = sharp(join(ORIGEM, ficheiro));
+  const entrada = sharp(join(pasta, ficheiro));
   const { width } = await entrada.metadata();
 
-  for (const largura of nome === "fachada" ? LARGURAS_FACHADA : LARGURAS) {
-    if (width < largura) continue;
-    /* O maior tamanho fica sem sufixo, que é o que a página escreve no `src`;
-       os outros levam a largura e entram no `srcset`. */
-    const maior = nome === "fachada" ? 2000 : 1080;
+  /* Nunca acima do original: ampliar só produz um ficheiro maior igualmente
+     desfocado. O `Set` junta o tecto com o tamanho do meio quando calham no
+     mesmo número. */
+  const larguras = [
+    ...new Set((LARGURAS_ESPECIAIS[nome] ?? LARGURAS).map((l) => Math.min(l, width))),
+  ];
+  /* O maior tamanho fica sem sufixo, que é o que a página escreve no `src`;
+     os outros levam a largura e entram no `srcset`. */
+  const maior = Math.max(...larguras);
+
+  for (const largura of larguras) {
     const saida = join(DESTINO, `${nome}${largura === maior ? "" : `-${largura}`}.webp`);
     await entrada
       .clone()

@@ -36,11 +36,11 @@ gravidade:
       cozinha fecha meia hora antes. `horarioConfirmado: true`.
 - [ ] **Confirmar que a casa está aberta.** Um agregador marca-a como
       *temporariamente encerrada*. Pode ser dado velho, mas convém perguntar.
-- [ ] **Fotografias originais.** As 38 imagens de `public/casa/` saíram das 19
-      fotografias do Instagram da casa, **a 1080 px de largura**, que é o tecto do
-      que o Instagram serve. Chegam para os cartões do carril; não chegam para um
-      herói de ecrã inteiro. Os ficheiros da máquina de quem as tirou valem muito
-      mais, e permitem fotografias maiores na página.
+- [ ] **Fotografias originais.** O herói e a sala já vêm de originais
+      (`fotos/site/`). As dos cocktails e dos pratos continuam a sair do Instagram,
+      **a 1080 px de largura**, que é o tecto do que o Instagram serve: chegam para
+      os cartões do carril, mas os ficheiros da máquina de quem as tirou valem
+      muito mais.
 - [ ] **Logótipo em vetor.** O de `public/marca/` foi recortado de um JPEG por
       luminância. Funciona, mas um SVG dava contornos limpos em qualquer tamanho
       — e a preguiça é o elemento que mais cresce na página.
@@ -117,10 +117,20 @@ ementa.json inválido:
 
 ## Reprocessar as imagens
 
-O material em bruto vive em `fotos/`, **fora do git**.
+O material em bruto vive em `fotos/`, **fora do git**:
+
+| Pasta | O que tem |
+|---|---|
+| `fotos/site/` | As fotografias que o cliente mandou para um sítio certo (a fachada do herói, horizontal e vertical, e a sala). O nome do ficheiro é o nome com que sai. |
+| `fotos/instagram/` | Derivadas do Instagram, a 1080 px. Os nomes estão em `scripts/importar-fotos.mjs`. |
+| `fotos/instagram/nao-usadas/` | As que o site deixou de usar. O script não entra lá. |
+| `fotos/reels/` | As capas dos reels. |
+| `fotos/ementa/` | O PDF da carta e as duas páginas extraídas dele. |
+| `fotos/marca/` | Os logótipos originais e a preguiça deitada. |
+| `fotos/osm/` | O recorte do OpenStreetMap para o `npm run mapa`. |
 
 ```bash
-npm run fotos     # fotos/instagram/ → public/casa/, WebP a 640 e 1080
+npm run fotos     # fotos/site/ e fotos/instagram/ → public/casa/, fotos/reels/ → public/reels/
 ```
 
 ## Antes de dizer que algo está pronto
@@ -142,4 +152,5 @@ verificados pelo CI, CSP que não deixa carregar nada de fora — **incluindo o
 motor de rolagem, que é servido por nós** — nenhum serviço de terceiros, nenhum
 cookie a quem visita, nenhum dado de visitante recolhido, um painel com login
 por código e CSP com nonce, scripts de instalação de pacotes
-bloqueados e `npm audit` a zero mantido pelo Dependabot.
+bloqueados e `npm audit` das dependências de produção a zero, mantido pelo
+Dependabot.

@@ -98,8 +98,8 @@ Investigação, não resposta dele:
 
 | O quê | Onde | Estado |
 |---|---|---|
-| Logótipo dourado com a preguiça no "P" | `fotos/logo2.jpg` | 1024², JPEG sobre preto |
-| Lettering branco manuscrito | `fotos/logo1.jpg` | 351², pequeno |
+| Logótipo dourado com a preguiça no "P" | `fotos/marca/logotipo-dourado.jpg` | 1024², JPEG sobre preto |
+| Lettering branco manuscrito | `fotos/marca/lettering-branco.jpg` | 351², pequeno |
 | 19 fotografias da casa | `fotos/instagram/` | **1080 px de largura, derivadas do Instagram** |
 | As duas páginas da ementa | `fotos/ementa/` | 3579×2551, extraídas do PDF |
 

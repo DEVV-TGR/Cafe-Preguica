@@ -383,14 +383,20 @@
   z-index: 0;
 }
 
+/* O `<picture>` é só o que escolhe a fotografia; quem ocupa o quadro é o
+   `<img>`. Como caixa, o `<picture>` é `inline` e o `height: 100%` de dentro
+   deixava de ter a que se agarrar. */
+.pg-heroi__foto picture {
+  display: contents;
+}
+
 .pg-heroi__foto img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* ⚠️ Puxa para **baixo do meio**, não para cima. A árvore em flor está no
-     topo do original e a tentação é enquadrá-la — mas o assunto é a casa, e com
-     `35%` a fachada ficava cortada fora do ecrã num monitor largo. Assim
-     apanha-se o edifício inteiro e as flores continuam a entrar por cima. */
+  /* ⚠️ No centro, não mais acima. As folhas estão no topo e a tentação é
+     enquadrá-las — mas o assunto é a casa, e puxada para cima a fachada
+     ficava cortada fora do ecrã num monitor largo. */
   object-position: 50% 50%;
 }
 
@@ -510,10 +516,10 @@
   width: 100%;
   aspect-ratio: 3 / 2;
   max-height: 62vh;
+  /* A fotografia já vem em 3:2 e entra inteira; o `cover` só trabalha quando
+     o `max-height` a encurta num ecrã baixo, e aí corta por igual dos dois
+     lados. */
   object-fit: cover;
-  /* A fotografia original é em retrato; o recorte fica na carta e na parede
-     de granito por trás dela. */
-  object-position: 50% 45%;
   display: block;
 }
 

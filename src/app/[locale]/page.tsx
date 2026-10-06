@@ -156,20 +156,21 @@ export default async function Inicio({ params }: Props) {
           </div>
           <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
             {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
-                casa — a parede de granito, a madeira, a carta em cima da mesa.
+                casa — a sala forrada a madeira, os quadros, o nome escrito a
+                giz na ardósia.
                 Esteve aqui uma fotografia de três clientes a rir e estava errada
                 pela razão mais simples: não era a casa, eram pessoas nela. */}
             <Ampliar
-              grupo={{ nome: seccoes("casa"), fotos: [fotoDoVisor("/casa/menu-mesa", t("casa.alt"))] }}
+              grupo={{ nome: seccoes("casa"), fotos: [fotoDoVisor("/casa/sala-madeira", t("casa.alt"), [], 640, 1536)] }}
               indice={0}
               rotulo={`${visor.ampliar}: ${t("casa.nome")}`}
             >
               <img
-                src="/casa/menu-mesa.webp"
-                srcSet="/casa/menu-mesa-640.webp 640w, /casa/menu-mesa.webp 1080w"
+                src="/casa/sala-madeira.webp"
+                srcSet="/casa/sala-madeira-640.webp 640w, /casa/sala-madeira-1080.webp 1080w, /casa/sala-madeira.webp 1536w"
                 sizes="(min-width: 52rem) 50vw, 100vw"
-                width={1080}
-                height={1440}
+                width={1536}
+                height={1024}
                 alt={t("casa.alt")}
                 loading="lazy"
               />

@@ -64,8 +64,19 @@ jobs:
 
       # É isto que mantém o `npm audit` a zero ao longo do tempo, em vez de ser
       # um número que alguém pôs a zero uma vez e nunca mais olhou.
+      #
+      # ⚠️ Só as dependências **que chegam ao site** param o CI (`--omit=dev`).
+      # Em 2026-10 apareceu um aviso no `braces`, que só entra pelo ESLint e não
+      # tem versão corrigida: com o audit inteiro a bloquear, todos os PRs
+      # ficavam vermelhos por uma coisa que ninguém aqui pode resolver e que
+      # nunca corre no servidor nem no browser. As de desenvolvimento continuam
+      # à vista no passo seguinte, que avisa sem parar.
       - name: Vulnerabilidades
+        run: npm audit --audit-level=high --omit=dev
+
+      - name: Vulnerabilidades nas ferramentas de desenvolvimento (só aviso)
         run: npm audit --audit-level=high
+        continue-on-error: true
 
       # O build é também o que valida `src/data/*.json` com o `zod`: um preço
       # escrito como texto rebenta aqui, a dizer qual é o artigo.

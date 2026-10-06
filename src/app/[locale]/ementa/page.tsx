@@ -92,9 +92,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * serve. As originais ao alto continuam a ser as do círculo e do visor de cada
  * artigo (`FOTOS_ARTIGO`).
  *
- * A `altura`, quando existe, é o `object-position` vertical de uma que ainda é
- * ao alto: que faixa fica à vista.
- *
  * ## Juntar uma fotografia
  *
  * 1. A versão deitada (16:9) em `fotos/ementa-aberturas/<nome>.png`, e
@@ -107,7 +104,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * ⚠️ Fotografias com caras de clientes não entram sem a casa confirmar que tem
  * autorização de quem aparece.
  */
-const ABERTURAS: Record<Capitulo, { foto: string; altura?: string; artigos: string[] }[]> = {
+const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }[]> = {
   comer: [
     { foto: "abertura-bocadinhos-chourico", artigos: ["bocadinhos-de-pao-com-chourico"] },
     { foto: "abertura-preguicinhas", artigos: ["preguicinhas-com-queijo"] },
@@ -127,9 +124,7 @@ const ABERTURAS: Record<Capitulo, { foto: string; altura?: string; artigos: stri
     { foto: "abertura-long-island", artigos: ["long-island-ice-tea"] },
     { foto: "abertura-margarita", artigos: ["margarita"] },
   ],
-  /* Ainda a do Instagram, ao alto: a versão deitada voltou com outra bebida
-     (o copo azul) e está em `fotos/ementa-aberturas/a-refazer/`. */
-  mocktails: [{ foto: "cocktail-turquesa", altura: "40%", artigos: [] }],
+  mocktails: [{ foto: "abertura-cocktail-turquesa", artigos: [] }],
   garrafeira: [
     { foto: "abertura-gin-tanqueray-sevilla", artigos: ["gin-tanqueray-sevilla"] },
     { foto: "abertura-b52", artigos: ["sho-b52"] },
@@ -330,14 +325,10 @@ export default async function Ementa({ params }: Props) {
           </header>
 
           {capitulos.map(({ capitulo, seccoes }, i) => {
-            const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, altura, artigos }) => ({
-              posicao: altura ? `50% ${altura}` : undefined,
+            const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, artigos }) => ({
               src: `/casa/${foto}.webp`,
-              /* As deitadas têm três larguras e a maior é a do original (1672);
-                 as que ainda são do Instagram, duas. */
-              srcSet: foto.startsWith("abertura-")
-                ? `/casa/${foto}-640.webp 640w, /casa/${foto}-1080.webp 1080w, /casa/${foto}.webp 1672w`
-                : `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
+              /* Três larguras, e a maior é a do original (1672). */
+              srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}-1080.webp 1080w, /casa/${foto}.webp 1672w`,
               alt: t(`fotos.${foto.replace(/^abertura-/, "")}`),
               legenda: artigos
                 .map(artigoPorId)

@@ -59,6 +59,7 @@ const eslintConfig = [
       "src/components/catalogo/**",
       "src/components/ementa/**",
       "src/components/BarraSite.tsx",
+      "src/components/Carrossel.tsx",
       "src/components/Pagina.tsx",
       "src/components/RodapeSite.tsx",
       "src/components/Transicao.tsx",

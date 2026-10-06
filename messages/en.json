@@ -48,6 +48,11 @@
       "seguinte": "Next photo",
       "naFotografia": "In the photo",
       "foto": "Photo {n} of {total}"
+    },
+    "carrossel": {
+      "foto": "Photo {n} of {total}",
+      "pausar": "Pause the photos",
+      "continuar": "Resume the photos"
     }
   },
   "metadata": {
@@ -97,7 +102,15 @@
       "facto": "Solid wood, exposed granite and the name chalked on a slate. A small room where everyone knows everyone, open afternoons and evenings.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
       "animais": "Dogs come in too. If you bring yours, there's no need to leave it at the door.",
-      "alt": "Inside Café Preguiça: wood-panelled walls, old frames, the name of the house chalked on a slate and wooden tables."
+      "alt": "Inside Café Preguiça: wood-panelled walls, old frames, the name of the house chalked on a slate and wooden tables.",
+      "fotos": {
+        "casa-sofas": "Grey velvet sofas and poufs along the granite wall, with wooden tables and old frames in the corner.",
+        "casa-balcao": "The corner of the bar with the bottles, the granite wall and wooden tables and chairs in front.",
+        "casa-candeeiro": "The upstairs room, with the roof beams, iron chandeliers and the balcony above the room below.",
+        "casa-carta": "The house menu standing on a wooden table, against the granite wall.",
+        "casa-esplanada": "A table and two iron chairs on the terrace, in front of a wall of climbing plants.",
+        "casa-fachada": "The peach-coloured front of the house on a sunny day, seen from the street through the leaves."
+      }
     },
     "cocktail": {
       "alt": "A cocktail on a dark wooden table."
@@ -201,11 +214,6 @@
     "contagem": "{artigos} items · {seccoes} sections",
     "indice": "Menu sections",
     "naFotografia": "In the photo",
-    "carrossel": {
-      "foto": "Photo {n} of {total}",
-      "pausar": "Pause the photos",
-      "continuar": "Resume the photos"
-    },
     "capitulos": {
       "comer": {
         "nome": "To eat",
@@ -233,16 +241,44 @@
       }
     },
     "fotos": {
-      "tabua-partilha": "A round platter of chouriço and cheese toasts, a bowl of crisps and a bottle of tabasco, on wood.",
-      "negroni-salpico": "A negroni in a short glass, with an orange slice and drops splashing over the rim.",
       "cocktail-turquesa": "A balloon glass with a turquoise drink, crushed ice, a strawberry, mint and a blue-striped straw, on a wooden table.",
-      "lima-espremida": "A hand squeezing half a lime over a tall glass with ice.",
       "cocktail-amarelo": "A balloon glass with a yellow drink, a slice of kiwi and a green-striped straw, on a wooden table.",
-      "tosta-chocolate": "A hot chocolate with whipped cream and a cinnamon stick, next to a slice of toast with jam.",
       "cocktail-rosa": "A balloon glass with a pink drink, a dried orange slice and a yellow-striped straw, on a wooden table.",
-      "cocktail-azul": "A balloon glass with a blue drink, a slice of lemon and a green-striped straw, on a wooden table.",
-      "negroni-fumo": "A negroni in a short glass with ice and orange peel, wrapped in smoke, on the bar.",
-      "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red-striped straw, next to a coconut, on a wooden table."
+      "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red-striped straw, next to a coconut, on a wooden table.",
+      "bocadinhos-chourico": "A platter of bread baked with chouriço and melted cheese, in pieces, with a bowl of crisps and a bottle of hot sauce.",
+      "bocadinhos-queijo": "Close up, the pieces of bread with chouriço and melted cheese, beside a bowl of crisps.",
+      "bocadinhos-tabasco": "The pieces of bread with chouriço and cheese in front of a bottle of hot sauce.",
+      "preguicinhas": "A platter of little toasts with chouriço and cheese around a bowl of crisps, with a bottle of Tabasco.",
+      "preguicinhas-tabasco": "Close up, the little toasts with chouriço and melted cheese, a bottle of Tabasco and crisps.",
+      "petit-gateau": "A petit gâteau with a scoop of vanilla ice cream and chocolate drizzle, on a slate plate.",
+      "petit-gateau-colher": "A spoon breaking into the petit gâteau, warm chocolate inside and the ice cream beside it.",
+      "torrada-chocolate-quente": "A hot chocolate with whipped cream and a wafer roll, behind two slices of toast with jam, on a wooden table.",
+      "aperol-laranja": "An Aperol Spritz in a wine glass with a slice of orange, being stirred at the bar.",
+      "aperol-garrafa": "An Aperol Spritz with a slice of orange and a straw, beside a large bottle of Aperol, on the bar.",
+      "aperol-espumante": "Sparkling wine being poured into a wine glass with ice and Aperol.",
+      "mojito": "A mojito in a tall glass, with crushed ice, lime and a sprig of mint.",
+      "mojito-noite": "A mojito with lime and mint, at night, with the house sign behind it.",
+      "mojito-limao": "A mojito with crushed ice and mint, topped with a dried citrus slice.",
+      "mojito-melancia": "Two red watermelon mojitos with mint and a slice of watermelon, held in two hands.",
+      "caipirinha": "A caipirinha in a short glass, with lime wedges, ice and a black straw.",
+      "caipirinha-servir": "Cachaça being poured into a short glass with lime and crushed ice.",
+      "margarita": "A margarita in a coupe with a salted rim and a slice of lime, on a wooden table.",
+      "negroni": "A negroni in a cut-glass tumbler, with ice and a slice of orange.",
+      "negroni-fumado": "A negroni with orange peel, wrapped in smoke, on the bar.",
+      "negroni-salpicos": "A negroni in a cut-glass tumbler, with drops splashing above it.",
+      "long-island": "A Long Island Iced Tea in a tall glass, cola-coloured, with ice and a slice of lime.",
+      "long-island-lima": "A hand squeezing half a lime over a Long Island Iced Tea with ice.",
+      "blue-lagoon": "A blue Blue Lagoon in a patterned glass, with crushed ice and a blue-striped straw.",
+      "blue-lagoon-tubarao": "A blue Blue Lagoon with crushed ice and a gummy shark on top.",
+      "blue-lagoon-servir": "A Blue Lagoon being poured at the bar, in a patterned glass full of ice.",
+      "gin-tanqueray": "A gin and tonic being poured into balloon glasses engraved with the Tanqueray name.",
+      "gin-tanqueray-sevilla": "A gin and tonic with orange peel in a balloon glass, beside a bottle of Tanqueray Sevilla.",
+      "b52": "Layered B52 shots, burning with a blue flame.",
+      "b52-tabuleiro": "A row of four B52 shots on fire, on a tray.",
+      "chocolate-chantilly": "A hot chocolate in a glass mug, with whipped cream, cocoa and a wafer roll.",
+      "chocolate-chantilly-mesa": "A hot chocolate with whipped cream and a wafer roll, on a wooden table.",
+      "gluehwein": "A Glühwein, hot red wine, in a glass mug with a slice of orange, beside oranges and cinnamon sticks.",
+      "gluehwein-canela": "A Glühwein with orange, cinnamon sticks in front and jars of spices behind."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",

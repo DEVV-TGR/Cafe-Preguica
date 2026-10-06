@@ -506,27 +506,122 @@
   transform: translateY(0.15em);
 }
 
-.pg-casa figure {
+/* A moldura do carrossel (`components/Carrossel.tsx`): deitada, 3:2, e todas
+   as fotografias do mesmo tamanho lá dentro. Vêm todas deitadas, em 3:2 ou
+   16:10; o `cover` só apara uma lasca dos lados às de 16:10. */
+.pg-casa__fotos {
+  position: relative;
   margin: 0;
   overflow: hidden;
   border-radius: 2px;
-}
-
-.pg-casa img {
-  width: 100%;
   aspect-ratio: 3 / 2;
   max-height: 62vh;
-  /* A fotografia já vem em 3:2 e entra inteira; o `cover` só trabalha quando
-     o `max-height` a encurta num ecrã baixo, e aí corta por igual dos dois
-     lados. */
-  object-fit: cover;
+  background: var(--color-superficie);
+}
+
+.pg-casa__fotos img {
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @media (min-width: 52rem) {
   .pg-casa {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   }
+}
+
+/* ========================================================== O CARROSSEL ===== */
+
+/* Ver `components/Carrossel.tsx`. Só a mecânica: a moldura (tamanho, recorte,
+   cantos) é de quem o usa — `.em-abertura__foto` na carta, `.pg-casa__fotos`
+   aqui. Lá dentro, uma faixa que desliza de lado, com uma fotografia por
+   moldura. */
+
+.pg-carrossel__faixa {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.pg-carrossel__faixa::-webkit-scrollbar {
+  display: none;
+}
+
+.pg-carrossel__foto {
+  position: relative;
+  flex: 0 0 100%;
+  margin: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.pg-carrossel__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Os pontos e a pausa, no canto de baixo à direita — na carta, o título do
+   capítulo está no canto de baixo à esquerda. */
+.pg-carrossel__controlos {
+  position: absolute;
+  z-index: 2;
+  right: clamp(0.4rem, 2vw, 1rem);
+  bottom: clamp(0.4rem, 2vw, 1.1rem);
+  display: flex;
+  align-items: center;
+}
+
+.pg-carrossel__pontos {
+  display: flex;
+}
+
+/* O ponto desenha-se no `::before`; o botão tem 44 px de área de toque à
+   volta dele, que é o mínimo para um dedo acertar. */
+.pg-carrossel__ponto {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 2.75rem;
+  cursor: pointer;
+}
+
+.pg-carrossel__ponto::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-ouro-claro);
+  background: transparent;
+  transition: background-color 220ms ease, transform 220ms ease;
+}
+
+.pg-carrossel__ponto[aria-current="true"]::before {
+  background: var(--color-ouro);
+  border-color: var(--color-ouro);
+  transform: scale(1.25);
+}
+
+.pg-carrossel__pausa {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-ouro-claro);
+  font-size: 0.7rem;
+  letter-spacing: -0.1em;
+  cursor: pointer;
+}
+
+.pg-carrossel__pausa:hover,
+.pg-carrossel__pausa:focus-visible {
+  color: var(--color-ouro);
 }
 
 /* ================================================================ OS REELS == */

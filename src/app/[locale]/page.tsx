@@ -17,7 +17,8 @@ import { Redes } from "@/components/catalogo/Redes";
 import { Link } from "@/i18n/navigation";
 import { RodapeSite } from "@/components/RodapeSite";
 import { BarraSite } from "@/components/BarraSite";
-import { Ampliar, Visor, type GrupoDoVisor } from "@/components/Visor";
+import { Visor, type GrupoDoVisor } from "@/components/Visor";
+import { Carrossel, type FotoDoCarrossel } from "@/components/Carrossel";
 import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
 import { artigoPorId } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
@@ -115,6 +116,28 @@ export default async function Inicio({ params }: Props) {
     fotos: carril.map((c) => fotoDoVisor(`/casa/${c.foto}`, c.alt, legenda(c.id))),
   };
 
+  /**
+   * As fotografias de "A casa", pela ordem em que passam. Todas deitadas e do
+   * tamanho da moldura (3:2, ou quase): as originais da sessão do Rafael eram
+   * ao alto, e o Tomás refê-las para entrarem inteiras em vez de recortadas.
+   * A largura é a do ficheiro maior, para o `srcset`.
+   */
+  const fotosDaCasa: FotoDoCarrossel[] = [
+    fotoDoVisor("/casa/sala-madeira", t("casa.alt"), [], 640, 1536),
+    ...(
+      [
+        ["casa-sofas", 1586],
+        ["casa-balcao", 1586],
+        ["casa-candeeiro", 1586],
+        ["casa-carta", 1536],
+        ["casa-esplanada", 1586],
+        ["casa-fachada", 1536],
+      ] as const
+    ).map(([foto, largura]) =>
+      fotoDoVisor(`/casa/${foto}`, t(`casa.fotos.${foto}`), [], 640, largura),
+    ),
+  ];
+
   return (
     <>
       {/* O motor não arranca sozinho — ver `components/catalogo/Motor.tsx`. */}
@@ -154,28 +177,26 @@ export default async function Inicio({ params }: Props) {
               </p>
             )}
           </div>
-          <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
-            {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
-                casa — a sala forrada a madeira, os quadros, o nome escrito a
-                giz na ardósia.
-                Esteve aqui uma fotografia de três clientes a rir e estava errada
-                pela razão mais simples: não era a casa, eram pessoas nela. */}
-            <Ampliar
-              grupo={{ nome: seccoes("casa"), fotos: [fotoDoVisor("/casa/sala-madeira", t("casa.alt"), [], 640, 1536)] }}
-              indice={0}
-              rotulo={`${visor.ampliar}: ${t("casa.nome")}`}
-            >
-              <img
-                src="/casa/sala-madeira.webp"
-                srcSet="/casa/sala-madeira-640.webp 640w, /casa/sala-madeira-1080.webp 1080w, /casa/sala-madeira.webp 1536w"
-                sizes="(min-width: 52rem) 50vw, 100vw"
-                width={1536}
-                height={1024}
-                alt={t("casa.alt")}
-                loading="lazy"
-              />
-            </Ampliar>
-          </figure>
+          <div data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
+            {/* ⚠️ Fotos **sem pessoas**: a secção chama-se "a casa" e mostra a
+                casa — a sala, o granito, o balcão, a esplanada. Esteve aqui uma
+                fotografia de três clientes a rir e estava errada pela razão
+                mais simples: não era a casa, eram pessoas nela. */}
+            <Carrossel
+              fotos={fotosDaCasa}
+              moldura="pg-casa__fotos"
+              sizes="(min-width: 52rem) 50vw, 100vw"
+              dimensoes={[1586, 992]}
+              textos={{
+                naFotografia: "",
+                nome: t("casa.nome"),
+                rotuloDaFoto: comum("carrossel.foto", { n: "{n}", total: "{total}" }),
+                pausar: comum("carrossel.pausar"),
+                continuar: comum("carrossel.continuar"),
+                ampliar: visor.ampliar,
+              }}
+            />
+          </div>
         </section>
 
         {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado

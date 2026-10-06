@@ -23,6 +23,10 @@
  * - `fotos/instagram/nao-usadas/` — as que o site deixou de usar. Ficam como
  *   material, mas o script não entra lá: gerá-las era pôr em `public/`
  *   ficheiros que nenhuma página pede.
+ * - `fotos/Fotografias/` — a sessão fotográfica que o Rafael mandou: originais
+ *   da máquina, a ~4600 × 6900. Só sai o que está em `NOMES_SESSAO`; o resto
+ *   fica à espera de alguém confirmar o que é (ver `IDENTIFICACAO.md` na
+ *   própria pasta).
  * - `fotos/reels/` — as capas dos reels, mais abaixo.
  */
 import sharp from "sharp";
@@ -31,6 +35,7 @@ import { join, parse } from "node:path";
 
 const ORIGEM = "fotos/instagram";
 const ORIGEM_SITE = "fotos/site";
+const ORIGEM_SESSAO = "fotos/Fotografias";
 const DESTINO = "public/casa";
 const ORIGEM_REELS = "fotos/reels";
 const DESTINO_REELS = "public/reels";
@@ -44,8 +49,6 @@ const DESTINO_REELS = "public/reels";
  * `fotos/site/` não precisam de entrada: já chegam com o nome certo.
  */
 const NOMES = {
-  "post-07": "tosta-chocolate",
-  "post-09": "negroni-salpico",
   "post-11": "tabua-partilha",
   "post-13": "cocktail-coco",
   "post-14": "cocktail-rosa",
@@ -54,6 +57,54 @@ const NOMES = {
   "post-17": "cocktail-azul",
   "post-18": "lima-espremida",
   "post-19": "negroni-fumo",
+};
+
+/**
+ * A sessão do Rafael. ⚠️ **Só entra aqui uma fotografia cuja bebida ou prato se
+ * identifica ao certo**: o nome com que sai é o que a ementa põe ao lado de um
+ * artigo, e uma fotografia ao lado do artigo errado promete ao cliente outra
+ * bebida. As que têm dúvida (os Mules, os copos balão, os hurricane) ficam de
+ * fora até o Rafael as confirmar.
+ *
+ * As fotografias da sala e da rua para o carrossel de "A casa" não saem daqui:
+ * o Tomás refê-las deitadas, do tamanho da moldura, e estão em `fotos/site/`
+ * como `casa-*`.
+ */
+const NOMES_SESSAO = {
+  IMG_0482: "torrada-chocolate-quente",
+  IMG_4063: "petit-gateau",
+  IMG_4065: "petit-gateau-colher",
+  IMG_6132: "bocadinhos-chourico",
+  IMG_6134: "bocadinhos-tabasco",
+  IMG_6136: "bocadinhos-queijo",
+  IMG_8854: "preguicinhas",
+  IMG_9418: "preguicinhas-tabasco",
+  IMG_3046: "aperol-laranja",
+  IMG_3054: "aperol-garrafa",
+  IMG_3034: "aperol-espumante",
+  IMG_3000: "mojito",
+  IMG_2999: "mojito-noite",
+  IMG_8948: "mojito-limao",
+  IMG_8681: "mojito-melancia",
+  IMG_0505: "caipirinha",
+  IMG_8805: "caipirinha-servir",
+  IMG_0718: "margarita",
+  IMG_9349: "negroni",
+  IMG_8913: "negroni-fumado",
+  IMG_9368: "negroni-salpicos",
+  IMG_8731: "long-island",
+  IMG_8723: "long-island-lima",
+  IMG_8851: "blue-lagoon",
+  IMG_8844: "blue-lagoon-tubarao",
+  IMG_8839: "blue-lagoon-servir",
+  IMG_8986: "gin-tanqueray",
+  IMG_9084: "gin-tanqueray-sevilla",
+  IMG_3085: "b52",
+  IMG_3081: "b52-tabuleiro",
+  IMG_9312: "chocolate-chantilly",
+  IMG_9316: "chocolate-chantilly-mesa",
+  IMG_6051: "gluehwein",
+  IMG_6045: "gluehwein-canela",
 };
 
 /**
@@ -79,13 +130,15 @@ const LARGURAS = [640, 1080];
  *   fica abaixo dos 2000 px: o herói é o que o telemóvel espera para pintar o
  *   primeiro ecrã, e 1600 já passa dos 2× de um ecrã de telemóvel.
  * - A sala fica em meia página no PC, que num ecrã retina são uns 1800 px, e
- *   abre-se inteira no visor.
+ *   abre-se inteira no visor. As `casa-*` do carrossel ao lado dela também.
  */
 const LARGURAS_ESPECIAIS = {
   fachada: [640, 1280, 2560],
   "fachada-vertical": [640, 1080, 1600],
   "sala-madeira": [640, 1080, 2400],
 };
+const larguraDe = (nome) =>
+  LARGURAS_ESPECIAIS[nome] ?? (nome.startsWith("casa-") ? [640, 1600] : LARGURAS);
 
 /**
  * As capas dos reels vêm em 9:16 e a **três mil e novecentos píxeis de largura**,
@@ -106,7 +159,14 @@ const imagens = async (pasta) =>
   (await readdir(pasta))
     .filter((f) => /\.(jpe?g|png)$/i.test(f))
     .map((f) => ({ pasta, ficheiro: f }));
-const ficheiros = [...(await imagens(ORIGEM)), ...(await imagens(ORIGEM_SITE))];
+const ficheiros = [
+  ...(await imagens(ORIGEM)),
+  ...(await imagens(ORIGEM_SITE)),
+  /* Da sessão só as que têm nome: as outras 120 e tal não são um esquecimento,
+     estão à espera de confirmação, e um aviso por cada uma afogava os que
+     interessam. */
+  ...(await imagens(ORIGEM_SESSAO)).filter(({ ficheiro }) => parse(ficheiro).name in NOMES_SESSAO),
+];
 if (ficheiros.length === 0) {
   console.error(`✖ nada em ${ORIGEM}/ nem em ${ORIGEM_SITE}/ — é lá que entra o material em bruto.`);
   process.exit(1);
@@ -115,7 +175,8 @@ if (ficheiros.length === 0) {
 let escritos = 0;
 for (const { pasta, ficheiro } of ficheiros) {
   const base = parse(ficheiro).name;
-  const nome = pasta === ORIGEM_SITE ? base : NOMES[base];
+  const nome =
+    pasta === ORIGEM_SITE ? base : pasta === ORIGEM_SESSAO ? NOMES_SESSAO[base] : NOMES[base];
   if (!nome) {
     /* Um ficheiro novo sem nome atribuído não passa em silêncio: sairia para
        `public/` com o nome do Instagram e ninguém saberia o que é. */
@@ -130,7 +191,7 @@ for (const { pasta, ficheiro } of ficheiros) {
      desfocado. O `Set` junta o tecto com o tamanho do meio quando calham no
      mesmo número. */
   const larguras = [
-    ...new Set((LARGURAS_ESPECIAIS[nome] ?? LARGURAS).map((l) => Math.min(l, width))),
+    ...new Set(larguraDe(nome).map((l) => Math.min(l, width))),
   ];
   /* O maior tamanho fica sem sufixo, que é o que a página escreve no `src`;
      os outros levam a largura e entram no `srcset`. */

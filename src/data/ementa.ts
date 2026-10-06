@@ -202,6 +202,19 @@ export const EM_DESTAQUE: readonly string[] = [
   "bocadinhos-de-pao-com-chourico",
   "torrada-com-compota",
   "caf-chocolate-quente-com-chantilly",
+  /* A sessão do Rafael (2026-10). */
+  "preguicinhas-com-queijo",
+  "petit-gateau-com-gelado-de-baunilha",
+  "aperol-spritz",
+  "mojito",
+  "mojito-melancia",
+  "caipirinha",
+  "margarita",
+  "long-island-ice-tea",
+  "gin-tanqueray",
+  "gin-tanqueray-sevilla",
+  "sho-b52",
+  "caf-gluehwein",
 ];
 
 /**

@@ -119,10 +119,20 @@ ementa.json inválido:
 
 ## Reprocessar as imagens
 
-O material em bruto vive em `fotos/`, **fora do git**.
+O material em bruto vive em `fotos/`, **fora do git**:
+
+| Pasta | O que tem |
+|---|---|
+| `fotos/site/` | As fotografias que o cliente mandou para um sítio certo (a fachada do herói, horizontal e vertical, e a sala). O nome do ficheiro é o nome com que sai. |
+| `fotos/instagram/` | Derivadas do Instagram, a 1080 px. Os nomes estão em `scripts/importar-fotos.mjs`. |
+| `fotos/instagram/nao-usadas/` | As que o site deixou de usar. O script não entra lá. |
+| `fotos/reels/` | As capas dos reels. |
+| `fotos/ementa/` | O PDF da carta e as duas páginas extraídas dele. |
+| `fotos/marca/` | Os logótipos originais e a preguiça deitada. |
+| `fotos/osm/` | O recorte do OpenStreetMap para o `npm run mapa`. |
 
 ```bash
-npm run fotos     # fotos/instagram/ → public/casa/, WebP a 640 e 1080
+npm run fotos     # fotos/site/ e fotos/instagram/ → public/casa/, fotos/reels/ → public/reels/
 ```
 
 ## Antes de dizer que algo está pronto

@@ -11,22 +11,26 @@
  *
  *   npm run fotos
  *
- * ⚠️ **As fotografias de hoje são derivadas do Instagram, a 1080 px de
- * largura.** É o tecto do que o Instagram serve a quem não tem sessão iniciada.
- * Chegam para os cartões do carril e para os blocos de meia página; **não
- * chegam para um herói de ecrã inteiro** num monitor grande, e é por isso que o
- * primeiro acto da página é tipográfico. Quando chegarem os originais, este
- * script volta a correr e os tamanhos abaixo passam a ter matéria-prima a
- * sério.
+ * As pastas:
+ *
+ * - `fotos/site/` — as que o cliente mandou para um sítio certo do site (a
+ *   fachada do herói, a sala). **O nome do ficheiro já é o nome com que sai**:
+ *   `fachada.png` → `public/casa/fachada.webp`.
+ * - `fotos/instagram/` — derivadas do Instagram, a 1080 px de largura, que é o
+ *   tecto do que o Instagram serve a quem não tem sessão iniciada. Chegam para
+ *   os cartões do carril e para blocos de meia página, não para um ecrã
+ *   inteiro. Os nomes vêm na tabela `NOMES`, abaixo.
+ * - `fotos/instagram/nao-usadas/` — as que o site deixou de usar. Ficam como
+ *   material, mas o script não entra lá: gerá-las era pôr em `public/`
+ *   ficheiros que nenhuma página pede.
+ * - `fotos/reels/` — as capas dos reels, mais abaixo.
  */
 import sharp from "sharp";
 import { readdir, mkdir } from "node:fs/promises";
 import { join, parse } from "node:path";
 
 const ORIGEM = "fotos/instagram";
-/* As fotografias que o cliente mandou já tratadas para o sítio onde ficam
-   (o herói e a secção da casa). Entram pela mesma tabela de nomes. */
-const ORIGEM_SITE = "fotos/fotos_terminar_site";
+const ORIGEM_SITE = "fotos/site";
 const DESTINO = "public/casa";
 const ORIGEM_REELS = "fotos/reels";
 const DESTINO_REELS = "public/reels";
@@ -36,21 +40,13 @@ const DESTINO_REELS = "public/reels";
  * fotografia é** e não em que ordem foi descarregada. `post-13.jpg` obriga a
  * abrir a pasta para saber o que lá está; `cocktail-coco.webp` não.
  *
- * A ordem aqui não importa; a ordem da página vive nos componentes.
+ * A ordem aqui não importa; a ordem da página vive nos componentes. As de
+ * `fotos/site/` não precisam de entrada: já chegam com o nome certo.
  */
 const NOMES = {
-  "post-01": "cartaz-masterclass",
-  "post-02": "masterclass-mesa",
-  "post-03": "canecas-ardosia",
-  "post-04": "telemovel-cocktail",
-  "post-05": "menu-granito",
-  "post-06": "mesa-tres",
   "post-07": "tosta-chocolate",
-  "post-08": "boas-historias",
   "post-09": "negroni-salpico",
-  "post-10": "balao-coracao",
   "post-11": "tabua-partilha",
-  "post-12": "menu-mesa",
   "post-13": "cocktail-coco",
   "post-14": "cocktail-rosa",
   "post-15": "cocktail-amarelo",
@@ -58,16 +54,6 @@ const NOMES = {
   "post-17": "cocktail-azul",
   "post-18": "lima-espremida",
   "post-19": "negroni-fumo",
-  /* A fachada, que o cliente mandou à parte. É a única fotografia de dia do
-     site inteiro, e é de propósito: é a primeira coisa que se vê.
-     ⚠️ `hero` substituiu a antiga `image.png` (a da árvore em flor), que ainda
-     está em `fotos/instagram/` mas já não tem nome: as duas a sair como
-     `fachada` era a última a correr a ganhar, sem aviso. */
-  hero: "fachada",
-  /* A mesma fachada tirada ao alto, para o herói em ecrãs verticais: a de cima
-     cortada para um telemóvel ficava com um terço da casa, esticado. */
-  foto_hero_telemovel: "fachada-vertical",
-  foto_seccao_casa: "sala-madeira",
 };
 
 /**
@@ -86,8 +72,11 @@ const LARGURAS = [640, 1080];
  * original. Os `srcSet` em `Heroi.tsx` e em `page.tsx` escrevem essas larguras
  * à mão, por isso uma fotografia nova pede que se olhe para lá também.
  *
- * - A fachada é o herói e ocupa o ecrã inteiro. A vertical fica abaixo dos
- *   2000 px de propósito: o herói é o que o telemóvel espera para pintar o
+ * - A fachada é o herói e ocupa o ecrã inteiro, e é a única fotografia de dia
+ *   do site — de propósito, é a primeira coisa que se vê. Há duas: a vertical
+ *   é a mesma casa tirada ao alto, para ecrãs verticais, porque a horizontal
+ *   cortada para um telemóvel ficava com um terço da casa, esticado. A vertical
+ *   fica abaixo dos 2000 px: o herói é o que o telemóvel espera para pintar o
  *   primeiro ecrã, e 1600 já passa dos 2× de um ecrã de telemóvel.
  * - A sala fica em meia página no PC, que num ecrã retina são uns 1800 px, e
  *   abre-se inteira no visor.
@@ -119,14 +108,14 @@ const imagens = async (pasta) =>
     .map((f) => ({ pasta, ficheiro: f }));
 const ficheiros = [...(await imagens(ORIGEM)), ...(await imagens(ORIGEM_SITE))];
 if (ficheiros.length === 0) {
-  console.error(`✖ nada em ${ORIGEM}/ — é lá que entra o material em bruto.`);
+  console.error(`✖ nada em ${ORIGEM}/ nem em ${ORIGEM_SITE}/ — é lá que entra o material em bruto.`);
   process.exit(1);
 }
 
 let escritos = 0;
 for (const { pasta, ficheiro } of ficheiros) {
   const base = parse(ficheiro).name;
-  const nome = NOMES[base];
+  const nome = pasta === ORIGEM_SITE ? base : NOMES[base];
   if (!nome) {
     /* Um ficheiro novo sem nome atribuído não passa em silêncio: sairia para
        `public/` com o nome do Instagram e ninguém saberia o que é. */

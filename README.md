@@ -154,4 +154,5 @@ verificados pelo CI, CSP que não deixa carregar nada de fora — **incluindo o
 motor de rolagem, que é servido por nós** — nenhum serviço de terceiros, nenhum
 cookie a quem visita, nenhum dado de visitante recolhido, um painel com login
 por código e CSP com nonce, scripts de instalação de pacotes
-bloqueados e `npm audit` a zero mantido pelo Dependabot.
+bloqueados e `npm audit` das dependências de produção a zero, mantido pelo
+Dependabot.

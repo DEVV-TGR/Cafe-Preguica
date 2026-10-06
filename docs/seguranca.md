@@ -131,7 +131,12 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
   durante o `npm install`, e é o vetor mais usado contra cadeias de dependências
   de JavaScript. O `allowScripts` no `package.json` mantém os três pacotes que o
   pediriam a `false` — confirmado que o build passa sem eles.
-- `npm audit --audit-level=high` no CI, em cada PR.
+- `npm audit --audit-level=high --omit=dev` no CI, em cada PR: uma
+  vulnerabilidade alta numa dependência que chega ao site pára o PR. As das
+  ferramentas de desenvolvimento (ESLint, Tailwind, TypeScript) aparecem num
+  passo à parte que avisa sem parar — em 2026-10 o `braces`, via
+  `eslint-config-next`, ficou sem versão corrigida e punha todos os PRs a
+  vermelho.
 - Dependabot semanal (`.github/dependabot.yml`). É a peça que faz par com o
   `audit`: sem ela, um audit a zero é a fotografia do dia em que alguém o pôs a
   zero.
@@ -205,7 +210,7 @@ sinal de que um segredo está a passar pelo cliente.
 2. `lint`
 3. `tsc --noEmit`
 4. As duas línguas têm as mesmas chaves de tradução
-5. `npm audit --audit-level=high`
+5. `npm audit --audit-level=high --omit=dev` (e o audit inteiro, só como aviso)
 6. `build` — e com ele a validação `zod` de `src/data/`
 7. O site arranca e as 13 rotas respondem com o código certo
 8. Os seis cabeçalhos de segurança estão na resposta

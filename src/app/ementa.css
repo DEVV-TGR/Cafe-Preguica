@@ -312,9 +312,9 @@ html:has(.em-pagina) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* As fotografias são retratos e a faixa é paisagem: o que interessa está
-     quase sempre no meio, um pouco abaixo do centro. */
-  object-position: 50% 58%;
+  /* Ao centro: as aberturas foram refeitas a 16:9 com a bebida no meio. A que
+     ainda é ao alto diz que faixa fica (`altura`, em `ementa/page.tsx`). */
+  object-position: 50% 50%;
 }
 
 /* O véu por baixo do título: o texto claro por cima de madeira clara ficava
@@ -365,24 +365,31 @@ html:has(.em-pagina) {
    `.em-abertura__foto` de sempre. Aqui só o que é da carta: */
 
 .em-abertura .pg-carrossel__foto img {
-  object-position: 50% 58%;
+  object-position: 50% 50%;
 }
 
-/* No telemóvel o título do capítulo ocupa quase a largura toda; os controlos
-   sobem para o canto de cima, e a legenda desce para debaixo deles. Lado a
-   lado só cabiam enquanto um capítulo tinha duas fotografias: com quatro ou
-   oito pontos, a fila chegava à legenda e passava-lhe por baixo. */
-@media (max-width: 40rem) {
-  .em-abertura .pg-carrossel__controlos {
-    top: 0.2rem;
-    bottom: auto;
-    left: 0.2rem;
-    right: auto;
-  }
+/* Os pontos e a pausa ficam **debaixo** da fotografia, ao centro. Dentro dela
+   não cabiam: no telemóvel chocavam com a legenda ou tapavam o copo (que nas
+   aberturas deitadas está ao centro), e no computador o título comprido
+   ("Cafetaria & bebidas quentes") passava-lhes por cima.
 
-  .em-abertura .pg-carrossel .em-abertura__legenda {
-    top: 3rem;
-  }
+   Para saírem, a moldura deixa de recortar (`overflow: visible`) e quem recorta
+   a fotografia é a faixa, que já o faz por ter `overflow-x`. */
+.em-abertura .pg-carrossel {
+  overflow: visible;
+  margin-bottom: 2.75rem;
+}
+
+.em-abertura .pg-carrossel__faixa {
+  border-radius: 3px;
+}
+
+.em-abertura .pg-carrossel__controlos {
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
 }
 
 .em-abertura__legenda {
@@ -803,6 +810,12 @@ html:has(.em-pagina) {
       animation-range: entry 0% cover 45%;
     }
 
+    /* A moldura do carrossel não recorta (ver "o carrossel", acima), e a faixa
+       a crescer 12 % passava-lhe por fora: aí só clareia. */
+    .em-abertura .pg-carrossel__faixa {
+      animation-name: em-foto-clarear;
+    }
+
     .em-seccao__cabeca {
       animation: em-subir linear both;
       animation-timeline: view();
@@ -818,6 +831,15 @@ html:has(.em-pagina) {
   }
   to {
     transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes em-foto-clarear {
+  from {
+    filter: brightness(0.6);
+  }
+  to {
     filter: brightness(1);
   }
 }

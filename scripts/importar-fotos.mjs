@@ -66,7 +66,9 @@ const NOMES = {
  * bebida. As que têm dúvida (os Mules, os copos balão, os hurricane) ficam de
  * fora até o Rafael as confirmar.
  *
- * As `casa-*` são a sala e a rua, para o carrossel de "A casa" na inicial.
+ * As fotografias da sala e da rua para o carrossel de "A casa" não saem daqui:
+ * o Tomás refê-las deitadas, do tamanho da moldura, e estão em `fotos/site/`
+ * como `casa-*`.
  */
 const NOMES_SESSAO = {
   IMG_0482: "torrada-chocolate-quente",
@@ -103,16 +105,6 @@ const NOMES_SESSAO = {
   IMG_9316: "chocolate-chantilly-mesa",
   IMG_6051: "gluehwein",
   IMG_6045: "gluehwein-canela",
-  IMG_3016: "casa-sofas",
-  IMG_3007: "casa-quadros",
-  IMG_3010: "casa-janela",
-  IMG_3018: "casa-balcao",
-  IMG_3019: "casa-sotao",
-  IMG_3120: "casa-candeeiro",
-  IMG_3006: "casa-garrafas",
-  IMG_3020: "casa-sangria",
-  IMG_3079: "casa-esplanada",
-  IMG_3099: "casa-noite",
 };
 
 /**
@@ -138,9 +130,7 @@ const LARGURAS = [640, 1080];
  *   fica abaixo dos 2000 px: o herói é o que o telemóvel espera para pintar o
  *   primeiro ecrã, e 1600 já passa dos 2× de um ecrã de telemóvel.
  * - A sala fica em meia página no PC, que num ecrã retina são uns 1800 px, e
- *   abre-se inteira no visor. As `casa-*` do carrossel ao lado dela também:
- *   vêm ao alto e o quadro é deitado, por isso a largura do quadro é a largura
- *   da fotografia.
+ *   abre-se inteira no visor. As `casa-*` do carrossel ao lado dela também.
  */
 const LARGURAS_ESPECIAIS = {
   fachada: [640, 1280, 2560],

@@ -117,30 +117,25 @@ export default async function Inicio({ params }: Props) {
   };
 
   /**
-   * As fotografias de "A casa", pela ordem em que passam. A sala de madeira
-   * abre, porque é a única deitada e a que já lá estava; as outras vêm da
-   * sessão do Rafael e são ao alto, num quadro deitado — perdem dois terços da
-   * altura, e a `posicao` diz que terço fica.
+   * As fotografias de "A casa", pela ordem em que passam. Todas deitadas e do
+   * tamanho da moldura (3:2, ou quase): as originais da sessão do Rafael eram
+   * ao alto, e o Tomás refê-las para entrarem inteiras em vez de recortadas.
+   * A largura é a do ficheiro maior, para o `srcset`.
    */
   const fotosDaCasa: FotoDoCarrossel[] = [
     fotoDoVisor("/casa/sala-madeira", t("casa.alt"), [], 640, 1536),
     ...(
       [
-        ["casa-sofas", "50% 62%"],
-        ["casa-quadros", "50% 40%"],
-        ["casa-balcao", "50% 45%"],
-        ["casa-janela", "50% 45%"],
-        ["casa-sotao", "50% 55%"],
-        ["casa-candeeiro", "50% 40%"],
-        ["casa-garrafas", "50% 45%"],
-        ["casa-sangria", "50% 70%"],
-        ["casa-esplanada", "50% 65%"],
-        ["casa-noite", "50% 55%"],
+        ["casa-sofas", 1586],
+        ["casa-balcao", 1586],
+        ["casa-candeeiro", 1586],
+        ["casa-carta", 1536],
+        ["casa-esplanada", 1586],
+        ["casa-fachada", 1536],
       ] as const
-    ).map(([foto, posicao]) => ({
-      ...fotoDoVisor(`/casa/${foto}`, t(`casa.fotos.${foto}`), [], 640, 1600),
-      posicao,
-    })),
+    ).map(([foto, largura]) =>
+      fotoDoVisor(`/casa/${foto}`, t(`casa.fotos.${foto}`), [], 640, largura),
+    ),
   ];
 
   return (
@@ -191,7 +186,7 @@ export default async function Inicio({ params }: Props) {
               fotos={fotosDaCasa}
               moldura="pg-casa__fotos"
               sizes="(min-width: 52rem) 50vw, 100vw"
-              dimensoes={[1600, 2400]}
+              dimensoes={[1586, 992]}
               textos={{
                 naFotografia: "",
                 nome: t("casa.nome"),

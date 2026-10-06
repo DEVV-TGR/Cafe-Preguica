@@ -104,16 +104,12 @@
       "animais": "E os cães também entram. Quem vem com o seu não tem de o deixar à porta.",
       "alt": "A sala do Café Preguiça: paredes forradas a madeira, quadros antigos, o nome da casa escrito a giz numa ardósia e mesas de madeira.",
       "fotos": {
-        "casa-sofas": "Sofás e pufes de veludo cinzento junto à parede de granito, com mesas de madeira.",
-        "casa-quadros": "Quadros antigos na parede de granito, por cima de um sofá cinzento e de uma mesa com a carta.",
-        "casa-janela": "Uma mesa redonda e cadeiras de madeira junto a uma janela aberta para a rua.",
-        "casa-balcao": "O canto do balcão, com as garrafas, a parede de granito e mesas de madeira à frente.",
-        "casa-sotao": "A sala de cima, com as traves de madeira à vista, sofás cinzentos e uma ardósia a anunciar a sangria.",
-        "casa-candeeiro": "As traves do telhado e um candeeiro de ferro por cima da sala, com o varandim por baixo.",
-        "casa-garrafas": "Garrafas de gin e de espumante num nicho de granito, com uma ardósia por trás.",
-        "casa-sangria": "Uma cadeira antiga e uma mesa pequena num nicho de granito, com uma ardósia a anunciar sangria de melancia.",
+        "casa-sofas": "Sofás e pufes de veludo cinzento ao longo da parede de granito, com mesas de madeira e quadros antigos no canto.",
+        "casa-balcao": "O canto do balcão com as garrafas, a parede de granito e mesas e cadeiras de madeira à frente.",
+        "casa-candeeiro": "A sala de cima, com as traves do telhado, candeeiros de ferro e o varandim por cima da sala de baixo.",
+        "casa-carta": "A carta da casa em pé numa mesa de madeira, diante da parede de granito.",
         "casa-esplanada": "Uma mesa e duas cadeiras de ferro na esplanada, à frente de uma parede de trepadeiras.",
-        "casa-noite": "A fachada da casa à noite, com as janelas acesas."
+        "casa-fachada": "A fachada da casa num dia de sol, cor de pêssego, vista da rua por entre as folhas."
       }
     },
     "cocktail": {

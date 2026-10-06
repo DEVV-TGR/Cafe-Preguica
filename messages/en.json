@@ -104,16 +104,12 @@
       "animais": "Dogs come in too. If you bring yours, there's no need to leave it at the door.",
       "alt": "Inside Café Preguiça: wood-panelled walls, old frames, the name of the house chalked on a slate and wooden tables.",
       "fotos": {
-        "casa-sofas": "Grey velvet sofas and poufs against the granite wall, with wooden tables.",
-        "casa-quadros": "Old frames on the granite wall, above a grey sofa and a table with the menu.",
-        "casa-janela": "A round table and wooden chairs by a window open to the street.",
-        "casa-balcao": "The corner of the bar, with the bottles, the granite wall and wooden tables in front.",
-        "casa-sotao": "The upstairs room, with exposed wooden beams, grey sofas and a slate announcing the sangria.",
-        "casa-candeeiro": "The roof beams and an iron chandelier above the room, with the balcony below.",
-        "casa-garrafas": "Bottles of gin and sparkling wine in a granite niche, with a slate behind them.",
-        "casa-sangria": "An old chair and a small table in a granite niche, with a slate announcing watermelon sangria.",
+        "casa-sofas": "Grey velvet sofas and poufs along the granite wall, with wooden tables and old frames in the corner.",
+        "casa-balcao": "The corner of the bar with the bottles, the granite wall and wooden tables and chairs in front.",
+        "casa-candeeiro": "The upstairs room, with the roof beams, iron chandeliers and the balcony above the room below.",
+        "casa-carta": "The house menu standing on a wooden table, against the granite wall.",
         "casa-esplanada": "A table and two iron chairs on the terrace, in front of a wall of climbing plants.",
-        "casa-noite": "The front of the house at night, with the windows lit."
+        "casa-fachada": "The peach-coloured front of the house on a sunny day, seen from the street through the leaves."
       }
     },
     "cocktail": {

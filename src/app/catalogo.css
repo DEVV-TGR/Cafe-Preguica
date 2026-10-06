@@ -507,9 +507,8 @@
 }
 
 /* A moldura do carrossel (`components/Carrossel.tsx`): deitada, 3:2, e todas
-   as fotografias do mesmo tamanho lá dentro. A sala de madeira já vem em 3:2 e
-   entra inteira; as outras são ao alto e cada uma diz que parte fica
-   (`posicao`, em `page.tsx`). */
+   as fotografias do mesmo tamanho lá dentro. Vêm todas deitadas, em 3:2 ou
+   16:10; o `cover` só apara uma lasca dos lados às de 16:10. */
 .pg-casa__fotos {
   position: relative;
   margin: 0;

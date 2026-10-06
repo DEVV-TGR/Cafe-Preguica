@@ -23,7 +23,7 @@ import { Preguica } from "@/components/catalogo/Preguica";
 import { RodapeSite } from "@/components/RodapeSite";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
 import { Sabores } from "@/components/ementa/Sabores";
-import { Carrossel, type FotoDoCarrossel } from "@/components/ementa/Carrossel";
+import { Carrossel, type FotoDoCarrossel } from "@/components/Carrossel";
 import { Ampliar, Visor, type GrupoDoVisor } from "@/components/Visor";
 import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
 import { DesenhosDoCapitulo } from "@/components/ementa/Desenhos";
@@ -78,57 +78,99 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * que não têm artigos não têm legenda: a da garrafeira é o balcão, e os copos
  * balão dos mocktails e das águas são da casa mas ninguém disse que bebida são.
  *
+ * ## A `altura`
+ *
+ * As fotografias são ao alto e a moldura é deitada (21:9 no computador), por
+ * isso só se vê pouco mais de um quarto da altura de cada uma. A `altura` é o
+ * `object-position` vertical: que faixa fica. Sem ela, ficava a do meio — e
+ * na dos bocadinhos via-se o frasco de tabasco em vez da comida. Escolhe-se a
+ * olhar para o capítulo no computador, que é onde a faixa é mais estreita.
+ *
  * ## Juntar uma fotografia
  *
  * 1. `npm run fotos` com o original, para sair em `public/casa/` nas duas
  *    larguras (`nome.webp` e `nome-640.webp`).
- * 2. Acrescentá-la à lista do capítulo, com os `id` do que se vê nela — e esses
- *    `id` em `EM_DESTAQUE` (`data/ementa.ts`), senão o `build` rebenta a dizê-lo.
+ * 2. Acrescentá-la à lista do capítulo, com a `altura` e os `id` do que se vê
+ *    nela — e esses `id` em `EM_DESTAQUE` (`data/ementa.ts`), senão o `build`
+ *    rebenta a dizê-lo.
  * 3. Texto alternativo em `ementa.fotos.<nome>`, nas duas línguas.
  *
  * ⚠️ Fotografias com caras de clientes não entram sem a casa confirmar que tem
  * autorização de quem aparece.
  */
-const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }[]> = {
+const ABERTURAS: Record<Capitulo, { foto: string; altura: string; artigos: string[] }[]> = {
   comer: [
-    { foto: "tabua-partilha", artigos: ["bocadinhos-de-pao-com-chourico"] },
-    { foto: "tosta-chocolate", artigos: ["torrada-com-compota"] },
+    { foto: "bocadinhos-chourico", altura: "78%", artigos: ["bocadinhos-de-pao-com-chourico"] },
+    { foto: "preguicinhas", altura: "58%", artigos: ["preguicinhas-com-queijo"] },
+    { foto: "petit-gateau", altura: "45%", artigos: ["petit-gateau-com-gelado-de-baunilha"] },
+    {
+      foto: "torrada-chocolate-quente", altura: "52%",
+      artigos: ["torrada-com-compota", "caf-chocolate-quente-com-chantilly"],
+    },
   ],
   cocktails: [
-    { foto: "negroni-salpico", artigos: ["negroni"] },
-    { foto: "cocktail-rosa", artigos: ["cocktail-preguica"] },
-    { foto: "cocktail-azul", artigos: ["blue-lagoon"] },
-    { foto: "negroni-fumo", artigos: ["negroni"] },
+    { foto: "aperol-garrafa", altura: "55%", artigos: ["aperol-spritz"] },
+    { foto: "negroni-fumado", altura: "48%", artigos: ["negroni"] },
+    { foto: "mojito", altura: "45%", artigos: ["mojito"] },
+    { foto: "cocktail-rosa", altura: "42%", artigos: ["cocktail-preguica"] },
+    { foto: "blue-lagoon", altura: "60%", artigos: ["blue-lagoon"] },
+    { foto: "mojito-melancia", altura: "35%", artigos: ["mojito-melancia"] },
+    { foto: "long-island", altura: "40%", artigos: ["long-island-ice-tea"] },
+    { foto: "margarita", altura: "42%", artigos: ["margarita"] },
   ],
-  mocktails: [{ foto: "cocktail-turquesa", artigos: [] }],
-  garrafeira: [{ foto: "lima-espremida", artigos: [] }],
+  mocktails: [{ foto: "cocktail-turquesa", altura: "40%", artigos: [] }],
+  garrafeira: [
+    { foto: "gin-tanqueray-sevilla", altura: "50%", artigos: ["gin-tanqueray-sevilla"] },
+    { foto: "b52", altura: "45%", artigos: ["sho-b52"] },
+    { foto: "gin-tanqueray", altura: "32%", artigos: ["gin-tanqueray"] },
+  ],
   aguas: [
-    { foto: "cocktail-amarelo", artigos: [] },
-    { foto: "cocktail-coco", artigos: [] },
+    { foto: "cocktail-amarelo", altura: "40%", artigos: [] },
+    { foto: "cocktail-coco", altura: "42%", artigos: [] },
   ],
   cafetaria: [
-    {
-      foto: "tosta-chocolate",
-      artigos: ["caf-chocolate-quente-com-chantilly", "torrada-com-compota"],
-    },
+    { foto: "chocolate-chantilly", altura: "32%", artigos: ["caf-chocolate-quente-com-chantilly"] },
+    { foto: "gluehwein", altura: "50%", artigos: ["caf-gluehwein"] },
   ],
 };
 
 /**
- * Os artigos que têm fotografia da casa, e qual.
+ * Os artigos que têm fotografia da casa, e quais. **A primeira é a do círculo**
+ * ao lado do nome; todas abrem no visor, uma a seguir à outra, ao tocar nele.
  *
- * ⚠️ Só entra aqui o que **se identifica ao certo** na fotografia. Os copos
- * balão amarelo, turquesa e de coco ficaram de fora: são da casa mas ninguém
- * disse que cocktail são, e pô-los ao lado de um nome era afirmar o que não se
- * sabe. Estão no leque do topo, que não diz nome nenhum.
+ * ⚠️ Só entra aqui o que **se identifica ao certo** na fotografia. Da sessão do
+ * Rafael ficaram de fora os Mules, os hurricane e os copos balão: a família
+ * vê-se, a variante não, e pô-los ao lado de um nome era afirmar o que não se
+ * sabe. A lista do que falta confirmar está em `fotos/Fotografias/
+ * IDENTIFICACAO.md`.
  */
-const FOTOS_ARTIGO: Record<string, string> = {
-  negroni: "negroni-fumo",
-  "blue-lagoon": "cocktail-azul",
-  "cocktail-preguica": "cocktail-rosa",
-  "bocadinhos-de-pao-com-chourico": "tabua-partilha",
-  "torrada-com-compota": "tosta-chocolate",
-  "caf-chocolate-quente-com-chantilly": "tosta-chocolate",
+const FOTOS_ARTIGO: Record<string, string[]> = {
+  "bocadinhos-de-pao-com-chourico": [
+    "bocadinhos-chourico",
+    "bocadinhos-queijo",
+    "bocadinhos-tabasco",
+  ],
+  "preguicinhas-com-queijo": ["preguicinhas", "preguicinhas-tabasco"],
+  "petit-gateau-com-gelado-de-baunilha": ["petit-gateau", "petit-gateau-colher"],
+  "torrada-com-compota": ["torrada-chocolate-quente"],
+  "aperol-spritz": ["aperol-laranja", "aperol-garrafa", "aperol-espumante"],
+  mojito: ["mojito", "mojito-noite", "mojito-limao"],
+  "mojito-melancia": ["mojito-melancia"],
+  caipirinha: ["caipirinha", "caipirinha-servir"],
+  margarita: ["margarita"],
+  negroni: ["negroni", "negroni-fumado", "negroni-salpicos"],
+  "long-island-ice-tea": ["long-island", "long-island-lima"],
+  "blue-lagoon": ["blue-lagoon", "blue-lagoon-tubarao", "blue-lagoon-servir"],
+  "cocktail-preguica": ["cocktail-rosa"],
+  "gin-tanqueray": ["gin-tanqueray"],
+  "gin-tanqueray-sevilla": ["gin-tanqueray-sevilla"],
+  "sho-b52": ["b52", "b52-tabuleiro"],
+  "caf-chocolate-quente-com-chantilly": [
+    "chocolate-chantilly",
+    "chocolate-chantilly-mesa",
+    "torrada-chocolate-quente",
+  ],
+  "caf-gluehwein": ["gluehwein", "gluehwein-canela"],
 };
 
 /* Um `id` que deixou de existir na carta partia a legenda em silêncio. Assim
@@ -177,15 +219,12 @@ export default async function Ementa({ params }: Props) {
   /* A fotografia de um artigo, para o visor: a mesma que aparece no círculo,
      inteira, com o nome e o preço por baixo. */
   const grupoDoArtigo = (artigo: Artigo): GrupoDoVisor | null => {
-    const foto = FOTOS_ARTIGO[artigo.id];
-    if (!foto) return null;
+    const fotos = FOTOS_ARTIGO[artigo.id];
+    if (!fotos) return null;
+    const legenda = [`${artigo.nome[locale]} · ${preco(artigo.preco)}`];
     return {
       nome: artigo.nome[locale],
-      fotos: [
-        fotoDoVisor(`/casa/${foto}`, t(`fotos.${foto}`), [
-          `${artigo.nome[locale]} · ${preco(artigo.preco)}`,
-        ]),
-      ],
+      fotos: fotos.map((foto) => fotoDoVisor(`/casa/${foto}`, t(`fotos.${foto}`), legenda)),
     };
   };
 
@@ -279,7 +318,8 @@ export default async function Ementa({ params }: Props) {
           </header>
 
           {capitulos.map(({ capitulo, seccoes }, i) => {
-            const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, artigos }) => ({
+            const fotos: FotoDoCarrossel[] = ABERTURAS[capitulo].map(({ foto, altura, artigos }) => ({
+              posicao: `50% ${altura}`,
               src: `/casa/${foto}.webp`,
               srcSet: `/casa/${foto}-640.webp 640w, /casa/${foto}.webp 1080w`,
               alt: t(`fotos.${foto}`),
@@ -306,9 +346,9 @@ export default async function Ementa({ params }: Props) {
                     textos={{
                       naFotografia: t("naFotografia"),
                       nome: t(`capitulos.${capitulo}.nome`),
-                      rotuloDaFoto: t("carrossel.foto", { n: "{n}", total: "{total}" }),
-                      pausar: t("carrossel.pausar"),
-                      continuar: t("carrossel.continuar"),
+                      rotuloDaFoto: comum("carrossel.foto", { n: "{n}", total: "{total}" }),
+                      pausar: comum("carrossel.pausar"),
+                      continuar: comum("carrossel.continuar"),
                       ampliar: visor.ampliar,
                     }}
                     /* A `key` não é decoração: um elemento criado aqui e desenhado
@@ -534,9 +574,9 @@ function Seccao({
                   >
                     <img
                       className="em-artigo__foto"
-                      src={`/casa/${FOTOS_ARTIGO[artigo.id]}-640.webp`}
+                      src={`/casa/${FOTOS_ARTIGO[artigo.id][0]}-640.webp`}
                       width={640}
-                      height={853}
+                      height={960}
                       alt=""
                       loading="lazy"
                       decoding="async"

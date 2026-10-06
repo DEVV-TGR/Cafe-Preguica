@@ -48,6 +48,11 @@
       "seguinte": "Fotografia seguinte",
       "naFotografia": "Na fotografia",
       "foto": "Fotografia {n} de {total}"
+    },
+    "carrossel": {
+      "foto": "Fotografia {n} de {total}",
+      "pausar": "Pausar as fotografias",
+      "continuar": "Continuar as fotografias"
     }
   },
   "metadata": {
@@ -97,7 +102,19 @@
       "facto": "Madeira maciça, granito à vista e o nome escrito a giz na ardósia. Uma sala pequena onde toda a gente se conhece, aberta de tarde e de noite.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
       "animais": "E os cães também entram. Quem vem com o seu não tem de o deixar à porta.",
-      "alt": "A sala do Café Preguiça: paredes forradas a madeira, quadros antigos, o nome da casa escrito a giz numa ardósia e mesas de madeira."
+      "alt": "A sala do Café Preguiça: paredes forradas a madeira, quadros antigos, o nome da casa escrito a giz numa ardósia e mesas de madeira.",
+      "fotos": {
+        "casa-sofas": "Sofás e pufes de veludo cinzento junto à parede de granito, com mesas de madeira.",
+        "casa-quadros": "Quadros antigos na parede de granito, por cima de um sofá cinzento e de uma mesa com a carta.",
+        "casa-janela": "Uma mesa redonda e cadeiras de madeira junto a uma janela aberta para a rua.",
+        "casa-balcao": "O canto do balcão, com as garrafas, a parede de granito e mesas de madeira à frente.",
+        "casa-sotao": "A sala de cima, com as traves de madeira à vista, sofás cinzentos e uma ardósia a anunciar a sangria.",
+        "casa-candeeiro": "As traves do telhado e um candeeiro de ferro por cima da sala, com o varandim por baixo.",
+        "casa-garrafas": "Garrafas de gin e de espumante num nicho de granito, com uma ardósia por trás.",
+        "casa-sangria": "Uma cadeira antiga e uma mesa pequena num nicho de granito, com uma ardósia a anunciar sangria de melancia.",
+        "casa-esplanada": "Uma mesa e duas cadeiras de ferro na esplanada, à frente de uma parede de trepadeiras.",
+        "casa-noite": "A fachada da casa à noite, com as janelas acesas."
+      }
     },
     "cocktail": {
       "alt": "Um cocktail sobre uma mesa de madeira escura."
@@ -201,11 +218,6 @@
     "contagem": "{artigos} artigos · {seccoes} secções",
     "indice": "Capítulos da carta",
     "naFotografia": "Na fotografia",
-    "carrossel": {
-      "foto": "Fotografia {n} de {total}",
-      "pausar": "Pausar as fotografias",
-      "continuar": "Continuar as fotografias"
-    },
     "capitulos": {
       "comer": {
         "nome": "Para comer",
@@ -233,16 +245,44 @@
       }
     },
     "fotos": {
-      "tabua-partilha": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
-      "negroni-salpico": "Um negroni num copo baixo, com uma rodela de laranja e gotas a saltar por cima do copo.",
       "cocktail-turquesa": "Um copo balão com uma bebida turquesa, gelo picado, um morango, hortelã e uma palhinha às riscas azuis, sobre uma mesa de madeira.",
-      "lima-espremida": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
       "cocktail-amarelo": "Um copo balão com uma bebida amarela, uma rodela de kiwi e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
-      "tosta-chocolate": "Um chocolate quente com chantilly e um pau de canela, ao lado de uma torrada com compota.",
       "cocktail-rosa": "Um copo balão com uma bebida cor-de-rosa, uma rodela de laranja desidratada e uma palhinha às riscas amarelas, sobre uma mesa de madeira.",
-      "cocktail-azul": "Um copo balão com uma bebida azul, uma rodela de limão e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
-      "negroni-fumo": "Um negroni num copo baixo com gelo e casca de laranja, envolto em fumo, em cima do balcão.",
-      "cocktail-coco": "Um copo balão com uma bebida branca e gelo, um guarda-chuva amarelo e uma palhinha às riscas vermelhas, ao lado de um coco, sobre uma mesa de madeira."
+      "cocktail-coco": "Um copo balão com uma bebida branca e gelo, um guarda-chuva amarelo e uma palhinha às riscas vermelhas, ao lado de um coco, sobre uma mesa de madeira.",
+      "bocadinhos-chourico": "Uma travessa de pão com chouriço e queijo derretido, aos pedaços, com uma taça de batata frita e um frasco de molho picante.",
+      "bocadinhos-queijo": "De perto, os pedaços de pão com chouriço e queijo derretido, ao lado de uma taça de batata frita.",
+      "bocadinhos-tabasco": "Os pedaços de pão com chouriço e queijo à frente de um frasco de molho picante.",
+      "preguicinhas": "Uma travessa de tostinhas com chouriço e queijo à volta de uma taça de batata frita, com um frasco de tabasco.",
+      "preguicinhas-tabasco": "De perto, as tostinhas com chouriço e queijo derretido, um frasco de tabasco e batata frita.",
+      "petit-gateau": "Um petit gâteau com uma bola de gelado de baunilha e fios de chocolate, numa travessa de ardósia.",
+      "petit-gateau-colher": "Uma colher a abrir o petit gâteau, com o chocolate quente por dentro e o gelado ao lado.",
+      "torrada-chocolate-quente": "Um chocolate quente com chantilly e um barquilho, atrás de duas torradas com compota, numa mesa de madeira.",
+      "aperol-laranja": "Um Aperol Spritz num copo de vinho com uma rodela de laranja, a ser mexido ao balcão.",
+      "aperol-garrafa": "Um Aperol Spritz com rodela de laranja e palhinha, ao lado de uma garrafa grande de Aperol, no balcão.",
+      "aperol-espumante": "Espumante a ser deitado num copo de vinho com gelo e Aperol.",
+      "mojito": "Um mojito num copo alto, com gelo picado, lima e um raminho de hortelã.",
+      "mojito-noite": "Um mojito com lima e hortelã, à noite, com o letreiro da casa por trás.",
+      "mojito-limao": "Um mojito com gelo picado e hortelã, com uma rodela de citrino desidratada por cima.",
+      "mojito-melancia": "Dois mojitos de melancia, vermelhos, com hortelã e uma fatia de melancia, seguros por duas mãos.",
+      "caipirinha": "Uma caipirinha num copo baixo, com gomos de lima, gelo e uma palhinha preta.",
+      "caipirinha-servir": "Cachaça a ser deitada num copo baixo com lima e gelo picado.",
+      "margarita": "Uma margarita numa taça com sal no rebordo e uma rodela de lima, numa mesa de madeira.",
+      "negroni": "Um negroni num copo baixo lapidado, com gelo e uma rodela de laranja.",
+      "negroni-fumado": "Um negroni com casca de laranja, envolto em fumo, em cima do balcão.",
+      "negroni-salpicos": "Um negroni num copo lapidado, com gotas a saltar por cima.",
+      "long-island": "Um Long Island Iced Tea num copo alto, cor de cola, com gelo e uma rodela de lima.",
+      "long-island-lima": "Uma mão a espremer meia lima por cima de um Long Island Iced Tea com gelo.",
+      "blue-lagoon": "Um Blue Lagoon azul num copo trabalhado, com gelo picado e uma palhinha às riscas azuis.",
+      "blue-lagoon-tubarao": "Um Blue Lagoon azul com gelo picado e um tubarão de goma por cima.",
+      "blue-lagoon-servir": "Um Blue Lagoon a ser servido ao balcão, num copo trabalhado cheio de gelo.",
+      "gin-tanqueray": "Um gin tónico a ser servido em copos balão com o nome Tanqueray gravado.",
+      "gin-tanqueray-sevilla": "Um gin tónico com casca de laranja num copo balão, ao lado de uma garrafa de Tanqueray Sevilla.",
+      "b52": "Shots B52 em camadas, a arder com uma chama azul.",
+      "b52-tabuleiro": "Uma fila de quatro shots B52 a arder, num tabuleiro.",
+      "chocolate-chantilly": "Um chocolate quente numa caneca de vidro, com chantilly, cacau e um barquilho.",
+      "chocolate-chantilly-mesa": "Um chocolate quente com chantilly e um barquilho, numa mesa de madeira.",
+      "gluehwein": "Um Glühwein, vinho tinto quente, numa caneca de vidro com uma rodela de laranja, ao lado de laranjas e paus de canela.",
+      "gluehwein-canela": "Um Glühwein com laranja, paus de canela à frente e frascos de especiarias por trás."
     },
     "sortear": "Deixe a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",

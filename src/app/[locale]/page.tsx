@@ -17,7 +17,8 @@ import { Redes } from "@/components/catalogo/Redes";
 import { Link } from "@/i18n/navigation";
 import { RodapeSite } from "@/components/RodapeSite";
 import { BarraSite } from "@/components/BarraSite";
-import { Ampliar, Visor, type GrupoDoVisor } from "@/components/Visor";
+import { Visor, type GrupoDoVisor } from "@/components/Visor";
+import { Carrossel, type FotoDoCarrossel } from "@/components/Carrossel";
 import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
 import { artigoPorId } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
@@ -115,6 +116,33 @@ export default async function Inicio({ params }: Props) {
     fotos: carril.map((c) => fotoDoVisor(`/casa/${c.foto}`, c.alt, legenda(c.id))),
   };
 
+  /**
+   * As fotografias de "A casa", pela ordem em que passam. A sala de madeira
+   * abre, porque é a única deitada e a que já lá estava; as outras vêm da
+   * sessão do Rafael e são ao alto, num quadro deitado — perdem dois terços da
+   * altura, e a `posicao` diz que terço fica.
+   */
+  const fotosDaCasa: FotoDoCarrossel[] = [
+    fotoDoVisor("/casa/sala-madeira", t("casa.alt"), [], 640, 1536),
+    ...(
+      [
+        ["casa-sofas", "50% 62%"],
+        ["casa-quadros", "50% 40%"],
+        ["casa-balcao", "50% 45%"],
+        ["casa-janela", "50% 45%"],
+        ["casa-sotao", "50% 55%"],
+        ["casa-candeeiro", "50% 40%"],
+        ["casa-garrafas", "50% 45%"],
+        ["casa-sangria", "50% 70%"],
+        ["casa-esplanada", "50% 65%"],
+        ["casa-noite", "50% 55%"],
+      ] as const
+    ).map(([foto, posicao]) => ({
+      ...fotoDoVisor(`/casa/${foto}`, t(`casa.fotos.${foto}`), [], 640, 1600),
+      posicao,
+    })),
+  ];
+
   return (
     <>
       {/* O motor não arranca sozinho — ver `components/catalogo/Motor.tsx`. */}
@@ -154,28 +182,26 @@ export default async function Inicio({ params }: Props) {
               </p>
             )}
           </div>
-          <figure data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
-            {/* ⚠️ Foto **sem pessoas**: a secção chama-se "a casa" e mostra a
-                casa — a sala forrada a madeira, os quadros, o nome escrito a
-                giz na ardósia.
-                Esteve aqui uma fotografia de três clientes a rir e estava errada
-                pela razão mais simples: não era a casa, eram pessoas nela. */}
-            <Ampliar
-              grupo={{ nome: seccoes("casa"), fotos: [fotoDoVisor("/casa/sala-madeira", t("casa.alt"), [], 640, 1536)] }}
-              indice={0}
-              rotulo={`${visor.ampliar}: ${t("casa.nome")}`}
-            >
-              <img
-                src="/casa/sala-madeira.webp"
-                srcSet="/casa/sala-madeira-640.webp 640w, /casa/sala-madeira-1080.webp 1080w, /casa/sala-madeira.webp 1536w"
-                sizes="(min-width: 52rem) 50vw, 100vw"
-                width={1536}
-                height={1024}
-                alt={t("casa.alt")}
-                loading="lazy"
-              />
-            </Ampliar>
-          </figure>
+          <div data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
+            {/* ⚠️ Fotos **sem pessoas**: a secção chama-se "a casa" e mostra a
+                casa — a sala, o granito, o balcão, a esplanada. Esteve aqui uma
+                fotografia de três clientes a rir e estava errada pela razão
+                mais simples: não era a casa, eram pessoas nela. */}
+            <Carrossel
+              fotos={fotosDaCasa}
+              moldura="pg-casa__fotos"
+              sizes="(min-width: 52rem) 50vw, 100vw"
+              dimensoes={[1600, 2400]}
+              textos={{
+                naFotografia: "",
+                nome: t("casa.nome"),
+                rotuloDaFoto: comum("carrossel.foto", { n: "{n}", total: "{total}" }),
+                pausar: comum("carrossel.pausar"),
+                continuar: comum("carrossel.continuar"),
+                ampliar: visor.ampliar,
+              }}
+            />
+          </div>
         </section>
 
         {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado

@@ -4,11 +4,15 @@ import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } fro
 import { Ampliar, type FotoDoVisor } from "@/components/Visor";
 
 /**
- * # As fotografias que abrem cada capítulo da carta
+ * # Um carrossel de fotografias que passam sozinhas
  *
+ * Nasceu para abrir os capítulos da carta e serve também "A casa", na inicial.
  * Com uma fotografia só, é o que sempre foi: a fotografia, a legenda e o título
- * por cima. Com várias, passam sozinhas — a casa quer que a carta mostre mais do
- * que um prato por capítulo.
+ * por cima. Com várias, passam sozinhas.
+ *
+ * A moldura (a caixa, o recorte, o canto arredondado) é de quem o usa, pela
+ * `moldura`; o que está em `catalogo.css` (`.pg-carrossel*`) é só a mecânica: a
+ * faixa, os pontos e a pausa.
  *
  * ## Deslizar é do browser
  *
@@ -33,7 +37,11 @@ import { Ampliar, type FotoDoVisor } from "@/components/Visor";
  * estava a ver lá dentro.
  */
 
-export type FotoDoCarrossel = FotoDoVisor;
+export type FotoDoCarrossel = FotoDoVisor & {
+  /** O `object-position` desta fotografia na moldura, quando o meio não serve
+   *  — uma fotografia ao alto num quadro deitado perde dois terços da altura. */
+  posicao?: string;
+};
 
 export type TextosDoCarrossel = {
   naFotografia: string;
@@ -48,7 +56,6 @@ export type TextosDoCarrossel = {
 };
 
 const INTERVALO_MS = 5000;
-const SIZES = "(min-width: 72rem) 72rem, 100vw";
 
 /* O "reduzir movimento" lido como loja externa: muda sozinho se a pessoa mexer
    na definição com a página aberta, e no servidor conta como reduzido — o
@@ -74,16 +81,24 @@ function Legenda({ fotografia, rotulo }: { fotografia: FotoDoCarrossel; rotulo: 
 
 export function Carrossel({
   fotos,
-  titulo,
+  titulo = null,
   textos,
   prioridade = false,
+  moldura = "em-abertura__foto",
+  sizes = "(min-width: 72rem) 72rem, 100vw",
+  dimensoes = [1080, 1440],
 }: {
   fotos: FotoDoCarrossel[];
   /** O número e o `<h2>` do capítulo — fica por cima de todas as fotografias. */
-  titulo: ReactNode;
+  titulo?: ReactNode;
   textos: TextosDoCarrossel;
   /** O primeiro capítulo carrega a primeira fotografia logo; os outros esperam. */
   prioridade?: boolean;
+  /** A classe da caixa de fora, que dá o tamanho e o recorte. */
+  moldura?: string;
+  sizes?: string;
+  /** Largura e altura do ficheiro maior, para o browser reservar o lugar. */
+  dimensoes?: [number, number];
 }) {
   const faixa = useRef<HTMLDivElement>(null);
   const [atual, setAtual] = useState(0);
@@ -159,9 +174,10 @@ export function Carrossel({
       <img
         src={f.src}
         srcSet={f.srcSet}
-        sizes={SIZES}
-        width={1080}
-        height={1440}
+        sizes={sizes}
+        width={dimensoes[0]}
+        height={dimensoes[1]}
+        style={f.posicao ? { objectPosition: f.posicao } : undefined}
         alt={f.alt}
         loading={prioridade && i === 0 ? undefined : "lazy"}
         decoding="async"
@@ -172,7 +188,7 @@ export function Carrossel({
   if (!varias) {
     const [f] = fotos;
     return (
-      <figure className="em-abertura__foto">
+      <figure className={moldura}>
         {imagem(f, 0)}
         <Legenda fotografia={f} rotulo={textos.naFotografia} />
         {titulo}
@@ -184,7 +200,7 @@ export function Carrossel({
 
   return (
     <div
-      className="em-abertura__foto em-carrossel"
+      className={`${moldura} pg-carrossel`}
       role="region"
       aria-roledescription="carrossel"
       aria-label={textos.nome}
@@ -197,7 +213,7 @@ export function Carrossel({
     >
       <div
         ref={faixa}
-        className="em-carrossel__faixa"
+        className="pg-carrossel__faixa"
         onScroll={(e) => {
           const el = e.currentTarget;
           setAtual(Math.min(total - 1, Math.round(el.scrollLeft / el.clientWidth)));
@@ -212,7 +228,7 @@ export function Carrossel({
         {fotos.map((f, i) => (
           <figure
             key={f.src}
-            className="em-carrossel__foto"
+            className="pg-carrossel__foto"
             role="group"
             aria-roledescription="fotografia"
             aria-label={textos.rotuloDaFoto
@@ -227,13 +243,13 @@ export function Carrossel({
 
       {titulo}
 
-      <div className="em-carrossel__controlos">
-        <div className="em-carrossel__pontos">
+      <div className="pg-carrossel__controlos">
+        <div className="pg-carrossel__pontos">
           {fotos.map((f, i) => (
             <button
               key={f.src}
               type="button"
-              className="em-carrossel__ponto"
+              className="pg-carrossel__ponto"
               aria-label={textos.rotuloDaFoto
                 .replace("{n}", String(i + 1))
                 .replace("{total}", String(total))}
@@ -248,7 +264,7 @@ export function Carrossel({
         {!reduzir && !tomouConta && (
           <button
             type="button"
-            className="em-carrossel__pausa"
+            className="pg-carrossel__pausa"
             aria-label={pausado ? textos.continuar : textos.pausar}
             onClick={() => setPausado((p) => !p)}
           >

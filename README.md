@@ -36,11 +36,11 @@ gravidade:
       cozinha fecha meia hora antes. `horarioConfirmado: true`.
 - [ ] **Confirmar que a casa está aberta.** Um agregador marca-a como
       *temporariamente encerrada*. Pode ser dado velho, mas convém perguntar.
-- [ ] **Fotografias originais.** O herói e a sala já vêm de originais
-      (`fotos/site/`). As dos cocktails e dos pratos continuam a sair do Instagram,
-      **a 1080 px de largura**, que é o tecto do que o Instagram serve: chegam para
-      os cartões do carril, mas os ficheiros da máquina de quem as tirou valem
-      muito mais.
+- [ ] **Identificar o resto da sessão do Rafael.** Os Mules, os hurricane, os
+      copos balão e os que não estão na carta (Pornstar Martini, Whiskey Sour)
+      ficaram de fora da ementa por não se saber ao certo o que são. A lista está
+      em `fotos/Fotografias/IDENTIFICACAO.md`; com a confirmação do Rafael,
+      entram em `NOMES_SESSAO` e em `FOTOS_ARTIGO`.
 - [ ] **Logótipo em vetor.** O de `public/marca/` foi recortado de um JPEG por
       luminância. Funciona, mas um SVG dava contornos limpos em qualquer tamanho
       — e a preguiça é o elemento que mais cresce na página.
@@ -124,6 +124,7 @@ O material em bruto vive em `fotos/`, **fora do git**:
 | `fotos/site/` | As fotografias que o cliente mandou para um sítio certo (a fachada do herói, horizontal e vertical, e a sala). O nome do ficheiro é o nome com que sai. |
 | `fotos/instagram/` | Derivadas do Instagram, a 1080 px. Os nomes estão em `scripts/importar-fotos.mjs`. |
 | `fotos/instagram/nao-usadas/` | As que o site deixou de usar. O script não entra lá. |
+| `fotos/Fotografias/` | A sessão fotográfica do Rafael, originais da máquina. Só sai o que está em `NOMES_SESSAO`; o resto espera confirmação (ver `IDENTIFICACAO.md` na pasta). |
 | `fotos/reels/` | As capas dos reels. |
 | `fotos/ementa/` | O PDF da carta e as duas páginas extraídas dele. |
 | `fotos/marca/` | Os logótipos originais e a preguiça deitada. |

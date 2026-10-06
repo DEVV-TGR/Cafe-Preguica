@@ -360,105 +360,28 @@ html:has(.em-pagina) {
 }
 
 /* ------------------------------------------------------------ o carrossel
-   Ver `components/ementa/Carrossel.tsx`. A moldura é a `.em-abertura__foto` de
-   sempre; lá dentro, uma faixa que desliza de lado, com uma fotografia por
-   ecrã. */
+   A mecânica (a faixa, os pontos, a pausa) está em `catalogo.css`, partilhada
+   com "A casa" da inicial; ver `components/Carrossel.tsx`. A moldura é a
+   `.em-abertura__foto` de sempre. Aqui só o que é da carta: */
 
-.em-carrossel__faixa {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.em-carrossel__faixa::-webkit-scrollbar {
-  display: none;
-}
-
-.em-carrossel__foto {
-  position: relative;
-  flex: 0 0 100%;
-  margin: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.em-carrossel__foto img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.em-abertura .pg-carrossel__foto img {
   object-position: 50% 58%;
 }
 
-/* Os pontos e a pausa, no canto de baixo à direita — o título do capítulo
-   está no canto de baixo à esquerda. */
-.em-carrossel__controlos {
-  position: absolute;
-  z-index: 2;
-  right: clamp(0.4rem, 2vw, 1rem);
-  bottom: clamp(0.4rem, 2vw, 1.1rem);
-  display: flex;
-  align-items: center;
-}
-
-.em-carrossel__pontos {
-  display: flex;
-}
-
-/* O ponto desenha-se no `::before`; o botão tem 44 px de área de toque à
-   volta dele, que é o mínimo para um dedo acertar. */
-.em-carrossel__ponto {
-  display: grid;
-  place-items: center;
-  width: 1.75rem;
-  height: 2.75rem;
-  cursor: pointer;
-}
-
-.em-carrossel__ponto::before {
-  content: "";
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-ouro-claro);
-  background: transparent;
-  transition: background-color 220ms ease, transform 220ms ease;
-}
-
-.em-carrossel__ponto[aria-current="true"]::before {
-  background: var(--color-ouro);
-  border-color: var(--color-ouro);
-  transform: scale(1.25);
-}
-
-.em-carrossel__pausa {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  color: var(--color-ouro-claro);
-  font-size: 0.7rem;
-  letter-spacing: -0.1em;
-  cursor: pointer;
-}
-
-.em-carrossel__pausa:hover,
-.em-carrossel__pausa:focus-visible {
-  color: var(--color-ouro);
-}
-
 /* No telemóvel o título do capítulo ocupa quase a largura toda; os controlos
-   sobem para o canto de cima à esquerda, que a legenda (à direita) deixa
-   livre. */
+   sobem para o canto de cima, e a legenda desce para debaixo deles. Lado a
+   lado só cabiam enquanto um capítulo tinha duas fotografias: com quatro ou
+   oito pontos, a fila chegava à legenda e passava-lhe por baixo. */
 @media (max-width: 40rem) {
-  .em-carrossel__controlos {
+  .em-abertura .pg-carrossel__controlos {
     top: 0.2rem;
     bottom: auto;
     left: 0.2rem;
     right: auto;
+  }
+
+  .em-abertura .pg-carrossel .em-abertura__legenda {
+    top: 3rem;
   }
 }
 
@@ -874,7 +797,7 @@ html:has(.em-pagina) {
        — que não é vertical — e a fotografia ficava parada no primeiro
        fotograma, escura e ampliada. */
     .em-abertura__foto > img,
-    .em-carrossel__faixa {
+    .em-abertura .pg-carrossel__faixa {
       animation: em-foto-entrar linear both;
       animation-timeline: view();
       animation-range: entry 0% cover 45%;

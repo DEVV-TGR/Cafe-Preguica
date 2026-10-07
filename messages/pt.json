@@ -150,7 +150,9 @@
       "factoTosta": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte, por 3,60 €.",
       "verMais": "E o resto da carta",
       "verMaisFacto": "Tábuas, preguiçinhas, sobremesas e as taças para petiscar. Tudo com preço.",
-      "verMaisAcao": "Ver a ementa"
+      "verMaisAcao": "Ver a ementa",
+      "altSaloias": "Duas tostas no pão saloio, uma mista e uma de atum, em dois pratos com batata frita.",
+      "factoSaloias": "No pão saloio, com batata frita. Ao lado, a de pasta de atum e queijo."
     },
     "preguicosos": {
       "nome": "Os Preguiçosos",
@@ -278,7 +280,14 @@
       "chocolate-chantilly": "Um chocolate quente numa caneca de vidro, com chantilly, cacau e um barquilho.",
       "chocolate-chantilly-mesa": "Um chocolate quente com chantilly e um barquilho, numa mesa de madeira.",
       "gluehwein": "Um Glühwein, vinho tinto quente, numa caneca de vidro com uma rodela de laranja, ao lado de laranjas e paus de canela.",
-      "gluehwein-canela": "Um Glühwein com laranja, paus de canela à frente e frascos de especiarias por trás."
+      "gluehwein-canela": "Um Glühwein com laranja, paus de canela à frente e frascos de especiarias por trás.",
+      "cachorro-xl": "Um cachorro tostado no pão, cortado às fatias, com queijo derretido e a salsicha à vista, ao lado de uma taça de batata frita.",
+      "tostas-saloias": "Dois pratos com tostas no pão saloio, uma mista e uma de atum, cada uma com uma taça de batata frita.",
+      "tabua-mista": "Uma tábua com fuet, presunto, cubos de queijo e uma taça de compota, ao lado de um cesto de pão e bolachas.",
+      "mongolia": "Um Mongolia numa caneca tiki verde, com um morango, uma rodela de limão, hortelã e uma palhinha às riscas vermelhas.",
+      "espresso-martini": "Um Espresso Martini numa taça, com espuma e canela por cima, numa mesa de madeira com uma placa de reservado.",
+      "mexican-mule": "Um Mexican Mule numa caneca de cobre, com um morango, hortelã e uma palhinha preta.",
+      "moscow-mule": "Um Moscow Mule numa caneca de cobre com gelo, hortelã e uma palhinha preta, numa mesa de madeira."
     },
     "sortear": "Deixe a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",

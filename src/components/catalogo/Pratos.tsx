@@ -28,12 +28,11 @@ import { fotoDoVisor } from "@/lib/visor";
  * lá dentro (ver `catalogo.css`): o motor continua a empurrar para a esquerda
  * e o que se vê anda para a direita. O HTML fica na ordem de leitura.
  *
- * ## ⚠️ Só há duas fotografias de comida
+ * ## Os pratos
  *
- * A tábua e a tosta com compota. **Não são duas por escolha** — são as duas que
- * existem nas dezanove fotografias que a casa publicou. Acrescentar um prato é
- * meter a fotografia em `fotos/instagram/`, dar-lhe nome no
- * `scripts/importar-fotos.mjs` e acrescentar uma linha a `PRATOS` aqui.
+ * Os bocadinhos, a torrada com compota e as saloias. Acrescentar um prato é
+ * dar nome à fotografia no `scripts/importar-fotos.mjs` (as da sessão do
+ * Rafael em `NOMES_SESSAO`) e acrescentar uma linha a `PRATOS` aqui.
  *
  * Esta é a secção que mais ganha com uma ida lá com o telemóvel: uma tábua a
  * ocupar o ecrã inteiro vale mais do que qualquer coisa que se escreva à volta
@@ -66,6 +65,15 @@ const PRATOS = [
     foto: "/reels/DVHIQ4CDHyc",
     pequena: 420,
     grande: 720,
+  },
+  /* As duas tostas no pão saloio, a mista e a de atum. O painel é da mista (a
+     que a casa chama "saloia mista"); a de atum vai dita na linha de baixo,
+     como o chocolate quente ao lado da torrada — sem preço escrito à mão. */
+  {
+    id: "queijo-fiambre",
+    foto: "/casa/tostas-saloias",
+    pequena: 640,
+    grande: 1080,
   },
 ] as const;
 

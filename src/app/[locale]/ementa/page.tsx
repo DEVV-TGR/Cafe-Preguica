@@ -146,9 +146,10 @@ const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }[]> = {
  * ao lado do nome; todas abrem no visor, uma a seguir à outra, ao tocar nele.
  *
  * ⚠️ Só entra aqui o que **se identifica ao certo** na fotografia. Da sessão do
- * Rafael ficaram de fora os Mules, os hurricane e os copos balão: a família
- * vê-se, a variante não, e pô-los ao lado de um nome era afirmar o que não se
- * sabe. A lista do que falta confirmar está em `fotos/Fotografias/
+ * Rafael ficaram de fora os hurricane e os copos balão: a família vê-se, a
+ * variante não, e pô-los ao lado de um nome era afirmar o que não se sabe. (Os
+ * Mules, o Mongolia e o Espresso Martini entraram quando o Tomás os
+ * confirmou.) A lista do que falta está em `fotos/Fotografias/
  * IDENTIFICACAO.md`.
  */
 const FOTOS_ARTIGO: Record<string, string[]> = {
@@ -178,6 +179,16 @@ const FOTOS_ARTIGO: Record<string, string[]> = {
     "torrada-chocolate-quente",
   ],
   "caf-gluehwein": ["gluehwein", "gluehwein-canela"],
+  /* Confirmadas pelo Tomás a 2026-10-07. A das saloias tem as duas tostas
+     (a mista e a de atum), por isso fica nas duas linhas. */
+  "cachorro-xl": ["cachorro-xl"],
+  "queijo-fiambre": ["tostas-saloias"],
+  "pasta-de-atum-e-queijo": ["tostas-saloias"],
+  "tabua-mista": ["tabua-mista"],
+  "mongolia-m-f": ["mongolia"],
+  "espresso-martini": ["espresso-martini"],
+  "mexican-mule": ["mexican-mule"],
+  "moscow-mule": ["moscow-mule"],
 };
 
 /* Um `id` que deixou de existir na carta partia a legenda em silêncio. Assim

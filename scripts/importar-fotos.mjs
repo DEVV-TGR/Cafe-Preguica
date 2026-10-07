@@ -113,6 +113,15 @@ const NOMES_SESSAO = {
   IMG_9316: "chocolate-chantilly-mesa",
   IMG_6051: "gluehwein",
   IMG_6045: "gluehwein-canela",
+  /* Confirmadas pelo Tomás (2026-10-07, pasta `fotos/duvidas/` com o nome de
+     cada uma). Saem dos originais, e não das cópias de 1066 px da pasta. */
+  IMG_9405: "cachorro-xl",
+  IMG_8809: "tostas-saloias",
+  IMG_8821: "tabua-mista",
+  IMG_8886: "mongolia",
+  IMG_6037: "espresso-martini",
+  IMG_8964: "mexican-mule",
+  IMG_8699: "moscow-mule",
 };
 
 /**

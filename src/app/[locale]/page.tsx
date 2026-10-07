@@ -20,7 +20,7 @@ import { BarraSite } from "@/components/BarraSite";
 import { Visor, type GrupoDoVisor } from "@/components/Visor";
 import { Carrossel, type FotoDoCarrossel } from "@/components/Carrossel";
 import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
-import { artigoPorId } from "@/data/ementa";
+import { artigoPorId, CAPITULOS, exigirEmDestaque, menorPreco } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import "../catalogo-motor.css";
 import "../catalogo.css";
@@ -78,6 +78,19 @@ export default async function Inicio({ params }: Props) {
      — "Vinte e quatro cocktails" não cabia ao lado da contagem no telemóvel. */
   const seccoes = await getTranslations("nav.seccoes");
 
+  /* Os preços que os rótulos dizem vêm da carta, e não das mensagens: escritos
+     à mão, ficaram para trás da carta (o "Desde 4,20 €" era um mocktail que
+     foi escondido; o chocolate quente era 3,60 € e já é 4,30 €). Ver
+     `menorPreco`. Os cocktails são os vinte e quatro que o rótulo conta. */
+  const preco = (valor: number | null | undefined) =>
+    valor == null ? null : formatarPreco(valor, locale);
+  const desdeCocktails = preco(
+    menorPreco(["cocktails-classicos", "cocktails-special", "mocktails"]),
+  );
+  const desdePartilhar = preco(menorPreco(CAPITULOS.comer));
+  exigirEmDestaque("caf-chocolate-quente-com-chantilly", "page.tsx (partilhar.factoTosta)");
+  const chocolate = preco(artigoPorId("caf-chocolate-quente-com-chantilly")?.preco);
+
   const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
   const rede = redeDoTelefone();
@@ -87,11 +100,16 @@ export default async function Inicio({ params }: Props) {
   /* Os cartões do carril e o grupo que o visor desliza saem desta lista, para
      nunca haver uma fotografia no carril e outra no visor. Um `id` que deixou
      de existir na carta fica de fora dos dois (o cartão sairia em branco). */
+  /* O texto alternativo de cada fotografia é o do catálogo da ementa
+     (`ementa.fotos.<nome>`), que descreve aquela fotografia em concreto. Já foi
+     "Um cocktail sobre uma mesa de madeira escura." nas quatro: um leitor de
+     ecrã ouvia a mesma frase quatro vezes, e uma delas nem era numa mesa. */
+  const fotos = await getTranslations("ementa.fotos");
   const carril = [
-    { id: "negroni", foto: "negroni-fumo", alt: t("cocktail.alt") },
-    { id: "blue-lagoon", foto: "cocktail-azul", alt: t("cocktail.alt") },
-    { id: "cocktail-preguica", foto: "cocktail-rosa", alt: t("cocktail.alt") },
-    { id: "cocktail-preguica", foto: "cocktail-turquesa", alt: t("cocktail.alt") },
+    { id: "negroni", foto: "negroni-fumo", alt: fotos("negroni-fumo") },
+    { id: "blue-lagoon", foto: "cocktail-azul", alt: fotos("cocktail-azul") },
+    { id: "cocktail-preguica", foto: "cocktail-rosa", alt: fotos("cocktail-rosa") },
+    { id: "cocktail-preguica", foto: "cocktail-turquesa", alt: fotos("cocktail-turquesa") },
     {
       foto: "lima-espremida",
       alt: t("carril.balcaoAlt"),
@@ -216,7 +234,7 @@ export default async function Inicio({ params }: Props) {
                   <Rotulo
                     nome={t("carril.nome")}
                     facto={t("carril.facto")}
-                    dado={t("carril.dado")}
+                    dado={desdeCocktails ? t("carril.dado", { preco: desdeCocktails }) : undefined}
                   />
                   <p className="pg-nota mt-6">{t("carril.ilustrativa")}</p>
                 </div>
@@ -265,7 +283,7 @@ export default async function Inicio({ params }: Props) {
             locale={locale}
             nome={t("partilhar.nome")}
             facto={t("partilhar.facto")}
-            dado={t("partilhar.dado")}
+            dado={desdePartilhar ? t("partilhar.dado", { preco: desdePartilhar }) : undefined}
             verMais={t("partilhar.verMais")}
             verMaisFacto={t("partilhar.verMaisFacto")}
             verMaisAcao={t("partilhar.verMaisAcao")}
@@ -273,7 +291,9 @@ export default async function Inicio({ params }: Props) {
             alts={{
               "bocadinhos-de-pao-com-chourico": t("partilhar.altTabua"),
               "torrada-com-compota": t("partilhar.altTosta"),
-              "torrada-com-compota-facto": t("partilhar.factoTosta"),
+              "torrada-com-compota-facto": chocolate
+                ? t("partilhar.factoTosta", { preco: chocolate })
+                : t("partilhar.factoTostaSemPreco"),
               "queijo-fiambre": t("partilhar.altSaloias"),
               "queijo-fiambre-facto": t("partilhar.factoSaloias"),
             }}

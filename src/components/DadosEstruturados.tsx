@@ -1,4 +1,4 @@
-import { cafe, DIAS, type DiaDaSemana } from "@/data/cafe";
+import { cafe, DIAS, telefoneInternacional, type DiaDaSemana } from "@/data/cafe";
 import { marca, redes } from "@/data/marca";
 import { URL_SITE } from "@/lib/site";
 import { jsonParaScript } from "@/lib/json-em-script";
@@ -76,7 +76,7 @@ export function DadosEstruturados({ descricao }: { descricao: string }) {
           },
         }
       : {}),
-    ...(cafe.telefone ? { telephone: cafe.telefone } : {}),
+    ...(cafe.telefone ? { telephone: telefoneInternacional() } : {}),
     ...(cafe.email ? { email: cafe.email } : {}),
     ...(redes.length > 0 ? { sameAs: redes } : {}),
     ...horarioEstruturado(),

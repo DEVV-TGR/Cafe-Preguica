@@ -7,7 +7,6 @@
     "inicio": "Início",
     "ementa": "Ementa",
     "contactos": "Contactos",
-    "sobre": "A casa",
     "mudarIdioma": "English",
     "principal": "Navegação principal",
     "reservar": "Reservar",
@@ -68,10 +67,6 @@
       "titulo": "Contactos",
       "descricao": "Onde estamos, a que horas abrimos e como falar connosco."
     },
-    "sobre": {
-      "titulo": "A casa",
-      "descricao": "Quem somos e o que se come no Café Preguiça."
-    },
     "privacidade": {
       "titulo": "Privacidade",
       "descricao": "Que dados este site recolhe, para quê e por quanto tempo."
@@ -112,13 +107,10 @@
         "casa-fachada": "A fachada da casa num dia de sol, cor de pêssego, vista da rua por entre as folhas."
       }
     },
-    "cocktail": {
-      "alt": "Um cocktail sobre uma mesa de madeira escura."
-    },
     "carril": {
       "nome": "Vinte e quatro cocktails",
       "facto": "Nove clássicos, dez especiais e cinco sem álcool. Feitos ao balcão, um a um.",
-      "dado": "Desde 4,20 €",
+      "dado": "Desde {preco}",
       "ilustrativa": "As fotografias são da casa. Quando não se sabe ao certo que cocktail é, a legenda diz apenas o que se sabe.",
       "balcaoNome": "Ao balcão",
       "balcaoFacto": "Lima espremida à mão, sobre o copo. Todos os cocktails são feitos à frente de quem os bebe.",
@@ -144,10 +136,11 @@
     "partilhar": {
       "nome": "Para partilhar",
       "facto": "O que se come com as mãos, no meio da mesa, enquanto a conversa não acaba.",
-      "dado": "Desde 1,70 €",
+      "dado": "Desde {preco}",
       "altTabua": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
       "altTosta": "Uma torrada com compota de morango ao lado de um chocolate quente com chantilly e um pau de canela.",
-      "factoTosta": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte, por 3,60 €.",
+      "factoTosta": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte, por {preco}.",
+      "factoTostaSemPreco": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte.",
       "verMais": "E o resto da carta",
       "verMaisFacto": "Tábuas, preguiçinhas, sobremesas e as taças para petiscar. Tudo com preço.",
       "verMaisAcao": "Ver a ementa",
@@ -287,7 +280,9 @@
       "mongolia": "Um Mongolia numa caneca tiki verde, com um morango, uma rodela de limão, hortelã e uma palhinha às riscas vermelhas.",
       "espresso-martini": "Um Espresso Martini numa taça, com espuma e canela por cima, numa mesa de madeira com uma placa de reservado.",
       "mexican-mule": "Um Mexican Mule numa caneca de cobre, com um morango, hortelã e uma palhinha preta.",
-      "moscow-mule": "Um Moscow Mule numa caneca de cobre com gelo, hortelã e uma palhinha preta, numa mesa de madeira."
+      "moscow-mule": "Um Moscow Mule numa caneca de cobre com gelo, hortelã e uma palhinha preta, numa mesa de madeira.",
+      "negroni-fumo": "Um copo baixo com uma bebida vermelho-escura, gelo e uma casca de laranja, com fumo à volta, sobre o tapete do balcão.",
+      "cocktail-azul": "Um copo balão com uma bebida azul, gelo picado, uma fatia de fruta amarela e uma palhinha às riscas verdes, sobre uma mesa de madeira."
     },
     "sortear": "Deixe a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",
@@ -334,10 +329,6 @@
     "ligar": "Ligar",
     "semDados": "Estes dados ainda não foram confirmados com a casa. Aparecem aqui assim que o forem."
   },
-  "sobre": {
-    "titulo": "A casa",
-    "porEscrever": "Texto por escrever. Entra aqui depois da conversa com o cliente."
-  },
   "privacidade": {
     "titulo": "Privacidade",
     "atualizado": "Última atualização: rascunho, por rever antes de publicar.",
@@ -347,15 +338,15 @@
     },
     "newsletter": {
       "titulo": "A newsletter",
-      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou a inscrição, e usamo-los apenas para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o através do link que lhe enviamos. Sem essa confirmação, o endereço não fica guardado. Cada email traz um link para cancelar a inscrição, que tem efeito imediato. O seu endereço fica na lista até cancelar a inscrição e, a qualquer momento, pode perguntar-nos que dados temos sobre si ou pedir que os apaguemos, pelos contactos da casa. O mesmo email serve para abrir a carta secreta da ementa: quando o escreve lá, apenas verificamos se está inscrito na lista."
+      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou a inscrição, e usamo-los apenas para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o através do link que lhe enviamos. Sem essa confirmação, o endereço não entra na lista; fica apenas o registo do envio do email de confirmação no serviço que o envia (a Resend). Cada email traz um link para cancelar a inscrição, que tem efeito imediato: deixa de receber, e o endereço fica na lista marcado como cancelado, para não voltar a receber por engano. A qualquer momento pode perguntar-nos que dados temos sobre si ou pedir que os apaguemos de vez, pelos contactos da casa. O mesmo email serve para abrir a carta secreta da ementa: quando o escreve lá, apenas verificamos se está inscrito na lista."
     },
     "terceiros": {
       "titulo": "Serviços de terceiros",
-      "texto": "Nenhum que carregue código no seu navegador: as fontes e as imagens são servidas por este domínio, e não há mapas incorporados nem botões de redes sociais. As ligações para o Google Maps e para as redes sociais são links normais, que só abrem se carregar neles. Os emails da newsletter são enviados pela Resend, que guarda a lista de contactos em nosso nome; o seu navegador nunca comunica com ela, quem o faz é o servidor do site."
+      "texto": "Nenhum que carregue código no seu navegador: as fontes e as imagens são servidas por este domínio, e não há mapas incorporados nem botões de redes sociais. As ligações para o Google Maps e para as redes sociais são links normais, que só abrem se carregar neles. Os emails da newsletter são enviados pela Resend, que guarda a lista de contactos em nosso nome. Para impedir abusos dos formulários da newsletter e da carta secreta, o servidor conta os pedidos na Upstash: o endereço de rede de onde vêm, durante uma hora, e o email, numa forma que não permite recuperá-lo, durante 24 horas. Em nenhum dos casos o seu navegador comunica com estes serviços — quem o faz é o servidor do site."
     },
     "alojamento": {
       "titulo": "Alojamento",
-      "texto": "O site está alojado na Vercel, que regista os pedidos feitos ao servidor para poder disponibilizar e proteger o site. Esses registos pertencem à plataforma e não os usamos para identificar ninguém."
+      "texto": "O site está alojado na Vercel, que regista os pedidos feitos ao servidor para poder disponibilizar e proteger o site. Esses registos pertencem à plataforma e não os usamos para identificar ninguém. Quando alguém excede os limites dos formulários, o registo do servidor guarda o endereço de rede e o email parcialmente oculto, para se poder perceber um abuso."
     },
     "equipa": {
       "titulo": "A área da equipa",
@@ -363,7 +354,7 @@
     },
     "contacto": {
       "titulo": "Dúvidas",
-      "texto": "Fale connosco pelos contactos da casa."
+      "texto": "Fale connosco pelos contactos da casa. Se entender que os seus dados não foram bem tratados, tem também o direito de apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD)."
     },
     "olho": "O site e os seus dados",
     "ficha": {
@@ -372,7 +363,7 @@
       "terceiros": "Serviços de terceiros",
       "nenhum": "Nenhum",
       "newsletter": "A newsletter",
-      "soEmail": "Só o envio de email"
+      "soEmail": "Envio de email e limites de pedidos"
     }
   },
   "cookies": {
@@ -391,15 +382,15 @@
     },
     "lingua": {
       "titulo": "E a língua que escolheu?",
-      "texto": "Fica no endereço, e não num cookie: a versão inglesa está em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre na língua do seu navegador."
+      "texto": "Fica no endereço, e não num cookie: a versão inglesa está em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre em português."
     },
     "memoria": {
       "titulo": "E o convite da newsletter?",
-      "texto": "Para não voltar a mostrar o convite a quem já se inscreveu, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\". Se fechar o convite, fica outra nota, que o navegador apaga sozinho quando fechar o separador. Nenhuma das duas identifica ninguém, e nenhuma sai do seu aparelho. Se abrir a carta secreta, fica também guardada uma chave com o seu email, assinada por nós, que o site usa apenas para a voltar a abrir sem lhe pedir o email outra vez; o botão \"Fechar a carta\" apaga-a. Nenhuma destas notas é um cookie e, se as apagar, o pior que pode acontecer é o convite voltar a aparecer ou a carta voltar a pedir o email."
+      "texto": "Quando pede a inscrição na newsletter, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\", para não voltar a mostrar o convite. Se fechar o convite, fica outra nota, que o navegador apaga sozinho quando fechar o separador. Nenhuma das duas identifica ninguém, e nenhuma sai do seu aparelho. Se abrir a carta secreta, fica também guardada uma chave com o seu email, assinada por nós e válida por 180 dias: quando volta à ementa, o site envia-a ao servidor para confirmar que continua inscrito e abrir a carta sem lhe pedir o email outra vez. O botão \"Fechar a carta\" apaga-a. Nenhuma destas notas é um cookie e, se as apagar, o pior que pode acontecer é o convite voltar a aparecer ou a carta voltar a pedir o email."
     },
     "equipa": {
       "titulo": "A área da equipa",
-      "texto": "Há uma área reservada a quem trabalha na casa, para atualizar a carta e o horário. Quem lá entra recebe dois cookies estritamente necessários — um para manter a sessão aberta, outro para não ter de pedir o código de entrada sempre que volta ao mesmo aparelho — e só nessa área. Quem visita o site nunca os recebe."
+      "texto": "Há uma área reservada a quem trabalha na casa, para atualizar a carta e o horário. Quem usa o ecrã de entrada dessa área recebe até três cookies estritamente necessários — um para o código de entrada que está a meio (dura dez minutos), um para manter a sessão aberta e outro para não ter de pedir o código sempre que volta ao mesmo aparelho — e só nessa área: não viajam para as outras páginas. Quem só visita o site nunca os recebe."
     },
     "verificar": {
       "titulo": "Como confirmar",

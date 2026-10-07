@@ -80,6 +80,11 @@ export default function proxy(request: NextRequest) {
 
 export const config = {
   /* Tudo o que não seja API, ficheiros internos do Next/Vercel ou um pedido com
-     extensão (imagens, sitemap.xml, robots.txt) passa por aqui. */
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+     extensão (imagens, sitemap.xml, robots.txt) passa por aqui.
+
+     E **todo** o `/painel`, com ponto ou sem ele. A exclusão das extensões
+     deixava `/painel/x.y` fora do proxy: saía um 404 sem CSP nenhuma e sem a
+     verificação da sessão. Não há ficheiros estáticos debaixo de `/painel`,
+     portanto nada se perde por o proxy olhar para todos. */
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)", "/painel/:caminho*"],
 };

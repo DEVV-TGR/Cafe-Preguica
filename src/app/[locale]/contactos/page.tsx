@@ -22,15 +22,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /**
  * Contactos.
  *
- * ⚠️ **Hoje esta página está quase toda vazia, e isso é o comportamento certo.**
- * Não há morada, telefone nem horário confirmados em `cafe.json`, e nenhum deles
- * se inventa: um número errado no site manda alguém ligar a um estranho, e um
- * horário errado manda alguém a uma porta fechada. Enquanto não houver dados, a
- * página diz que não há.
+ * Tudo o que aqui aparece vem de `cafe.json`, e o que lá estiver a `null`
+ * desaparece da página em vez de se inventar: um número errado no site manda
+ * alguém ligar a um estranho, e um horário errado manda alguém a uma porta
+ * fechada. Hoje a morada, o telefone, o email e o horário estão confirmados.
  *
- * Não há formulário — a decisão ainda está em aberto, e está registada em
- * `docs/decisoes-pendentes.md` com o custo de cada lado. Enquanto não houver,
- * os contactos são links diretos e o site não recebe dados de ninguém.
+ * Não há formulário de contacto — a decisão está em aberto, registada em
+ * `docs/decisoes-pendentes.md` com o custo de cada lado. Os contactos são links
+ * diretos. (O único formulário do site é o da newsletter.)
  */
 export default async function Contactos({ params }: Props) {
   const { locale } = await params;

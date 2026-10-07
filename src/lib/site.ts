@@ -55,7 +55,6 @@ export const ROTAS_FIXAS = [
   "/",
   "/ementa",
   "/contactos",
-  "/sobre",
   "/privacidade",
   "/cookies",
   "/informacao-legal",

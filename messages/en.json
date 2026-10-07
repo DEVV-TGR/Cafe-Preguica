@@ -7,7 +7,6 @@
     "inicio": "Home",
     "ementa": "Menu",
     "contactos": "Contact",
-    "sobre": "The place",
     "mudarIdioma": "Português",
     "principal": "Main navigation",
     "reservar": "Book a table",
@@ -68,10 +67,6 @@
       "titulo": "Contact",
       "descricao": "Where we are, when we're open and how to reach us."
     },
-    "sobre": {
-      "titulo": "The place",
-      "descricao": "Who we are and what you will find at Café Preguiça."
-    },
     "privacidade": {
       "titulo": "Privacy",
       "descricao": "What data this site collects, what for, and for how long."
@@ -112,13 +107,10 @@
         "casa-fachada": "The peach-coloured front of the house on a sunny day, seen from the street through the leaves."
       }
     },
-    "cocktail": {
-      "alt": "A cocktail on a dark wooden table."
-    },
     "carril": {
       "nome": "Twenty-four cocktails",
       "facto": "Nine classics, ten specials and five alcohol-free. Made at the bar, one at a time.",
-      "dado": "From €4.20",
+      "dado": "From {preco}",
       "ilustrativa": "The photos are our own. Where we can't say for sure which cocktail it is, the caption only says what we know.",
       "balcaoNome": "At the bar",
       "balcaoFacto": "Lime squeezed by hand, straight over the glass. Every cocktail is made in front of whoever is drinking it.",
@@ -144,10 +136,11 @@
     "partilhar": {
       "nome": "To share",
       "facto": "What you eat with your hands, in the middle of the table, while the conversation keeps going.",
-      "dado": "From €1.70",
+      "dado": "From {preco}",
       "altTabua": "A round platter of small toasts with chouriço and cheese, a bowl of crisps and a bottle of tabasco, on wood.",
       "altTosta": "Toast with strawberry jam beside a hot chocolate topped with whipped cream and a cinnamon stick.",
-      "factoTosta": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately at €3.60.",
+      "factoTosta": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately at {preco}.",
+      "factoTostaSemPreco": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately.",
       "verMais": "And the rest of the menu",
       "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
       "verMaisAcao": "See the menu",
@@ -287,7 +280,9 @@
       "mongolia": "A Mongolia in a green tiki mug, with a strawberry, a slice of lemon, mint and a red-striped straw.",
       "espresso-martini": "An Espresso Martini in a coupe, with foam and cinnamon on top, on a wooden table with a reserved sign.",
       "mexican-mule": "A Mexican Mule in a copper mug, with a strawberry, mint and a black straw.",
-      "moscow-mule": "A Moscow Mule in a copper mug with ice, mint and a black straw, on a wooden table."
+      "moscow-mule": "A Moscow Mule in a copper mug with ice, mint and a black straw, on a wooden table.",
+      "negroni-fumo": "A short glass of a dark red drink with ice and an orange peel, wreathed in smoke, on the bar mat.",
+      "cocktail-azul": "A balloon glass with a blue drink, crushed ice, a slice of yellow fruit and a green-striped straw, on a wooden table."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",
@@ -334,10 +329,6 @@
     "ligar": "Call",
     "semDados": "These details have not been confirmed with the house yet. They will appear here as soon as they are."
   },
-  "sobre": {
-    "titulo": "The place",
-    "porEscrever": "Copy still to be written. It goes here after the conversation with the client."
-  },
   "privacidade": {
     "titulo": "Privacy",
     "atualizado": "Last updated: draft, to be reviewed before publishing.",
@@ -347,15 +338,15 @@
     },
     "newsletter": {
       "titulo": "The newsletter",
-      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you our news, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation, the address is not kept. Every email includes a link to unsubscribe, which takes effect immediately. Your address stays on the list until you unsubscribe, and you can ask us at any time what data we hold about you, or ask us to delete it, using our contact details. The same email opens the secret menu: when you type it there, we only check whether it is on the list."
+      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you our news, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation, the address does not join the list; the only trace is the record of the confirmation email kept by the service that sends it (Resend). Every email includes a link to unsubscribe, which takes effect immediately: you stop receiving emails, and the address stays on the list marked as unsubscribed, so that it isn't emailed again by mistake. You can ask us at any time what data we hold about you, or ask us to delete it for good, using our contact details. The same email opens the secret menu: when you type it there, we only check whether it is on the list."
     },
     "terceiros": {
       "titulo": "Third-party services",
-      "texto": "None that load code in your browser: fonts and images are served from this domain, and there are no embedded maps or social media buttons. Links to Google Maps and to social media are plain links, which only open if you click them. Newsletter emails are sent through Resend, which keeps the contact list on our behalf; your browser never talks to it — the site's server does."
+      "texto": "None that load code in your browser: fonts and images are served from this domain, and there are no embedded maps or social media buttons. Links to Google Maps and to social media are plain links, which only open if you click them. Newsletter emails are sent through Resend, which keeps the contact list on our behalf. To prevent abuse of the newsletter and secret menu forms, the server counts requests in Upstash: the network address they come from, for one hour, and the email, in a form that cannot be turned back into it, for 24 hours. In neither case does your browser talk to these services — the site's server does."
     },
     "alojamento": {
       "titulo": "Hosting",
-      "texto": "The site is hosted by Vercel, which logs requests to its servers in order to deliver and protect the site. Those logs belong to the platform, and we do not use them to identify anyone."
+      "texto": "The site is hosted by Vercel, which logs requests to its servers in order to deliver and protect the site. Those logs belong to the platform, and we do not use them to identify anyone. When someone exceeds the form limits, the server log keeps the network address and the partly hidden email, so that abuse can be spotted."
     },
     "equipa": {
       "titulo": "The staff area",
@@ -363,7 +354,7 @@
     },
     "contacto": {
       "titulo": "Questions",
-      "texto": "Reach us through the details on the contact page."
+      "texto": "Reach us through the details on the contact page. If you believe your data has not been handled properly, you also have the right to lodge a complaint with the Portuguese data protection authority (CNPD)."
     },
     "olho": "This site and your data",
     "ficha": {
@@ -372,7 +363,7 @@
       "terceiros": "Third-party services",
       "nenhum": "None",
       "newsletter": "The newsletter",
-      "soEmail": "Email sending only"
+      "soEmail": "Email delivery and request limits"
     }
   },
   "cookies": {
@@ -391,15 +382,15 @@
     },
     "lingua": {
       "titulo": "What about the language you chose?",
-      "texto": "It lives in the address, not in a cookie: the English version is under /en, and it stays that way as you browse. If you type the address again without /en, the site opens in your browser's language."
+      "texto": "It lives in the address, not in a cookie: the English version is under /en, and it stays that way as you browse. If you type the address again without /en, the site opens in Portuguese."
     },
     "memoria": {
       "titulo": "What about the newsletter invitation?",
-      "texto": "So as not to show it again to someone who has already signed up, the site leaves a note in your browser's storage that just says \"signed up\". Closing the invitation leaves another note, which the browser deletes by itself when you close the tab. Neither of them identifies anyone, and neither leaves your device. Opening the secret menu also stores a key with your email, signed by us, which the site uses only to open the menu again without asking for your email; the \"Close the menu\" button deletes it. None of these is a cookie, and if you delete them, the worst that can happen is the invitation showing up again or the menu asking for your email again."
+      "texto": "When you ask to join the newsletter, the site leaves a note in your browser's storage that just says \"signed up\", so as not to show the invitation again. Closing the invitation leaves another note, which the browser deletes by itself when you close the tab. Neither of them identifies anyone, and neither leaves your device. Opening the secret menu also stores a key with your email, signed by us and valid for 180 days: when you come back to the menu, the site sends it to the server to check that you are still signed up and to open the menu without asking for your email again. The \"Close the menu\" button deletes it. None of these is a cookie, and if you delete them, the worst that can happen is the invitation showing up again or the menu asking for your email again."
     },
     "equipa": {
       "titulo": "The staff area",
-      "texto": "There is an area reserved for the people who work here, to update the menu and the opening hours. Anyone who signs in there receives two strictly necessary cookies — one to keep the session open, the other so that the same device isn't asked for a sign-in code every time — and only in that area. Visitors never receive them."
+      "texto": "There is an area reserved for the people who work here, to update the menu and the opening hours. Anyone who uses its sign-in screen receives up to three strictly necessary cookies — one for a sign-in code in progress (it lasts ten minutes), one to keep the session open and one so that the same device isn't asked for a code every time — and only in that area: they are never sent to the other pages. People who just visit the site never receive them."
     },
     "verificar": {
       "titulo": "How to check",

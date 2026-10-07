@@ -11,8 +11,9 @@ import { URL_SITE } from "@/lib/site";
 export default function robots(): MetadataRoute.Robots {
   return {
     /* O painel também leva `noindex` na metadata e no `X-Robots-Tag` — isto é
-       só a primeira das três camadas, e a mais fraca. */
-    rules: { userAgent: "*", allow: "/", disallow: "/painel" },
+       só a primeira das três camadas, e a mais fraca. As rotas `/api` só
+       respondem a POST; não há nada lá para um robô ler. */
+    rules: { userAgent: "*", allow: "/", disallow: ["/painel", "/api/"] },
     sitemap: `${URL_SITE}/sitemap.xml`,
   };
 }

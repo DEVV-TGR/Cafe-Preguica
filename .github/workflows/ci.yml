@@ -143,7 +143,7 @@ jobs:
           verificar /                 200
           verificar /ementa           200
           verificar /contactos        200
-          verificar /sobre            200
+          verificar /sobre            308
           verificar /privacidade      200
           verificar /cookies          200
           verificar /informacao-legal 200

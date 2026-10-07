@@ -14,6 +14,10 @@ import "./globals.css";
 export default function NaoEncontradaGlobal() {
   return (
     <html lang={routing.defaultLocale}>
+      {/* Sem layout por cima não há `metadata`, e a aba ficava com o endereço
+          por título. O React 19 põe este `<title>` no `<head>`. */}
+      <title>Página não encontrada — Café Preguiça</title>
+      <meta name="robots" content="noindex" />
       <body className="mx-auto max-w-3xl px-4 py-24">
         <h1 className="font-display text-4xl font-semibold">
           Página não encontrada

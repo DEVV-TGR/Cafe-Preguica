@@ -487,6 +487,23 @@ export function porCategoria(): { categoria: Categoria; artigos: Artigo[] }[] {
 }
 
 /**
+ * O preço mais baixo do que está à vista nestas categorias — o "Desde 4,60 €"
+ * dos rótulos da página inicial. `null` se nenhum tiver preço.
+ *
+ * Calculado e não escrito nas mensagens, pela regra de sempre (factos em
+ * `src/data/`): o "Desde 4,20 €" escrito à mão era o preço de um mocktail que
+ * entretanto foi escondido, e o texto ficou a anunciar um preço que a carta já
+ * não tinha. Só conta o que a `/ementa` mostra — sem escondidos nem secretos.
+ */
+export function menorPreco(categorias: readonly Categoria[]): number | null {
+  const precos = porCategoria()
+    .filter((seccao) => categorias.includes(seccao.categoria))
+    .flatMap((seccao) => seccao.artigos.map((artigo) => artigo.preco))
+    .filter((preco): preco is number => preco !== null);
+  return precos.length > 0 ? Math.min(...precos) : null;
+}
+
+/**
  * Se **algum** artigo já tem alergénios declarados.
  *
  * Enquanto for `false`, a página mostra o aviso de que a informação está

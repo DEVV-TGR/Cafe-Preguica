@@ -45,6 +45,15 @@ import "../app/visor.css";
  * fotografia que se estiver a ver — o carrossel anda até ela antes. Sem elas, ou
  * com "reduzir movimento", o visor aparece por cima com um desvanecer.
  *
+ * ⚠️ **A transição só começa com a fotografia pronta e com a forma certa.** O
+ * browser fotografa o destino no instante em que o visor abre. Antes, nesse
+ * instante a fotografia grande ainda vinha a caminho e a caixa dela tinha a
+ * forma do `width`/`height` escrito à mão (3:4): numa fotografia deitada, a
+ * imagem crescia esticada para um retrato e só depois saltava para a moldura
+ * certa. Agora a forma vem da fotografia da página (é o mesmo ficheiro noutro
+ * tamanho), e a grande é pedida e descodificada antes — com um tecto, para um
+ * toque nunca ficar à espera de uma rede lenta.
+ *
  * ## A preguiça em cima da fotografia
  *
  * Deitada na borda de cima da fotografia, como num ramo: a barriga assente
@@ -96,6 +105,34 @@ type Abrir = (grupo: GrupoDoVisor, indice: number, origem: Origem) => void;
 const ContextoDoVisor = createContext<Abrir | null>(null);
 
 const NOME_DA_TRANSICAO = "visor-foto";
+
+/* O mesmo `sizes` no `<img>` do visor e na fotografia pedida antes de abrir:
+   assim o browser escolhe o mesmo ficheiro nos dois e o segundo já está em
+   cache. */
+const SIZES_DO_VISOR = "(min-width: 48rem) 60vh, 100vw";
+
+/* Quanto um toque espera pela fotografia grande antes de abrir na mesma. Numa
+   rede normal chega bem antes; numa lenta, abre e a fotografia aparece quando
+   chegar — mas já na moldura com a forma certa. */
+const ESPERA_MAXIMA_MS = 500;
+
+/** Pede e descodifica a fotografia que o visor vai mostrar, com tecto. */
+function preparar(foto: FotoDoVisor): Promise<void> {
+  const img = new Image();
+  img.sizes = SIZES_DO_VISOR;
+  img.srcset = foto.srcSet;
+  img.src = foto.src;
+  return Promise.race([
+    img.decode().catch(() => {}),
+    new Promise<void>((resolver) => window.setTimeout(resolver, ESPERA_MAXIMA_MS)),
+  ]);
+}
+
+/** Largura e altura da fotografia da página — a mesma, noutro tamanho. */
+function proporcaoDe(recorte: HTMLElement | null): [number, number] | null {
+  const img = recorte instanceof HTMLImageElement ? recorte : recorte?.querySelector("img");
+  return img?.naturalWidth ? [img.naturalWidth, img.naturalHeight] : null;
+}
 
 /* Com o separador escondido o browser aborta a transição logo à cabeça — e
    rejeita o `ready`. Não vale a pena pedi-la. */
@@ -153,6 +190,11 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
   const noHistorico = useRef(false);
   const [grupo, setGrupo] = useState<GrupoDoVisor | null>(null);
   const [atual, setAtual] = useState(0);
+  /* A forma de cada fotografia já vista na página, por `src`. Sem ela, a caixa
+     da imagem tinha 3:4 até a fotografia chegar. */
+  const [proporcoes, setProporcoes] = useState<Record<string, [number, number]>>({});
+  /* Um segundo toque enquanto a fotografia ainda vem a caminho não abre outra. */
+  const aAbrir = useRef(false);
 
   /* O `<dialog>` abre e fecha com o estado, e só aqui. Com o `showModal()` e o
      `close()` espalhados pelos caminhos de abrir e fechar, uma transição
@@ -170,10 +212,15 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
   }, [grupo]);
 
   const abrir = useCallback<Abrir>((novo, indice, deOnde) => {
+    if (aAbrir.current) return;
+    aAbrir.current = true;
     origem.current = deOnde;
+    const foto = novo.fotos[indice];
+    const proporcao = proporcaoDe(deOnde(indice));
 
     const mostrar = () => {
       flushSync(() => {
+        if (proporcao) setProporcoes((p) => ({ ...p, [foto.src]: proporcao }));
         setGrupo(novo);
         setAtual(indice);
       });
@@ -182,23 +229,28 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
       if (el) el.scrollTo({ left: indice * el.clientWidth, behavior: "instant" });
     };
 
-    if (comTransicao()) {
-      const recorte = deOnde(indice);
-      nomear(recorte, NOME_DA_TRANSICAO);
-      transicao(
-        () => {
-          nomear(recorte, "");
-          mostrar();
-          nomear(fotoNoVisor(faixa.current, indice), NOME_DA_TRANSICAO);
-        },
-        () => nomear(fotoNoVisor(faixa.current, indice), ""),
-      );
-    } else {
-      mostrar();
-    }
+    void preparar(foto).then(() => {
+      aAbrir.current = false;
+      if (comTransicao()) {
+        /* Outra vez, e não o de cima: a página pode ter mexido enquanto a
+           fotografia chegava. */
+        const recorte = deOnde(indice);
+        nomear(recorte, NOME_DA_TRANSICAO);
+        transicao(
+          () => {
+            nomear(recorte, "");
+            mostrar();
+            nomear(fotoNoVisor(faixa.current, indice), NOME_DA_TRANSICAO);
+          },
+          () => nomear(fotoNoVisor(faixa.current, indice), ""),
+        );
+      } else {
+        mostrar();
+      }
 
-    window.history.pushState(null, "", window.location.href);
-    noHistorico.current = true;
+      window.history.pushState(null, "", window.location.href);
+      noHistorico.current = true;
+    });
   }, []);
 
   /* O único sítio que fecha — chamado pelo `popstate`. */
@@ -341,9 +393,9 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                       className="visor__imagem"
                       src={f.src}
                       srcSet={f.srcSet}
-                      sizes="(min-width: 48rem) 60vh, 100vw"
-                      width={1080}
-                      height={1440}
+                      sizes={SIZES_DO_VISOR}
+                      width={(proporcoes[f.src] ?? [1080, 1440])[0]}
+                      height={(proporcoes[f.src] ?? [1080, 1440])[1]}
                       alt={f.alt}
                       loading={i === atual ? undefined : "lazy"}
                       decoding="async"

@@ -22,14 +22,24 @@ import { Ampliar, type FotoDoVisor } from "@/components/Visor";
  *
  * ## O relógio sabe quando se calar
  *
- * - Muda a cada 5 segundos, **só com o carrossel no ecrã** e o separador visível
- *   — uma fotografia a mudar onde ninguém a vê é trabalho para nada.
+ * - Muda a cada 5 segundos (ou o `intervalo` de quem o usa), **só com o
+ *   carrossel no ecrã** e o separador visível — uma fotografia a mudar onde
+ *   ninguém a vê é trabalho para nada.
  * - Pára enquanto o rato está por cima ou o foco está lá dentro, e retoma a
  *   seguir.
  * - **Um toque, um deslizar ou um ponto param-no de vez**: a pessoa tomou conta,
  *   e uma fotografia a fugir-lhe da mão a seguir é irritante.
  * - Tem um botão de pausa, que é o que as regras de acessibilidade pedem a
  *   qualquer coisa que mexe sozinha mais de cinco segundos.
+ *
+ * ## As fotografias carregam todas quando o carrossel chega perto
+ *
+ * Só a primeira está à vista; as outras estão fora da faixa, de lado, e com
+ * `loading="lazy"` o browser só as ia buscar quando entrassem — **a meio da
+ * passagem**. O que se via era o fundo castanho da moldura a deslizar até a
+ * fotografia chegar. Agora, quando o carrossel está a um ecrã de distância,
+ * passam todas a `eager`; e o relógio, antes de avançar, espera que a
+ * seguinte esteja descodificada.
  * - Com "reduzir movimento" no sistema não arranca.
  *
  * Um toque numa fotografia abre-a inteira no `<Visor>` — e também conta como
@@ -83,6 +93,7 @@ export function Carrossel({
   moldura = "em-abertura__foto",
   sizes = "(min-width: 72rem) 72rem, 100vw",
   dimensoes = [1080, 1440],
+  intervalo = INTERVALO_MS,
 }: {
   fotos: FotoDoCarrossel[];
   /** O número e o `<h2>` do capítulo — fica por cima de todas as fotografias. */
@@ -95,6 +106,8 @@ export function Carrossel({
   sizes?: string;
   /** Largura e altura do ficheiro maior, para o browser reservar o lugar. */
   dimensoes?: [number, number];
+  /** Milissegundos entre fotografias, quando passam sozinhas. */
+  intervalo?: number;
 }) {
   const faixa = useRef<HTMLDivElement>(null);
   const [atual, setAtual] = useState(0);
@@ -102,6 +115,8 @@ export function Carrossel({
   const [tomouConta, setTomouConta] = useState(false);
   const [emCima, setEmCima] = useState(false);
   const [noEcra, setNoEcra] = useState(false);
+  /* Uma vez perto, fica: voltar a `lazy` não descarrega nada. */
+  const [perto, setPerto] = useState(false);
   const reduzir = useSyncExternalStore(
     subscreverReduzir,
     () => window.matchMedia(consultaReduzir).matches,
@@ -127,8 +142,22 @@ export function Carrossel({
     );
     observador.observe(el);
     document.addEventListener("visibilitychange", atualizar);
+
+    /* A um ecrã de distância: tempo para as fotografias chegarem antes da
+       primeira passagem. */
+    const aproximar = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        setPerto(true);
+        aproximar.disconnect();
+      },
+      { rootMargin: "100% 0px" },
+    );
+    aproximar.observe(el);
+
     return () => {
       observador.disconnect();
+      aproximar.disconnect();
       document.removeEventListener("visibilitychange", atualizar);
     };
   }, [varias]);
@@ -143,11 +172,24 @@ export function Carrossel({
      incluindo as feitas à mão, antes de a pessoa tomar conta. */
   useEffect(() => {
     if (!varias || pausado || tomouConta || emCima || !noEcra || reduzir) return;
-    const relogio = window.setTimeout(() => irPara((atual + 1) % total), INTERVALO_MS);
-    return () => window.clearTimeout(relogio);
+    let cancelado = false;
+    const relogio = window.setTimeout(() => {
+      const seguinte = (atual + 1) % total;
+      const img = faixa.current?.querySelectorAll("img")[seguinte];
+      /* Só passa quando a seguinte está pronta a desenhar — senão o que
+         deslizava para a vista era a moldura vazia. */
+      const pronta = img && !(img.complete && img.naturalWidth) ? img.decode().catch(() => {}) : null;
+      Promise.resolve(pronta).then(() => {
+        if (!cancelado) irPara(seguinte);
+      });
+    }, intervalo);
+    return () => {
+      cancelado = true;
+      window.clearTimeout(relogio);
+    };
     // `irPara` só lê a ref e o `reduzir`, que já estão nas dependências.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [varias, pausado, tomouConta, emCima, noEcra, reduzir, atual, total]);
+  }, [varias, pausado, tomouConta, emCima, noEcra, reduzir, atual, total, intervalo]);
 
   const grupo = { nome: textos.nome, fotos };
 
@@ -174,7 +216,7 @@ export function Carrossel({
         width={dimensoes[0]}
         height={dimensoes[1]}
         alt={f.alt}
-        loading={prioridade && i === 0 ? undefined : "lazy"}
+        loading={(prioridade && i === 0) || perto ? undefined : "lazy"}
         decoding="async"
       />
     </Ampliar>

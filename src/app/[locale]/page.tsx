@@ -187,6 +187,9 @@ export default async function Inicio({ params }: Props) {
               moldura="pg-casa__fotos"
               sizes="(min-width: 52rem) 50vw, 100vw"
               dimensoes={[1586, 992]}
+              /* Mais depressa do que a carta: aqui são fotografias de
+                 ambiente, para passar os olhos, e não pratos para ler. */
+              intervalo={3000}
               textos={{
                 naFotografia: "",
                 nome: t("casa.nome"),

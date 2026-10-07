@@ -95,6 +95,18 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
   const [estado, setEstado] = useState<Estado>({ tipo: "fechada" });
   const [aVista, setAVista] = useState(false);
   const seccao = useRef<HTMLElement>(null);
+  /* Controlado: o React 19 repõe os campos de um `<form action>` quando a
+     acção acaba, e o email desaparecia por baixo da mensagem de erro. */
+  const [email, setEmail] = useState("");
+  /* O número do último pedido. A abertura sozinha (com a chave) e a do botão
+     (com o email) podem estar em voo ao mesmo tempo, e a resposta que chegasse
+     em último decidia o ecrã — uma chave caducada fechava a carta por cima de
+     um "não está inscrito" acabado de mostrar. Só conta a do último pedido. */
+  const ultimoPedido = useRef(0);
+  /* Depois de um pedido feito por quem está a ver, o foco vai para o resultado:
+     o formulário onde estava desaparece, e sem isto o foco caía no `<body>` e o
+     leitor de ecrã não dizia o que mudou. */
+  const focarResultado = useRef(false);
 
   const erroDoPedido = (status: number) =>
     status === 400 ? textos.erroEmail : status === 429 ? textos.erroLimite : textos.erroServico;
@@ -105,6 +117,8 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
     corpo: { email: string } | { chave: string },
     discreto = false,
   ): Promise<void> {
+    const numero = ++ultimoPedido.current;
+    const atual = () => numero === ultimoPedido.current;
     if (!discreto) setEstado({ tipo: "a-abrir" });
     let resposta: Response;
     try {
@@ -114,18 +128,29 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
         body: JSON.stringify({ ...corpo, lingua: locale }),
       });
     } catch {
-      setEstado({ tipo: "fechada", erro: discreto ? undefined : textos.erroServico });
+      if (atual()) setEstado({ tipo: "fechada", erro: discreto ? undefined : textos.erroServico });
       return;
     }
 
     if (!resposta.ok) {
-      setEstado({ tipo: "fechada", erro: discreto ? undefined : erroDoPedido(resposta.status) });
+      if (atual()) {
+        setEstado({ tipo: "fechada", erro: discreto ? undefined : erroDoPedido(resposta.status) });
+      }
       return;
     }
 
-    const r = (await resposta.json()) as
+    /* Um 200 que não é JSON (uma página de erro de um proxy pelo meio) deixava
+       o ecrã preso em "A abrir…", com o botão desligado para sempre. */
+    const r = (await resposta.json().catch(() => null)) as
       | { aberta: true; artigos: ArtigoSecreto[]; chave: string }
-      | { aberta: false };
+      | { aberta: false }
+      | null;
+    if (!atual()) return;
+    if (!r) {
+      setEstado({ tipo: "fechada", erro: discreto ? undefined : textos.erroServico });
+      return;
+    }
+    if (!discreto) focarResultado.current = true;
 
     if (r.aberta) {
       guardarChave(r.chave);
@@ -139,6 +164,13 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       setEstado({ tipo: "fechada" });
     }
   }
+
+  useEffect(() => {
+    if (!focarResultado.current) return;
+    if (estado.tipo !== "aberta" && estado.tipo !== "nao-inscrito") return;
+    focarResultado.current = false;
+    seccao.current?.querySelector<HTMLElement>("[data-resultado]")?.focus();
+  }, [estado]);
 
   /* Um telemóvel que já abriu a carta abre-a sozinho. */
   useEffect(() => {
@@ -189,6 +221,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       setEstado({ tipo: "nao-inscrito", email, erro: erroDoPedido(resposta.status) });
       return;
     }
+    focarResultado.current = true;
 
     try {
       localStorage.setItem("preguica:newsletter", "inscrito");
@@ -219,7 +252,12 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
         <header className="em-secreta__cabeca">
           <Cadeado aberto={aberta} />
           <p className="em-olho">{textos.olho}</p>
-          <h2 id="titulo-carta-secreta" className="em-secreta__titulo">
+          <h2
+            id="titulo-carta-secreta"
+            className="em-secreta__titulo"
+            tabIndex={-1}
+            data-resultado={aberta || undefined}
+          >
             {textos.titulo}
           </h2>
           <p className="em-secreta__texto">{aberta ? textos.abertaTexto : textos.texto}</p>
@@ -276,7 +314,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
             <div className="em-secreta__porta">
               {estado.tipo === "nao-inscrito" ? (
                 estado.enviado ? (
-                  <div className="em-secreta__form" role="status">
+                  <div className="em-secreta__form" role="status" tabIndex={-1} data-resultado>
                     <p className="em-secreta__estado">{textos.enviadoTitulo}</p>
                     <p className="em-secreta__nota">{textos.enviadoTexto}</p>
                     <button
@@ -289,7 +327,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                   </div>
                 ) : (
                   <form action={inscrever} className="em-secreta__form">
-                    <p className="em-secreta__estado" role="status">
+                    <p className="em-secreta__estado" role="status" tabIndex={-1} data-resultado>
                       {textos.naoInscritoTitulo}
                     </p>
                     <p className="em-secreta__nota">
@@ -331,7 +369,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
               ) : (
                 <form
                   className="em-secreta__form"
-                  action={(dados) => pedir({ email: String(dados.get("email") ?? "") })}
+                  action={() => pedir({ email })}
                 >
                   <label className="em-secreta__campo">
                     <span className="sr-only">{textos.etiqueta}</span>
@@ -342,6 +380,8 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                       autoComplete="email"
                       inputMode="email"
                       placeholder={textos.marcador}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="pg-convite__entrada"
                       aria-invalid={estado.tipo === "fechada" && estado.erro ? true : undefined}
                     />

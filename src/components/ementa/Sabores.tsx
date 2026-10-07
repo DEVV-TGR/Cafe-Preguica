@@ -157,7 +157,10 @@ export function Sabores({
           type="button"
           className="pg-botao pg-botao--cheio"
           onClick={sortear}
-          disabled={aRodar}
+          /* `aria-disabled` e não `disabled`: desligado, o botão perdia o
+             foco a meio da roleta e quem sorteou pelo teclado ficava no
+             `<body>`. O `sortear` já não faz nada enquanto roda. */
+          aria-disabled={aRodar}
         >
           <img
             className="em-sabores__preguica"

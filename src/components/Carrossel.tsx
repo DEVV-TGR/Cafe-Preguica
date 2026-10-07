@@ -113,7 +113,12 @@ export function Carrossel({
   const [atual, setAtual] = useState(0);
   const [pausado, setPausado] = useState(false);
   const [tomouConta, setTomouConta] = useState(false);
+  /* O rato por cima e o foco lá dentro são duas razões para parar, e cada uma
+     com o seu estado. Já foram um só: com o foco num ponto, o rato passava por
+     cima e saía, e o `pointerleave` punha o relógio a andar com o foco ainda
+     lá dentro. */
   const [emCima, setEmCima] = useState(false);
+  const [comFoco, setComFoco] = useState(false);
   const [noEcra, setNoEcra] = useState(false);
   /* Uma vez perto, fica: voltar a `lazy` não descarrega nada. */
   const [perto, setPerto] = useState(false);
@@ -171,7 +176,7 @@ export function Carrossel({
   /* O relógio. Depende do `atual`, por isso volta a contar os 5 s a cada troca —
      incluindo as feitas à mão, antes de a pessoa tomar conta. */
   useEffect(() => {
-    if (!varias || pausado || tomouConta || emCima || !noEcra || reduzir) return;
+    if (!varias || pausado || tomouConta || emCima || comFoco || !noEcra || reduzir) return;
     let cancelado = false;
     const relogio = window.setTimeout(() => {
       const seguinte = (atual + 1) % total;
@@ -189,7 +194,7 @@ export function Carrossel({
     };
     // `irPara` só lê a ref e o `reduzir`, que já estão nas dependências.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [varias, pausado, tomouConta, emCima, noEcra, reduzir, atual, total, intervalo]);
+  }, [varias, pausado, tomouConta, emCima, comFoco, noEcra, reduzir, atual, total, intervalo]);
 
   const grupo = { nome: textos.nome, fotos };
 
@@ -243,9 +248,9 @@ export function Carrossel({
       aria-label={textos.nome}
       onPointerEnter={(e) => e.pointerType === "mouse" && setEmCima(true)}
       onPointerLeave={(e) => e.pointerType === "mouse" && setEmCima(false)}
-      onFocus={() => setEmCima(true)}
+      onFocus={() => setComFoco(true)}
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setEmCima(false);
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setComFoco(false);
       }}
     >
       <div

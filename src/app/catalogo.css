@@ -323,6 +323,134 @@
     flex-basis: 100%;
     max-width: 52ch;
   }
+
+  /* Os pratos são o outro carril, e tinham ficado de fora: continuavam uma
+     fila de painéis de 86vw cada, agora sem `transform` nem palco a cortá-los,
+     e a página inteira passava a rolar de lado — 1441 px de largura num ecrã
+     de 320, 4531 num de 1280 (medido). Empilham-se, um painel por linha. */
+  .pg-pratos {
+    flex-direction: column;
+    align-items: stretch;
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .pg-prato,
+  .pg-pratos__abertura,
+  .pg-pratos__fecho {
+    width: auto;
+    max-width: 72rem;
+  }
+}
+
+/* ------------------------------------------------------------- sem motor --
+   O que o motor revela (`data-sc-in`, `data-sc-cue`) começa invisível no CSS,
+   à espera dele. Se ele não chegar — JavaScript desligado, um bloqueador, a
+   rede partida — ficava invisível para sempre: o texto de "A casa", os Reels,
+   as avaliações e "Onde estamos", 26 elementos ao todo (medido), com links
+   invisíveis que continuavam a receber o foco. E os carris, sem quem os
+   desloque, mostravam o primeiro ecrã e escondiam o resto.
+
+   Duas portas para o mesmo resultado, que é o da página sem movimento:
+   - `scripting: none`, para quem não tem JavaScript;
+   - `.sc-sem-motor` no `<html>`, que o `Motor.tsx` põe quando o script falha
+     ou não monta a tempo (e tira se ele montar depois).
+
+   As regras repetem as do "reduzir movimento" de cima. Uma media query e uma
+   classe não se juntam num seletor só, e duas cópias à vista uma da outra
+   envelhecem melhor do que um truque. */
+
+@media (scripting: none) {
+  [data-sc-in],
+  [data-sc-stagger] > *,
+  [data-sc-cue] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-sc-act="pan"] {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  [data-sc-act="pan"] [data-sc-stage] {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .pg-carril {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .pg-carril__abertura,
+  .pg-carril__fecho {
+    flex-basis: 100%;
+    max-width: 52ch;
+  }
+
+  .pg-pratos {
+    flex-direction: column;
+    align-items: stretch;
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .pg-prato,
+  .pg-pratos__abertura,
+  .pg-pratos__fecho {
+    width: auto;
+    max-width: 72rem;
+  }
+
+  .pg-pratos-espelho,
+  .pg-pratos > * {
+    transform: none !important;
+  }
+}
+
+.sc-sem-motor :is([data-sc-in], [data-sc-stagger] > *, [data-sc-cue]) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.sc-sem-motor [data-sc-act="pan"] {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.sc-sem-motor [data-sc-act="pan"] [data-sc-stage] {
+  position: static !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.sc-sem-motor .pg-carril {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding-block: clamp(3rem, 9vh, 7rem);
+}
+
+.sc-sem-motor :is(.pg-carril__abertura, .pg-carril__fecho) {
+  flex-basis: 100%;
+  max-width: 52ch;
+}
+
+.sc-sem-motor .pg-pratos {
+  flex-direction: column;
+  align-items: stretch;
+  padding-block: clamp(3rem, 9vh, 7rem);
+}
+
+.sc-sem-motor :is(.pg-prato, .pg-pratos__abertura, .pg-pratos__fecho) {
+  width: auto;
+  max-width: 72rem;
+}
+
+.sc-sem-motor :is(.pg-pratos-espelho, .pg-pratos > *) {
+  transform: none !important;
 }
 
 /* ------------------------------------------------- correcções vistas a olho

@@ -51,9 +51,12 @@ export function IndiceCapitulos({
     /* `scrollTo` no próprio índice e não `scrollIntoView` no botão: este
        último também rola a página na vertical, e puxava o leitor para trás a
        meio da leitura. */
+    /* "Reduzir movimento" vale também aqui: um `behavior` escrito no JS passa
+       por cima de qualquer regra do CSS. */
+    const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     navEl.scrollTo({
       left: botao.offsetLeft - (navEl.clientWidth - botao.offsetWidth) / 2,
-      behavior: "smooth",
+      behavior: reduzir ? "instant" : "smooth",
     });
   }, [ativo]);
 

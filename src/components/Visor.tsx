@@ -195,6 +195,17 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
   const [proporcoes, setProporcoes] = useState<Record<string, [number, number]>>({});
   /* Um segundo toque enquanto a fotografia ainda vem a caminho não abre outra. */
   const aAbrir = useRef(false);
+  /* A fotografia pode demorar até `ESPERA_MAXIMA_MS`, e nesse meio segundo dá
+     para sair da página. Sem isto, o `pushState` corria na página seguinte e
+     deixava-lhe uma entrada a mais no histórico — o primeiro "voltar" não
+     fazia nada. */
+  const montado = useRef(true);
+  useEffect(() => {
+    montado.current = true;
+    return () => {
+      montado.current = false;
+    };
+  }, []);
 
   /* O `<dialog>` abre e fecha com o estado, e só aqui. Com o `showModal()` e o
      `close()` espalhados pelos caminhos de abrir e fechar, uma transição
@@ -231,6 +242,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
 
     void preparar(foto).then(() => {
       aAbrir.current = false;
+      if (!montado.current) return;
       if (comTransicao()) {
         /* Outra vez, e não o de cima: a página pode ter mexido enquanto a
            fotografia chegava. */
@@ -428,11 +440,16 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
             </div>
 
             {total > 1 && (
+              /* `aria-disabled` e não `disabled`: um botão desligado perde o
+                 foco, e quem chegava à última fotografia com o "seguinte"
+                 ficava com o foco no `<body>` — as setas do teclado deixavam
+                 de responder até carregar em Tab. O `irPara` já não passa dos
+                 extremos. */
               <div className="visor__setas">
                 <button
                   type="button"
                   aria-label={textos.anterior}
-                  disabled={atual === 0}
+                  aria-disabled={atual === 0}
                   onClick={() => irPara(atual - 1)}
                 >
                   <span aria-hidden="true">←</span>
@@ -440,7 +457,7 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                 <button
                   type="button"
                   aria-label={textos.seguinte}
-                  disabled={atual === total - 1}
+                  aria-disabled={atual === total - 1}
                   onClick={() => irPara(atual + 1)}
                 >
                   <span aria-hidden="true">→</span>
@@ -454,9 +471,28 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
   );
 }
 
+/** Visível, ainda que só em parte, na janela. */
+function naJanela(el: Element): boolean {
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.bottom > 0 && r.right > 0 && r.top < innerHeight && r.left < innerWidth;
+}
+
 /**
  * O botão à volta de uma fotografia da carta. Sem `<Visor>` por cima (ou sem
  * JavaScript) é só a fotografia, como antes.
+ *
+ * ## Para onde volta a fotografia ao fechar
+ *
+ * Quem não passa uma `origem` (os pratos, o carril dos cocktails) tem um botão
+ * por fotografia do grupo, cada um no seu painel. Ao fechar na fotografia `i`,
+ * a fotografia encolhe para o botão `i` — encontrado pelas marcas
+ * `data-visor-grupo` e `data-visor-indice` — se ele estiver à vista. Se não
+ * estiver (o carril deslocou-o para fora do ecrã), não encolhe para lado
+ * nenhum e o visor só desvanece.
+ *
+ * Já foi sempre para a fotografia em que se tocou: abria-se o primeiro prato,
+ * deslizava-se até ao terceiro, e ao fechar o terceiro transformava-se no
+ * primeiro à frente de quem via.
  */
 export function Ampliar({
   grupo,
@@ -479,6 +515,17 @@ export function Ampliar({
   const botao = useRef<HTMLButtonElement>(null);
   if (!abrir) return <>{children}</>;
 
+  const marca = `${grupo.nome}|${grupo.fotos[0]?.src ?? ""}`;
+  const porOmissao: Origem = (i) => {
+    if (i === indice) return botao.current?.querySelector("img") ?? null;
+    const irmao = [
+      ...document.querySelectorAll<HTMLElement>(
+        `[data-visor-grupo="${CSS.escape(marca)}"][data-visor-indice="${i}"]`,
+      ),
+    ].find(naJanela);
+    return irmao?.querySelector("img") ?? null;
+  };
+
   return (
     <button
       ref={botao}
@@ -486,9 +533,9 @@ export function Ampliar({
       className={className ? `visor-ampliar ${className}` : "visor-ampliar"}
       aria-label={rotulo}
       aria-haspopup="dialog"
-      onClick={() =>
-        abrir(grupo, indice, origem ?? (() => botao.current?.querySelector("img") ?? null))
-      }
+      data-visor-grupo={marca}
+      data-visor-indice={indice}
+      onClick={() => abrir(grupo, indice, origem ?? porOmissao)}
     >
       {children}
     </button>

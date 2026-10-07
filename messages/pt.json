@@ -18,7 +18,6 @@
     }
   },
   "comum": {
-    "porConfirmar": "Por confirmar",
     "encerrado": "Encerrado",
     "precoPorConfirmar": "—",
     "dias": {
@@ -326,7 +325,6 @@
     "email": "Email",
     "horario": "Horário",
     "direcoes": "Como chegar",
-    "ligar": "Ligar",
     "semDados": "Estes dados ainda não foram confirmados com a casa. Aparecem aqui assim que o forem."
   },
   "privacidade": {

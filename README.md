@@ -16,18 +16,20 @@ npm run dev      # http://localhost:3000
 **O que falta são dados e ficheiros que só o cliente tem.** Por ordem de
 gravidade:
 
-- [ ] **Confirmar os preços da carta.** Os 125 artigos de `src/data/ementa.json`
-      foram transcritos do PDF do menu digital, que **não tem data**. Uma carta
-      de bar muda mais do que uma de pastelaria. Enquanto
-      `"confirmada": false`, a página da ementa mostra o aviso — e é isso que se
-      quer até alguém conferir ao balcão.
+- [x] **Confirmar os preços da carta.** Conferidos com o menu impresso
+      atualizado da casa em 2026-09-24 (commit `9e202ad`), e `"confirmada": true`
+      desde então. São 128 artigos em `src/data/ementa.json` (123 à vista). Daqui
+      em diante a casa muda-os no painel; se a carta voltar a ser transcrita de
+      outra fonte, volta a `false` até alguém a conferir ao balcão.
 - [ ] **Os QR das mesas.** Apontam para `https://<domínio>/ementa`, **sem
-      `/pt`**: com `localePrefix: "as-needed"` o português não leva prefixo, e um
-      telemóvel em inglês recebe a versão inglesa sozinho. ⚠️ Só se imprimem
+      `/pt`**: com `localePrefix: "as-needed"` o português não leva prefixo. A
+      carta abre sempre em português (a deteção da língua do telemóvel está
+      desligada, ver `src/i18n/routing.ts`), com o botão "English" na barra.
+      ⚠️ Só se imprimem
       depois de o domínio definitivo estar a servir HTTPS — hoje
       `cafepreguica.pt` está parqueado e com o certificado partido, e um QR
       impresso em vinte mesas não se corrige com um commit.
-- [ ] **Alergénios.** `alergenios: []` nos 125 artigos. Preencher com quem está
+- [ ] **Alergénios.** `alergenios: []` nos 128 artigos. Preencher com quem está
       na cozinha, **sem deduzir das descrições**. Até lá o site mostra o aviso de
       que a informação está no balcão, que é o que o Regulamento (UE) 1169/2011
       aceita.
@@ -44,13 +46,17 @@ gravidade:
 - [ ] **Logótipo em vetor.** O de `public/marca/` foi recortado de um JPEG por
       luminância. Funciona, mas um SVG dava contornos limpos em qualquer tamanho
       — e a preguiça é o elemento que mais cresce na página.
-- [ ] **Redes sociais.** `instagram` e `facebook` estão a `null` em
-      `src/data/marca.json`, por isso não aparecem no rodapé nem no `sameAs` dos
-      dados estruturados. O Instagram é `@cafepreguica`; falta confirmar o
-      Facebook.
+- [x] **Redes sociais.** Instagram, Facebook, TikTok e Spotify em
+      `src/data/marca.json`, e no `sameAs` dos dados estruturados. Mudam-se no
+      painel.
 - [ ] **O domínio.** Ver `docs/decisoes-pendentes.md` — `cafepreguica.pt` já
       existe, está parqueado, e o HTTPS está partido.
-- [ ] **Rever a indexação.** O `robots.txt` deixa indexar tudo.
+- [ ] **Rever a indexação.** O `robots.txt` deixa indexar tudo menos o painel
+      e a API — incluindo a demonstração em `cafe-preguica.vercel.app`.
+- [ ] **A política de privacidade.** Está marcada como rascunho à vista de quem
+      a lê, e faltam dados que só o cliente tem: quem é o responsável pelo
+      tratamento (nome e NIF), a data da versão, e a base das transferências para
+      os EUA (Resend, Upstash, Vercel). Ver `docs/AUDITORIA-PUBLICACAO.md`.
 
 ## Como está organizado
 
@@ -132,7 +138,12 @@ O material em bruto vive em `fotos/`, **fora do git**:
 
 ```bash
 npm run fotos     # fotos/site/ e fotos/instagram/ → public/casa/, fotos/reels/ → public/reels/
+node scripts/desenhar-partilha.mjs   # a imagem de partilha (og:image), a partir da fachada
 ```
+
+O `npm run fotos` gera também três ficheiros que hoje nenhuma página pede
+(`sala-madeira-1080.webp`, `cocktail-amarelo.webp` e `cocktail-coco.webp`, em
+`public/casa/`). Ficam: apagá-los à mão não dura até à próxima corrida.
 
 ## Antes de dizer que algo está pronto
 
@@ -148,10 +159,12 @@ rotas e os cabeçalhos de segurança. Ver `.github/workflows/ci.yml`.
 
 ## Segurança
 
-O resumo está em `docs/seguranca.md`. Em três linhas: cabeçalhos completos e
+O resumo está em `docs/seguranca.md`, e a auditoria de publicação em
+`docs/AUDITORIA-PUBLICACAO.md`. Em poucas linhas: cabeçalhos completos e
 verificados pelo CI, CSP que não deixa carregar nada de fora — **incluindo o
-motor de rolagem, que é servido por nós** — nenhum serviço de terceiros, nenhum
-cookie a quem visita, nenhum dado de visitante recolhido, um painel com login
-por código e CSP com nonce, scripts de instalação de pacotes
-bloqueados e `npm audit` das dependências de produção a zero, mantido pelo
-Dependabot.
+motor de rolagem, que é servido por nós** — nenhum script de terceiros, nenhum
+cookie a quem visita, e um só dado de visitantes (o email de quem se inscreve na
+newsletter, com duplo opt-in). Um painel com login por código e CSP com nonce,
+que fora do site oficial nunca grava no `main`. Scripts de instalação de
+pacotes bloqueados pelo `.npmrc`, e `npm audit` das dependências de produção a
+zero, mantido pelo Dependabot.

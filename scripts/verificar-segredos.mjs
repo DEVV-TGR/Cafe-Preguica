@@ -56,7 +56,19 @@ const SENSIVEIS = [
   "UPSTASH_REDIS_REST_URL",
   "KV_REST_API_TOKEN",
   "KV_REST_API_URL",
+  /* Não são chaves, mas também não são do browser: o segmento é o endereço da
+     lista de contactos no Resend, e os remetentes dizem que conta envia. */
+  "RESEND_NEWSLETTER_SEGMENTO",
+  "RESEND_REMETENTE",
+  "RESEND_NEWSLETTER_REMETENTE",
 ];
+
+/* Quem entra no painel: dados pessoais, e a lista que o ecrã de entrada se
+   esforça por não revelar. Procura-se cada endereço à parte. */
+const EMAILS_DO_PAINEL = (process.env.PAINEL_EMAILS ?? "")
+  .split(",")
+  .map((e) => e.trim())
+  .filter((e) => e.length >= 8);
 
 const SO_DO_SERVIDOR = [
   "api.github.com",
@@ -85,6 +97,10 @@ for (const caminho of PUBLICOS) {
     }
   }
 
+  for (const email of EMAILS_DO_PAINEL) {
+    if (texto.includes(email)) problemas.push(`um endereço de PAINEL_EMAILS está em ${relativo(caminho)}`);
+  }
+
   for (const marca of SO_DO_SERVIDOR) {
     if (texto.includes(marca)) problemas.push(`"${marca}" está em ${relativo(caminho)}`);
   }
@@ -102,7 +118,7 @@ if (problemas.length) {
   process.exit(1);
 }
 
-const sentinelas = SENSIVEIS.filter((n) => process.env[n]).length;
+const sentinelas = SENSIVEIS.filter((n) => process.env[n]).length + EMAILS_DO_PAINEL.length;
 console.log(
   `✓ ${PUBLICOS.length} ficheiros públicos sem segredos (${sentinelas} valores procurados), ` +
     `sem código do servidor e sem os ${SECRETOS.length} nomes da carta secreta.`,

@@ -35,16 +35,16 @@ mesa ou perguntar se há sopa liga, não escreve.
   maioria do spam automático.
 - *Rate limiting* por IP. Sem isto, o formulário é uma forma de alguém mandar
   mil emails à casa numa tarde, ou de gastar a quota do serviço de envio.
-- Envio por [Resend](https://resend.com) ou equivalente. **Passa a haver um
-  segredo** (`RESEND_API_KEY`) no painel da Vercel e no `.env.example`.
+- Envio pelo [Resend](https://resend.com), que o painel e a newsletter já usam
+  (`RESEND_API_KEY` e `RESEND_NEWSLETTER_*`, no `.env.example`).
 - **A CSP já está pronta**: `form-action 'self'` e `connect-src 'self'` já lá
   estão e cobrem um POST para o próprio domínio. Não é preciso mexer-lhe.
 
 E há duas coisas que **têm** de ser feitas ao mesmo tempo, não depois:
 
-- ⚠️ **Rever `/privacidade`.** A página diz hoje que o site não recolhe dados
-  nenhuns. Com formulário passa a haver nome, email e mensagem, e é preciso
-  declarar a finalidade, o fundamento e quanto tempo se guarda.
+- ⚠️ **Rever `/privacidade`.** Hoje a página declara um só dado de visitantes,
+  o email da newsletter. Com formulário passa a haver nome, email e mensagem, e
+  é preciso declarar a finalidade, o fundamento e quanto tempo se guarda.
 - ⚠️ **Rever `/cookies`** se o serviço escolhido puser algum. Se puser, deixa de
   se poder dizer que não há cookies, e entra banner de consentimento.
 

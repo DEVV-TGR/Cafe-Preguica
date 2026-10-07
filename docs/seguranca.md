@@ -5,21 +5,26 @@ automaticamente. É a página para entregar a quem pedir contas.
 
 ## O ponto de partida
 
-Este é um site de montra: **não tem base de dados, e para quem o visita não tem
-contas, não tem formulários e não recebe texto de ninguém**. Nada do que é
-renderizado vem de fora — vem de `src/data/`, que são ficheiros versionados no
-git e validados por `zod` antes de o build passar.
+Este é um site de montra: **não tem base de dados nem contas para quem o
+visita**, e nada do que é renderizado nas páginas vem de fora — vem de
+`src/data/`, que são ficheiros versionados no git e validados por `zod` antes
+de o build passar.
 
-A única exceção é o **painel da casa** (`/painel`, ver [`PAINEL.md`](PAINEL.md)):
-quem trabalha lá entra com um código enviado por email e muda a carta e o
-horário. O painel escreve nos mesmos ficheiros de `src/data/`, com um commit, e
-passa pelos mesmos esquemas `zod`. O site público continua estático e continua
-sem receber texto de visitantes.
+Há duas exceções, e são as duas fronteiras que importam:
 
-Isso muda a conta toda. A maior parte das vulnerabilidades de um site vive na
-fronteira entre o que o visitante escreve e o que o servidor faz com isso. Aqui
-essa fronteira não existe, e o esforço vai para as duas que restam: **o que o
-browser é autorizado a carregar** e **o que entra no repositório**.
+- **O painel da casa** (`/painel`, ver [`PAINEL.md`](PAINEL.md)): quem trabalha
+  lá entra com um código enviado por email e muda a carta e o horário. O painel
+  escreve nos mesmos ficheiros de `src/data/`, com um commit, e passa pelos
+  mesmos esquemas `zod`.
+- **A newsletter e a carta secreta** (ver [`NEWSLETTER.md`](NEWSLETTER.md)):
+  um formulário público que recebe **um email** — e só um email, validado no
+  servidor (`src/lib/email.ts`), com limites por endereço, por ligação e por
+  dia. O email nunca volta ao HTML; vai para o Resend.
+
+As páginas públicas continuam estáticas e nenhuma mostra texto escrito por
+visitantes. O esforço vai para três sítios: **o que o browser é autorizado a
+carregar**, **o que entra no repositório** e **o que os dois formulários
+deixam fazer**.
 
 ## Cabeçalhos
 
@@ -129,8 +134,11 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
   silêncio.
 - **Scripts de instalação bloqueados.** Um pacote pode correr código arbitrário
   durante o `npm install`, e é o vetor mais usado contra cadeias de dependências
-  de JavaScript. O `allowScripts` no `package.json` mantém os três pacotes que o
-  pediriam a `false` — confirmado que o build passa sem eles.
+  de JavaScript. Quem os bloqueia é o `.npmrc` (`ignore-scripts=true`), que todas
+  as versões do npm respeitam. O `allowScripts` do `package.json` regista a mesma
+  decisão para os três pacotes que o pediriam, mas só é lido a partir do npm 11
+  — e o Node 22 do CI traz o npm 10, que o ignorava e corria os três (auditoria
+  de 2026-10). O CI confirma que o bloqueio está ligado.
 - `npm audit --audit-level=high --omit=dev` no CI, em cada PR: uma
   vulnerabilidade alta numa dependência que chega ao site pára o PR. As das
   ferramentas de desenvolvimento (ESLint, Tailwind, TypeScript) aparecem num
@@ -173,9 +181,16 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
 
 ## Dados pessoais
 
-Nenhuns são recolhidos sobre quem visita o site: não há formulários, contas nem
-cookies. O alojamento (Vercel) regista pedidos ao servidor para o poder servir e
+Sobre quem só visita, nenhuns: não há contas, cookies nem estatísticas. O
+alojamento (Vercel) regista pedidos ao servidor para o poder servir e
 proteger; esses registos são da plataforma e não são usados por nós.
+
+**Quem usa o convite da newsletter ou a carta secreta** deixa um email. Até
+confirmar, o endereço não entra na lista: vai dentro do link assinado, fica o
+registo do envio na Resend e, no Upstash, um contador com o email em hash (24 h)
+e outro com a ligação (1 h). Depois de confirmar, o contacto vive no Resend.
+Quando um limite é excedido, o registo da Vercel guarda o IP e o email
+mascarado. Está tudo dito em `/privacidade`.
 
 O painel usa os emails da equipa autorizada, e só esses. Servem para enviar o
 código (Resend), e no Upstash ficam em hash, com prazo de 30 dias no máximo. Nos
@@ -212,24 +227,36 @@ sinal de que um segredo está a passar pelo cliente.
 4. As duas línguas têm as mesmas chaves de tradução
 5. `npm audit --audit-level=high --omit=dev` (e o audit inteiro, só como aviso)
 6. `build` — e com ele a validação `zod` de `src/data/`
-7. O site arranca e as 13 rotas respondem com o código certo
-8. Os seis cabeçalhos de segurança estão na resposta
-9. A CSP de produção não traz `'unsafe-eval'`
+7. O site arranca e as páginas respondem com o código certo, nas duas línguas,
+   incluindo o 404 e o 308 da `/sobre`
+8. Os seis cabeçalhos de segurança estão na resposta — na inicial, em inglês,
+   num 404, no sitemap e numa rota da API
+9. A CSP de produção não traz `'unsafe-eval'` em nenhuma delas
 10. O painel está fechado:
     - `/painel` sem sessão, ou com um cookie inventado, vai para a entrada;
     - a CSP do painel tem nonce, e nem `'unsafe-inline'` nem `'unsafe-eval'`
       nos scripts;
     - traz `no-store` e `noindex`;
-    - nenhuma rota dele é estática.
-11. O HTML não carrega nenhum recurso de terceiros
-12. Nenhuma página pública grava cookies
+    - nenhuma rota dele é estática;
+    - `/painel/versao` com um cookie inventado é 401, e um caminho com ponto
+      (`/painel/x.y`) também vai para a entrada;
+    - as server actions chamadas à mão, com um cookie inventado, não respondem
+      sucesso nem detalhe.
+11. O HTML de todas as páginas, nas duas línguas, não carrega nenhum recurso de
+    terceiros
+12. Nenhuma página pública grava cookies (todas, mais o 404, o sitemap e o
+    robots)
 13. Os testes unitários de segurança (`npm run testes`, em `testes/`)
 14. O build corre com valores sentinela nas variáveis sensíveis, e
-    `npm run segredos` procura-os no que vai para o browser — com os endereços
-    das APIs que usam chaves e os nomes da carta secreta
+    `npm run segredos` procura-os no que vai para o browser — as chaves, os
+    endereços do `PAINEL_EMAILS`, o segmento e os remetentes do Resend, os
+    endereços das APIs que usam chaves e os nomes da carta secreta
 15. Sem `X-Powered-By`; `/painelx` e afins com os cabeçalhos do site
-16. As três rotas públicas recusam o que não é JSON (415) e corpos acima de
-    4 KB (413)
+16. As três rotas públicas recusam o que não é JSON (415), corpos acima de
+    4 KB (413), GET (405) e emails inválidos (400)
+17. Os scripts de instalação estão bloqueados (`ignore-scripts`)
+18. O sitemap não anuncia rotas privadas e traz `x-default`; o `robots.txt`
+    continua a bloquear o `/painel`
 
 Configuração parte-se sem ninguém dar por isso. Aqui, parte-se com o CI
 vermelho.

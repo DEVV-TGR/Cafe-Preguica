@@ -40,10 +40,19 @@ jobs:
 
       # `ci` e não `install`: instala exactamente o que está no lock e falha se o
       # `package.json` e o lock divergirem, em vez de os reconciliar em silêncio.
-      # Os scripts de instalação dos pacotes ficam bloqueados — ver o comentário
-      # `_comentario_allowScripts` no `package.json`.
+      # Os scripts de instalação dos pacotes ficam bloqueados pelo `.npmrc`
+      # (`ignore-scripts=true`). O `allowScripts` do `package.json` diz o mesmo,
+      # mas só o npm 11 em diante o lê — e o Node 22 daqui traz o npm 10, que o
+      # ignorava e corria os três scripts. O passo a seguir confirma que o
+      # bloqueio está ligado neste npm, seja qual for a versão.
       - name: Instalar
         run: npm ci
+
+      - name: Os scripts de instalação estão bloqueados
+        run: |
+          set -euo pipefail
+          [ "$(npm config get ignore-scripts)" = "true" ] || { echo "::error::ignore-scripts não está ativo (npm $(npm --version))"; exit 1; }
+          echo "✓ ignore-scripts ativo no npm $(npm --version)"
 
       - name: Lint
         run: npm run lint
@@ -92,6 +101,10 @@ jobs:
           RESEND_NEWSLETTER_API_KEY: sentinela-ci-newsletter-5a7c9e1b
           UPSTASH_REDIS_REST_TOKEN: sentinela-ci-upstash-2e4f6a8c
           UPSTASH_REDIS_REST_URL: https://sentinela-ci-upstash.invalid
+          PAINEL_EMAILS: sentinela-ci-painel-4b8e@exemplo.invalid
+          RESEND_REMETENTE: Sentinela CI <sentinela-ci-remetente-9c1d@exemplo.invalid>
+          RESEND_NEWSLETTER_REMETENTE: Sentinela CI <sentinela-ci-novidades-6a2f@exemplo.invalid>
+          RESEND_NEWSLETTER_SEGMENTO: sentinela-ci-segmento-3e7b
 
       # Nada do servidor no browser: nem os valores de cima, nem os endereços
       # das APIs com chave, nem a carta secreta. Ver `scripts/verificar-segredos.mjs`.
@@ -103,6 +116,10 @@ jobs:
           RESEND_NEWSLETTER_API_KEY: sentinela-ci-newsletter-5a7c9e1b
           UPSTASH_REDIS_REST_TOKEN: sentinela-ci-upstash-2e4f6a8c
           UPSTASH_REDIS_REST_URL: https://sentinela-ci-upstash.invalid
+          PAINEL_EMAILS: sentinela-ci-painel-4b8e@exemplo.invalid
+          RESEND_REMETENTE: Sentinela CI <sentinela-ci-remetente-9c1d@exemplo.invalid>
+          RESEND_NEWSLETTER_REMETENTE: Sentinela CI <sentinela-ci-novidades-6a2f@exemplo.invalid>
+          RESEND_NEWSLETTER_SEGMENTO: sentinela-ci-segmento-3e7b
 
       # Teste de fumo: o site arranca mesmo e as páginas respondem. Apanha o erro
       # de runtime que passa por um build verde.
@@ -150,40 +167,51 @@ jobs:
           verificar /en               200
           verificar /en/ementa        200
           verificar /en/contactos     200
+          verificar /en/cookies       200
+          verificar /en/privacidade   200
+          verificar /en/informacao-legal 200
+          verificar /en/sobre         308
+          verificar /painel/entrar    200
           verificar /newsletter/confirmar    200
           verificar /en/newsletter/confirmar 200
           verificar /sitemap.xml      200
           verificar /robots.txt       200
           verificar /uma-rota-que-nao-existe 404
+          verificar /en/uma-rota-que-nao-existe 404
 
       # Os cabeçalhos de segurança são configuração, e configuração parte-se sem
       # ninguém dar por isso. Aqui, parte-se com o CI vermelho.
       - name: Os cabeçalhos de segurança estão lá
         run: |
           set -euo pipefail
-          cabecalhos=$(curl -s -D - -o /dev/null http://localhost:3000/ | tr 'A-Z' 'a-z')
 
-          for cabecalho in \
-            "content-security-policy" \
-            "x-frame-options" \
-            "x-content-type-options" \
-            "referrer-policy" \
-            "permissions-policy" \
-            "strict-transport-security"
-          do
-            if ! grep -q "^${cabecalho}:" <<< "$cabecalhos"; then
-              echo "::error::falta o cabeçalho ${cabecalho}"
+          # Não só a inicial: as páginas em inglês, um 404, o sitemap e uma
+          # rota da API saem por caminhos diferentes do Next, e cada um tem de
+          # levar os seis. Em produção não pode haver `unsafe-eval` em nenhum —
+          # só o `dev` o usa.
+          for caminho in / /en /ementa /uma-rota-que-nao-existe /sitemap.xml /api/newsletter; do
+            cabecalhos=$(curl -s -D - -o /dev/null "http://localhost:3000${caminho}" | tr 'A-Z' 'a-z')
+
+            for cabecalho in \
+              "content-security-policy" \
+              "x-frame-options" \
+              "x-content-type-options" \
+              "referrer-policy" \
+              "permissions-policy" \
+              "strict-transport-security"
+            do
+              if ! grep -q "^${cabecalho}:" <<< "$cabecalhos"; then
+                echo "::error::${caminho}: falta o cabeçalho ${cabecalho}"
+                exit 1
+              fi
+            done
+
+            if grep -q "unsafe-eval" <<< "$cabecalhos"; then
+              echo "::error::${caminho}: a CSP de produção traz 'unsafe-eval'"
               exit 1
             fi
-            echo "✓ ${cabecalho}"
+            echo "✓ ${caminho}: os seis cabeçalhos, sem 'unsafe-eval'"
           done
-
-          # Em produção não pode haver `unsafe-eval` — só o `dev` o usa.
-          if grep -q "unsafe-eval" <<< "$cabecalhos"; then
-            echo "::error::a CSP de produção traz 'unsafe-eval'"
-            exit 1
-          fi
-          echo "✓ a CSP não traz 'unsafe-eval'"
 
           # Ninguém precisa de saber que framework está do outro lado.
           for caminho in / /painel/entrar; do
@@ -212,7 +240,7 @@ jobs:
           set -euo pipefail
 
           # Sem sessão, `/painel` e as suas páginas mandam para a entrada.
-          for caminho in /painel /painel/ementa /painel/casa /painel/newsletter /painel/newsletter/enviada/qualquer; do
+          for caminho in /painel /painel/ementa /painel/casa /painel/newsletter /painel/newsletter/enviada/qualquer /painel/versao /painel/x.y; do
             resposta=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "http://localhost:3000${caminho}")
             if [ "$resposta" != "307 http://localhost:3000/painel/entrar" ]; then
               echo "::error::${caminho} sem sessão devolveu '${resposta}', esperava 307 para /painel/entrar"
@@ -230,6 +258,32 @@ jobs:
             exit 1
           fi
           echo "✓ um cookie de sessão falso não entra"
+
+          obtido=$(curl -s -o /dev/null -w '%{http_code}' -b 'preguica_sessao=s2.inventado.falso' \
+            http://localhost:3000/painel/versao)
+          [ "$obtido" = "401" ] || { echo "::error::/painel/versao com cookie falso devolveu ${obtido}, esperava 401"; exit 1; }
+          echo "✓ /painel/versao com cookie falso → 401"
+
+          # As server actions são pontos de entrada como outros quaisquer: um
+          # POST feito à mão, com um cookie que passa o proxy, tem de morrer no
+          # `exigirSessaoNaAccao()` — sem resposta de sucesso e sem detalhe.
+          for nome in publicarEmenta gravarCasa enviarNewsletter enviarTesteDaNewsletter; do
+            id=$(node -e '
+              const m = require("./.next/server/server-reference-manifest.json");
+              const e = Object.entries(m.node).find(([, v]) => JSON.stringify(v).includes(`"exportedName":"${process.argv[1]}"`));
+              console.log(e ? e[0] : "");' "$nome")
+            [ -n "$id" ] || { echo "::error::não encontrei a action ${nome} no manifesto"; exit 1; }
+            resposta=$(curl -s -w '\n%{http_code}' -X POST http://localhost:3000/painel/ementa \
+              -H "Next-Action: ${id}" -H 'Content-Type: text/plain;charset=UTF-8' \
+              -H 'Origin: http://localhost:3000' -b 'preguica_sessao=s2.inventado.falso' \
+              --data '[{"tipo":"parado"},"$K1"]')
+            estado=$(tail -n1 <<< "$resposta")
+            if [ "$estado" = "200" ] || grep -q '"tipo":"gravado"\|"tipo":"enviado"\|Sem sessão' <<< "$resposta"; then
+              echo "::error::a action ${nome} sem sessão respondeu ${estado}"
+              exit 1
+            fi
+            echo "✓ ${nome} sem sessão → ${estado}, sem detalhe"
+          done
 
           cabecalhos=$(curl -s -D - -o /dev/null http://localhost:3000/painel/entrar | tr 'A-Z' 'a-z')
           csp=$(grep '^content-security-policy:' <<< "$cabecalhos")
@@ -262,7 +316,12 @@ jobs:
       - name: O site não carrega nada de fora
         run: |
           set -euo pipefail
-          html=$(curl -s http://localhost:3000/)
+          # Todas as páginas, nas duas línguas, e um 404: um recurso de fora pode
+          # entrar por uma página só (um mapa nos contactos, um vídeo na ementa).
+          html=$(for caminho in / /ementa /contactos /privacidade /cookies /informacao-legal /newsletter/confirmar \
+                   /en /en/ementa /en/contactos /en/privacidade /en/cookies /en/informacao-legal /uma-rota-que-nao-existe; do
+                   curl -s "http://localhost:3000${caminho}"
+                 done)
 
           # Só conta o que o browser **carrega** sozinho: qualquer `src` e os
           # `href` dos `<link>` cujo `rel` provoca um pedido. Um `<a href>` para
@@ -303,7 +362,13 @@ jobs:
           [ "$obtido" != "200" ] || { echo "::error::um convite inventado foi aceite"; exit 1; }
           echo "✓ um convite inventado não entra (${obtido})"
 
-          for rota in /api/newsletter /api/newsletter/confirmar; do
+          obtido=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' -d '{"email":"isto-nao-e-um-email"}' \
+            http://localhost:3000/api/carta-secreta)
+          [ "$obtido" = "400" ] || { echo "::error::a carta secreta com email inválido devolveu ${obtido}, esperava 400"; exit 1; }
+          echo "✓ carta secreta: email inválido → 400"
+
+          for rota in /api/newsletter /api/newsletter/confirmar /api/carta-secreta; do
             obtido=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:3000${rota}")
             [ "$obtido" = "405" ] || { echo "::error::GET ${rota} devolveu ${obtido}, esperava 405"; exit 1; }
             echo "✓ GET ${rota} → 405"
@@ -331,7 +396,9 @@ jobs:
         run: |
           set -euo pipefail
           falhou=0
-          for caminho in / /en /ementa /en/ementa /privacidade /en/cookies; do
+          for caminho in / /en /ementa /en/ementa /contactos /en/contactos /privacidade /en/privacidade \
+                         /cookies /en/cookies /informacao-legal /en/informacao-legal /newsletter/confirmar \
+                         /en/newsletter/confirmar /uma-rota-que-nao-existe /sitemap.xml /robots.txt; do
             for lingua in pt-PT en-GB; do
               if curl -s -o /dev/null -D - -H "Accept-Language: ${lingua}" \
                   "http://localhost:3000${caminho}" | grep -qi '^set-cookie:'; then
@@ -342,6 +409,26 @@ jobs:
           done
           [ "$falhou" = 0 ] && echo "✓ nenhuma página grava cookies"
           exit "$falhou"
+
+      # O sitemap é o que se anuncia ao Google; o robots, o que se lhe pede
+      # para não ler. Uma rota privada no primeiro, ou o painel fora do
+      # segundo, é o tipo de coisa que só se nota depois de indexada.
+      - name: O sitemap e o robots dizem o que devem
+        run: |
+          set -euo pipefail
+          sitemap=$(curl -s http://localhost:3000/sitemap.xml)
+          for proibido in /painel /api /newsletter /sobre; do
+            if grep -q "<loc>[^<]*${proibido}" <<< "$sitemap"; then
+              echo "::error::o sitemap anuncia ${proibido}"
+              exit 1
+            fi
+          done
+          grep -q 'hreflang="x-default"' <<< "$sitemap" || { echo "::error::o sitemap não traz x-default"; exit 1; }
+          echo "✓ sitemap sem rotas privadas, com x-default"
+
+          robots=$(curl -s http://localhost:3000/robots.txt)
+          grep -q '^Disallow: /painel' <<< "$robots" || { echo "::error::o robots.txt deixou de bloquear /painel"; exit 1; }
+          echo "✓ robots.txt bloqueia /painel"
 
       - name: Desligar o site
         if: always()

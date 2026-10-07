@@ -37,7 +37,7 @@
   "engines": {
     "node": ">=20.9.0"
   },
-  "_comentario_allowScripts": "Um pacote pode correr código arbitrário na máquina de quem faz npm install, e é o vetor de ataque mais usado contra cadeias de dependências de JavaScript. O npm bloqueia esses scripts por omissão; esta lista é a decisão explícita de os manter bloqueados. Os tres estao a false porque o build e os testes passam sem eles — confirmado a correr npm ci seguido de npm run build com node_modules apagado. Se um dia algo deixar de funcionar, o que se poe a true e so o pacote que falhou, depois de se perceber o que o script dele faz.",
+  "_comentario_allowScripts": "Um pacote pode correr código arbitrário na máquina de quem faz npm install, e é o vetor de ataque mais usado contra cadeias de dependências de JavaScript. Esta lista é a decisão explícita de manter bloqueados os três pacotes que o pediriam. Mas o allowScripts só é lido a partir do npm 11, e o Node 22 do CI traz o npm 10, que o ignora: quem aplica o bloqueio em qualquer versão é o .npmrc (ignore-scripts=true), e o CI confirma-o. Os três estão a false porque o build e os testes passam sem eles — confirmado a correr npm ci seguido de npm run build com o npm 10.9 e o npm 12. Se um dia algo deixar de funcionar, o que se põe a true é só o pacote que falhou, depois de se perceber o que o script dele faz — e o .npmrc tem de passar a deixá-lo correr.",
   "allowScripts": {
     "unrs-resolver@1.12.2": false,
     "@parcel/watcher@2.6.0": false,

@@ -79,9 +79,23 @@ const SO_DO_SERVIDOR = [
 
 const ementa = JSON.parse(readFileSync(join(RAIZ, "src/data/ementa.json"), "utf8"));
 const porId = new Map(ementa.artigos.map((a) => [a.id, a]));
+/*
+  Os nomes da carta secreta procuram-se como palavra inteira, e não como
+  pedaço de texto: o "Hurricane" secreto não pode ser apanhado dentro do
+  "Virgin Hurricane", que é um mocktail à vista na ementa. Foi o que pôs este
+  passo vermelho quando o painel mandou o Hurricane para a carta secreta.
+  "Palavra inteira" quer dizer sem letra ou algarismo logo a seguir, e sem
+  outra palavra imediatamente antes (letra, ou letra e um espaço ou hífen) —
+  ">Hurricane · 6,20 €<" e "\"Hurricane\"" contam; "Virgin Hurricane" não.
+*/
+const escapar = (texto) => texto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const comoPalavra = (texto) =>
+  new RegExp(`(?<![\\p{L}\\p{N}][ -]?)${escapar(texto)}(?![\\p{L}\\p{N}])`, "u");
 const SECRETOS = (ementa.secretos ?? []).flatMap((id) => {
   const artigo = porId.get(id);
-  return artigo ? Object.values(artigo.nome).map((nome) => ({ id, nome })) : [];
+  return artigo
+    ? Object.values(artigo.nome).map((nome) => ({ id, nome, padrao: comoPalavra(nome) }))
+    : [];
 });
 
 const problemas = [];
@@ -105,8 +119,8 @@ for (const caminho of PUBLICOS) {
     if (texto.includes(marca)) problemas.push(`"${marca}" está em ${relativo(caminho)}`);
   }
 
-  for (const { id, nome } of SECRETOS) {
-    if (texto.includes(nome)) {
+  for (const { id, padrao } of SECRETOS) {
+    if (padrao.test(texto)) {
       problemas.push(`o artigo secreto "${id}" está em ${relativo(caminho)}`);
     }
   }

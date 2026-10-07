@@ -63,9 +63,16 @@ function moldura(cancelar: string): Moldura {
     remetente: rodapeDaCasa(), cancelar };
 }
 
+/*
+  As mudanças de linha chegam como `\r\n`: é assim que um `<textarea>` as envia
+  num formulário (regra do HTML), mas no browser o mesmo texto tem `\n`. Sem as
+  igualar aqui, o texto que o teste devolve nunca era igual ao que está no
+  ecrã, e o "Enviar a todos" não acendia para nenhuma newsletter com mais de um
+  parágrafo — ou seja, para nenhuma.
+*/
 function lerMensagem(dados: FormData): { assunto: string; texto: string } | string {
   const assunto = String(dados.get("assunto") ?? "").trim();
-  const texto = String(dados.get("texto") ?? "").trim();
+  const texto = String(dados.get("texto") ?? "").replace(/\r\n?/g, "\n").trim();
 
   if (!assunto) return "Falta o assunto.";
   if (assunto.length > MAX_ASSUNTO) return `O assunto tem de ter até ${MAX_ASSUNTO} caracteres.`;

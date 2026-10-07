@@ -150,7 +150,9 @@
       "factoTosta": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately at €3.60.",
       "verMais": "And the rest of the menu",
       "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
-      "verMaisAcao": "See the menu"
+      "verMaisAcao": "See the menu",
+      "altSaloias": "Two toasties on rustic bread, one ham and cheese and one tuna, on two plates with crisps.",
+      "factoSaloias": "On rustic bread, with crisps. Beside it, the tuna and cheese one."
     },
     "preguicosos": {
       "nome": "The Preguiçosos",
@@ -278,7 +280,14 @@
       "chocolate-chantilly": "A hot chocolate in a glass mug, with whipped cream, cocoa and a wafer roll.",
       "chocolate-chantilly-mesa": "A hot chocolate with whipped cream and a wafer roll, on a wooden table.",
       "gluehwein": "A Glühwein, hot red wine, in a glass mug with a slice of orange, beside oranges and cinnamon sticks.",
-      "gluehwein-canela": "A Glühwein with orange, cinnamon sticks in front and jars of spices behind."
+      "gluehwein-canela": "A Glühwein with orange, cinnamon sticks in front and jars of spices behind.",
+      "cachorro-xl": "A toasted Portuguese hot dog sandwich, cut into slices, with melted cheese and the sausage showing, beside a bowl of crisps.",
+      "tostas-saloias": "Two plates of toasties on rustic bread, one ham and cheese and one tuna, each with a bowl of crisps.",
+      "tabua-mista": "A board with fuet, cured ham, cubes of cheese and a bowl of jam, beside a basket of bread and crackers.",
+      "mongolia": "A Mongolia in a green tiki mug, with a strawberry, a slice of lemon, mint and a red-striped straw.",
+      "espresso-martini": "An Espresso Martini in a coupe, with foam and cinnamon on top, on a wooden table with a reserved sign.",
+      "mexican-mule": "A Mexican Mule in a copper mug, with a strawberry, mint and a black straw.",
+      "moscow-mule": "A Moscow Mule in a copper mug with ice, mint and a black straw, on a wooden table."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",

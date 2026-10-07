@@ -215,6 +215,15 @@ export const EM_DESTAQUE: readonly string[] = [
   "gin-tanqueray-sevilla",
   "sho-b52",
   "caf-gluehwein",
+  /* As dúvidas que o Tomás confirmou (2026-10-07). */
+  "cachorro-xl",
+  "queijo-fiambre",
+  "pasta-de-atum-e-queijo",
+  "tabua-mista",
+  "mongolia-m-f",
+  "espresso-martini",
+  "mexican-mule",
+  "moscow-mule",
 ];
 
 /**

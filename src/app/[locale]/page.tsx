@@ -269,6 +269,8 @@ export default async function Inicio({ params }: Props) {
             "bocadinhos-de-pao-com-chourico": t("partilhar.altTabua"),
             "torrada-com-compota": t("partilhar.altTosta"),
             "torrada-com-compota-facto": t("partilhar.factoTosta"),
+            "queijo-fiambre": t("partilhar.altSaloias"),
+            "queijo-fiambre-facto": t("partilhar.factoSaloias"),
           }}
         />
 

@@ -267,22 +267,29 @@ jobs:
           # As server actions são pontos de entrada como outros quaisquer: um
           # POST feito à mão, com um cookie que passa o proxy, tem de morrer no
           # `exigirSessaoNaAccao()` — sem resposta de sucesso e sem detalhe.
-          for nome in publicarEmenta gravarCasa enviarNewsletter enviarTesteDaNewsletter; do
+          #
+          # O que se confere é o corpo, e não o código HTTP: o Next responde 500
+          # a uma action que atira na página dela, mas 200 (com o mesmo erro no
+          # corpo) se o POST for para outra página. A resposta certa é um erro
+          # opaco — `E{"digest":…}` — e nada que diga porquê.
+          for par in publicarEmenta:/painel/ementa gravarCasa:/painel/casa \
+                     enviarNewsletter:/painel/newsletter enviarTesteDaNewsletter:/painel/newsletter; do
+            nome=${par%%:*}
+            pagina=${par#*:}
             id=$(node -e '
               const m = require("./.next/server/server-reference-manifest.json");
               const e = Object.entries(m.node).find(([, v]) => JSON.stringify(v).includes(`"exportedName":"${process.argv[1]}"`));
               console.log(e ? e[0] : "");' "$nome")
             [ -n "$id" ] || { echo "::error::não encontrei a action ${nome} no manifesto"; exit 1; }
-            resposta=$(curl -s -w '\n%{http_code}' -X POST http://localhost:3000/painel/ementa \
+            resposta=$(curl -s -X POST "http://localhost:3000${pagina}" \
               -H "Next-Action: ${id}" -H 'Content-Type: text/plain;charset=UTF-8' \
               -H 'Origin: http://localhost:3000' -b 'preguica_sessao=s2.inventado.falso' \
               --data '[{"tipo":"parado"},"$K1"]')
-            estado=$(tail -n1 <<< "$resposta")
-            if [ "$estado" = "200" ] || grep -q '"tipo":"gravado"\|"tipo":"enviado"\|Sem sessão' <<< "$resposta"; then
-              echo "::error::a action ${nome} sem sessão respondeu ${estado}"
+            if ! grep -q ':E{"digest"' <<< "$resposta" || grep -q '"tipo":\|Sem sessão' <<< "$resposta"; then
+              echo "::error::a action ${nome} sem sessão não foi recusada: $(tail -c 200 <<< "$resposta")"
               exit 1
             fi
-            echo "✓ ${nome} sem sessão → ${estado}, sem detalhe"
+            echo "✓ ${nome} sem sessão → erro opaco"
           done
 
           cabecalhos=$(curl -s -D - -o /dev/null http://localhost:3000/painel/entrar | tr 'A-Z' 'a-z')

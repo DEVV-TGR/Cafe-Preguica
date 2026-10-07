@@ -1,6 +1,8 @@
 {
   "confirmada": true,
-  "secretos": [],
+  "secretos": [
+    "hurricane"
+  ],
   "sabores": [
     {
       "id": "surpresa",

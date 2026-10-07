@@ -1,4 +1,5 @@
 import { exigirSessao } from "@/lib/painel/porta";
+import { noSiteOficial } from "@/lib/ambiente";
 import { URL_SITE } from "@/lib/site";
 import Link from "next/link";
 import { rodapeDaCasa } from "@/lib/newsletter/casa";
@@ -68,6 +69,7 @@ export default async function PaginaDaNewsletter() {
           <EditorDaNewsletter
             inscritos={inscritos}
             podeEnviar={!falta && !erro}
+            envioATodos={noSiteOficial()}
             /* O logótipo relativo: a CSP do painel só deixa carregar imagens do
                 próprio domínio, e a pré-visualização vive dentro dela. */
             moldura={{

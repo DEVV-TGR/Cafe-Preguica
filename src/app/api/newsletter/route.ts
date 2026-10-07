@@ -7,6 +7,7 @@ import { podeConvidar } from "@/lib/newsletter/limites";
 import { enviarConfirmacao, estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { lerJson } from "@/lib/pedido";
+import { EsquemaEmail } from "@/lib/email";
 
 /*
   O pop-up escreve aqui: pede o email de confirmação, e mais nada.
@@ -35,7 +36,7 @@ import { lerJson } from "@/lib/pedido";
 */
 
 const Pedido = z.object({
-  email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
+  email: EsquemaEmail,
   lingua: z.enum(routing.locales).catch(routing.defaultLocale),
   /* O isco: um campo escondido que uma pessoa nunca vê nem preenche, e que um
      robô de formulários preenche quase sempre. */

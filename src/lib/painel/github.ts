@@ -1,4 +1,5 @@
 import "server-only";
+import { noSiteOficial } from "@/lib/ambiente";
 
 /*
   Gravar no repositório.
@@ -40,16 +41,31 @@ const DONO = "DEVV-TGR";
 const REPO = "Cafe-Preguica";
 
 /*
-  Em produção grava sempre no `main`, que é o que a Vercel publica.
+  Onde o painel lê e grava.
 
-  Fora de produção, `PAINEL_GITHUB_RAMO` deixa experimentar o painel na própria
-  máquina contra uma branch de ensaio — sem ela, carregar em "Publicar" no
-  `npm run dev` punha um preço de teste no site verdadeiro. A branch tem de
-  existir antes; a API não a cria.
+  | onde | ramo |
+  |---|---|
+  | site oficial (`VERCEL_ENV=production`) | `main`, que é o que a Vercel publica |
+  | pré-visualização de um PR, `npm start`, `npm run dev` | `PAINEL_GITHUB_RAMO`, uma branch de ensaio |
+  | idem, sem `PAINEL_GITHUB_RAMO` (ou com `main` lá dentro) | recusa, e diz porquê |
+
+  Já foi `NODE_ENV === "production"` → `main`, e isso apanhava também as
+  pré-visualizações e o `npm start`: quem experimentasse o painel num PR
+  publicava no site verdadeiro. Ver `lib/ambiente.ts`.
+
+  Fora do site oficial **nunca** se grava no `main`, nem que alguém escreva
+  `main` na variável: uma versão de ensaio que publica no site verdadeiro é
+  exatamente o que isto existe para impedir. A branch de ensaio tem de existir
+  antes; a API não a cria.
 */
-function ramo(): string {
-  if (process.env.NODE_ENV === "production") return "main";
-  return process.env.PAINEL_GITHUB_RAMO?.trim() || "main";
+export function ramo(): string {
+  if (noSiteOficial()) return "main";
+
+  const ensaio = process.env.PAINEL_GITHUB_RAMO?.trim();
+  if (!ensaio || ensaio === "main") {
+    throw new ErroDoGithub(SEM_RAMO_DE_ENSAIO, "PAINEL_GITHUB_RAMO em falta fora do site oficial.");
+  }
+  return ensaio;
 }
 
 export const CAMINHO_EMENTA = "src/data/ementa.json";
@@ -107,6 +123,13 @@ export class ErroDoGithub extends Error {
         "PAINEL_GITHUB_TOKEN. Ver docs/PAINEL.md."
       );
     }
+    if (this.estado === SEM_RAMO_DE_ENSAIO) {
+      return (
+        "Esta é uma versão de ensaio do site, e daqui o painel não grava no site " +
+        "verdadeiro. Para experimentar, define PAINEL_GITHUB_RAMO com uma branch de " +
+        "ensaio. Ver docs/PAINEL.md."
+      );
+    }
     if (this.estado === 401 || this.estado === 403) {
       return (
         "O painel não conseguiu falar com o GitHub — o mais provável é o " +
@@ -128,6 +151,9 @@ export class ErroDoGithub extends Error {
   fora da gama do HTTP de propósito, para nunca colidir com uma resposta real.
 */
 const SEM_TOKEN = 0;
+
+/* Pela mesma razão: uma versão de ensaio sem branch de ensaio. Ver `ramo()`. */
+const SEM_RAMO_DE_ENSAIO = 1;
 
 /* Lido dentro da função: em module scope rebentava o `next build` da CI. */
 function cabecalhos(): HeadersInit {

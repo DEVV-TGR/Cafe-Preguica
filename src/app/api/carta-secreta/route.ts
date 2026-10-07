@@ -6,6 +6,7 @@ import { estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { somar, ErroDoRedis } from "@/lib/painel/redis";
 import { rede } from "@/lib/painel/limites";
 import { lerJson } from "@/lib/pedido";
+import { EsquemaEmail } from "@/lib/email";
 
 /*
   Abrir a carta secreta: está inscrito na newsletter, ou não está?
@@ -33,7 +34,7 @@ import { lerJson } from "@/lib/pedido";
 
 const Pedido = z.union([
   z.object({
-    email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
+    email: EsquemaEmail,
     lingua: z.enum(routing.locales).catch(routing.defaultLocale),
   }),
   z.object({

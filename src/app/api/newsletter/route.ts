@@ -128,6 +128,7 @@ export async function POST(pedido: Request) {
     const moldura: Moldura = {
       logo: `${URL_SITE}${CAMINHO_DO_LOGO}`,
       estudio: `${URL_SITE}${CAMINHO_DO_ESTUDIO}`,
+      site: URL_SITE,
       remetente: rodapeDaCasa(),
       cancelar: null,
       lingua: lingua === "en" ? "en" : "pt-PT",

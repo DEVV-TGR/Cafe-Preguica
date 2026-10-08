@@ -31,6 +31,11 @@
   o Gmail do telemóvel em modo escuro invertia esse fundo para branco, deixando
   só o logótipo preto no meio. Os clientes invertem cores, nunca imagens.
 
+  **A faixa vai dentro de um link para o site.** Uma imagem grande sem link
+  ganha no Gmail um botão de transferir por cima, e o logótipo não é para
+  levar. Não impede quem queira mesmo guardá-lo — nada impede —, mas deixa de
+  ser oferecido a quem passa o rato.
+
   O `color-scheme: light only` faz o Mail da Apple deixar o email claro em modo
   escuro. O Gmail do telemóvel ignora-o e inverte o papel e a tinta à mesma — isso
   ninguém consegue impedir sem transformar o texto em imagem —, mas a faixa, que
@@ -100,6 +105,8 @@ export type Moldura = {
   logo: string;
   /** O ícone da DevPlus — absoluto ou relativo, pela mesma razão do `logo`. */
   estudio: string;
+  /** Para onde leva a faixa do logótipo: o site da casa. */
+  site: string;
   /** "Café Preguiça · R. José Joaquim Ribeiro Teles, 560 · Ermesinde" */
   remetente: string;
   /** O link de cancelar. No envio a sério é a `MARCA_DO_CANCELAMENTO`; no teste
@@ -207,7 +214,7 @@ Recebe este email porque se inscreveu na newsletter no site da casa.
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CORES.papel}">
 <tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CORES.folha}">
-<tr><td style="padding:0;background:${CORES.escuro};line-height:0;font-size:0"><img src="${escapar(moldura.logo)}" width="560" alt="Café Preguiça" style="display:block;border:0;outline:none;width:100%;max-width:560px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px;line-height:1.4"></td></tr>
+<tr><td style="padding:0;background:${CORES.escuro};line-height:0;font-size:0"><a href="${escapar(moldura.site)}" style="display:block;text-decoration:none"><img src="${escapar(moldura.logo)}" width="560" alt="Café Preguiça" style="display:block;border:0;outline:none;width:100%;max-width:560px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px;line-height:1.4"></a></td></tr>
 <tr><td style="padding:28px 28px 12px;font-size:26px;line-height:1.2;color:${CORES.tinta}">${escapar(extras.titulo ?? assunto)}</td></tr>
 <tr><td style="padding:12px 28px;font-family:Helvetica,Arial,sans-serif;color:${CORES.tinta}">${corpo}${botao}${nota}</td></tr>
 <tr><td style="padding:16px 28px 28px;border-top:1px solid #e4d8c6;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:${CORES.suave}">

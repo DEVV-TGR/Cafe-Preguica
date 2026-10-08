@@ -163,9 +163,9 @@
   },
   "ementa": {
     "titulo": "A carta",
-    "introducao": "Tostas e tábuas para partilhar, cocktails feitos ao balcão, um a um, e o resto da garrafeira.",
-    "avisoProvisoria": "Carta transcrita do menu da casa e ainda por confirmar. Em caso de dúvida, pergunte ao balcão.",
-    "avisoAlergenios": "A informação sobre alergénios está disponível no balcão. Pergunte-nos antes de fazer o pedido.",
+    "introducao": "Tostas, tábuas, cocktails, vinho quente e muito mais! Espreita a nossa garrafeira, escolhe o que te apetece e desfruta sem pressas.",
+    "avisoProvisoria": "Carta transcrita do menu da casa e ainda por confirmar. Em caso de dúvida, pergunta ao balcão.",
+    "avisoAlergenios": "A informação sobre alergénios está disponível no balcão. Pergunta-nos antes de fazeres o pedido.",
     "categorias": {
       "tostas-e-snacks": "Tostas & snacks",
       "tabuas": "Tábuas",
@@ -197,7 +197,7 @@
         "b": "Garrafa"
       }
     },
-    "saboresTitulo": "Escolha o sabor",
+    "saboresTitulo": "Escolhe o sabor",
     "olho": "Café Preguiça · Ermesinde",
     "contagem": "{artigos} artigos · {seccoes} secções",
     "indice": "Capítulos da carta",
@@ -233,6 +233,11 @@
       "cocktail-amarelo": "Um copo balão com uma bebida amarela, uma rodela de kiwi e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
       "cocktail-rosa": "Um copo balão com uma bebida cor-de-rosa, uma rodela de laranja desidratada e uma palhinha às riscas amarelas, sobre uma mesa de madeira.",
       "cocktail-coco": "Um copo balão com uma bebida branca e gelo, um guarda-chuva amarelo e uma palhinha às riscas vermelhas, ao lado de um coco, sobre uma mesa de madeira.",
+      "unicornio-azul": "Um Unicórnio azul num copo de vidro com gelo, um tubarão de goma amarelo, casca de limão e uma palhinha às riscas amarelas, sobre um balcão de madeira.",
+      "unicornio-vermelho": "Um Unicórnio vermelho num copo de vidro com gelo, uma rodela de laranja desidratada e uma palhinha às riscas pretas, sobre um balcão de madeira.",
+      "unicornio-amarelo": "Um Unicórnio amarelo num copo de vidro com gelo, um enfeite vermelho na borda e uma palhinha às riscas pretas, sobre um balcão de madeira.",
+      "unicornio-turquesa": "Um Unicórnio turquesa num copo de vidro com gelo, uma rodela de limão e uma palhinha às riscas pretas, sobre um balcão de madeira.",
+      "unicornio-transparente": "Um Unicórnio transparente num copo de vidro com gelo, um raminho de hortelã e uma palhinha às riscas vermelhas, sobre um balcão de madeira.",
       "bocadinhos-chourico": "Uma travessa de pão com chouriço e queijo derretido, aos pedaços, com uma taça de batata frita e um frasco de molho picante.",
       "bocadinhos-queijo": "De perto, os pedaços de pão com chouriço e queijo derretido, ao lado de uma taça de batata frita.",
       "bocadinhos-tabasco": "Os pedaços de pão com chouriço e queijo à frente de um frasco de molho picante.",
@@ -278,12 +283,12 @@
       "cocktail-azul": "Um copo balão com uma bebida azul, gelo picado, uma fatia de fruta amarela e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
       "lima-espremida": "Uma mão a espremer meia lima por cima de um Long Island Iced Tea, num copo alto com gelo."
     },
-    "sortear": "Deixe a preguiça escolher",
+    "sortear": "Deixa a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",
     "escolheu": "A preguiça escolheu",
-    "escolhido": "Escolheu",
-    "nenhumSabor": "Toque num sabor, ou deixe a preguiça escolher por si.",
-    "saboresNota": "Escolher aqui não faz o pedido: diga o sabor a quem o vier anotar.",
+    "escolhido": "Escolheste",
+    "nenhumSabor": "Toca num sabor, ou deixa a preguiça escolher por ti.",
+    "saboresNota": "Escolher aqui não faz o pedido: diz o sabor a quem o vier anotar.",
     "fecho": {
       "nome": "Dúvidas?",
       "facto": "Se quiser saber o que leva um prato ou uma bebida, ou que alergénios tem, pergunte a quem está ao balcão.",

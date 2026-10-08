@@ -163,7 +163,7 @@
   },
   "ementa": {
     "titulo": "The menu",
-    "introducao": "Toasties and boards to share, cocktails made at the bar one at a time, and everything else behind the counter.",
+    "introducao": "Toasties, boards, cocktails, mulled wine and much more! Have a look through our drinks, pick whatever you fancy and take your time.",
     "avisoProvisoria": "Transcribed from our printed menu and not yet confirmed. If in doubt, ask at the bar.",
     "avisoAlergenios": "Allergen information is available at the bar. Please ask before ordering.",
     "categorias": {
@@ -233,6 +233,11 @@
       "cocktail-amarelo": "A balloon glass with a yellow drink, a slice of kiwi and a green-striped straw, on a wooden table.",
       "cocktail-rosa": "A balloon glass with a pink drink, a dried orange slice and a yellow-striped straw, on a wooden table.",
       "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red-striped straw, next to a coconut, on a wooden table.",
+      "unicornio-azul": "A blue Unicorn in a glass tumbler with ice, a yellow gummy shark, lemon peel and a yellow-striped straw, on a wooden counter.",
+      "unicornio-vermelho": "A red Unicorn in a glass tumbler with ice, a dried orange slice and a black-striped straw, on a wooden counter.",
+      "unicornio-amarelo": "A yellow Unicorn in a glass tumbler with ice, a red decoration on the rim and a black-striped straw, on a wooden counter.",
+      "unicornio-turquesa": "A turquoise Unicorn in a glass tumbler with ice, a slice of lemon and a black-striped straw, on a wooden counter.",
+      "unicornio-transparente": "A clear Unicorn in a glass tumbler with ice, a sprig of mint and a red-striped straw, on a wooden counter.",
       "bocadinhos-chourico": "A platter of bread baked with chouriço and melted cheese, in pieces, with a bowl of crisps and a bottle of hot sauce.",
       "bocadinhos-queijo": "Close up, the pieces of bread with chouriço and melted cheese, beside a bowl of crisps.",
       "bocadinhos-tabasco": "The pieces of bread with chouriço and cheese in front of a bottle of hot sauce.",

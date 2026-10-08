@@ -226,6 +226,8 @@ export const EM_DESTAQUE: readonly string[] = [
   "moscow-mule",
   /* A lista das tostas, em "Para partilhar" na inicial (o cliente, 2026-10-08). */
   "presunto-queijo",
+  /* As fotografias que abrem as águas (o cliente, 2026-10-08). */
+  "unicornio",
 ];
 
 /**

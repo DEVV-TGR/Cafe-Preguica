@@ -466,7 +466,15 @@
     },
     "email": {
       "assunto": "Confirme a sua inscrição na newsletter do Café Preguiça",
-      "texto": "Olá,\n\nPediu para receber as novidades do Café Preguiça. Para confirmar, abra este link:\n\n{link}\n\nO link é válido durante 48 horas. Se não fez este pedido, ignore este email: sem confirmação, o endereço não fica inscrito nem guardado.\n\nCafé Preguiça · Ermesinde"
+      "titulo": "Falta só um passo",
+      "texto": "Olá,\n\nPediu para receber as novidades do Café Preguiça. Falta só confirmar que este endereço é seu.",
+      "botao": "Confirmar inscrição",
+      "nota": "O link é válido durante 48 horas. Se não fez este pedido, ignore este email: sem confirmação, o endereço não fica inscrito nem guardado.",
+      "assinatura": {
+        "antes": "Site feito",
+        "enfase": "sem preguiça nenhuma",
+        "depois": "pela"
+      }
     }
   }
 }

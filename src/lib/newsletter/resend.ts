@@ -157,11 +157,13 @@ export async function enviarConfirmacao({
   para,
   link,
   assunto,
+  html,
   texto,
 }: {
   para: string;
   link: string;
   assunto: string;
+  html: string;
   texto: string;
 }): Promise<void> {
   if (paraOTerminal(`confirmação da newsletter para ${para}:`, link)) return;
@@ -169,7 +171,7 @@ export async function enviarConfirmacao({
   const { remetente } = configuracao();
   await pedir("/emails", {
     metodo: "POST",
-    corpo: { from: remetente, to: [para], subject: assunto, text: texto },
+    corpo: { from: remetente, to: [para], subject: assunto, html, text: texto },
   });
 }
 

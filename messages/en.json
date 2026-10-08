@@ -466,7 +466,15 @@
     },
     "email": {
       "assunto": "Confirm your subscription to the Café Preguiça newsletter",
-      "texto": "Hello,\n\nYou asked to receive news from Café Preguiça. To confirm, open this link:\n\n{link}\n\nThe link is valid for 48 hours. If you didn't make this request, just ignore this email: without confirmation, the address is neither subscribed nor stored.\n\nCafé Preguiça · Ermesinde"
+      "titulo": "Just one more step",
+      "texto": "Hello,\n\nYou asked to receive news from Café Preguiça. All that's left is to confirm this address is yours.",
+      "botao": "Confirm subscription",
+      "nota": "The link is valid for 48 hours. If you didn't make this request, just ignore this email: without confirmation, the address is neither subscribed nor stored.",
+      "assinatura": {
+        "antes": "Site made",
+        "enfase": "without a lazy bone",
+        "depois": "by"
+      }
     }
   }
 }

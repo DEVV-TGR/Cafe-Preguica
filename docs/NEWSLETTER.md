@@ -39,6 +39,15 @@ O link abre uma página com um botão, em vez de inscrever ao abrir, porque os
 filtros de email das empresas e alguns antivírus seguem todos os links de uma
 mensagem. Ver `src/app/api/newsletter/confirmar/route.ts`.
 
+### O email de confirmação tem a cara da newsletter
+
+A mesma moldura (`emailEmHtml`, em `lib/newsletter/corpo.ts`): a faixa do
+logótipo, a morada e a assinatura da DevPlus, com um botão "Confirmar
+inscrição" e a versão só de texto ao lado. **Sem a linha "Cancelar a
+inscrição"**, porque quem o recebe ainda não está inscrito (`cancelar: null`).
+Os textos estão em `messages/*.json`, em `newsletter.email`, e seguem a língua
+em que a pessoa se inscreveu — a assinatura incluída.
+
 ---
 
 ## Montar

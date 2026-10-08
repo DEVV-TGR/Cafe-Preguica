@@ -17,8 +17,15 @@
   scroll-margin-top: 8rem;
 }
 
-html:has(.em-pagina) {
-  scroll-behavior: smooth;
+/* Suave só para quem não pediu menos movimento — o `scroll-behavior` não sabe
+   dessa preferência sozinho. E só dentro da carta: o `data-scroll-behavior` do
+   `<html>` (layout) faz o Next pô-lo a `auto` durante as navegações, para que
+   chegar a `/ementa#carta-secreta` seja um salto e não meio minuto a ver o
+   índice passar por todos os capítulos. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.em-pagina) {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ------------------------------------------------------------ o índice */
@@ -507,9 +514,12 @@ html:has(.em-pagina) {
   color: var(--color-tinta-suave);
 }
 
+/* Encolhe com o ecrã até 4rem: com 5,4rem fixos, as duas colunas mais o
+   círculo da fotografia não cabiam num telemóvel de 320px e a segunda coluna
+   ficava cortada pela borda ("4,1…"). 4rem chegam para "6,80 €". */
 .em-colunas span,
 .em-artigo__precos > span {
-  width: 5.4rem;
+  width: clamp(4rem, 20vw, 5.4rem);
   text-align: right;
 }
 
@@ -722,7 +732,7 @@ html:has(.em-pagina) {
   cursor: pointer;
 }
 
-.em-sabores__acao .pg-botao:disabled {
+.em-sabores__acao .pg-botao[aria-disabled="true"] {
   cursor: progress;
   opacity: 0.85;
 }

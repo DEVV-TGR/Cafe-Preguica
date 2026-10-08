@@ -37,7 +37,13 @@ import type { Locale } from "@/i18n/routing";
  *
  * Não escurece a página, não prende o foco e não obriga a responder. Quem está a
  * ler continua a ler; quem usa leitor de ecrã não é arrancado do sítio onde
- * estava. Fecha-se com o ×, com o Esc, ou ignorando-o.
+ * estava — e por isso é um `<aside>` com nome (um marco que o leitor de ecrã
+ * lista), e não um `role="dialog"`, que promete um diálogo que não existe.
+ * Fecha-se com o ×, com o Esc, ou ignorando-o.
+ *
+ * O Esc é dele só quando não há um `<dialog>` aberto: com uma fotografia aberta
+ * no visor, o Esc é do visor. Já foi dos dois — fechava a fotografia e o
+ * convite ao mesmo tempo, e o convite não voltava nessa visita.
  *
  * ## Pára no rodapé
  *
@@ -103,7 +109,12 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   const [passouOTempo, setPassouOTempo] = useState(false);
   const [estado, setEstado] = useState<Estado>({ tipo: "formulario" });
   const idTitulo = useId();
+  const idErro = useId();
   const cartao = useRef<HTMLElement>(null);
+  /* Controlado, e não deixado ao browser: o React 19 repõe os campos de um
+     `<form action>` quando a acção acaba, e acabava também quando dava erro —
+     o email desaparecia por baixo da mensagem que pedia para o corrigir. */
+  const [email, setEmail] = useState("");
 
   /* O relógio conta uma vez por visita: o layout não volta a montar ao mudar de
      página, portanto este efeito também não. */
@@ -123,13 +134,25 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
     if (estado.tipo !== "enviado" && estado.tipo !== "ja-inscrito") {
       guardar(() => sessionStorage, "fechado");
     }
+    /* Quem fechou pelo teclado tinha o foco cá dentro, e o cartão vai
+       desaparecer com ele: o foco passa para o conteúdo da página, em vez de
+       cair no `<body>` e recomeçar do topo. */
+    if (cartao.current?.contains(document.activeElement)) {
+      const principal = document.querySelector<HTMLElement>("main");
+      if (principal) {
+        if (!principal.hasAttribute("tabindex")) principal.tabIndex = -1;
+        principal.focus({ preventScroll: true });
+      }
+    }
     setEstado({ tipo: "fechado" });
   }
 
   useEffect(() => {
     if (!visivel) return;
     const aoTeclar = (e: KeyboardEvent) => {
-      if (e.key === "Escape") fechar();
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      if (document.querySelector("dialog[open]")) return;
+      fechar();
     };
     window.addEventListener("keydown", aoTeclar);
     return () => window.removeEventListener("keydown", aoTeclar);
@@ -169,7 +192,7 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: dados.get("email"),
+          email,
           sitio: dados.get("sitio"),
           lingua: locale,
         }),
@@ -201,7 +224,7 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   if (!visivel) return null;
 
   return (
-    <section ref={cartao} className="pg-convite" role="dialog" aria-labelledby={idTitulo}>
+    <aside ref={cartao} className="pg-convite" aria-labelledby={idTitulo}>
       {/* A preguiça pendurada na borda, como no topo da inicial. É decorativa,
           e por isso `alt` vazio. */}
       <img
@@ -244,7 +267,10 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
                 autoComplete="email"
                 inputMode="email"
                 placeholder={textos.marcador}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={estado.tipo === "formulario" && estado.erro ? true : undefined}
+                aria-describedby={estado.tipo === "formulario" && estado.erro ? idErro : undefined}
                 className="pg-convite__entrada"
               />
             </label>
@@ -270,7 +296,7 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
           </form>
 
           {estado.tipo === "formulario" && estado.erro ? (
-            <p className="pg-convite__erro" role="alert">
+            <p id={idErro} className="pg-convite__erro" role="alert">
               {estado.erro}
             </p>
           ) : null}
@@ -283,6 +309,6 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
           </p>
         </>
       )}
-    </section>
+    </aside>
   );
 }

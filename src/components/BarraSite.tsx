@@ -14,8 +14,10 @@ import { MudarIdioma } from "./MudarIdioma";
  * os links das secções**: na inicial saltam dentro da página (`#casa`); nas
  * outras levam lá (`/#casa`).
  *
- * `/sobre` e `/contactos` não estão aqui de propósito: ainda estão à espera do
- * texto e dos dados do cliente, e "Onde estamos" já faz o papel de contactos.
+ * `/contactos` não está aqui de propósito: "Onde estamos", na inicial, já faz
+ * esse papel. (Houve também uma `/sobre`, que nunca chegou a ter texto; o que
+ * ela ia dizer está na secção "A casa", e o endereço leva para lá — ver o
+ * `next.config.ts`.)
  *
  * O CSS está em `app/site.css`, que o `layout.tsx` carrega para todas.
  */

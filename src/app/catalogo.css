@@ -112,42 +112,6 @@
   color: var(--color-ouro);
 }
 
-/* ------------------------------------------------------------- os objectos */
-
-.pg-objeto {
-  display: grid;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  align-items: center;
-  /* Apertado em cima e generoso nos limites entre objectos, não um valor
-     repetido — o ritmo vem do contraste. Desceu de 9vh depois de ver nos
-     screenshots que a metade de baixo da página era mais preto do que coisas. */
-  padding-block: clamp(2.5rem, 6.5vh, 5.5rem);
-  padding-inline: clamp(1rem, 5vw, 4rem);
-  /* Espaço à direita para a preguiça não passar por cima do texto. */
-  padding-inline-end: clamp(5rem, 12vw, 10rem);
-}
-
-@media (min-width: 52rem) {
-  .pg-objeto--duplo {
-    grid-template-columns: 1fr 1fr;
-  }
-  .pg-objeto--trailing .pg-rotulo {
-    order: 2;
-  }
-}
-
-.pg-objeto figure {
-  margin: 0;
-  overflow: hidden;
-  border-radius: 2px;
-}
-
-.pg-objeto img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
 /* ----------------------------------------------------------------- o carril
    O pico da página. `pan` é a espinha desta gramática, e o motor mede o
    `scrollWidth` e viaja exactamente o excesso.
@@ -221,55 +185,6 @@
   color: var(--color-ouro-tinta);
 }
 
-.pg-sabor-escolhido {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 8vw, 5rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--color-ouro-claro);
-}
-
-/* ------------------------------------------------------------------- a placa
-   O fecho. Tipografado **exactamente como um rótulo**, para o pedido ler como
-   parte da colecção e não como um banner colado no fim. */
-
-.pg-placa {
-  display: grid;
-  gap: 1.25rem;
-  max-width: 52ch;
-  margin-inline: auto;
-  padding: clamp(1.75rem, 5vw, 3rem);
-  border: 1px solid var(--color-linha);
-  background: var(--color-superficie);
-}
-
-.pg-placa dl {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.4rem 1.5rem;
-  font-size: 0.95rem;
-}
-
-.pg-placa dt {
-  color: var(--color-tinta-suave);
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  align-self: baseline;
-}
-
-.pg-placa dd {
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.pg-placa__telefone {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 6vw, 2.8rem);
-  color: var(--color-ouro-claro);
-  letter-spacing: -0.01em;
-}
-
 .pg-nota {
   font-size: 0.82rem;
   color: var(--color-tinta-suave);
@@ -323,11 +238,139 @@
     flex-basis: 100%;
     max-width: 52ch;
   }
+
+  /* Os pratos são o outro carril, e tinham ficado de fora: continuavam uma
+     fila de painéis de 86vw cada, agora sem `transform` nem palco a cortá-los,
+     e a página inteira passava a rolar de lado — 1441 px de largura num ecrã
+     de 320, 4531 num de 1280 (medido). Empilham-se, um painel por linha. */
+  .pg-pratos {
+    flex-direction: column;
+    align-items: stretch;
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .pg-prato,
+  .pg-pratos__abertura,
+  .pg-pratos__fecho {
+    width: auto;
+    max-width: 72rem;
+  }
+}
+
+/* ------------------------------------------------------------- sem motor --
+   O que o motor revela (`data-sc-in`, `data-sc-cue`) começa invisível no CSS,
+   à espera dele. Se ele não chegar — JavaScript desligado, um bloqueador, a
+   rede partida — ficava invisível para sempre: o texto de "A casa", os Reels,
+   as avaliações e "Onde estamos", 26 elementos ao todo (medido), com links
+   invisíveis que continuavam a receber o foco. E os carris, sem quem os
+   desloque, mostravam o primeiro ecrã e escondiam o resto.
+
+   Duas portas para o mesmo resultado, que é o da página sem movimento:
+   - `scripting: none`, para quem não tem JavaScript;
+   - `.sc-sem-motor` no `<html>`, que o `Motor.tsx` põe quando o script falha
+     ou não monta a tempo (e tira se ele montar depois).
+
+   As regras repetem as do "reduzir movimento" de cima. Uma media query e uma
+   classe não se juntam num seletor só, e duas cópias à vista uma da outra
+   envelhecem melhor do que um truque. */
+
+@media (scripting: none) {
+  [data-sc-in],
+  [data-sc-stagger] > *,
+  [data-sc-cue] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-sc-act="pan"] {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  [data-sc-act="pan"] [data-sc-stage] {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .pg-carril {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .pg-carril__abertura,
+  .pg-carril__fecho {
+    flex-basis: 100%;
+    max-width: 52ch;
+  }
+
+  .pg-pratos {
+    flex-direction: column;
+    align-items: stretch;
+    padding-block: clamp(3rem, 9vh, 7rem);
+  }
+
+  .pg-prato,
+  .pg-pratos__abertura,
+  .pg-pratos__fecho {
+    width: auto;
+    max-width: 72rem;
+  }
+
+  .pg-pratos-espelho,
+  .pg-pratos > * {
+    transform: none !important;
+  }
+}
+
+.sc-sem-motor :is([data-sc-in], [data-sc-stagger] > *, [data-sc-cue]) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.sc-sem-motor [data-sc-act="pan"] {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.sc-sem-motor [data-sc-act="pan"] [data-sc-stage] {
+  position: static !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.sc-sem-motor .pg-carril {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding-block: clamp(3rem, 9vh, 7rem);
+}
+
+.sc-sem-motor :is(.pg-carril__abertura, .pg-carril__fecho) {
+  flex-basis: 100%;
+  max-width: 52ch;
+}
+
+.sc-sem-motor .pg-pratos {
+  flex-direction: column;
+  align-items: stretch;
+  padding-block: clamp(3rem, 9vh, 7rem);
+}
+
+.sc-sem-motor :is(.pg-prato, .pg-pratos__abertura, .pg-pratos__fecho) {
+  width: auto;
+  max-width: 72rem;
+}
+
+.sc-sem-motor :is(.pg-pratos-espelho, .pg-pratos > *) {
+  transform: none !important;
 }
 
 /* ------------------------------------------------- correcções vistas a olho
-   Duas coisas que só apareceram nos screenshots, e nenhuma delas seria apanhada
-   por um relatório automático. */
+   Uma coisa que só apareceu nos screenshots, e que nenhum relatório automático
+   apanharia. (Havia uma segunda, a da placa do fecho, que saiu com a placa.) */
 
 /* 1 · A barra é `sticky`, portanto um salto do índice punha o título do objecto
        **por baixo dela**. O `scroll-margin-top` reserva a altura da barra no
@@ -336,27 +379,8 @@
 [id="casa"],
 [id="carril"],
 [id="reels"],
-[id="partilhar"],
-[id="porta"] {
+[id="partilhar"] {
   scroll-margin-top: 5.5rem;
-}
-
-/* 2 · No telemóvel, o horário em duas colunas dava sete linhas de "Segunda
-       15:30–" partidas a meio. Abaixo de 30rem passa a uma coluna, com o rótulo
-       por cima — que é como se lê um horário em papel de qualquer maneira. */
-@media (max-width: 30rem) {
-  .pg-placa dl {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-  }
-
-  .pg-placa dt {
-    margin-top: 0.75rem;
-  }
-
-  .pg-placa dt:first-of-type {
-    margin-top: 0;
-  }
 }
 
 

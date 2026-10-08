@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { autorizado } from "@/lib/painel/utilizadores";
+import { EsquemaEmail } from "@/lib/email";
 import {
   selar,
   lembrarAparelho,
@@ -72,9 +73,11 @@ export async function pedirCodigo(
   _estado: EstadoDaEntrada,
   dados: FormData,
 ): Promise<EstadoDaEntrada> {
-  const email = String(dados.get("email") ?? "").trim().toLowerCase();
-
-  if (!email.includes("@")) return { erro: "Escreve um endereço de email." };
+  /* Validar não diz a ninguém se o endereço tem acesso — só se é um endereço.
+     Ver `lib/email.ts` para o porquê do teto e do formato. */
+  const lido = EsquemaEmail.safeParse(String(dados.get("email") ?? ""));
+  if (!lido.success) return { erro: "Escreve um endereço de email válido." };
+  const email = lido.data;
 
   const frasco = await cookies();
   let jaConhecido = false;

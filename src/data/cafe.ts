@@ -189,9 +189,30 @@ export function urlDirecoes(): string | null {
   )}`;
 }
 
-/** O número sem espaços, que é o que o `href="tel:"` precisa. */
+/** O número nacional sem espaços: `229730873`. */
+function numeroNacional(): string | null {
+  return cafe.telefone ? cafe.telefone.replace(/\s+/g, "").replace(/^\+351/, "") : null;
+}
+
+/**
+ * O número para o `href="tel:"`, com o indicativo: `+351229730873`.
+ *
+ * Sem o `+351`, um telemóvel com cartão estrangeiro — metade de quem abre a
+ * versão inglesa — ligava para um número que no país dele não existe. Um
+ * número nacional português tem nove algarismos; o que não for isso (um número
+ * já escrito com indicativo, por exemplo) segue tal e qual.
+ */
 export function telefoneParaLigar(): string | null {
-  return cafe.telefone ? cafe.telefone.replace(/\s+/g, "") : null;
+  const numero = numeroNacional();
+  if (!numero) return null;
+  return /^\d{9}$/.test(numero) ? `+351${numero}` : numero;
+}
+
+/** Como os dados estruturados o querem: `+351 229 730 873`. */
+export function telefoneInternacional(): string | null {
+  const numero = telefoneParaLigar();
+  const m = numero?.match(/^\+351(\d{3})(\d{3})(\d{3})$/);
+  return m ? `+351 ${m[1]} ${m[2]} ${m[3]}` : numero;
 }
 
 /**
@@ -205,7 +226,7 @@ export function telefoneParaLigar(): string | null {
  * se isso acontecer, confirmar à mão qual é o texto certo.
  */
 export function redeDoTelefone(): "fixa" | "movel" | null {
-  const numero = telefoneParaLigar();
+  const numero = numeroNacional();
   if (!numero) return null;
   if (numero.startsWith("2")) return "fixa";
   if (numero.startsWith("9")) return "movel";

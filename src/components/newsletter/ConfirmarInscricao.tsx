@@ -30,7 +30,17 @@ type Estado = "pronto" | "a-confirmar" | "feito" | "invalido" | "expirado" | "er
    `null` — ainda não se sabe —, no browser é o que está no endereço. Com `""` no
    servidor, o HTML estático dizia "este link não traz convite" a toda a gente,
    durante o instante antes de o browser ler o endereço. */
-const lerFragmento = () => decodeURIComponent(window.location.hash.slice(1));
+const lerFragmento = () => {
+  const bruto = window.location.hash.slice(1);
+  /* Um link mexido à mão (`#%E0%A4`) faz o `decodeURIComponent` atirar, e atirar
+     aqui, dentro do render, deitava a página abaixo. O bruto segue tal e qual e
+     a rota responde "convite inválido", que é o que ele é. */
+  try {
+    return decodeURIComponent(bruto);
+  } catch {
+    return bruto;
+  }
+};
 const semFragmento = () => null;
 const naoMuda = () => () => {};
 

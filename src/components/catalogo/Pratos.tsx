@@ -93,7 +93,8 @@ export function Pratos({
   locale: Locale;
   nome: string;
   facto: string;
-  dado: string;
+  /** "Desde 1,85 €". Sem preço nenhum na carta, não há linha. */
+  dado?: string;
   /** O texto alternativo de cada fotografia, pelo `id` do artigo. */
   alts: Record<string, string>;
   verMais: string;
@@ -139,7 +140,7 @@ export function Pratos({
               <div className="pg-rotulo">
                 <h2 className="pg-rotulo__nome">{nome}</h2>
                 <p className="pg-rotulo__facto">{facto}</p>
-                <p className="pg-rotulo__dado">{dado}</p>
+                {dado && <p className="pg-rotulo__dado">{dado}</p>}
               </div>
             </div>
 

@@ -81,8 +81,3 @@ export async function chave(uso: Uso, bytes = 32): Promise<Buffer> {
     hkdfSync("sha256", await segredo(), "", `preguica:${uso}:v1`, bytes),
   );
 }
-
-/** Só para os testes: esquece o segredo memoizado desta instância. */
-export function esquecerSegredo(): void {
-  emCache = null;
-}

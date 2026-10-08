@@ -60,7 +60,8 @@ mensagem. Ver `src/app/api/newsletter/confirmar/route.ts`.
    ```
 
    O Upstash e o `PAINEL_EMAILS` também têm de existir em Preview — sem Upstash
-   o convite responde "não foi possível enviar agora".
+   o convite responde "não foi possível enviar agora". Em Preview o painel
+   envia o teste mas **não** envia a todos: os inscritos são os de verdade.
 4. Redeploy.
 
 > Enquanto a conta for a mesma, os envios da newsletter e os códigos do painel
@@ -89,11 +90,20 @@ O plano gratuito do Resend deixa ter até 1000 contactos.
 
 ## O que o painel faz, e o que obriga
 
-- **O teste é obrigatório.** "Enviar a todos" só acende depois de um teste ter
-  saído com este assunto e este texto. Mudar o texto apaga o teste.
+- **O teste é obrigatório, e o servidor confere.** "Enviar a todos" só acende
+  depois de um teste ter saído com este assunto e este texto, e a acção recusa
+  o envio se não encontrar esse teste no Upstash (vale 24 horas e gasta-se com
+  o envio). Mudar o texto apaga o teste. Já foi só o ecrã a obrigar: um pedido
+  feito à mão enviava a todos um texto nunca testado.
+- **Só o site oficial envia a todos.** Numa pré-visualização de um PR as
+  variáveis e o segmento são os mesmos, e o envio chegava aos inscritos de
+  verdade. Lá, só sai o teste (ver `docs/PAINEL.md`, "Site oficial e versões de
+  ensaio").
 - **Há uma confirmação** que diz para quantas pessoas vai.
 - **A mesma newsletter não sai duas vezes em 15 minutos**, mesmo com dois
-  separadores ou um toque duplo (trava no Upstash).
+  separadores ou um toque duplo (trava no Upstash). Se o envio falhar, a trava
+  sai: a tentativa seguinte, depois de o serviço voltar, não diz "já foi
+  enviada" sem ter sido.
 - **O formato é texto simples:** linha em branco = parágrafo, `**negrito**`, e
   endereços `https://` ficam clicáveis. O rodapé (morada da casa e link de
   cancelar) é posto sozinho.

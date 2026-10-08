@@ -245,9 +245,29 @@ PAINEL_GITHUB_RAMO=painel-ensaio # uma branch que já exista no GitHub
 - **Sem `RESEND_API_KEY`, e só em desenvolvimento, o código sai no terminal**
   do `npm run dev`. O código continua a ser exigido; muda só por onde sai.
 - **Sem Upstash, os contadores ficam na memória do processo**, com um aviso.
-- **Com `PAINEL_GITHUB_RAMO`, o painel lê e grava nessa branch** e não no
-  `main`. Sem ela, "Publicar" no `npm run dev` punha o preço de teste no site
-  verdadeiro. Em produção a variável é ignorada: grava-se sempre no `main`.
+- **Fora do site oficial, o painel lê e grava em `PAINEL_GITHUB_RAMO`**, e
+  nunca no `main`. Sem ela (ou com `main` lá dentro), as páginas da carta e da
+  casa dizem que esta é uma versão de ensaio e não abrem o editor. No site
+  oficial a variável é ignorada: grava-se sempre no `main`.
+
+### Site oficial e versões de ensaio
+
+"Site oficial" é o deploy de produção da Vercel — `VERCEL_ENV=production`, que a
+própria plataforma põe (`src/lib/ambiente.ts`). **Não é o `NODE_ENV`**: esse é
+`production` também em cada pré-visualização de um PR e no `npm start` na
+nossa máquina. Já foi o `NODE_ENV`, e por isso o painel de uma pré-visualização
+publicava no `main` — no site verdadeiro (auditoria de 2026-10, ver
+`docs/AUDITORIA-PUBLICACAO.md`).
+
+| onde | o painel lê e grava em | a newsletter |
+|---|---|---|
+| site oficial | `main` | teste e envio a todos |
+| pré-visualização, `npm start`, `npm run dev` | `PAINEL_GITHUB_RAMO` (ou recusa) | só o teste |
+
+⚠️ Se um dia a opção *Automatically expose System Environment Variables* da
+Vercel for desligada, o `VERCEL_ENV` deixa de chegar ao código e o site
+oficial passa a portar-se como uma versão de ensaio: o painel recusa gravar.
+Falha do lado seguro, e diz porquê no ecrã.
 
 ---
 

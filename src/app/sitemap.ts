@@ -17,9 +17,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       priority: rota === "/" ? 1 : 0.8,
       alternates: {
-        languages: Object.fromEntries(
-          routing.locales.map((l) => [l, urlLocalizado(rota, l)]),
-        ),
+        languages: {
+          ...Object.fromEntries(routing.locales.map((l) => [l, urlLocalizado(rota, l)])),
+          "x-default": urlLocalizado(rota, routing.defaultLocale),
+        },
       },
     })),
   );

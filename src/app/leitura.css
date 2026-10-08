@@ -71,11 +71,17 @@
   color: var(--color-tinta-suave);
 }
 
+/* O valor pode quebrar a linha, alinhado à direita. Já foi `nowrap` e sem
+   encolher, e um valor mais comprido ("Envio de email e limites de pedidos",
+   na privacidade) punha a página a rolar de lado no telemóvel — 444 px de
+   largura num ecrã de 320 (medido). */
 .lt-ficha dd {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   font-family: var(--font-display);
   font-size: 1.25rem;
-  white-space: nowrap;
+  text-align: right;
+  text-wrap: balance;
   color: var(--color-ouro-claro);
   font-variant-numeric: tabular-nums;
 }
@@ -103,7 +109,7 @@
 
   .lt-ficha dd {
     font-size: 1.7rem;
-    white-space: normal;
+    text-align: left;
   }
 }
 

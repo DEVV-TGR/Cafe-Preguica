@@ -500,12 +500,12 @@ html:has(.visor[open]) {
     right: clamp(1rem, 3vw, 2.5rem);
   }
 
-  .visor__setas button:hover:not(:disabled) {
+  .visor__setas button:hover:not([aria-disabled="true"]) {
     border-color: var(--color-ouro);
     color: var(--color-ouro);
   }
 
-  .visor__setas button:disabled {
+  .visor__setas button[aria-disabled="true"] {
     opacity: 0.25;
     cursor: default;
   }

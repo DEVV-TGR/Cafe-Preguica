@@ -20,7 +20,7 @@ import { BarraSite } from "@/components/BarraSite";
 import { Visor, type GrupoDoVisor } from "@/components/Visor";
 import { Carrossel, type FotoDoCarrossel } from "@/components/Carrossel";
 import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
-import { artigoPorId } from "@/data/ementa";
+import { artigoPorId, CAPITULOS, exigirEmDestaque, menorPreco } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import "../catalogo-motor.css";
 import "../catalogo.css";
@@ -78,6 +78,19 @@ export default async function Inicio({ params }: Props) {
      — "Vinte e quatro cocktails" não cabia ao lado da contagem no telemóvel. */
   const seccoes = await getTranslations("nav.seccoes");
 
+  /* Os preços que os rótulos dizem vêm da carta, e não das mensagens: escritos
+     à mão, ficaram para trás da carta (o "Desde 4,20 €" era um mocktail que
+     foi escondido; o chocolate quente era 3,60 € e já é 4,30 €). Ver
+     `menorPreco`. Os cocktails são os vinte e quatro que o rótulo conta. */
+  const preco = (valor: number | null | undefined) =>
+    valor == null ? null : formatarPreco(valor, locale);
+  const desdeCocktails = preco(
+    menorPreco(["cocktails-classicos", "cocktails-special", "mocktails"]),
+  );
+  const desdePartilhar = preco(menorPreco(CAPITULOS.comer));
+  exigirEmDestaque("caf-chocolate-quente-com-chantilly", "page.tsx (partilhar.factoTosta)");
+  const chocolate = preco(artigoPorId("caf-chocolate-quente-com-chantilly")?.preco);
+
   const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
   const rede = redeDoTelefone();
@@ -87,11 +100,16 @@ export default async function Inicio({ params }: Props) {
   /* Os cartões do carril e o grupo que o visor desliza saem desta lista, para
      nunca haver uma fotografia no carril e outra no visor. Um `id` que deixou
      de existir na carta fica de fora dos dois (o cartão sairia em branco). */
+  /* O texto alternativo de cada fotografia é o do catálogo da ementa
+     (`ementa.fotos.<nome>`), que descreve aquela fotografia em concreto. Já foi
+     "Um cocktail sobre uma mesa de madeira escura." nas quatro: um leitor de
+     ecrã ouvia a mesma frase quatro vezes, e uma delas nem era numa mesa. */
+  const fotos = await getTranslations("ementa.fotos");
   const carril = [
-    { id: "negroni", foto: "negroni-fumo", alt: t("cocktail.alt") },
-    { id: "blue-lagoon", foto: "cocktail-azul", alt: t("cocktail.alt") },
-    { id: "cocktail-preguica", foto: "cocktail-rosa", alt: t("cocktail.alt") },
-    { id: "cocktail-preguica", foto: "cocktail-turquesa", alt: t("cocktail.alt") },
+    { id: "negroni", foto: "negroni-fumo", alt: fotos("negroni-fumo") },
+    { id: "blue-lagoon", foto: "cocktail-azul", alt: fotos("cocktail-azul") },
+    { id: "cocktail-preguica", foto: "cocktail-rosa", alt: fotos("cocktail-rosa") },
+    { id: "cocktail-preguica", foto: "cocktail-turquesa", alt: fotos("cocktail-turquesa") },
     {
       foto: "lima-espremida",
       alt: t("carril.balcaoAlt"),
@@ -153,240 +171,248 @@ export default async function Inicio({ params }: Props) {
           motor continua a ver os actos como antes. A fachada fica de fora: é
           o fundo do herói, com os botões por cima. */}
       <Visor textos={visor.textos}>
-        {/* 1 · A FACHADA */}
-        <Heroi
-          nome={marca("nome")}
-          ondeFica={t("heroi.onde")}
-          linha={t("heroi.linha")}
-          acao={t("heroi.acao")}
-          ondeEstamos={t("heroi.ondeEstamos")}
-          alt={t("heroi.alt")}
-        />
+        {/* O `<main>` é o alvo do "Saltar para o conteúdo" do layout, e o marco
+            principal para quem navega por marcos. Faltava só aqui: as secções
+            iam soltas no `<body>` e o link de salto não levava a lado nenhum.
+            Fica dentro do `Visor` para o `<dialog>` não ser conteúdo dele. */}
+        <main id="conteudo">
+          {/* 1 · A FACHADA */}
+          <Heroi
+            nome={marca("nome")}
+            ondeFica={t("heroi.onde")}
+            linha={t("heroi.linha")}
+            acao={t("heroi.acao")}
+            ondeEstamos={t("heroi.ondeEstamos")}
+            alt={t("heroi.alt")}
+          />
 
-        {/* 2 · A CASA — texto à esquerda e a fotografia ao lado, em paisagem,
-            como a porta do Damira: da altura do texto, não do ecrã. */}
-        <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
-          <div className="pg-casa__texto" data-sc-in data-sc-stagger="80">
-            <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
-            {/* Repete de propósito a linha de "Onde estamos": aqui é o feitio da
-                casa, lá é informação prática para quem vem. */}
-            {cafe.aceitaAnimais && (
-              <p className="pg-casa__animais">
-                <IconePata className="pg-icone" />
-                {t("casa.animais")}
-              </p>
-            )}
-          </div>
-          <div data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
-            {/* ⚠️ Fotos **sem pessoas**: a secção chama-se "a casa" e mostra a
-                casa — a sala, o granito, o balcão, a esplanada. Esteve aqui uma
-                fotografia de três clientes a rir e estava errada pela razão
-                mais simples: não era a casa, eram pessoas nela. */}
-            <Carrossel
-              fotos={fotosDaCasa}
-              moldura="pg-casa__fotos"
-              sizes="(min-width: 52rem) 50vw, 100vw"
-              dimensoes={[1586, 992]}
-              /* Mais depressa do que a carta: aqui são fotografias de
-                 ambiente, para passar os olhos, e não pratos para ler. */
-              intervalo={3000}
-              textos={{
-                naFotografia: "",
-                nome: t("casa.nome"),
-                rotuloDaFoto: comum("carrossel.foto", { n: "{n}", total: "{total}" }),
-                pausar: comum("carrossel.pausar"),
-                continuar: comum("carrossel.continuar"),
-                ampliar: visor.ampliar,
-              }}
-            />
-          </div>
-        </section>
-
-        {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado
-            ao topo: ver `.pg-carril` em `catalogo.css`. */}
-        <section id="carril" data-sc-act="pan" data-sc-span="3.6" data-sc-drift="#0e0906">
-          <div data-sc-stage>
-            <div className="pg-carril" data-sc-pan="0.06">
-              <div className="pg-carril__abertura">
-                <Rotulo
-                  nome={t("carril.nome")}
-                  facto={t("carril.facto")}
-                  dado={t("carril.dado")}
-                />
-                <p className="pg-nota mt-6">{t("carril.ilustrativa")}</p>
-              </div>
-
-              {carril.map((c, i) => (
-                <CartaoCarril
-                  key={c.foto}
-                  {...c}
-                  locale={locale}
-                  visor={{ grupo: grupoCarril, indice: i, ampliar: visor.ampliar }}
-                />
-              ))}
-
-              <div className="pg-carril__fecho">
-                <Rotulo nome={t("carril.fechoNome")} facto={t("carril.fechoFacto")} />
-                <p className="mt-4">
-                  <Link href="/ementa" className="pg-botao">
-                    {t("carril.fechoDado")}
-                  </Link>
+          {/* 2 · A CASA — texto à esquerda e a fotografia ao lado, em paisagem,
+              como a porta do Damira: da altura do texto, não do ecrã. */}
+          <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
+            <div className="pg-casa__texto" data-sc-in data-sc-stagger="80">
+              <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
+              {/* Repete de propósito a linha de "Onde estamos": aqui é o feitio da
+                  casa, lá é informação prática para quem vem. */}
+              {cafe.aceitaAnimais && (
+                <p className="pg-casa__animais">
+                  <IconePata className="pg-icone" />
+                  {t("casa.animais")}
                 </p>
+              )}
+            </div>
+            <div data-sc-reveal="up" data-sc-reveal-at="0.1 0.55">
+              {/* ⚠️ Fotos **sem pessoas**: a secção chama-se "a casa" e mostra a
+                  casa — a sala, o granito, o balcão, a esplanada. Esteve aqui uma
+                  fotografia de três clientes a rir e estava errada pela razão
+                  mais simples: não era a casa, eram pessoas nela. */}
+              <Carrossel
+                fotos={fotosDaCasa}
+                moldura="pg-casa__fotos"
+                sizes="(min-width: 52rem) 50vw, 100vw"
+                dimensoes={[1586, 992]}
+                /* Mais depressa do que a carta: aqui são fotografias de
+                   ambiente, para passar os olhos, e não pratos para ler. */
+                intervalo={3000}
+                textos={{
+                  naFotografia: "",
+                  nome: t("casa.nome"),
+                  rotuloDaFoto: comum("carrossel.foto", { n: "{n}", total: "{total}" }),
+                  pausar: comum("carrossel.pausar"),
+                  continuar: comum("carrossel.continuar"),
+                  ampliar: visor.ampliar,
+                }}
+              />
+            </div>
+          </section>
+
+          {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado
+              ao topo: ver `.pg-carril` em `catalogo.css`. */}
+          <section id="carril" data-sc-act="pan" data-sc-span="3.6" data-sc-drift="#0e0906">
+            <div data-sc-stage>
+              <div className="pg-carril" data-sc-pan="0.06">
+                <div className="pg-carril__abertura">
+                  <Rotulo
+                    nome={t("carril.nome")}
+                    facto={t("carril.facto")}
+                    dado={desdeCocktails ? t("carril.dado", { preco: desdeCocktails }) : undefined}
+                  />
+                  <p className="pg-nota mt-6">{t("carril.ilustrativa")}</p>
+                </div>
+
+                {carril.map((c, i) => (
+                  <CartaoCarril
+                    key={c.foto}
+                    {...c}
+                    locale={locale}
+                    visor={{ grupo: grupoCarril, indice: i, ampliar: visor.ampliar }}
+                  />
+                ))}
+
+                <div className="pg-carril__fecho">
+                  <Rotulo nome={t("carril.fechoNome")} facto={t("carril.fechoFacto")} />
+                  <p className="mt-4">
+                    <Link href="/ementa" className="pg-botao">
+                      {t("carril.fechoDado")}
+                    </Link>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* 4 · OS REELS */}
-        <Reels
-          nome={t("reels.nome")}
-          facto={t("reels.facto")}
-          noInstagram={t("reels.noInstagram")}
-          redes={comum("redes")}
-          seguir={comum("seguir")}
-          etiqueta={t("reels.etiqueta")}
-          legendas={{
-            masterclass: t("reels.legendas.masterclass"),
-            tosta: t("reels.legendas.tosta"),
-            negroni: t("reels.legendas.negroni"),
-            valentim: t("reels.legendas.valentim"),
-            menu: t("reels.legendas.menu"),
-            lima: t("reels.legendas.lima"),
-          }}
-        />
+          {/* 4 · OS REELS */}
+          <Reels
+            nome={t("reels.nome")}
+            facto={t("reels.facto")}
+            noInstagram={t("reels.noInstagram")}
+            redes={comum("redes")}
+            seguir={comum("seguir")}
+            etiqueta={t("reels.etiqueta")}
+            legendas={{
+              masterclass: t("reels.legendas.masterclass"),
+              tosta: t("reels.legendas.tosta"),
+              negroni: t("reels.legendas.negroni"),
+              valentim: t("reels.legendas.valentim"),
+              menu: t("reels.legendas.menu"),
+              lima: t("reels.legendas.lima"),
+            }}
+          />
 
-        {/* 5 · PARA PARTILHAR */}
-        <Pratos
-          locale={locale}
-          nome={t("partilhar.nome")}
-          facto={t("partilhar.facto")}
-          dado={t("partilhar.dado")}
-          verMais={t("partilhar.verMais")}
-          verMaisFacto={t("partilhar.verMaisFacto")}
-          verMaisAcao={t("partilhar.verMaisAcao")}
-          ampliar={visor.ampliar}
-          alts={{
-            "bocadinhos-de-pao-com-chourico": t("partilhar.altTabua"),
-            "torrada-com-compota": t("partilhar.altTosta"),
-            "torrada-com-compota-facto": t("partilhar.factoTosta"),
-            "queijo-fiambre": t("partilhar.altSaloias"),
-            "queijo-fiambre-facto": t("partilhar.factoSaloias"),
-          }}
-        />
+          {/* 5 · PARA PARTILHAR */}
+          <Pratos
+            locale={locale}
+            nome={t("partilhar.nome")}
+            facto={t("partilhar.facto")}
+            dado={desdePartilhar ? t("partilhar.dado", { preco: desdePartilhar }) : undefined}
+            verMais={t("partilhar.verMais")}
+            verMaisFacto={t("partilhar.verMaisFacto")}
+            verMaisAcao={t("partilhar.verMaisAcao")}
+            ampliar={visor.ampliar}
+            alts={{
+              "bocadinhos-de-pao-com-chourico": t("partilhar.altTabua"),
+              "torrada-com-compota": t("partilhar.altTosta"),
+              "torrada-com-compota-facto": chocolate
+                ? t("partilhar.factoTosta", { preco: chocolate })
+                : t("partilhar.factoTostaSemPreco"),
+              "queijo-fiambre": t("partilhar.altSaloias"),
+              "queijo-fiambre-facto": t("partilhar.factoSaloias"),
+            }}
+          />
 
-        {/* 6 · OS PREGUIÇOSOS — as avaliações, logo antes de "onde estamos". */}
-        <Preguicosos
-          locale={locale}
-          nome={t("preguicosos.nome")}
-          facto={t("preguicosos.facto")}
-          contagem={
-            avaliacoes.total !== null
-              ? t("preguicosos.contagem", { total: avaliacoes.total })
-              : null
-          }
-          estrelasTexto={t("preguicosos.estrelas", { nota: avaliacoes.nota ?? 0 })}
-          verTodas={t("preguicosos.verTodas")}
-          url={direcoes}
-        />
+          {/* 6 · OS PREGUIÇOSOS — as avaliações, logo antes de "onde estamos". */}
+          <Preguicosos
+            locale={locale}
+            nome={t("preguicosos.nome")}
+            facto={t("preguicosos.facto")}
+            contagem={
+              avaliacoes.total !== null
+                ? t("preguicosos.contagem", { total: avaliacoes.total })
+                : null
+            }
+            estrelasTexto={t("preguicosos.estrelas", { nota: avaliacoes.nota ?? 0 })}
+            verTodas={t("preguicosos.verTodas")}
+            url={direcoes}
+          />
 
-        {/* 7 · ONDE ESTAMOS — o fecho. O mapa de fundo é um SVG nosso, desenhado
-            do OpenStreetMap por `scripts/desenhar-mapa.mjs`, e não o Google
-            Maps: ver o porquê no cabeçalho desse script. */}
-        <section id="onde" className="pg-onde" data-sc-act="flow" data-sc-drift="#0b0806">
-          <div className="pg-onde__mapa">
-            <img
-              src="/mapa/ermesinde.svg"
-              width={1600}
-              height={820}
-              alt={t("onde.mapaAlt")}
-              loading="lazy"
-            />
-            {/* A preguiça é o sítio da casa no mapa, e é o primeiro sítio onde se
-                toca: por isso leva ao Google Maps, como o botão do cartão. Sem
-                direções confirmadas fica só o desenho. */}
-            {direcoes ? (
-              <a
-                className="pg-onde__alfinete"
-                href={direcoes}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t("onde.direcoes")}
-              >
-                <img src="/marca/preguica.webp" alt="" width={325} height={286} />
-              </a>
-            ) : (
-              <span className="pg-onde__alfinete" aria-hidden="true">
-                <img src="/marca/preguica.webp" alt="" width={325} height={286} />
-              </span>
-            )}
-            {/* O crédito é condição da licença ODbL, não decoração. */}
-            <p className="pg-onde__credito">
-              <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
-                {t("onde.credito")}
-              </a>
-            </p>
-          </div>
-
-          <div className="pg-onde__cartao" data-sc-in data-sc-stagger="70">
-            <p className="pg-onde__olho">{t("onde.olho")}</p>
-            <h2 className="pg-onde__nome">{marca("nome")}</h2>
-            {morada && <p className="pg-onde__morada">{morada}</p>}
-
-            <ul className="pg-onde__contactos">
-              {telefone && cafe.telefone && (
-                <li>
-                  <a href={`tel:${telefone}`}>{cafe.telefone}</a>
-                  {rede && <span className="pg-onde__custo"> ({t(`onde.chamada.${rede}`)})</span>}
-                </li>
-              )}
-              {cafe.email && (
-                <li>
-                  <a href={`mailto:${cafe.email}`}>{cafe.email}</a>
-                </li>
-              )}
-            </ul>
-
-            {cafe.horarios && (
-              <>
-                <p className="pg-onde__olho">{t("onde.horario")}</p>
-                <ul className="pg-onde__horario">
-                  {DIAS.map((dia) => {
-                    const h = cafe.horarios![dia];
-                    return (
-                      <li key={dia}>
-                        <span>{comum(`dias.${dia}`)}</span>
-                        <span>{h ? `${h.abre} – ${h.fecha}` : comum("encerrado")}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-                <HorarioDaCozinha locale={locale} className="pg-onde__cozinha" />
-                {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
-                {!cafe.horarioConfirmado && (
-                  <p className="pg-nota">{t("onde.horarioPorConfirmar")}</p>
-                )}
-              </>
-            )}
-
-            {/* Pedido do cliente. Vive aqui, e não numa secção própria, porque é
-                informação prática para quem vem: está ao pé do horário. */}
-            {cafe.aceitaAnimais && (
-              <p className="pg-onde__animais">
-                <IconePata className="pg-icone" />
-                {t("onde.animais")}
-              </p>
-            )}
-
-            <p className="pg-onde__botoes">
-              {direcoes && (
-                <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
-                  {t("onde.direcoes")} <span aria-hidden="true">↗</span>
+          {/* 7 · ONDE ESTAMOS — o fecho. O mapa de fundo é um SVG nosso, desenhado
+              do OpenStreetMap por `scripts/desenhar-mapa.mjs`, e não o Google
+              Maps: ver o porquê no cabeçalho desse script. */}
+          <section id="onde" className="pg-onde" data-sc-act="flow" data-sc-drift="#0b0806">
+            <div className="pg-onde__mapa">
+              <img
+                src="/mapa/ermesinde.svg"
+                width={1600}
+                height={820}
+                alt={t("onde.mapaAlt")}
+                loading="lazy"
+              />
+              {/* A preguiça é o sítio da casa no mapa, e é o primeiro sítio onde se
+                  toca: por isso leva ao Google Maps, como o botão do cartão. Sem
+                  direções confirmadas fica só o desenho. */}
+              {direcoes ? (
+                <a
+                  className="pg-onde__alfinete"
+                  href={direcoes}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t("onde.direcoes")}
+                >
+                  <img src="/marca/preguica.webp" alt="" width={325} height={286} />
                 </a>
+              ) : (
+                <span className="pg-onde__alfinete" aria-hidden="true">
+                  <img src="/marca/preguica.webp" alt="" width={325} height={286} />
+                </span>
               )}
-            </p>
-            <Redes rotulo={comum("redes")} seguir={comum("seguir")} className="pg-onde__redes" />
-          </div>
-        </section>
+              {/* O crédito é condição da licença ODbL, não decoração. */}
+              <p className="pg-onde__credito">
+                <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
+                  {t("onde.credito")}
+                </a>
+              </p>
+            </div>
+
+            <div className="pg-onde__cartao" data-sc-in data-sc-stagger="70">
+              <p className="pg-onde__olho">{t("onde.olho")}</p>
+              <h2 className="pg-onde__nome">{marca("nome")}</h2>
+              {morada && <p className="pg-onde__morada">{morada}</p>}
+
+              <ul className="pg-onde__contactos">
+                {telefone && cafe.telefone && (
+                  <li>
+                    <a href={`tel:${telefone}`}>{cafe.telefone}</a>
+                    {rede && <span className="pg-onde__custo"> ({t(`onde.chamada.${rede}`)})</span>}
+                  </li>
+                )}
+                {cafe.email && (
+                  <li>
+                    <a href={`mailto:${cafe.email}`}>{cafe.email}</a>
+                  </li>
+                )}
+              </ul>
+
+              {cafe.horarios && (
+                <>
+                  <p className="pg-onde__olho">{t("onde.horario")}</p>
+                  <ul className="pg-onde__horario">
+                    {DIAS.map((dia) => {
+                      const h = cafe.horarios![dia];
+                      return (
+                        <li key={dia}>
+                          <span>{comum(`dias.${dia}`)}</span>
+                          <span>{h ? `${h.abre} – ${h.fecha}` : comum("encerrado")}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <HorarioDaCozinha locale={locale} className="pg-onde__cozinha" />
+                  {/* Desaparece sozinho quando `horarioConfirmado` passar a `true`. */}
+                  {!cafe.horarioConfirmado && (
+                    <p className="pg-nota">{t("onde.horarioPorConfirmar")}</p>
+                  )}
+                </>
+              )}
+
+              {/* Pedido do cliente. Vive aqui, e não numa secção própria, porque é
+                  informação prática para quem vem: está ao pé do horário. */}
+              {cafe.aceitaAnimais && (
+                <p className="pg-onde__animais">
+                  <IconePata className="pg-icone" />
+                  {t("onde.animais")}
+                </p>
+              )}
+
+              <p className="pg-onde__botoes">
+                {direcoes && (
+                  <a className="pg-botao" href={direcoes} target="_blank" rel="noopener noreferrer">
+                    {t("onde.direcoes")} <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </p>
+              <Redes rotulo={comum("redes")} seguir={comum("seguir")} className="pg-onde__redes" />
+            </div>
+          </section>
+        </main>
       </Visor>
 
       {/* O rodapé é mínimo de propósito: "onde estamos" acabou de dar a morada, o

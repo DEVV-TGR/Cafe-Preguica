@@ -14,7 +14,7 @@ import { emailEmHtml, type Moldura } from "@/lib/newsletter/corpo";
  * Escrever a newsletter, ver como fica, mandar um teste, e só depois mandar a
  * toda a gente.
  *
- * ## O teste é obrigatório, e é o ecrã que o obriga
+ * ## O teste é obrigatório — no ecrã e no servidor
  *
  * "Enviar a todos" só acende depois de um teste ter saído **com este assunto e
  * este texto**. Mudar uma vírgula depois do teste volta a apagá-lo. É a única
@@ -23,6 +23,11 @@ import { emailEmHtml, type Moldura } from "@/lib/newsletter/corpo";
  *
  * E depois do teste há ainda uma confirmação que diz o número de pessoas. Um
  * email a uma lista não se desfaz.
+ *
+ * O ecrã é o conforto; a fechadura é a acção, que recusa o envio sem um teste
+ * com a mesma impressão, e fora do site oficial (ver
+ * `app/painel/newsletter/accoes.ts`). O `envioATodos` só serve para o ecrã de
+ * uma versão de ensaio dizer isso antes de alguém carregar no botão.
  */
 
 const INICIAL: EstadoDaNewsletter = { tipo: "parado" };
@@ -30,10 +35,13 @@ const INICIAL: EstadoDaNewsletter = { tipo: "parado" };
 export function EditorDaNewsletter({
   inscritos,
   podeEnviar,
+  envioATodos,
   moldura,
 }: {
   inscritos: number;
   podeEnviar: boolean;
+  /** `false` numa versão de ensaio do site: daí só sai o teste. */
+  envioATodos: boolean;
   moldura: Moldura;
 }) {
   const [assunto, setAssunto] = useState("");
@@ -177,11 +185,20 @@ export function EditorDaNewsletter({
             type="button"
             className="pg-botao pg-botao--cheio pn-largo"
             onClick={() => setAConfirmar(true)}
-            disabled={!podeEnviar || !testado || enviada || inscritos === 0 || ocupado}
+            disabled={
+              !podeEnviar || !envioATodos || !testado || enviada || inscritos === 0 || ocupado
+            }
           >
             {enviada ? "Enviada" : `2. Enviar a ${pessoas}`}
           </button>
         )}
+
+        {podeEnviar && !envioATodos ? (
+          <p className="pn-nota">
+            Esta é uma versão de ensaio do site: daqui só sai o teste. O envio a todos só funciona
+            no site oficial.
+          </p>
+        ) : null}
 
         {podeEnviar && inscritos === 0 ? (
           <p className="pn-nota">Ainda não há ninguém inscrito — não há a quem enviar.</p>

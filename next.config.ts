@@ -51,6 +51,16 @@ const nextConfig: NextConfig = {
      versão de framework está do outro lado. */
   poweredByHeader: false,
 
+  /* A `/sobre` nunca chegou a ter texto e saiu do site: o que ia dizer está na
+     secção "A casa" da inicial. Esteve no sitemap da demonstração, por isso o
+     endereço leva para lá em vez de dar 404. */
+  async redirects() {
+    return [
+      { source: "/sobre", destination: "/#casa", permanent: true },
+      { source: "/en/sobre", destination: "/en#casa", permanent: true },
+    ];
+  },
+
   async headers() {
     return [
       /* Sem CSP: a do painel leva nonce e é o `src/proxy.ts` que a emite. */

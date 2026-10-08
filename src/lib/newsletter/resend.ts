@@ -69,9 +69,9 @@ export class ErroDaNewsletter extends Error {
   }
 }
 
-function rebentar(estado: number, detalhe: string): never {
+function rebentar(estado: number, detalhe: string, registar = true): never {
   const seguro = semEnderecos(detalhe);
-  console.error(`[newsletter] o Resend falhou — ${estado} — ${seguro}`);
+  if (registar) console.error(`[newsletter] o Resend falhou — ${estado} — ${seguro}`);
   throw new ErroDaNewsletter(estado, seguro);
 }
 
@@ -105,10 +105,13 @@ function configuracao(): Configuracao {
 
 async function pedir<T>(
   caminho: string,
-  { metodo = "GET", corpo, cabecalhos }: {
+  { metodo = "GET", corpo, cabecalhos, esperados = [] }: {
     metodo?: string;
     corpo?: unknown;
     cabecalhos?: Record<string, string>;
+    /** Respostas que não são avaria (um 404 a "este email está inscrito?") e
+        que por isso não vão para o registo como erro. Atiram na mesma. */
+    esperados?: number[];
   } = {},
 ): Promise<T> {
   const { chave } = configuracao();
@@ -124,7 +127,9 @@ async function pedir<T>(
     cache: "no-store",
   });
 
-  if (!resposta.ok) rebentar(resposta.status, await resposta.text());
+  if (!resposta.ok) {
+    rebentar(resposta.status, await resposta.text(), !esperados.includes(resposta.status));
+  }
   return (await resposta.json()) as T;
 }
 
@@ -196,6 +201,8 @@ export async function criarContacto(email: string): Promise<void> {
     await pedir("/contacts", {
       metodo: "POST",
       corpo: { email, unsubscribed: false, segments: [{ id: segmento }] },
+      /* Já existe: quem se volta a inscrever. Trata-se em baixo. */
+      esperados: [400, 409, 422],
     });
     return;
   } catch (erro) {
@@ -232,7 +239,7 @@ export async function estaInscrito(email: string): Promise<boolean> {
 
   let contacto: { unsubscribed: boolean };
   try {
-    contacto = await pedir(`/contacts/${alvo}`);
+    contacto = await pedir(`/contacts/${alvo}`, { esperados: [404] });
   } catch (erro) {
     if (erro instanceof ErroDaNewsletter && erro.estado === 404) return false;
     throw erro;
@@ -385,7 +392,7 @@ export async function obterEnvio(id: string): Promise<EnvioCompleto | null> {
     sent_at: string | null;
   };
   try {
-    b = await pedir(`/broadcasts/${id}`);
+    b = await pedir(`/broadcasts/${id}`, { esperados: [404] });
   } catch (erro) {
     if (erro instanceof ErroDaNewsletter && erro.estado === 404) return null;
     throw erro;

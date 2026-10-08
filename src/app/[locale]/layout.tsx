@@ -75,7 +75,10 @@ export default async function LayoutIdioma({
   };
 
   return (
-    <html lang={locale} className={fontes}>
+    /* `data-scroll-behavior`: no Next 16, sem este atributo, a rolagem suave da
+       ementa aplicava-se também às mudanças de página (ver o guia
+       `upgrading/version-16`, "Scroll Behavior Override"). */
+    <html lang={locale} className={fontes} data-scroll-behavior="smooth">
       <body>
         <NextIntlClientProvider>
           {/* Primeiro tabulador da página: quem navega por teclado salta o

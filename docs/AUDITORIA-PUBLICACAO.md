@@ -63,23 +63,36 @@ foram simulados por interceção do `fetch`, com recusa de qualquer outro destin
 - CLS 0 em todas as páginas medidas; peso local entre 0,6 e 3,6 MB.
 - 208 imagens publicadas sem metadados.
 
+## Em produção, depois do merge (PR #51, b8b45a3, 2026-10-08)
+
+Só pedidos de leitura, em `cafe-preguica.vercel.app`, sem submeter nada:
+
+- CI no `main` verde, e o deploy de produção da Vercel com sucesso.
+- Páginas PT e EN com 200; `/sobre` com 308 para `/#casa`; 404 nas rotas inexistentes.
+- O painel e `/painel/x.y` mandam para a entrada (307); a entrada tem CSP com nonce,
+  `no-store` e `noindex`.
+- Os seis cabeçalhos de segurança, sem `unsafe-eval`, e nenhum cookie.
+- Preços calculados, `tel:+351`, `og:image` e `x-default` no sitemap.
+- Navegação no Chromium: nenhum erro de consola, nenhuma violação de CSP, nenhum pedido falhado
+  — **incluindo os pré-carregamentos de segmento**, que localmente davam 404.
+- Não testado em produção, para não mexer em dados reais: o "Publicar" do painel e um envio de
+  teste da newsletter. Fazer à mão, com a conta da casa.
+
 ## Verificações não realizadas
 
 - Dispositivos reais (telemóveis, Safari no iOS): não testados. Só simulação de larguras e toque
   nos motores do Playwright.
 - Produção real, a Vercel, HTTPS, DNS e serviços reais (GitHub, Resend, Upstash): não testados.
   Tudo foi simulado.
-- Depois do deploy, confirmar no site real: a consola das páginas PT (ver o primeiro risco
-  residual), o "Publicar" do painel a gravar no `main` (depende do `VERCEL_ENV`), e o envio de
-  um teste da newsletter.
+- Por confirmar à mão no site real, com a conta da casa: o "Publicar" do painel a gravar no
+  `main` (depende do `VERCEL_ENV`) e o envio de um teste da newsletter.
 
 ## Riscos residuais
 
-- Pré-carregamentos de segmento RSC das páginas portuguesas dão 404 nos três browsers, em
-  `next start` local: o Next responde à reescrita do `next-intl` (`/ementa` → `/pt/ementa`) com
-  um 307 para outro `_rsc`, que dá 404. A navegação funciona (cai para um pedido normal); fica um
-  erro na consola e perde-se o pré-carregamento. Não há solução conhecida e limpa, e o
-  comportamento depende do alojamento — confirmar na Vercel.
+- Pré-carregamentos de segmento RSC das páginas portuguesas dão 404 **só em `next start` local**:
+  o Next responde à reescrita do `next-intl` (`/ementa` → `/pt/ementa`) com um 307 para outro
+  `_rsc`, que dá 404. **Na Vercel não acontece** (verificado em produção a 2026-10-08). Só
+  importa se o site um dia sair da Vercel.
 - `somar` faz `INCR` e `EXPIRE` em dois passos.
 - O ano do rodapé fica fixo no build.
 - O `leitura.css` é carregado na inicial.

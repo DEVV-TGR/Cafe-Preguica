@@ -93,9 +93,9 @@
     },
     "casa": {
       "nome": "The place",
-      "facto": "Solid wood, exposed granite and the name chalked on a slate. A small room where everyone knows everyone, open afternoons and evenings.",
+      "facto": "Preguiça is a cosy place to have a drink and catch up. Cocktails, food, good music and a team that gives you a warm welcome.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
-      "animais": "Dogs come in too. If you bring yours, there's no need to leave it at the door.",
+      "animais": "Our terrace is pet-friendly!",
       "alt": "Inside Café Preguiça: wood-panelled walls, old frames, the name of the house chalked on a slate and wooden tables.",
       "fotos": {
         "casa-sofas": "Grey velvet sofas and poufs along the granite wall, with wooden tables and old frames in the corner.",
@@ -107,15 +107,12 @@
       }
     },
     "carril": {
-      "nome": "Twenty-four cocktails",
-      "facto": "Nine classics, ten specials and five alcohol-free. Made at the bar, one at a time.",
+      "nome": "{total} cocktails",
+      "facto": "{semAlcool} alcohol-free, {classicos} classics and {especiais} specials.",
       "dado": "From {preco}",
-      "ilustrativa": "The photos are our own. Where we can't say for sure which cocktail it is, the caption only says what we know.",
-      "balcaoNome": "At the bar",
-      "balcaoFacto": "Lime squeezed by hand, straight over the glass. Every cocktail is made in front of whoever is drinking it.",
-      "balcaoAlt": "A hand squeezing half a lime over a tall glass of ice.",
+      "comSabor": "{sabor} {cocktail}",
       "fechoNome": "And the rest of the menu",
-      "fechoFacto": "Gin, whisky, shots, sangria by the jug, beer, tea and coffee.",
+      "fechoFacto": "Gin, whisky, shots, sangria by the glass or jug, beer, tea and coffee.",
       "fechoDado": "See the menu"
     },
     "reels": {
@@ -137,14 +134,11 @@
       "facto": "What you eat with your hands, in the middle of the table, while the conversation keeps going.",
       "dado": "From {preco}",
       "altTabua": "A round platter of small toasts with chouriço and cheese, a bowl of crisps and a bottle of tabasco, on wood.",
-      "altTosta": "Toast with strawberry jam beside a hot chocolate topped with whipped cream and a cinnamon stick.",
-      "factoTosta": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately at {preco}.",
-      "factoTostaSemPreco": "In the photo, next to a hot chocolate with whipped cream, which is ordered separately.",
       "verMais": "And the rest of the menu",
-      "verMaisFacto": "Boards, preguiçinhas, desserts and bowls to pick at. All with prices.",
+      "verMaisFacto": "Boards, bread pieces with chouriço, desserts and bowls to pick at. All with prices.",
       "verMaisAcao": "See the menu",
       "altSaloias": "Two toasties on rustic bread, one ham and cheese and one tuna, on two plates with crisps.",
-      "factoSaloias": "On rustic bread, with crisps. Beside it, the tuna and cheese one."
+      "tostasNome": "Our toasties…"
     },
     "preguicosos": {
       "nome": "The Preguiçosos",
@@ -162,14 +156,14 @@
         "movel": "Call to a Portuguese mobile"
       },
       "horarioPorConfirmar": "These hours have not been confirmed yet. It's best to call ahead.",
-      "animais": "Dogs are welcome. Bring yours along.",
+      "animais": "Our terrace is pet-friendly!",
       "mapaAlt": "Map of the streets around Café Preguiça in Ermesinde, with the house marked by the sloth from the logo.",
       "credito": "© OpenStreetMap contributors"
     }
   },
   "ementa": {
     "titulo": "The menu",
-    "introducao": "Toasties and boards to share, cocktails made at the bar one at a time, and everything else behind the counter.",
+    "introducao": "Toasties, boards, cocktails, mulled wine and much more! Have a look through our drinks, pick whatever you fancy and take your time.",
     "avisoProvisoria": "Transcribed from our printed menu and not yet confirmed. If in doubt, ask at the bar.",
     "avisoAlergenios": "Allergen information is available at the bar. Please ask before ordering.",
     "categorias": {
@@ -215,7 +209,7 @@
       },
       "cocktails": {
         "nome": "Cocktails & sangrias",
-        "facto": "Our signature cocktail, the classics, the specials and sangria by the jug."
+        "facto": "Our signature cocktail, the classics, the specials and sangria by the glass or jug."
       },
       "mocktails": {
         "nome": "Mocktails",
@@ -239,6 +233,11 @@
       "cocktail-amarelo": "A balloon glass with a yellow drink, a slice of kiwi and a green-striped straw, on a wooden table.",
       "cocktail-rosa": "A balloon glass with a pink drink, a dried orange slice and a yellow-striped straw, on a wooden table.",
       "cocktail-coco": "A balloon glass with a white drink and ice, a yellow cocktail umbrella and a red-striped straw, next to a coconut, on a wooden table.",
+      "unicornio-azul": "A blue Unicorn in a glass tumbler with ice, a yellow gummy shark, lemon peel and a yellow-striped straw, on a wooden counter.",
+      "unicornio-vermelho": "A red Unicorn in a glass tumbler with ice, a dried orange slice and a black-striped straw, on a wooden counter.",
+      "unicornio-amarelo": "A yellow Unicorn in a glass tumbler with ice, a red decoration on the rim and a black-striped straw, on a wooden counter.",
+      "unicornio-turquesa": "A turquoise Unicorn in a glass tumbler with ice, a slice of lemon and a black-striped straw, on a wooden counter.",
+      "unicornio-transparente": "A clear Unicorn in a glass tumbler with ice, a sprig of mint and a red-striped straw, on a wooden counter.",
       "bocadinhos-chourico": "A platter of bread baked with chouriço and melted cheese, in pieces, with a bowl of crisps and a bottle of hot sauce.",
       "bocadinhos-queijo": "Close up, the pieces of bread with chouriço and melted cheese, beside a bowl of crisps.",
       "bocadinhos-tabasco": "The pieces of bread with chouriço and cheese in front of a bottle of hot sauce.",
@@ -281,7 +280,8 @@
       "mexican-mule": "A Mexican Mule in a copper mug, with a strawberry, mint and a black straw.",
       "moscow-mule": "A Moscow Mule in a copper mug with ice, mint and a black straw, on a wooden table.",
       "negroni-fumo": "A short glass of a dark red drink with ice and an orange peel, wreathed in smoke, on the bar mat.",
-      "cocktail-azul": "A balloon glass with a blue drink, crushed ice, a slice of yellow fruit and a green-striped straw, on a wooden table."
+      "cocktail-azul": "A balloon glass with a blue drink, crushed ice, a slice of yellow fruit and a green-striped straw, on a wooden table.",
+      "lima-espremida": "A hand squeezing half a lime over a Long Island Iced Tea, in a tall glass with ice."
     },
     "sortear": "Let the sloth choose",
     "aRodar": "The sloth is thinking…",
@@ -311,6 +311,10 @@
       "naoInscritoTexto": "Sign {email} up for our news. Confirm through the email we'll send you, and the menu will open by itself.",
       "inscrever": "Sign up and open",
       "aEnviar": "Sending…",
+      "consentimento": "By signing up, you agree to receive our news by email. You can unsubscribe at any time.",
+      "privacidade": "How we handle your email",
+      "erroLimite": "Too many requests in the last few minutes. Please try again shortly.",
+      "erroServico": "We couldn't send it right now. Please try again shortly.",
       "enviadoTitulo": "One more step",
       "enviadoTexto": "We've sent you an email. Click the link in it — you'll come back here with the menu open.",
       "outroEmail": "Use another email",
@@ -429,8 +433,8 @@
   "newsletter": {
     "convite": {
       "olho": "Newsletter",
-      "titulo": "News from Preguiça",
-      "texto": "New cocktails, special nights and what changes on the menu — only when there's something to tell. Written in Portuguese.",
+      "titulo": "Shall we keep in touch?",
+      "texto": "Leave your email and get the latest from our place. Written in Portuguese.",
       "etiqueta": "Your email",
       "marcador": "you@email.com",
       "botao": "Sign up",

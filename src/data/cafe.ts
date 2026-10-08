@@ -121,6 +121,9 @@ export const EsquemaCafe = z.object({
    * Se a casa recebe cães. Veio do próprio cliente, que queria que o site o
    * dissesse. `null` esconde a linha em "Onde estamos"; `false` também, porque
    * um "não aceitamos animais" não é coisa que se anuncie na página inicial.
+   *
+   * ⚠️ É **na esplanada** (o cliente, 2026-10-08), e os textos dizem-no. Já
+   * disseram "os cães também entram", que mandava gente com o cão para a sala.
    */
   aceitaAnimais: z.boolean().nullable(),
   /**

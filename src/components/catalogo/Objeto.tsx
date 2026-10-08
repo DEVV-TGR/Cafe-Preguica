@@ -40,9 +40,10 @@ export function Rotulo({
  * mão neste componente era criar um segundo preço para a mesma bebida — e o do
  * site nunca mais batia certo com o do balcão.
  *
- * `facto` permite substituir a descrição da carta quando o cartão diz outra
- * coisa: os três cocktails de cor não se identificam ao certo na fotografia, e
- * o rótulo diz só o que se sabe em vez de adivinhar o sabor.
+ * `nome` e `facto` substituem o nome e a descrição da carta quando o cartão diz
+ * mais do que o artigo: os três copos balão são o mesmo Cocktail Preguiça, e o
+ * nome leva o sabor de cada um ("Cocktail Preguiça Laranja"). O preço é sempre
+ * o da carta.
  *
  * Com `visor`, um toque na fotografia abre-a inteira (`components/Visor.tsx`),
  * e dali desliza-se pelas outras do carril.
@@ -58,8 +59,8 @@ export function CartaoCarril({
 }: {
   /**
    * O `id` do artigo em `ementa.json`. Omite-se quando o cartão **não é um
-   * artigo da carta** — o da preparação ao balcão, por exemplo, que é um objecto
-   * da colecção sem preço. Nesse caso o `nome` é obrigatório.
+   * artigo da carta** — um objecto da colecção sem preço, como já foi o da
+   * preparação ao balcão. Nesse caso o `nome` é obrigatório.
    */
   id?: string;
   /** O nome do ficheiro em `public/casa/`, sem extensão. */

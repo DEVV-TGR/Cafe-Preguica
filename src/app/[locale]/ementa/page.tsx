@@ -75,8 +75,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *
  * A legenda "Na fotografia" vai buscar nome e preço **à carta** pelo `id` —
  * nunca escritos aqui, senão passava a haver dois preços para o mesmo prato. As
- * que não têm artigos não têm legenda: a da garrafeira é o balcão, e os copos
- * balão dos mocktails e das águas são da casa mas ninguém disse que bebida são.
+ * que não têm artigos não têm legenda.
+ *
+ * ⚠️ O copo balão turquesa que abre os mocktails é o Cocktail Preguiça de menta
+ * — o cliente identificou-o na inicial (2026-10-08) — e esse leva álcool. Fica
+ * sem legenda até haver uma fotografia de um mocktail para pôr no lugar dele.
  *
  * ## Deitadas, do tamanho da moldura
  *
@@ -130,9 +133,19 @@ const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }[]> = {
     { foto: "abertura-b52", artigos: ["sho-b52"] },
     { foto: "abertura-gin-tanqueray", artigos: ["gin-tanqueray"] },
   ],
+  /* Os Unicórnios, no copo em que se servem (pedido do cliente, 2026-10-08).
+     Estiveram aqui dois copos balão, mas esses são o Cocktail Preguiça — com
+     álcool, num capítulo que não tem. A legenda não diz o sabor de cada um:
+     ninguém o disse, e as cores não são a do sabor (ver o curaçau do de
+     laranja na inicial). Vieram a 21:9, que é a moldura do computador, em vez
+     dos 16:9 das outras: no telemóvel cortam-se mais dos lados, e o copo, ao
+     centro, fica inteiro. */
   aguas: [
-    { foto: "abertura-cocktail-amarelo", artigos: [] },
-    { foto: "abertura-cocktail-coco", artigos: [] },
+    { foto: "abertura-unicornio-azul", artigos: ["unicornio"] },
+    { foto: "abertura-unicornio-vermelho", artigos: ["unicornio"] },
+    { foto: "abertura-unicornio-amarelo", artigos: ["unicornio"] },
+    { foto: "abertura-unicornio-turquesa", artigos: ["unicornio"] },
+    { foto: "abertura-unicornio-transparente", artigos: ["unicornio"] },
   ],
   cafetaria: [
     { foto: "abertura-chocolate-chantilly", artigos: ["caf-chocolate-quente-com-chantilly"] },
@@ -470,16 +483,19 @@ export default async function Ementa({ params }: Props) {
                 naoInscritoTexto: t("secreta.naoInscritoTexto", { email: "{email}" }),
                 inscrever: t("secreta.inscrever"),
                 aEnviar: t("secreta.aEnviar"),
-                consentimento: convite("consentimento"),
-                privacidade: convite("privacidade"),
+                /* Os da carta, e não os do convite: o convite trata por "tu"
+                   (o texto é do cliente) e a carta, como o resto do site, por
+                   "você". O `erroEmail` não trata por nada e fica partilhado. */
+                consentimento: t("secreta.consentimento"),
+                privacidade: t("secreta.privacidade"),
                 enviadoTitulo: t("secreta.enviadoTitulo"),
                 enviadoTexto: t("secreta.enviadoTexto"),
                 outroEmail: t("secreta.outroEmail"),
                 abertaTexto: t("secreta.abertaTexto"),
                 fechar: t("secreta.fechar"),
                 erroEmail: convite("erroEmail"),
-                erroLimite: convite("erroLimite"),
-                erroServico: convite("erroServico"),
+                erroLimite: t("secreta.erroLimite"),
+                erroServico: t("secreta.erroServico"),
                 precoPorConfirmar: comum("precoPorConfirmar"),
               }}
             />

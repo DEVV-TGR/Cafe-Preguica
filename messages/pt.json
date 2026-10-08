@@ -93,9 +93,9 @@
     },
     "casa": {
       "nome": "A casa",
-      "facto": "Madeira maciça, granito à vista e o nome escrito a giz na ardósia. Uma sala pequena onde toda a gente se conhece, aberta de tarde e de noite.",
+      "facto": "O Preguiça é uma casa acolhedora para beber um copo e pôr a conversa em dia. Cocktails, comida, boa música e uma equipa que te recebe com simpatia.",
       "dado": "R. José Joaquim Ribeiro Teles, 560",
-      "animais": "E os cães também entram. Quem vem com o seu não tem de o deixar à porta.",
+      "animais": "A nossa esplanada é pet friendly!",
       "alt": "A sala do Café Preguiça: paredes forradas a madeira, quadros antigos, o nome da casa escrito a giz numa ardósia e mesas de madeira.",
       "fotos": {
         "casa-sofas": "Sofás e pufes de veludo cinzento ao longo da parede de granito, com mesas de madeira e quadros antigos no canto.",
@@ -107,15 +107,12 @@
       }
     },
     "carril": {
-      "nome": "Vinte e quatro cocktails",
-      "facto": "Nove clássicos, dez especiais e cinco sem álcool. Feitos ao balcão, um a um.",
+      "nome": "{total} cocktails",
+      "facto": "{semAlcool} sem álcool, {classicos} clássicos e {especiais} especiais.",
       "dado": "Desde {preco}",
-      "ilustrativa": "As fotografias são da casa. Quando não se sabe ao certo que cocktail é, a legenda diz apenas o que se sabe.",
-      "balcaoNome": "Ao balcão",
-      "balcaoFacto": "Lima espremida à mão, sobre o copo. Todos os cocktails são feitos à frente de quem os bebe.",
-      "balcaoAlt": "Uma mão a espremer meia lima por cima de um copo alto com gelo.",
+      "comSabor": "{cocktail} {sabor}",
       "fechoNome": "E ainda a carta toda",
-      "fechoFacto": "Gin, whisky, shots, sangrias em garrafão, cervejas, chás e a cafetaria.",
+      "fechoFacto": "Gin, whisky, shots, sangrias em copo ou jarro, cervejas, chás e a cafetaria.",
       "fechoDado": "Ver a ementa"
     },
     "reels": {
@@ -137,14 +134,11 @@
       "facto": "O que se come com as mãos, no meio da mesa, enquanto a conversa não acaba.",
       "dado": "Desde {preco}",
       "altTabua": "Uma travessa redonda com tostinhas de chouriço e queijo, uma taça de batata frita e um frasco de tabasco, sobre madeira.",
-      "altTosta": "Uma torrada com compota de morango ao lado de um chocolate quente com chantilly e um pau de canela.",
-      "factoTosta": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte, por {preco}.",
-      "factoTostaSemPreco": "Na fotografia, ao lado de um chocolate quente com chantilly — que se pede à parte.",
       "verMais": "E o resto da carta",
-      "verMaisFacto": "Tábuas, preguiçinhas, sobremesas e as taças para petiscar. Tudo com preço.",
+      "verMaisFacto": "Tábuas, bocadinhos de pão com chouriço, sobremesas e as taças para petiscar. Tudo com preço.",
       "verMaisAcao": "Ver a ementa",
       "altSaloias": "Duas tostas no pão saloio, uma mista e uma de atum, em dois pratos com batata frita.",
-      "factoSaloias": "No pão saloio, com batata frita. Ao lado, a de pasta de atum e queijo."
+      "tostasNome": "As nossas tostas…"
     },
     "preguicosos": {
       "nome": "Os Preguiçosos",
@@ -162,16 +156,16 @@
         "movel": "Chamada para a rede móvel nacional"
       },
       "horarioPorConfirmar": "O horário ainda não foi confirmado pela casa. Convém ligar antes de vir.",
-      "animais": "Os cães são bem-vindos. Traga o seu.",
+      "animais": "A nossa esplanada é pet friendly!",
       "mapaAlt": "Mapa das ruas à volta do Café Preguiça, em Ermesinde, com a casa assinalada pela preguiça do logótipo.",
       "credito": "© contribuidores do OpenStreetMap"
     }
   },
   "ementa": {
     "titulo": "A carta",
-    "introducao": "Tostas e tábuas para partilhar, cocktails feitos ao balcão, um a um, e o resto da garrafeira.",
-    "avisoProvisoria": "Carta transcrita do menu da casa e ainda por confirmar. Em caso de dúvida, pergunte ao balcão.",
-    "avisoAlergenios": "A informação sobre alergénios está disponível no balcão. Pergunte-nos antes de fazer o pedido.",
+    "introducao": "Tostas, tábuas, cocktails, vinho quente e muito mais! Espreita a nossa garrafeira, escolhe o que te apetece e desfruta sem pressas.",
+    "avisoProvisoria": "Carta transcrita do menu da casa e ainda por confirmar. Em caso de dúvida, pergunta ao balcão.",
+    "avisoAlergenios": "A informação sobre alergénios está disponível no balcão. Pergunta-nos antes de fazeres o pedido.",
     "categorias": {
       "tostas-e-snacks": "Tostas & snacks",
       "tabuas": "Tábuas",
@@ -203,7 +197,7 @@
         "b": "Garrafa"
       }
     },
-    "saboresTitulo": "Escolha o sabor",
+    "saboresTitulo": "Escolhe o sabor",
     "olho": "Café Preguiça · Ermesinde",
     "contagem": "{artigos} artigos · {seccoes} secções",
     "indice": "Capítulos da carta",
@@ -215,7 +209,7 @@
       },
       "cocktails": {
         "nome": "Cocktails & sangrias",
-        "facto": "O da casa, os clássicos, os especiais e as sangrias em garrafão."
+        "facto": "O da casa, os clássicos, os especiais e as sangrias em copo ou jarro."
       },
       "mocktails": {
         "nome": "Mocktails",
@@ -239,6 +233,11 @@
       "cocktail-amarelo": "Um copo balão com uma bebida amarela, uma rodela de kiwi e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
       "cocktail-rosa": "Um copo balão com uma bebida cor-de-rosa, uma rodela de laranja desidratada e uma palhinha às riscas amarelas, sobre uma mesa de madeira.",
       "cocktail-coco": "Um copo balão com uma bebida branca e gelo, um guarda-chuva amarelo e uma palhinha às riscas vermelhas, ao lado de um coco, sobre uma mesa de madeira.",
+      "unicornio-azul": "Um Unicórnio azul num copo de vidro com gelo, um tubarão de goma amarelo, casca de limão e uma palhinha às riscas amarelas, sobre um balcão de madeira.",
+      "unicornio-vermelho": "Um Unicórnio vermelho num copo de vidro com gelo, uma rodela de laranja desidratada e uma palhinha às riscas pretas, sobre um balcão de madeira.",
+      "unicornio-amarelo": "Um Unicórnio amarelo num copo de vidro com gelo, um enfeite vermelho na borda e uma palhinha às riscas pretas, sobre um balcão de madeira.",
+      "unicornio-turquesa": "Um Unicórnio turquesa num copo de vidro com gelo, uma rodela de limão e uma palhinha às riscas pretas, sobre um balcão de madeira.",
+      "unicornio-transparente": "Um Unicórnio transparente num copo de vidro com gelo, um raminho de hortelã e uma palhinha às riscas vermelhas, sobre um balcão de madeira.",
       "bocadinhos-chourico": "Uma travessa de pão com chouriço e queijo derretido, aos pedaços, com uma taça de batata frita e um frasco de molho picante.",
       "bocadinhos-queijo": "De perto, os pedaços de pão com chouriço e queijo derretido, ao lado de uma taça de batata frita.",
       "bocadinhos-tabasco": "Os pedaços de pão com chouriço e queijo à frente de um frasco de molho picante.",
@@ -281,14 +280,15 @@
       "mexican-mule": "Um Mexican Mule numa caneca de cobre, com um morango, hortelã e uma palhinha preta.",
       "moscow-mule": "Um Moscow Mule numa caneca de cobre com gelo, hortelã e uma palhinha preta, numa mesa de madeira.",
       "negroni-fumo": "Um copo baixo com uma bebida vermelho-escura, gelo e uma casca de laranja, com fumo à volta, sobre o tapete do balcão.",
-      "cocktail-azul": "Um copo balão com uma bebida azul, gelo picado, uma fatia de fruta amarela e uma palhinha às riscas verdes, sobre uma mesa de madeira."
+      "cocktail-azul": "Um copo balão com uma bebida azul, gelo picado, uma fatia de fruta amarela e uma palhinha às riscas verdes, sobre uma mesa de madeira.",
+      "lima-espremida": "Uma mão a espremer meia lima por cima de um Long Island Iced Tea, num copo alto com gelo."
     },
-    "sortear": "Deixe a preguiça escolher",
+    "sortear": "Deixa a preguiça escolher",
     "aRodar": "A preguiça está a pensar…",
     "escolheu": "A preguiça escolheu",
-    "escolhido": "Escolheu",
-    "nenhumSabor": "Toque num sabor, ou deixe a preguiça escolher por si.",
-    "saboresNota": "Escolher aqui não faz o pedido: diga o sabor a quem o vier anotar.",
+    "escolhido": "Escolheste",
+    "nenhumSabor": "Toca num sabor, ou deixa a preguiça escolher por ti.",
+    "saboresNota": "Escolher aqui não faz o pedido: diz o sabor a quem o vier anotar.",
     "fecho": {
       "nome": "Dúvidas?",
       "facto": "Se quiser saber o que leva um prato ou uma bebida, ou que alergénios tem, pergunte a quem está ao balcão.",
@@ -311,6 +311,10 @@
       "naoInscritoTexto": "Inscreva {email} nas novidades da casa. Confirme no email que lhe vamos enviar e a carta abre-se sozinha.",
       "inscrever": "Inscrever e abrir",
       "aEnviar": "A enviar…",
+      "consentimento": "Ao inscrever-se, aceita receber as novidades da casa por email. Pode cancelar quando quiser.",
+      "privacidade": "Como tratamos o seu email",
+      "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente novamente daqui a pouco.",
+      "erroServico": "Não foi possível enviar agora. Tente novamente daqui a pouco.",
       "enviadoTitulo": "Falta um passo",
       "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está e volta aqui com a carta já aberta.",
       "outroEmail": "Escrever outro email",
@@ -429,22 +433,22 @@
   "newsletter": {
     "convite": {
       "olho": "Newsletter",
-      "titulo": "Novidades da casa",
-      "texto": "Cocktails novos, noites especiais e o que muda na carta. Só quando há alguma coisa para contar.",
-      "etiqueta": "O seu email",
-      "marcador": "o-seu@email.pt",
+      "titulo": "Mantemos o contacto?",
+      "texto": "Deixa o teu email e recebe as novidades da nossa casa.",
+      "etiqueta": "O teu email",
+      "marcador": "o-teu@email.pt",
       "botao": "Inscrever",
       "aEnviar": "A enviar…",
       "fechar": "Fechar",
-      "consentimento": "Ao inscrever-se, aceita receber as novidades da casa por email. Pode cancelar quando quiser.",
-      "privacidade": "Como tratamos o seu email",
+      "consentimento": "Ao inscreveres-te, aceitas receber as novidades da casa por email. Podes cancelar quando quiseres.",
+      "privacidade": "Como tratamos o teu email",
       "enviadoTitulo": "Falta um passo",
-      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está para confirmar — até lá, não fica inscrito.",
-      "jaTitulo": "Já está inscrito",
+      "enviadoTexto": "Enviámos-te um email. Carrega no link que lá está para confirmar — até lá, não ficas inscrito.",
+      "jaTitulo": "Já estás inscrito",
       "jaTexto": "Este email já recebe as novidades da casa. Não é preciso fazer mais nada.",
       "erroEmail": "Esse email não parece estar completo.",
-      "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente novamente daqui a pouco.",
-      "erroServico": "Não foi possível enviar agora. Tente novamente daqui a pouco."
+      "erroLimite": "Houve pedidos a mais nos últimos minutos. Tenta novamente daqui a pouco.",
+      "erroServico": "Não foi possível enviar agora. Tenta novamente daqui a pouco."
     },
     "confirmar": {
       "olho": "Newsletter",

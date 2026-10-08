@@ -224,6 +224,8 @@ export const EM_DESTAQUE: readonly string[] = [
   "espresso-martini",
   "mexican-mule",
   "moscow-mule",
+  /* A lista das tostas, em "Para partilhar" na inicial (o cliente, 2026-10-08). */
+  "presunto-queijo",
 ];
 
 /**
@@ -501,6 +503,33 @@ export function menorPreco(categorias: readonly Categoria[]): number | null {
     .flatMap((seccao) => seccao.artigos.map((artigo) => artigo.preco))
     .filter((preco): preco is number => preco !== null);
   return precos.length > 0 ? Math.min(...precos) : null;
+}
+
+/**
+ * Quantos cocktails tem a casa — o "25 cocktails: 5 sem álcool, 10 clássicos e
+ * 10 especiais" do rótulo da página inicial. Calculado pela mesma razão que o
+ * `menorPreco`: escondido um cocktail no painel, o rótulo acompanha.
+ *
+ * A conta é a do cliente (2026-10-08), e não a do que a `/ementa` mostra:
+ *
+ * - **Os secretos contam.** Continuam a ser servidos; só não estão à vista
+ *   sem o email. Sem eles, a conta dava 24 em vez dos 25 que a casa diz.
+ * - **O Cocktail Preguiça conta como clássico** — são os "10 clássicos": os
+ *   nove da categoria e o da casa.
+ * - Os escondidos não contam, que já não se servem.
+ */
+export function contarCocktails(): {
+  total: number;
+  classicos: number;
+  especiais: number;
+  semAlcool: number;
+} {
+  const quantos = (...categorias: Categoria[]) =>
+    artigos.filter((a) => categorias.includes(a.categoria) && !a.escondido).length;
+  const classicos = quantos("cocktails-classicos", "cocktail-preguica");
+  const especiais = quantos("cocktails-special");
+  const semAlcool = quantos("mocktails");
+  return { total: classicos + especiais + semAlcool, classicos, especiais, semAlcool };
 }
 
 /**

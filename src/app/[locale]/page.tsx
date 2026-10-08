@@ -20,7 +20,7 @@ import { BarraSite } from "@/components/BarraSite";
 import { Visor, type GrupoDoVisor } from "@/components/Visor";
 import { Carrossel, type FotoDoCarrossel } from "@/components/Carrossel";
 import { fotoDoVisor, textosDoVisor } from "@/lib/visor";
-import { artigoPorId, CAPITULOS, exigirEmDestaque, menorPreco } from "@/data/ementa";
+import { artigoPorId, CAPITULOS, contarCocktails, menorPreco, sabores } from "@/data/ementa";
 import { formatarPreco } from "@/lib/preco";
 import "../catalogo-motor.css";
 import "../catalogo.css";
@@ -75,21 +75,21 @@ export default async function Inicio({ params }: Props) {
   const comum = await getTranslations("comum");
   const marca = await getTranslations("marca");
   /* Os nomes curtos das secções, os da barra: são o que o visor escreve em cima
-     — "Vinte e quatro cocktails" não cabia ao lado da contagem no telemóvel. */
+     — o rótulo do carril, quando era "Vinte e quatro cocktails", não cabia ao
+     lado da contagem no telemóvel. */
   const seccoes = await getTranslations("nav.seccoes");
 
-  /* Os preços que os rótulos dizem vêm da carta, e não das mensagens: escritos
-     à mão, ficaram para trás da carta (o "Desde 4,20 €" era um mocktail que
-     foi escondido; o chocolate quente era 3,60 € e já é 4,30 €). Ver
-     `menorPreco`. Os cocktails são os vinte e quatro que o rótulo conta. */
+  /* Os preços e as contas que os rótulos dizem vêm da carta, e não das
+     mensagens: escritos à mão, ficaram para trás da carta (o "Desde 4,20 €" era
+     um mocktail que foi escondido). Ver `menorPreco` e `contarCocktails` — o
+     preço olha para as mesmas categorias que a conta. */
   const preco = (valor: number | null | undefined) =>
     valor == null ? null : formatarPreco(valor, locale);
+  const cocktails = contarCocktails();
   const desdeCocktails = preco(
-    menorPreco(["cocktails-classicos", "cocktails-special", "mocktails"]),
+    menorPreco(["cocktail-preguica", "cocktails-classicos", "cocktails-special", "mocktails"]),
   );
   const desdePartilhar = preco(menorPreco(CAPITULOS.comer));
-  exigirEmDestaque("caf-chocolate-quente-com-chantilly", "page.tsx (partilhar.factoTosta)");
-  const chocolate = preco(artigoPorId("caf-chocolate-quente-com-chantilly")?.preco);
 
   const morada = moradaCompleta();
   const telefone = telefoneParaLigar();
@@ -105,33 +105,37 @@ export default async function Inicio({ params }: Props) {
      "Um cocktail sobre uma mesa de madeira escura." nas quatro: um leitor de
      ecrã ouvia a mesma frase quatro vezes, e uma delas nem era numa mesa. */
   const fotos = await getTranslations("ementa.fotos");
-  const carril = [
-    { id: "negroni", foto: "negroni-fumo", alt: fotos("negroni-fumo") },
-    { id: "blue-lagoon", foto: "cocktail-azul", alt: fotos("cocktail-azul") },
-    { id: "cocktail-preguica", foto: "cocktail-rosa", alt: fotos("cocktail-rosa") },
-    { id: "cocktail-preguica", foto: "cocktail-turquesa", alt: fotos("cocktail-turquesa") },
-    {
-      foto: "lima-espremida",
-      alt: t("carril.balcaoAlt"),
-      nome: t("carril.balcaoNome"),
-      facto: t("carril.balcaoFacto"),
-    },
-  ].filter((c) => !c.id || artigoPorId(c.id));
-
-  /* A legenda do visor é a da carta — nome e preço pelo `id`. O cartão do
-     balcão não é um artigo e fica sem ela. */
-  const legenda = (id?: string) => {
-    const artigo = id ? artigoPorId(id) : undefined;
+  /* Os três copos balão são o Cocktail Preguiça, cada um no seu sabor, e a
+     lima espremida é um Long Island — foi o cliente que os identificou
+     (2026-10-08). O azul é o de laranja, e não um Blue Lagoon: a cor é do
+     curaçau, que é licor de laranja. O sabor junta-se ao nome a partir dos
+     dados; se sair da lista no painel, o cartão fica "Cocktail Preguiça". */
+  const carril = (
+    [
+      { id: "negroni", foto: "negroni-fumo" },
+      { id: "cocktail-preguica", sabor: "laranja", foto: "cocktail-azul" },
+      { id: "cocktail-preguica", sabor: "morango", foto: "cocktail-rosa" },
+      { id: "cocktail-preguica", sabor: "menta", foto: "cocktail-turquesa" },
+      { id: "long-island-ice-tea", foto: "lima-espremida" },
+    ] as { id: string; sabor?: string; foto: string }[]
+  ).flatMap(({ id, sabor, foto }) => {
+    const artigo = artigoPorId(id);
     if (!artigo) return [];
-    return [
-      artigo.preco === null
-        ? artigo.nome[locale]
-        : `${artigo.nome[locale]} · ${formatarPreco(artigo.preco, locale)}`,
-    ];
-  };
+    const doSabor = sabores.find((s) => s.id === sabor);
+    const nome = doSabor
+      ? t("carril.comSabor", { cocktail: artigo.nome[locale], sabor: doSabor.nome[locale] })
+      : artigo.nome[locale];
+    return [{ id, foto, nome, alt: fotos(foto), preco: artigo.preco }];
+  });
+
+  /* A legenda do visor é a do cartão: o nome, já com o sabor, e o preço da carta. */
   const grupoCarril: GrupoDoVisor = {
     nome: seccoes("carril"),
-    fotos: carril.map((c) => fotoDoVisor(`/casa/${c.foto}`, c.alt, legenda(c.id))),
+    fotos: carril.map((c) =>
+      fotoDoVisor(`/casa/${c.foto}`, c.alt, [
+        c.preco === null ? c.nome : `${c.nome} · ${formatarPreco(c.preco, locale)}`,
+      ]),
+    ),
   };
 
   /**
@@ -232,17 +236,19 @@ export default async function Inicio({ params }: Props) {
               <div className="pg-carril" data-sc-pan="0.06">
                 <div className="pg-carril__abertura">
                   <Rotulo
-                    nome={t("carril.nome")}
-                    facto={t("carril.facto")}
+                    nome={t("carril.nome", { total: cocktails.total })}
+                    facto={t("carril.facto", cocktails)}
                     dado={desdeCocktails ? t("carril.dado", { preco: desdeCocktails }) : undefined}
                   />
-                  <p className="pg-nota mt-6">{t("carril.ilustrativa")}</p>
                 </div>
 
                 {carril.map((c, i) => (
                   <CartaoCarril
                     key={c.foto}
-                    {...c}
+                    id={c.id}
+                    foto={c.foto}
+                    alt={c.alt}
+                    nome={c.nome}
                     locale={locale}
                     visor={{ grupo: grupoCarril, indice: i, ampliar: visor.ampliar }}
                   />
@@ -288,14 +294,12 @@ export default async function Inicio({ params }: Props) {
             verMaisFacto={t("partilhar.verMaisFacto")}
             verMaisAcao={t("partilhar.verMaisAcao")}
             ampliar={visor.ampliar}
-            alts={{
-              "bocadinhos-de-pao-com-chourico": t("partilhar.altTabua"),
-              "torrada-com-compota": t("partilhar.altTosta"),
-              "torrada-com-compota-facto": chocolate
-                ? t("partilhar.factoTosta", { preco: chocolate })
-                : t("partilhar.factoTostaSemPreco"),
-              "queijo-fiambre": t("partilhar.altSaloias"),
-              "queijo-fiambre-facto": t("partilhar.factoSaloias"),
+            /* Com o `{preco}` por preencher: o painel das tostas é que sabe qual é. */
+            desde={t("partilhar.dado", { preco: "{preco}" })}
+            textos={{
+              "preguicinhas-com-queijo": { alt: t("partilhar.altTabua") },
+              "tabua-mista": { alt: fotos("tabua-mista") },
+              tostas: { alt: t("partilhar.altSaloias"), nome: t("partilhar.tostasNome") },
             }}
           />
 

@@ -60,6 +60,7 @@ function moldura(cancelar: string): Moldura {
   return {
     logo: `${URL_SITE}${CAMINHO_DO_LOGO}`,
     estudio: `${URL_SITE}${CAMINHO_DO_ESTUDIO}`,
+    site: URL_SITE,
     remetente: rodapeDaCasa(), cancelar };
 }
 

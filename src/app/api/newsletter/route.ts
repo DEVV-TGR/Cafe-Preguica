@@ -5,6 +5,15 @@ import { URL_SITE, caminhoLocalizado } from "@/lib/site";
 import { criarConvite } from "@/lib/newsletter/convite";
 import { podeConvidar } from "@/lib/newsletter/limites";
 import { enviarConfirmacao, estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
+import {
+  CAMINHO_DO_ESTUDIO,
+  CAMINHO_DO_LOGO,
+  emailEmHtml,
+  emailEmTexto,
+  type Extras,
+  type Moldura,
+} from "@/lib/newsletter/corpo";
+import { rodapeDaCasa } from "@/lib/newsletter/casa";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { lerJson } from "@/lib/pedido";
 import { EsquemaEmail } from "@/lib/email";
@@ -114,11 +123,33 @@ export async function POST(pedido: Request) {
     const t = await getTranslations({ locale: lingua, namespace: "newsletter.email" });
     const link = linkDeConfirmacao(pedido, lingua, await criarConvite(email, lingua));
 
+    /* A mesma moldura da newsletter, sem a linha de cancelar: quem recebe isto
+       ainda não está inscrito. As imagens vêm do site em produção, como lá. */
+    const moldura: Moldura = {
+      logo: `${URL_SITE}${CAMINHO_DO_LOGO}`,
+      estudio: `${URL_SITE}${CAMINHO_DO_ESTUDIO}`,
+      site: URL_SITE,
+      remetente: rodapeDaCasa(),
+      cancelar: null,
+      lingua: lingua === "en" ? "en" : "pt-PT",
+      assinatura: {
+        antes: t("assinatura.antes"),
+        enfase: t("assinatura.enfase"),
+        depois: t("assinatura.depois"),
+      },
+    };
+    const extras: Extras = {
+      titulo: t("titulo"),
+      botao: { texto: t("botao"), endereco: link },
+      nota: t("nota"),
+    };
+
     await enviarConfirmacao({
       para: email,
       link,
       assunto: t("assunto"),
-      texto: t("texto", { link }),
+      html: emailEmHtml(t("assunto"), t("texto"), moldura, extras),
+      texto: emailEmTexto(t("texto"), moldura, extras),
     });
   } catch (erro) {
     if (erro instanceof ErroDoRedis || erro instanceof ErroDaNewsletter) {

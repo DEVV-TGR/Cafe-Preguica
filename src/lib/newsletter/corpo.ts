@@ -31,6 +31,11 @@
   o Gmail do telemóvel em modo escuro invertia esse fundo para branco, deixando
   só o logótipo preto no meio. Os clientes invertem cores, nunca imagens.
 
+  **A faixa vai dentro de um link para o site.** Uma imagem grande sem link
+  ganha no Gmail um botão de transferir por cima, e o logótipo não é para
+  levar. Não impede quem queira mesmo guardá-lo — nada impede —, mas deixa de
+  ser oferecido a quem passa o rato.
+
   O `color-scheme: light only` faz o Mail da Apple deixar o email claro em modo
   escuro. O Gmail do telemóvel ignora-o e inverte o papel e a tinta à mesma — isso
   ninguém consegue impedir sem transformar o texto em imagem —, mas a faixa, que
@@ -100,11 +105,32 @@ export type Moldura = {
   logo: string;
   /** O ícone da DevPlus — absoluto ou relativo, pela mesma razão do `logo`. */
   estudio: string;
+  /** Para onde leva a faixa do logótipo: o site da casa. */
+  site: string;
   /** "Café Preguiça · R. José Joaquim Ribeiro Teles, 560 · Ermesinde" */
   remetente: string;
   /** O link de cancelar. No envio a sério é a `MARCA_DO_CANCELAMENTO`; no teste
-      e na pré-visualização não há pessoa a quem cancelar, e aponta ao site. */
-  cancelar: string;
+      e na pré-visualização não há pessoa a quem cancelar, e aponta ao site.
+      `null` no email de confirmação: quem o recebe ainda não está inscrito, e
+      "recebe isto porque se inscreveu" seria falso. */
+  cancelar: string | null;
+  /** A língua do email (`lang`). A newsletter é só em português; a confirmação
+      segue a língua em que a pessoa se inscreveu. */
+  lingua?: string;
+  /** A assinatura da DevPlus noutra língua. Sem ela, vai a portuguesa. */
+  assinatura?: Assinatura;
+};
+
+/** "Site feito *sem preguiça nenhuma* pela DevPlus." — o nome do estúdio e o
+    ponto final são postos aqui; o resto vem de quem chama. */
+export type Assinatura = { antes: string; enfase: string; depois: string };
+
+/** O que só o email de confirmação tem: um título que não é o assunto, o botão,
+    e uma nota pequena por baixo dele. */
+export type Extras = {
+  titulo?: string;
+  botao?: { texto: string; endereco: string };
+  nota?: string;
 };
 
 /** Onde está a faixa do topo do email, a partir da raiz do site. O `email.png`
@@ -123,13 +149,22 @@ export const CAMINHO_DO_ESTUDIO = "/marca/devplus.png";
   bar com uma dúvida é para a casa, não para nós.
 */
 const ESTUDIO = { nome: "DevPlus", url: "https://devplus.pt" };
+/* Em código, e não em `messages/`, porque este ficheiro também corre no
+   browser do painel, onde a pré-visualização não tem o `next-intl` à mão. A
+   confirmação em inglês traz a sua na `Moldura`. */
+const ASSINATURA_PT: Assinatura = { antes: "Site feito", enfase: "sem preguiça nenhuma", depois: "pela" };
 const LARANJA_DEVPLUS = "#ff780a";
 
 /**
  * O email inteiro, em tabelas e estilos em linha — é a única forma de o Outlook
  * o mostrar como os outros o mostram.
  */
-export function emailEmHtml(assunto: string, texto: string, moldura: Moldura): string {
+export function emailEmHtml(
+  assunto: string,
+  texto: string,
+  moldura: Moldura,
+  extras: Extras = {},
+): string {
   const corpo = paragrafos(texto)
     .map(
       (p) =>
@@ -143,10 +178,30 @@ export function emailEmHtml(assunto: string, texto: string, moldura: Moldura): s
   /* A marca do Resend tem chavetas, e escapar não lhe mexe; um endereço
      qualquer passa pelo `escapar` como o resto. */
   const cancelar =
-    moldura.cancelar === MARCA_DO_CANCELAMENTO ? moldura.cancelar : escapar(moldura.cancelar);
+    moldura.cancelar === null || moldura.cancelar === MARCA_DO_CANCELAMENTO
+      ? moldura.cancelar
+      : escapar(moldura.cancelar);
+  const assinatura = moldura.assinatura ?? ASSINATURA_PT;
+
+  /* Um botão em tabela, com a cor na célula e no link: é o que o Outlook
+     respeita. Ouro com tinta escura, como o fio por baixo da faixa. */
+  const botao = extras.botao
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 20px"><tr>
+<td bgcolor="${CORES.fio}" style="background:${CORES.fio};border-radius:4px"><a href="${escapar(extras.botao.endereco)}" style="display:inline-block;padding:13px 26px;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:${CORES.escuro};text-decoration:none">${escapar(extras.botao.texto)}</a></td>
+</tr></table>`
+    : "";
+  const nota = extras.nota
+    ? `<p style="margin:0 0 16px;font-size:13px;line-height:1.6;color:${CORES.suave}">${escapar(extras.nota)}</p>`
+    : "";
+  const porque =
+    cancelar === null
+      ? ""
+      : `<br>
+Recebe este email porque se inscreveu na newsletter no site da casa.
+<a href="${cancelar}" style="color:${CORES.suave};text-decoration:underline">Cancelar a inscrição</a>.`;
 
   return `<!doctype html>
-<html lang="pt-PT">
+<html lang="${escapar(moldura.lingua ?? "pt-PT")}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -159,19 +214,17 @@ export function emailEmHtml(assunto: string, texto: string, moldura: Moldura): s
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CORES.papel}">
 <tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CORES.folha}">
-<tr><td style="padding:0;background:${CORES.escuro};line-height:0;font-size:0"><img src="${escapar(moldura.logo)}" width="560" alt="Café Preguiça" style="display:block;border:0;outline:none;width:100%;max-width:560px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px;line-height:1.4"></td></tr>
-<tr><td style="padding:28px 28px 12px;font-size:26px;line-height:1.2;color:${CORES.tinta}">${escapar(assunto)}</td></tr>
-<tr><td style="padding:12px 28px;font-family:Helvetica,Arial,sans-serif;color:${CORES.tinta}">${corpo}</td></tr>
+<tr><td style="padding:0;background:${CORES.escuro};line-height:0;font-size:0"><a href="${escapar(moldura.site)}" style="display:block;text-decoration:none"><img src="${escapar(moldura.logo)}" width="560" alt="Café Preguiça" style="display:block;border:0;outline:none;width:100%;max-width:560px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px;line-height:1.4"></a></td></tr>
+<tr><td style="padding:28px 28px 12px;font-size:26px;line-height:1.2;color:${CORES.tinta}">${escapar(extras.titulo ?? assunto)}</td></tr>
+<tr><td style="padding:12px 28px;font-family:Helvetica,Arial,sans-serif;color:${CORES.tinta}">${corpo}${botao}${nota}</td></tr>
 <tr><td style="padding:16px 28px 28px;border-top:1px solid #e4d8c6;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:${CORES.suave}">
-${escapar(moldura.remetente)}<br>
-Recebe este email porque se inscreveu na newsletter no site da casa.
-<a href="${cancelar}" style="color:${CORES.suave};text-decoration:underline">Cancelar a inscrição</a>.
+${escapar(moldura.remetente)}${porque}
 </td></tr>
 <tr><td style="padding:18px 28px 24px;background:${CORES.papel};font-family:Helvetica,Arial,sans-serif">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="padding-right:12px;vertical-align:middle"><a href="${ESTUDIO.url}"><img src="${escapar(moldura.estudio)}" width="32" height="32" alt="${ESTUDIO.nome}" style="display:block;width:32px;height:32px;border:0;border-radius:7px"></a></td>
 <td style="vertical-align:middle;font-size:12px;line-height:1.55;color:${CORES.suave}">
-Site feito <em>sem preguiça nenhuma</em> pela <a href="${ESTUDIO.url}" style="color:${CORES.tinta};font-weight:bold;text-decoration:none;border-bottom:1px solid ${LARANJA_DEVPLUS}">${ESTUDIO.nome}</a>.
+${escapar(assinatura.antes)} <em>${escapar(assinatura.enfase)}</em> ${escapar(assinatura.depois)} <a href="${ESTUDIO.url}" style="color:${CORES.tinta};font-weight:bold;text-decoration:none;border-bottom:1px solid ${LARANJA_DEVPLUS}">${ESTUDIO.nome}</a>.
 </td>
 </tr></table>
 </td></tr>
@@ -186,12 +239,17 @@ Site feito <em>sem preguiça nenhuma</em> pela <a href="${ESTUDIO.url}" style="c
  * A versão só de texto, que vai ao lado da HTML — para quem lê no relógio, e
  * para os filtros de spam, que desconfiam de um email sem ela.
  */
-export function emailEmTexto(texto: string, moldura: Moldura): string {
+export function emailEmTexto(texto: string, moldura: Moldura, extras: Extras = {}): string {
+  const a = moldura.assinatura ?? ASSINATURA_PT;
   return [
     ...paragrafos(texto).map((p) => p.replace(/\*\*(.+?)\*\*/g, "$1")),
+    ...(extras.botao ? [`${extras.botao.texto}: ${extras.botao.endereco}`] : []),
+    ...(extras.nota ? [extras.nota] : []),
     "—",
     moldura.remetente,
-    `Recebe este email porque se inscreveu na newsletter no site da casa. Cancelar a inscrição: ${moldura.cancelar}`,
-    `Site feito sem preguiça nenhuma pela ${ESTUDIO.nome} (${ESTUDIO.url}).`,
+    ...(moldura.cancelar === null
+      ? []
+      : [`Recebe este email porque se inscreveu na newsletter no site da casa. Cancelar a inscrição: ${moldura.cancelar}`]),
+    `${a.antes} ${a.enfase} ${a.depois} ${ESTUDIO.nome} (${ESTUDIO.url}).`,
   ].join("\n\n");
 }

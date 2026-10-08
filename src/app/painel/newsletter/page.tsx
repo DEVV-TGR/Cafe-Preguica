@@ -75,6 +75,7 @@ export default async function PaginaDaNewsletter() {
             moldura={{
               logo: CAMINHO_DO_LOGO,
               estudio: CAMINHO_DO_ESTUDIO,
+              site: URL_SITE,
               remetente: rodapeDaCasa(),
               cancelar: URL_SITE,
             }}

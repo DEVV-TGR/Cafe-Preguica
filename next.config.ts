@@ -58,6 +58,12 @@ const nextConfig: NextConfig = {
     return [
       { source: "/sobre", destination: "/#casa", permanent: true },
       { source: "/en/sobre", destination: "/en#casa", permanent: true },
+      /* Os QR das mesas estão impressos com `/m/<mesa>`, e levam todos à carta.
+         Temporário (307) de propósito: um 308 fica guardado para sempre no
+         telemóvel de quem já leu o QR, e se um dia a mesa servir para alguma
+         coisa — uma carta por mesa, um pedido — o papel não se reimprime. */
+      { source: "/m", destination: "/ementa", permanent: false },
+      { source: "/m/:mesa", destination: "/ementa", permanent: false },
     ];
   },
 

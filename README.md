@@ -21,8 +21,11 @@ gravidade:
       desde então. São 128 artigos em `src/data/ementa.json` (123 à vista). Daqui
       em diante a casa muda-os no painel; se a carta voltar a ser transcrita de
       outra fonte, volta a `false` até alguém a conferir ao balcão.
-- [ ] **Os QR das mesas.** Apontam para `https://<domínio>/ementa`, **sem
-      `/pt`**: com `localePrefix: "as-needed"` o português não leva prefixo. A
+- [ ] **Os QR das mesas.** Estão impressos com `cafepreguica.pt/m/<mesa>`
+      (`/m/1`, `/m/2`, …), e o `next.config.ts` leva-os todos à `/ementa` com um
+      307 — temporário, para a mesa poder vir a servir para outra coisa sem
+      reimprimir. A `/ementa` não leva `/pt`: com `localePrefix: "as-needed"` o
+      português não tem prefixo. A
       carta abre sempre em português (a deteção da língua do telemóvel está
       desligada, ver `src/i18n/routing.ts`), com o botão "English" na barra.
       ⚠️ Só se imprimem

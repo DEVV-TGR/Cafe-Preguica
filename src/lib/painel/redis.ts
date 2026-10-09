@@ -219,3 +219,33 @@ export async function somar(chave: string, segundos: number): Promise<number> {
   if (total === 1) await comando(["EXPIRE", chave, segundos]);
   return total;
 }
+
+/*
+  Soma um a um campo de um hash, sem prazo.
+
+  É o que guarda as leituras das mesas (`lib/mesas.ts`): contagens que valem a
+  pena ter daqui a um ano, e por isso sem `EX`. O `HINCRBY` é atómico como o
+  `INCR` — duas pessoas da mesma mesa ao mesmo tempo contam duas.
+*/
+export async function somarNoHash(chave: string, campo: string): Promise<void> {
+  if (!ligacao() && emMemoria()) {
+    const hash = JSON.parse(lerDaMemoria(chave) ?? "{}") as Record<string, number>;
+    hash[campo] = (hash[campo] ?? 0) + 1;
+    memoria.set(chave, { valor: JSON.stringify(hash), expira: 0 });
+    return;
+  }
+  await comando(["HINCRBY", chave, campo, 1]);
+}
+
+/* O hash inteiro, com os valores já em número. O Upstash devolve o `HGETALL`
+   como uma lista plana — campo, valor, campo, valor — e é aqui que se junta. */
+export async function lerHash(chave: string): Promise<Record<string, number>> {
+  if (!ligacao() && emMemoria()) {
+    return JSON.parse(lerDaMemoria(chave) ?? "{}") as Record<string, number>;
+  }
+
+  const plana = (await comando<string[] | null>(["HGETALL", chave])) ?? [];
+  const hash: Record<string, number> = {};
+  for (let i = 0; i + 1 < plana.length; i += 2) hash[plana[i]] = Number(plana[i + 1]);
+  return hash;
+}

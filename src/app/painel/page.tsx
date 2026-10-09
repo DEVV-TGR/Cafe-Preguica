@@ -4,7 +4,7 @@ import { esquecerEsteAparelho } from "./accoes";
 import { Cabecalho } from "@/components/painel/Cabecalho";
 
 /**
- * A porta de dentro: três escolhas e mais nenhuma.
+ * A porta de dentro: quatro escolhas e mais nenhuma.
  *
  * `exigirSessao()` aqui e não no layout — ver o comentário do `layout.tsx`
  * sobre um layout não ser fronteira de segurança.
@@ -27,6 +27,12 @@ const SECCOES = [
     olho: "Os contactos",
     titulo: "Newsletter",
     frase: "Escrever um email para quem se inscreveu no site, e ver quem está inscrito.",
+  },
+  {
+    href: "/painel/mesas",
+    olho: "Os QR e os NFC",
+    titulo: "Mesas",
+    frase: "Quantas vezes a carta foi aberta pelas mesas, noite a noite e mesa a mesa.",
   },
 ];
 

@@ -931,3 +931,43 @@ select.pn-entrada {
 .pn-sabor__cor input[data-escondido] {
   opacity: 0;
 }
+
+/* ============================================================== MESAS === */
+
+/* Os três totais lado a lado num ecrã largo, um por baixo do outro no telemóvel. */
+.pn-numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
+}
+
+.pn-numeros .pn-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pn-numero {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A barra cresce no meio da linha; o número fica sempre à direita. */
+.pn-barra {
+  flex: 1;
+  min-width: 3rem;
+  height: 0.4rem;
+  align-self: center;
+  border-radius: 1rem;
+  background: var(--color-linha);
+  overflow: hidden;
+}
+
+.pn-barra > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-ouro);
+}

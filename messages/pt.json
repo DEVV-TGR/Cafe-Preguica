@@ -336,7 +336,7 @@
     "atualizado": "Última atualização: rascunho, por rever antes de publicar.",
     "recolha": {
       "titulo": "Que dados recolhemos",
-      "texto": "Sobre quem só visita, nenhuns: o site não tem contas nem ferramentas de estatística, e não guarda nada sobre quem o abre. A única exceção é a newsletter, e só para quem se inscreve — está explicada na secção seguinte."
+      "texto": "Sobre quem só visita, nenhuns: o site não tem contas nem ferramentas de estatística, e não guarda nada sobre quem o abre. Quando a carta é aberta pelo código QR ou pelo NFC de uma mesa, o servidor soma um a um contador dessa mesa e dessa noite, para sabermos se os códigos são usados; não guarda nada sobre o telemóvel nem sobre quem o leu. A única exceção é a newsletter, e só para quem se inscreve — está explicada na secção seguinte."
     },
     "newsletter": {
       "titulo": "A newsletter",

@@ -61,9 +61,12 @@ const nextConfig: NextConfig = {
       /* Os QR das mesas estão impressos com `/m/<mesa>`, e levam todos à carta.
          Temporário (307) de propósito: um 308 fica guardado para sempre no
          telemóvel de quem já leu o QR, e se um dia a mesa servir para alguma
-         coisa — uma carta por mesa, um pedido — o papel não se reimprime. */
+         coisa — uma carta por mesa, um pedido — o papel não se reimprime.
+
+         Só o `/m` sem mesa fica aqui. O `/m/<mesa>` é o `src/app/m/[mesa]/route.ts`,
+         que conta a leitura antes de levar à carta — e um redirect deste
+         ficheiro corre antes dele e não o deixava contar nada. */
       { source: "/m", destination: "/ementa", permanent: false },
-      { source: "/m/:mesa", destination: "/ementa", permanent: false },
     ];
   },
 

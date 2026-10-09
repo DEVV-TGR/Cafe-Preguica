@@ -22,16 +22,15 @@ gravidade:
       em diante a casa muda-os no painel; se a carta voltar a ser transcrita de
       outra fonte, volta a `false` até alguém a conferir ao balcão.
 - [ ] **Os QR das mesas.** Estão impressos com `cafepreguica.pt/m/<mesa>`
-      (`/m/1`, `/m/2`, …), e o `next.config.ts` leva-os todos à `/ementa` com um
-      307 — temporário, para a mesa poder vir a servir para outra coisa sem
-      reimprimir. A `/ementa` não leva `/pt`: com `localePrefix: "as-needed"` o
-      português não tem prefixo. A
+      (`/m/1`, `/m/2`, …), e o `src/app/m/[mesa]/route.ts` leva-os todos à
+      `/ementa` com um 307 — temporário, para a mesa poder vir a servir para
+      outra coisa sem reimprimir. A `/ementa` não leva `/pt`: com
+      `localePrefix: "as-needed"` o português não tem prefixo. A
       carta abre sempre em português (a deteção da língua do telemóvel está
       desligada, ver `src/i18n/routing.ts`), com o botão "English" na barra.
-      ⚠️ Só se imprimem
-      depois de o domínio definitivo estar a servir HTTPS — hoje
-      `cafepreguica.pt` está parqueado e com o certificado partido, e um QR
-      impresso em vinte mesas não se corrige com um commit.
+      **Cada leitura conta**, por noite e por mesa, e vê-se no painel em
+      `/painel/mesas` (ver `docs/PAINEL.md`). Os NFC levam o mesmo endereço com
+      `?nfc` no fim (`cafepreguica.pt/m/7?nfc`), para se distinguirem dos QR.
 - [ ] **Alergénios.** `alergenios: []` nos 128 artigos. Preencher com quem está
       na cozinha, **sem deduzir das descrições**. Até lá o site mostra o aviso de
       que a informação está no balcão, que é o que o Regulamento (UE) 1169/2011

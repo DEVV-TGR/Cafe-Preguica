@@ -336,7 +336,7 @@
     "atualizado": "Last updated: draft, to be reviewed before publishing.",
     "recolha": {
       "titulo": "What data we collect",
-      "texto": "From people who just visit, none: the site has no accounts or analytics tools, and keeps nothing about the people who open it. The only exception is the newsletter, and only for those who sign up — it is explained in the next section."
+      "texto": "From people who just visit, none: the site has no accounts or analytics tools, and keeps nothing about the people who open it. When the menu is opened through a table's QR code or NFC tag, the server adds one to a counter for that table and that night, so we know whether the codes are used; it keeps nothing about the phone or the person who scanned it. The only exception is the newsletter, and only for those who sign up — it is explained in the next section."
     },
     "newsletter": {
       "titulo": "The newsletter",

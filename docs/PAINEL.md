@@ -74,6 +74,20 @@ com o nome, a tradução e o lugar na lista, e volta com um toque. Nas legendas 
 fotografias da página inicial **continua a aparecer**, porque essas pedem-no pelo
 `id`. Esconder um cocktail esgotado não deve deixar um buraco no carril.
 
+### As mesas
+
+`/painel/mesas` mostra quantas vezes a carta foi aberta pelo QR (`/m/<mesa>`) ou
+pelo NFC (`/m/<mesa>?nfc`) de cada mesa: os totais de 7 e 30 noites e desde o
+início, as últimas 14 noites e as mesas das últimas 30. Conta leituras, não
+pessoas, e não guarda nada sobre quem lê — só um número por noite, mesa e
+origem, no hash `mesas:leituras` do Upstash, sem prazo. A noite muda às 06:00
+de Lisboa, para o fecho depois da meia-noite contar na noite certa. Os robôs e
+as pré-visualizações de links (WhatsApp e companhia) não contam. As contas
+estão em `src/lib/mesas/contas.ts`, com testes em `testes/mesas.test.mjs`.
+
+Se o Upstash falhar, o QR continua a levar à carta: a leitura conta-se depois
+da resposta, e uma que falhe fica só no registo da Vercel (`[mesas]`).
+
 ---
 
 ## Como se entra

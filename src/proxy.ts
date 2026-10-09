@@ -75,6 +75,11 @@ export default function proxy(request: NextRequest) {
   if (pathname === "/painel" || pathname.startsWith("/painel/")) {
     return painel(request);
   }
+  /* Os QR das mesas, pela mesma razão do painel: o `next-intl` reescrevia
+     `/m/7` para `/pt/m/7`, e a rota que conta a leitura nunca era chamada. */
+  if (/^\/m\/[^/]+$/.test(pathname)) {
+    return NextResponse.next();
+  }
   return idioma(request);
 }
 

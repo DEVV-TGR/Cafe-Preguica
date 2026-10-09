@@ -52,8 +52,9 @@ gravidade:
 - [x] **Redes sociais.** Instagram, Facebook, TikTok e Spotify em
       `src/data/marca.json`, e no `sameAs` dos dados estruturados. Mudam-se no
       painel.
-- [ ] **O domínio.** Ver `docs/decisoes-pendentes.md` — `cafepreguica.pt` já
-      existe, está parqueado, e o HTTPS está partido.
+- [x] **O domínio.** `cafepreguica.pt` serve o site na Vercel, e o
+      `URL_SITE` (`src/lib/site.ts`) é `https://www.cafepreguica.pt`. Ver
+      `docs/decisoes-pendentes.md`.
 - [ ] **Rever a indexação.** O `robots.txt` deixa indexar tudo menos o painel
       e a API — incluindo a demonstração em `cafe-preguica.vercel.app`.
 - [ ] **A política de privacidade.** Está marcada como rascunho à vista de quem

@@ -103,28 +103,20 @@ acordo. Mudar é `gh repo edit --visibility private` e não toca no código.
 
 ---
 
-## 5. Domínio — **existe, e está partido**
+## 5. Domínio — **resolvido**
 
-⚠️ **`cafepreguica.pt` já é do cliente.** Está registado na Amen e está impresso
-no rodapé do menu que a casa entrega às mesas. Mas hoje:
+`cafepreguica.pt` é do cliente (registado na Amen, impresso no rodapé do menu)
+e já aponta para a Vercel: `cafepreguica.pt` redireciona (308) para
+`https://www.cafepreguica.pt`, com HTTPS válido.
 
-- **Não tem site.** Responde com a página de cortesia da Amen. Quem lê o menu e
-  escreve o endereço não encontra nada.
-- **O HTTPS está partido.** O certificado servido não corresponde ao domínio, e
-  o browser recusa a ligação com um aviso de segurança.
+O `src/lib/site.ts` assume `https://www.cafepreguica.pt` quando o
+`NEXT_PUBLIC_SITE_URL` não está definido. Antes assumia
+`https://cafe-preguica.vercel.app`, e como a variável nunca foi definida na
+Vercel, o site publicado mandava para a demonstração o link de confirmação da
+newsletter, o `sitemap.xml`, o `robots.txt`, o canonical e as imagens de
+partilha.
 
-É o candidato natural a `NEXT_PUBLIC_SITE_URL` e resolve-se apontando o DNS para
-a Vercel — mas é conversa a ter com quem tem a conta na Amen, e convém saber se
-o cliente sabe que o endereço impresso não leva a lado nenhum.
-
-Enquanto não estiver resolvido, o `NEXT_PUBLIC_SITE_URL` não está definido e o
-site assume `https://cafe-preguica.vercel.app`. É o que sai hoje no
-`sitemap.xml`, no `robots.txt` e nas imagens de partilha.
-
-⚠️ Enquanto isto não estiver resolvido, **cuidado com a indexação**: o
-`robots.txt` deixa indexar tudo, e é a demonstração que o Google apanha. Tirar
-de lá depois demora. Ver a lista *Antes de publicar* no README.
-
+Falta, na Search Console, adicionar `www.cafepreguica.pt` e submeter o sitemap.
 
 ---
 

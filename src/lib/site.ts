@@ -7,17 +7,19 @@ import { routing } from "@/i18n/routing";
  * transforma os caminhos relativos das imagens de partilha em absolutos), o
  * `sitemap.ts`, o `robots.ts` e os dados estruturados.
  *
- * ⚠️ O valor por defeito é um subdomínio de demonstração da Vercel, porque **o
- * domínio final ainda não está decidido**. Quando estiver, define-se
- * `NEXT_PUBLIC_SITE_URL` no painel da Vercel e faz-se *redeploy* — sem isso, o
- * `sitemap.xml` anuncia ao Google o endereço da demonstração.
+ * O valor por defeito é o domínio da casa, com `www` porque é para lá que a
+ * Vercel redireciona o `cafepreguica.pt` (308). Enquanto o defeito era o
+ * subdomínio de demonstração da Vercel, sem `NEXT_PUBLIC_SITE_URL` definido o
+ * site publicado mandava o link de confirmação da newsletter, o `sitemap.xml` e
+ * o canonical para `cafe-preguica.vercel.app`. A variável continua a mandar
+ * sobre o defeito, para um domínio novo não precisar de um commit.
  */
 export const URL_SITE = validarUrlSite(
   /* `||` e não `??`: a variável definida mas vazia (o que fica ao importar o
      `.env.example` para a Vercel tal como está) conta como não definida. Com
      `??` a string vazia passava e o `new URL("")` do `metadataBase` partia o
      build em todas as páginas. */
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://cafe-preguica.vercel.app",
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://www.cafepreguica.pt",
 );
 
 /** Falha no build com uma mensagem que diz o que corrigir, em vez do

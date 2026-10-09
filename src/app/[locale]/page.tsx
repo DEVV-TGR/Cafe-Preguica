@@ -46,13 +46,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * | 1 | O herói, a fachada | `parallax` | chegada |
  * | 2 | A casa | `reveal` | reconhecimento |
  * | 3 | Os cocktails | `pan` ← **pico** | deslumbre |
- * | 4 | Os reels | `pin` | curiosidade |
- * | 5 | Para partilhar | `pan` | fome |
+ * | 4 | Para partilhar | `pan` | fome |
+ * | 5 | Os reels | `pin` | curiosidade |
  * | 6 | Os Preguiçosos | `pin` | confiança |
  * | 7 | Onde estamos | `in` | decisão |
  *
- * Cinco famílias de dispositivo e nenhuma repetida em actos seguidos — os dois
- * `pan` estão separados pelo `pin` dos reels, de propósito. E são duas leituras
+ * Os dois `pan` estavam separados pelo `pin` dos reels, para não haver o mesmo
+ * dispositivo em actos seguidos. O cliente preferiu o que se come logo a seguir
+ * ao que se bebe (2026-10-09), e por isso estão agora lado a lado. Aguenta
+ * porque andam em sentidos contrários (ver `Pratos.tsx`) e são duas leituras
  * diferentes do mesmo dispositivo: os cocktails passam em cartões, três ou
  * quatro ao mesmo tempo; os pratos passam em painéis à largura do ecrã, um de
  * cada vez.
@@ -266,25 +268,8 @@ export default async function Inicio({ params }: Props) {
             </div>
           </section>
 
-          {/* 4 · OS REELS */}
-          <Reels
-            nome={t("reels.nome")}
-            facto={t("reels.facto")}
-            noInstagram={t("reels.noInstagram")}
-            redes={comum("redes")}
-            seguir={comum("seguir")}
-            etiqueta={t("reels.etiqueta")}
-            legendas={{
-              masterclass: t("reels.legendas.masterclass"),
-              tosta: t("reels.legendas.tosta"),
-              negroni: t("reels.legendas.negroni"),
-              valentim: t("reels.legendas.valentim"),
-              menu: t("reels.legendas.menu"),
-              lima: t("reels.legendas.lima"),
-            }}
-          />
-
-          {/* 5 · PARA PARTILHAR */}
+          {/* 4 · PARA PARTILHAR — logo a seguir aos cocktails, por decisão do
+              cliente: o que se bebe e o que se come de seguida. */}
           <Pratos
             locale={locale}
             nome={t("partilhar.nome")}
@@ -300,6 +285,24 @@ export default async function Inicio({ params }: Props) {
               "preguicinhas-com-queijo": { alt: t("partilhar.altTabua") },
               "tabua-mista": { alt: fotos("tabua-mista") },
               tostas: { alt: t("partilhar.altSaloias"), nome: t("partilhar.tostasNome") },
+            }}
+          />
+
+          {/* 5 · OS REELS */}
+          <Reels
+            nome={t("reels.nome")}
+            facto={t("reels.facto")}
+            noInstagram={t("reels.noInstagram")}
+            redes={comum("redes")}
+            seguir={comum("seguir")}
+            etiqueta={t("reels.etiqueta")}
+            legendas={{
+              masterclass: t("reels.legendas.masterclass"),
+              tosta: t("reels.legendas.tosta"),
+              negroni: t("reels.legendas.negroni"),
+              valentim: t("reels.legendas.valentim"),
+              menu: t("reels.legendas.menu"),
+              lima: t("reels.legendas.lima"),
             }}
           />
 

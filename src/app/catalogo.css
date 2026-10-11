@@ -1555,34 +1555,10 @@ a.pg-onde__alfinete:focus-visible {
   align-content: center;
 }
 
-/* ===================================================== SEM SALTOS NO IPHONE ==
-
-   ⚠️ **No iPhone, o carril andava aos saltos, e não era peso.** Gravado no
-   Safari (2026-10-11) e analisado quadro a quadro: quando o dedo larga e a
-   página abranda sozinha, o Safari só atualiza a posição de rolagem que a
-   página vê ~10 vezes por segundo. O motor escreve a posição nova de cada vez
-   que ela chega, por isso o carril ficava 5–6 quadros parado e depois saltava.
-   Os textos dos Reels e dos Preguiçosos, e a foto do herói, faziam o mesmo. O
-   ciclo da preguiça corria todos os quadros: o telemóvel não estava a sufocar.
-
-   Não dá para ter a posição mais vezes. O que se faz é **preencher o
-   intervalo**: uma transição curta leva o elemento até à posição nova, em vez
-   de o pôr lá de uma vez, e chega quando já vem a seguinte. Corre no
-   compositor, fluida mesmo com a página a falar 10 vezes por segundo — e no
-   PC a roda do rato, que atirava o carril aos degraus, passa a deslizar.
-
-   - **140 ms**, um pouco mais do que o intervalo entre atualizações (~100 ms):
-     mais curta, parava antes de chegar a seguinte e voltava o soluço; mais
-     longa, o carril ficava a arrastar atrás do dedo.
-   - **`linear`, e não um ease:** com ease, o movimento abrandava antes de cada
-     atualização e pulsava dez vezes por segundo.
-   - Com "reduzir movimento", o `globals.css` já as põe a zero.
-
-   ⚠️ O `transition: none` dos cues é do motor (`catalogo-motor.css`), com o
-   seletor `.sc-ready [data-sc-cue]`. Aqui leva `:root` à frente para pesar
-   mais: com o mesmo peso, ganhava quem viesse depois, e na build de produção
-   o CSS do motor vem **depois** deste. Esteve assim e os Reels e os
-   Preguiçosos continuaram aos saltos, no iPhone, com os carris já fluidos. */
+/* Nos browsers sem ViewTimeline, uma transição curta suaviza os destinos do
+   motor. Não elimina intervalos maiores entre eventos `scroll`, por isso os
+   carris e as deixas usam a rolagem nativa quando disponível (rolagem-nativa.ts).
+   `:root` garante que o CSS do motor não ganha pela ordem dos ficheiros. */
 
 [data-sc-pan],
 [data-sc-parallax] {
@@ -1593,4 +1569,10 @@ a.pg-onde__alfinete:focus-visible {
   transition:
     opacity 140ms linear,
     transform 140ms linear;
+}
+
+/* As animações nativas já seguem a rolagem: uma transição sobre os estilos
+   inline do motor competiria com elas e voltaria a introduzir atraso. */
+:root.sc-ready [data-sc-act] .pg-rolagem-nativa {
+  transition: none;
 }

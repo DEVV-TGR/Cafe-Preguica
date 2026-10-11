@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useCallback, useEffect, useRef } from "react";
+import { montarRolagemNativa } from "@/lib/rolagem-nativa";
 
 /**
  * Arranca o motor do scrollcraft.
@@ -191,10 +192,12 @@ function rolagemParaMostrar(el: HTMLElement): number | null {
 
 export function Motor() {
   const instancia = useRef<InstanciaDoMotor | null>(null);
+  const limparRolagem = useRef<(() => void) | null>(null);
 
   const montar = useCallback(() => {
     if (instancia.current || !window.ScrollCraft) return;
     instancia.current = window.ScrollCraft.mount(document.body);
+    limparRolagem.current = montarRolagemNativa(document.body);
     document.documentElement.classList.remove(SEM_MOTOR);
 
     /* ⚠️ **A inicial abre sempre no topo** (pedido do Tomás). A exceção é quem
@@ -221,6 +224,8 @@ export function Motor() {
     }, PRAZO_DO_MOTOR_MS);
     return () => {
       window.clearTimeout(prazo);
+      limparRolagem.current?.();
+      limparRolagem.current = null;
       document.documentElement.classList.remove(SEM_MOTOR);
       if (instancia.current) desmontar(instancia.current);
       instancia.current = null;

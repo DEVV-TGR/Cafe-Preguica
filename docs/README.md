@@ -6,6 +6,8 @@
   se entra, o que pode e não pode mudar, e o que fazer quando falha.
 - [`decisoes-pendentes.md`](decisoes-pendentes.md) — o que ainda não está
   decidido (formulário, estatísticas, mapa, domínio), com o custo de cada lado.
+- [`ROLAGEM-NATIVA.md`](ROLAGEM-NATIVA.md) — diagnóstico dos travões nos carris,
+  correção com animações nativas, testes e contexto para continuar com o Claude.
 
 As convenções de código estão em [`../AGENTS.md`](../AGENTS.md) e o estado do
 projeto no [`../README.md`](../README.md).

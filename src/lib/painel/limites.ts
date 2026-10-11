@@ -186,6 +186,37 @@ export async function gastarTentativaDoDia(email: string): Promise<boolean> {
   return (await somar(chaveDasTentativas(email), DIA_S)) <= TETO_DE_TENTATIVAS;
 }
 
+/*
+  Emails sem acesso, por ligação: à terceira em 15 minutos, a ligação fica
+  trancada até a janela acabar.
+
+  Desde que o ecrã diz *"este email não tem acesso"*, o formulário responde à
+  pergunta "este endereço entra?". O limite por IP de cima (10) deixava fazer
+  essa pergunta dez vezes; este deixa duas — quem se enganou numa letra
+  percebe à primeira, e quem anda a adivinhar fica parado.
+
+  **Trancada para todos os emails, e não só para os de fora.** Se o da lista
+  continuasse a passar, a pergunta continuava respondida — passava só a sair
+  noutra frase. Quem tem o aparelho lembrado não dá por isto, porque o
+  `pedirCodigo` o deixa entrar antes de olhar para os limites: o Rafael no
+  wifi do bar não fica fechado por um cliente a brincar com o formulário.
+*/
+const SEM_ACESSO_POR_REDE = 3;
+
+function chaveDosSemAcesso(ligacao: string): string {
+  return `sem-acesso-ip:${ligacao}`;
+}
+
+/** Conta mais um email sem acesso a partir desta ligação, e diz se a trancou. */
+export async function contarSemAcesso(): Promise<boolean> {
+  return (await somar(chaveDosSemAcesso(await rede()), JANELA_S)) >= SEM_ACESSO_POR_REDE;
+}
+
+/** Se esta ligação já tentou emails sem acesso vezes demais nesta janela. */
+export async function ligacaoTrancada(): Promise<boolean> {
+  return Number((await ler(chaveDosSemAcesso(await rede()))) ?? 0) >= SEM_ACESSO_POR_REDE;
+}
+
 /** Quantas tentativas de código este email já gastou hoje. */
 export async function tentativasDoDia(email: string): Promise<number> {
   return Number((await ler(chaveDasTentativas(email))) ?? 0);

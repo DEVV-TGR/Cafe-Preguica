@@ -166,6 +166,10 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
   o distinguir de um envio que falhou. Saber que um endereço tem acesso não
   abre nada — o código vai sempre para a caixa dele — e os pedidos de fora
   continuam a gastar os limites por email e por IP.
+  - Para a pergunta "este endereço entra?" não se poder fazer à vontade, à
+    **terceira tentativa sem acesso a mesma ligação fica trancada 15 minutos**,
+    para todos os emails (`contarSemAcesso` em `src/lib/painel/limites.ts`).
+    O aparelho lembrado não é afetado.
 - **A sessão confere o `PAINEL_EMAILS` a cada pedido.** Tirar alguém da lista
   põe-no fora já, e não quando o cookie caducar.
 - **20 tentativas de código por email em 24 h**, certas ou erradas, contadas

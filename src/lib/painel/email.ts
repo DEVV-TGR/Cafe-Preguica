@@ -1,6 +1,16 @@
 import "server-only";
 import { comEspaco } from "./codigo";
 import { meioEscondido } from "./utilizadores";
+import { URL_SITE } from "@/lib/site";
+import { rodapeDaCasa } from "@/lib/newsletter/casa";
+import {
+  CAMINHO_DO_ESTUDIO,
+  CAMINHO_DO_LOGO,
+  emailEmHtml,
+  emailEmTexto,
+  type Extras,
+  type Moldura,
+} from "@/lib/newsletter/corpo";
 
 /*
   Mandar o código por email.
@@ -38,6 +48,13 @@ import { meioEscondido } from "./utilizadores";
 
   A caixa não recebe respostas. O `reply_to` aponta ao próprio remetente e o
   texto do email diz que não vale a pena responder.
+
+  ## A cara é a da newsletter
+
+  A mesma moldura de `lib/newsletter/corpo.ts` — faixa do logótipo, morada,
+  assinatura da DevPlus — com o código em grande no lugar do botão, e **sem**
+  linha de cancelar: isto não é uma lista a que alguém se inscreveu. Já foi só
+  texto, e era o único email da casa que parecia de outro sítio.
 */
 
 /*
@@ -234,6 +251,28 @@ export async function enviarCodigo({
 
   const de = remetente();
 
+  const assunto = `${legivel} — entrar no painel do Preguiça`;
+  const texto = "Para entrar no painel do Preguiça, escreve este código no ecrã de entrada:";
+  const moldura: Moldura = {
+    logo: `${URL_SITE}${CAMINHO_DO_LOGO}`,
+    estudio: `${URL_SITE}${CAMINHO_DO_ESTUDIO}`,
+    site: URL_SITE,
+    remetente: rodapeDaCasa(),
+    cancelar: null,
+  };
+  const extras: Extras = {
+    titulo: "O teu código",
+    codigo: legivel,
+    nota:
+      "Vale 10 minutos e serve uma vez só. Se não foste tu a pedir este código, alguém " +
+      "escreveu o teu endereço no ecrã de entrada do painel: sem o código não se entra, mas " +
+      "avisa o Tomás se acontecer muitas vezes. Esta caixa não lê respostas.",
+    /* O código à cabeça, outra vez: há programas que mostram o assunto
+       cortado na notificação, e este é o segundo sítio onde ele se lê sem
+       abrir o email. */
+    preambulo: `${legivel} é o teu código. Vale 10 minutos.`,
+  };
+
   const resposta = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -255,18 +294,9 @@ export async function enviarCodigo({
         lê-o na notificação, sem desbloquear e sem abrir o email — que é como
         isto vai ser usado, ao balcão e com uma mão só.
       */
-      subject: `${legivel} — entrar no painel do Preguiça`,
-      text: [
-        `O teu código para entrar no painel é ${legivel}.`,
-        "",
-        "Vale 10 minutos e serve uma vez só.",
-        "",
-        "Se não foste tu a pedir este código, alguém escreveu o teu endereço",
-        "no ecrã de entrada do painel. Não há nada a fazer — sem o código não",
-        "se entra — mas vale a pena avisares o Tomás se acontecer muitas vezes.",
-        "",
-        "Esta caixa não lê respostas.",
-      ].join("\n"),
+      subject: assunto,
+      html: emailEmHtml(assunto, texto, moldura, extras),
+      text: emailEmTexto(texto, moldura, extras),
     }),
   });
 

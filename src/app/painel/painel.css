@@ -283,14 +283,6 @@
   line-height: 1.5;
 }
 
-.pn-entrada--codigo {
-  min-height: 3.5rem;
-  text-align: center;
-  font-size: 1.6rem;
-  letter-spacing: 0.4em;
-  font-variant-numeric: tabular-nums;
-}
-
 .pn-entrada--preco {
   width: 4.6rem;
   padding-inline: 0.5rem;
@@ -970,4 +962,259 @@ select.pn-entrada {
   height: 100%;
   border-radius: inherit;
   background: var(--color-ouro);
+}
+
+/* ============================================================== O CÓDIGO
+   Ver `components/painel/FormularioDeCodigo.tsx`. Seis casas desenhadas, e um
+   `<input>` transparente por cima delas que é quem recebe o que se escreve. O
+   JS só muda a `data-fase`; os tempos daqui batem com o `VOLTA_MS`,
+   `ENTRAR_MS` e `ERRADO_MS` de lá.
+
+   O "reduzir movimento" do `globals.css` já encurta tudo isto para zero: ficam
+   as cores e o logótipo, sem voltas, deslizes nem abanões. */
+
+/* O ângulo do brilho que dá a volta. O `@property` é o que deixa o browser
+   animar uma variável; sem ele, o anel fica dourado e parado, que também se
+   lê. */
+@property --pn-codigo-angulo {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.pn-codigo {
+  --pn-codigo-cor: var(--color-ouro);
+  --pn-codigo-folga: 0.5rem;
+  position: relative;
+  display: block;
+}
+
+.pn-codigo[data-fase="errado"] {
+  --pn-codigo-cor: #d9674c;
+}
+
+/* Alta o suficiente para o logótipo, que é mais alto do que as casas, nascer
+   no meio sem empurrar o resto do ecrã quando aparece. */
+.pn-codigo__fila {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  gap: var(--pn-codigo-folga);
+  max-width: 20rem;
+  min-height: 5.5rem;
+  margin-inline: auto;
+  padding: 0.75rem;
+}
+
+.pn-codigo__casa {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--color-linha);
+  border-radius: 0.6rem;
+  background: var(--color-canvas);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  /* Os algarismos da Fraunces sobem e descem por omissão (o 4 abaixo do 8);
+     num código, os seis à mesma altura. */
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--color-tinta);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 420ms cubic-bezier(0.6, 0, 0.3, 1),
+    opacity 420ms ease;
+}
+
+.pn-codigo__casa[data-cheia] {
+  border-color: color-mix(in oklab, var(--color-ouro) 40%, var(--color-linha));
+}
+
+/* O anel dourado na casa do algarismo seguinte — só com o campo focado,
+   senão parecia que se estava a escrever sem estar. */
+.pn-codigo[data-fase="escrever"][data-focado] .pn-codigo__casa[data-ativa] {
+  border-color: var(--color-ouro);
+  box-shadow:
+    0 0 0 1px var(--color-ouro),
+    0 0 0.9rem -0.2rem color-mix(in oklab, var(--color-ouro) 70%, transparent);
+}
+
+.pn-codigo[data-fase="escrever"][data-focado] .pn-codigo__casa[data-ativa]:not([data-cheia])::after {
+  content: "";
+  width: 1px;
+  height: 1.3rem;
+  background: var(--color-ouro);
+  animation: pn-codigo-cursor 1s steps(1) infinite;
+}
+
+@keyframes pn-codigo-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* O anel que dá a volta à fila: um gradiente cónico recortado pela máscara
+   até sobrar só a borda. */
+.pn-codigo__anel {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--pn-codigo-angulo),
+    transparent 0 55%,
+    color-mix(in oklab, var(--pn-codigo-cor) 40%, transparent) 70%,
+    var(--pn-codigo-cor) 92%,
+    var(--color-ouro-claro) 100%
+  );
+  /* Duas máscaras — a caixa toda e a caixa sem a borda — e fica a diferença.
+     A ordem conta: no Chrome o `-webkit-mask` é um sinónimo do `mask`, e
+     escrito depois apagava o `exclude`. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.pn-codigo[data-fase="a-confirmar"] .pn-codigo__anel {
+  opacity: 1;
+  animation: pn-codigo-volta 900ms linear infinite;
+}
+
+@keyframes pn-codigo-volta {
+  to {
+    --pn-codigo-angulo: 360deg;
+  }
+}
+
+.pn-codigo[data-fase="a-confirmar"] .pn-codigo__casa {
+  border-color: color-mix(in oklab, var(--color-ouro) 55%, var(--color-linha));
+}
+
+/* Certo: o anel fecha-se a verde, as casas correm para o meio e somem, e o
+   logótipo nasce onde elas se encontram. Cada casa anda o que a separa do
+   centro da fila — `2.5 - i` casas, mais as folgas pelo caminho. */
+.pn-codigo[data-fase="certo"] .pn-codigo__anel {
+  opacity: 0;
+  background: var(--pn-codigo-cor);
+  transition: opacity 500ms ease 250ms;
+}
+
+.pn-codigo[data-fase="certo"] {
+  --pn-codigo-cor: #7fbf6a;
+}
+
+.pn-codigo[data-fase="certo"] .pn-codigo__casa {
+  border-color: var(--pn-codigo-cor);
+  color: var(--pn-codigo-cor);
+  box-shadow: 0 0 0.8rem -0.3rem var(--pn-codigo-cor);
+  transform: translateX(calc((2.5 - var(--i)) * (100% + var(--pn-codigo-folga)))) scale(0.5);
+  opacity: 0;
+  /* Pela ordem do `transition` de cima: a cor já, o deslize já, e o sumir só
+     quando elas já vão a meio caminho. */
+  transition-delay: 0s, 0s, 0s, 180ms;
+}
+
+.pn-codigo__marca {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8.5rem;
+  height: auto;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  pointer-events: none;
+}
+
+.pn-codigo[data-fase="certo"] .pn-codigo__marca {
+  animation: pn-codigo-marca 700ms cubic-bezier(0.2, 0.8, 0.2, 1.2) 380ms forwards;
+}
+
+@keyframes pn-codigo-marca {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+    filter: drop-shadow(0 0 1.2rem color-mix(in oklab, var(--color-ouro) 70%, transparent));
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: drop-shadow(0 0 0.5rem color-mix(in oklab, var(--color-ouro) 35%, transparent));
+  }
+}
+
+/* Errado: o anel fica inteiro e vermelho, as casas também, e a fila abana.
+   Não se juntam no meio — juntar é o gesto de entrar. */
+.pn-codigo[data-fase="errado"] .pn-codigo__anel {
+  opacity: 1;
+  background: var(--pn-codigo-cor);
+}
+
+.pn-codigo[data-fase="errado"] .pn-codigo__casa {
+  border-color: var(--pn-codigo-cor);
+  color: var(--pn-codigo-cor);
+  box-shadow: 0 0 0.8rem -0.3rem var(--pn-codigo-cor);
+}
+
+.pn-codigo[data-fase="errado"] .pn-codigo__fila {
+  animation: pn-codigo-abanao 480ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes pn-codigo-abanao {
+  15%,
+  85% {
+    transform: translateX(-2px);
+  }
+  30%,
+  70% {
+    transform: translateX(5px);
+  }
+  45%,
+  55% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+/* O campo verdadeiro: por cima da fila toda, para um toque em qualquer casa o
+   focar, e invisível — texto, cursor e fundo. 16 px, como os outros campos,
+   para o Safari do iPhone não fazer zoom ao tocar. */
+.pn-codigo__campo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  font-size: 16px;
+  text-align: center;
+  outline: none;
+  -webkit-text-fill-color: transparent;
+}
+
+/* O texto selecionado também ficava à vista sem isto. */
+.pn-codigo__campo::selection {
+  background: transparent;
+}
+
+.pn-so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

@@ -125,17 +125,37 @@ export type Moldura = {
     ponto final são postos aqui; o resto vem de quem chama. */
 export type Assinatura = { antes: string; enfase: string; depois: string };
 
-/** O que só o email de confirmação tem: um título que não é o assunto, o botão,
-    e uma nota pequena por baixo dele. */
+/** O que só alguns emails têm: um título que não é o assunto, o botão (a
+    confirmação), o código em grande (a entrada no painel), uma nota pequena por
+    baixo, e o pré-texto. */
 export type Extras = {
   titulo?: string;
   botao?: { texto: string; endereco: string };
+  /** Já com o espaço ao meio (`384 921`), como vai no assunto. */
+  codigo?: string;
   nota?: string;
+  /** A linha que a caixa de entrada e a notificação mostram por baixo do
+      assunto. Sem ela, os programas de email vão buscar o início do corpo —
+      que é o texto alternativo da faixa, "Café Preguiça". */
+  preambulo?: string;
 };
 
 /** Onde está a faixa do topo do email, a partir da raiz do site. O `email.png`
     antigo fica em `public/marca`: os emails já enviados ainda apontam para ele. */
 export const CAMINHO_DO_LOGO = "/marca/email-cabecalho.png";
+
+/*
+  A altura da faixa a 560 de largura (o PNG é 1120 × 366, a dobrar).
+
+  **Tem de ir no `<img>`.** O Gmail do iPhone mede a altura de cada mensagem
+  para a encaixar na conversa, e as imagens chegam-lhe depois, pelo proxy da
+  Google. Sem altura, a faixa media zero nesse momento, a mensagem ficava ~180
+  px mais curta do que é, e o fundo — o botão, a nota, a assinatura — deixava
+  de se alcançar: rolava-se e não descia. Com a largura e a altura, o browser
+  reserva o espaço antes de a imagem chegar, e o `height:auto` do estilo
+  continua a encolhê-la em proporção no telemóvel.
+*/
+const ALTURA_DO_LOGO = 183;
 
 /** O ícone da DevPlus, para a assinatura do fim. */
 export const CAMINHO_DO_ESTUDIO = "/marca/devplus.png";
@@ -190,6 +210,23 @@ export function emailEmHtml(
 <td bgcolor="${CORES.fio}" style="background:${CORES.fio};border-radius:4px"><a href="${escapar(extras.botao.endereco)}" style="display:inline-block;padding:13px 26px;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:${CORES.escuro};text-decoration:none">${escapar(extras.botao.texto)}</a></td>
 </tr></table>`
     : "";
+  /* O código num quadro claro com o fio de ouro, e não num botão: não é para
+     carregar, é para ler e escrever no outro ecrã. Em Helvetica e não na
+     Georgia do título: os algarismos da Georgia sobem e descem (o 8 mais alto
+     do que o 4), e um código lê-se melhor com os seis à mesma altura. */
+  const codigo = extras.codigo
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 20px"><tr>
+<td style="padding:14px 24px;border:1px solid ${CORES.fio};border-radius:6px;background:${CORES.papel};font-family:Helvetica,Arial,sans-serif;font-size:36px;font-weight:bold;letter-spacing:6px;line-height:1.1;color:${CORES.tinta};white-space:nowrap">${escapar(extras.codigo)}</td>
+</tr></table>`
+    : "";
+  /*
+    Escondido de três maneiras porque cada programa respeita uma diferente. Os
+    espaços invisíveis do fim enchem a pré-visualização, para o programa não ir
+    buscar o resto do corpo e pôr "Café Preguiça Olá," à frente do código.
+  */
+  const preambulo = extras.preambulo
+    ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:${CORES.papel}">${escapar(extras.preambulo)}${"&#847;&zwnj;&nbsp;".repeat(60)}</div>`
+    : "";
   const nota = extras.nota
     ? `<p style="margin:0 0 16px;font-size:13px;line-height:1.6;color:${CORES.suave}">${escapar(extras.nota)}</p>`
     : "";
@@ -211,12 +248,12 @@ Recebe este email porque se inscreveu na newsletter no site da casa.
 <title>${escapar(assunto)}</title>
 </head>
 <body style="margin:0;padding:0;background:${CORES.papel};color:${CORES.tinta};font-family:Georgia,'Times New Roman',serif">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CORES.papel}">
+${preambulo}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CORES.papel}">
 <tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CORES.folha}">
-<tr><td style="padding:0;background:${CORES.escuro};line-height:0;font-size:0"><a href="${escapar(moldura.site)}" style="display:block;text-decoration:none"><img src="${escapar(moldura.logo)}" width="560" alt="Café Preguiça" style="display:block;border:0;outline:none;width:100%;max-width:560px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px;line-height:1.4"></a></td></tr>
+<tr><td style="padding:0;background:${CORES.escuro};line-height:0;font-size:0"><a href="${escapar(moldura.site)}" style="display:block;text-decoration:none"><img src="${escapar(moldura.logo)}" width="560" height="${ALTURA_DO_LOGO}" alt="Café Preguiça" style="display:block;border:0;outline:none;width:100%;max-width:560px;height:auto;color:${CORES.fio};font-family:Georgia,serif;font-size:22px;line-height:1.4"></a></td></tr>
 <tr><td style="padding:28px 28px 12px;font-size:26px;line-height:1.2;color:${CORES.tinta}">${escapar(extras.titulo ?? assunto)}</td></tr>
-<tr><td style="padding:12px 28px;font-family:Helvetica,Arial,sans-serif;color:${CORES.tinta}">${corpo}${botao}${nota}</td></tr>
+<tr><td style="padding:12px 28px;font-family:Helvetica,Arial,sans-serif;color:${CORES.tinta}">${corpo}${codigo}${botao}${nota}</td></tr>
 <tr><td style="padding:16px 28px 28px;border-top:1px solid #e4d8c6;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:${CORES.suave}">
 ${escapar(moldura.remetente)}${porque}
 </td></tr>
@@ -243,6 +280,7 @@ export function emailEmTexto(texto: string, moldura: Moldura, extras: Extras = {
   const a = moldura.assinatura ?? ASSINATURA_PT;
   return [
     ...paragrafos(texto).map((p) => p.replace(/\*\*(.+?)\*\*/g, "$1")),
+    ...(extras.codigo ? [extras.codigo] : []),
     ...(extras.botao ? [`${extras.botao.texto}: ${extras.botao.endereco}`] : []),
     ...(extras.nota ? [extras.nota] : []),
     "—",

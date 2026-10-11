@@ -26,7 +26,7 @@ import {
 } from "@/lib/painel/codigo";
 import { enviarCodigo, ErroAoEnviar } from "@/lib/painel/email";
 import { ErroDoRedis } from "@/lib/painel/redis";
-import { podePedirCodigo, anotar } from "@/lib/painel/limites";
+import { podePedirCodigo, anotar, contarSemAcesso, ligacaoTrancada } from "@/lib/painel/limites";
 import { exigirSessaoNaAccao } from "@/lib/painel/porta";
 
 /*
@@ -56,6 +56,17 @@ type Frasco = Awaited<ReturnType<typeof cookies>>;
   verificador de endereços sem limite.
 */
 const SEM_ACESSO = "Este email não tem acesso ao painel. Confirma se está bem escrito.";
+
+/*
+  À terceira tentativa sem acesso a partir da mesma ligação — ver
+  `contarSemAcesso` em `lib/painel/limites.ts`. Duas frases porque, com a
+  ligação já trancada, o email escrito pode até ter acesso, e dizer-lhe o
+  contrário era mentir.
+*/
+const SEM_ACESSO_E_TRANCADO =
+  "Este email não tem acesso ao painel, e já foram tentativas a mais. Tenta outra vez daqui a 15 minutos.";
+const TRANCADO =
+  "Houve tentativas a mais com emails sem acesso ao painel. Tenta outra vez daqui a 15 minutos.";
 
 /*
   Para quem tem acesso mas esgotou os pedidos.
@@ -114,13 +125,20 @@ export async function pedirCodigo(
       frasco.set(NOME_DO_COOKIE, await selar(quem.email), opcoesDoCookie());
       jaConhecido = true;
     } else {
+      /* Trancada a ligação, nem se pergunta pelo email: deixar passar os da
+         lista era continuar a dizer quem entra. */
+      if (await ligacaoTrancada()) {
+        await anotar("ligação trancada por emails sem acesso", email);
+        return { erro: TRANCADO };
+      }
+
       /* Conta antes de saber se o email existe — ver o comentário do
          `lib/painel/limites.ts` e o do `SEM_ACESSO`, lá em cima. */
       const podePedir = await podePedirCodigo(email);
 
       if (!quem) {
         await anotar("pedido para email fora da lista", email);
-        return { erro: SEM_ACESSO };
+        return { erro: (await contarSemAcesso()) ? SEM_ACESSO_E_TRANCADO : SEM_ACESSO };
       }
 
       if (!podePedir) {
@@ -156,7 +174,12 @@ export async function pedirCodigo(
   redirect(jaConhecido ? "/painel" : "/painel/entrar/codigo");
 }
 
-export type EstadoDoCodigo = { erro?: string; reenviado?: boolean };
+/*
+  `certo` em vez de um `redirect`: os cookies ficam postos aqui, e é o
+  formulário que abre o painel — depois de a animação de entrada acabar. Com o
+  `redirect`, o browser saltava a meio dela.
+*/
+export type EstadoDoCodigo = { erro?: string; reenviado?: boolean; certo?: boolean };
 
 export async function confirmarCodigo(
   _estado: EstadoDoCodigo,
@@ -165,7 +188,7 @@ export async function confirmarCodigo(
   const frasco = await cookies();
   const escrito = String(dados.get("codigo") ?? "");
 
-  /* Mesma forma do `pedirCodigo`: o armazenamento dentro, o `redirect` fora. */
+  /* O armazenamento dentro do `try`, como no `pedirCodigo`. */
   try {
     const veredicto = await conferirCodigo(frasco.get(NOME_DO_DESAFIO)?.value, escrito);
 
@@ -210,6 +233,7 @@ export async function confirmarCodigo(
       opcoesDoCookie(VALIDADE_APARELHO_MS),
     );
     frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
+    return { certo: true };
   } catch (erro) {
     /*
       O contador de tentativas vive no armazenamento. Sem ele não se consegue
@@ -219,8 +243,6 @@ export async function confirmarCodigo(
     if (erro instanceof ErroDoRedis) return { erro: erro.paraOEcra };
     throw erro;
   }
-
-  redirect("/painel");
 }
 
 /** "Não chegou nada" — outro código, e o anterior deixa de servir. */

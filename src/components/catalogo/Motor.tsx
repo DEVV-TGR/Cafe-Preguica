@@ -168,6 +168,10 @@ function rolagemParaMostrar(el: HTMLElement): number | null {
     const excesso = carril.scrollWidth - innerWidth;
     if (excesso <= 0) return null;
     const total = excesso * (1 + (Number(carril.dataset.scPan) || 0));
+    /* O calculado, e não o `style.transform` que o motor escreveu: com a
+       transição do carril (ver "Sem saltos no iPhone" em `catalogo.css`) os dois
+       diferem a meio do caminho, e o `getBoundingClientRect` de baixo vê o
+       calculado. Lidos no mesmo instante, a diferença entre eles bate certo. */
     const deslocado = new DOMMatrixReadOnly(getComputedStyle(carril).transform).m41;
     /* O carril dos pratos está ao espelho (`.pg-pratos-espelho`): lá, o mesmo
        deslocamento leva o cartão para o outro lado do ecrã. */

@@ -1036,6 +1036,37 @@
   min-width: 0;
 }
 
+/**
+ * ⚠️ **Para partilhar: o comprimento depende do ecrã.**
+ *
+ * O carril tem painéis à largura do ecrã, por isso o quanto anda de lado por
+ * cada píxel de rolagem muda muito com o formato. Medido (2026-10-11):
+ *
+ * | ecrã             | 2,6 ecrãs | 5 ecrãs |
+ * |------------------|-----------|---------|
+ * | telemóvel, alto  | 1,04      | 0,41    |
+ * | tablet, alto     | 1,34–1,49 | 0,54–0,59 |
+ * | portátil 1440    | 2,35      | 0,94    |
+ * | 1920             | 1,67      | 0,67    |
+ *
+ * Acima de ~1 vê-se aos saltos (um clique da roda atirava-o 235 px). Abaixo
+ * disso, no telemóvel, só se alonga a secção presa — e o iPhone, a abrandar
+ * sozinho, só dá a posição 10 vezes por segundo, por isso cada ecrã a mais é
+ * mais tempo a ver o carril mal (ver "Sem saltos no iPhone", no fim). Já
+ * foram 5 em todos os ecrãs e o telemóvel piorou.
+ *
+ * O HTML diz 2,6 e aqui estica-se para 5 nos ecrãs largos. O motor escreve a
+ * altura inline a partir do `data-sc-span` e depois **mede** a altura real,
+ * por isso o `!important` manda nas contas dele. Só com JavaScript, com
+ * movimento e sem `.sc-sem-motor`: nesses casos a secção encolhe ao conteúdo.
+ * Não usar `.sc-ready` — o motor mede as alturas antes de pôr essa classe.
+ */
+@media (min-width: 40rem) and (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  :root:not(.sc-sem-motor) #partilhar {
+    height: 500vh !important;
+  }
+}
+
 /* ========================================================== OS PREGUIÇOSOS == */
 
 /* O palco do `pin`: a nota ao centro e os lugares à volta, num ecrã só.

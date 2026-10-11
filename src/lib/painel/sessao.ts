@@ -28,12 +28,20 @@ import { ler, guardar, apagar, ErroDoRedis } from "./redis";
      (ver `lib/painel/chaves.ts`). Um selo de sessão não pode servir de selo de
      aparelho.
 
-  ## Porque é que o aparelho tem registo no Redis e a sessão não
+  ## Porque é que os dois têm registo no Redis
 
-  Para poder ser **revogado**. A sessão dura oito horas e passa; um aparelho
-  lembrado dura um mês, e um mês é tempo de mais para não haver forma de dizer
-  "esquece aquele telemóvel". O cookie leva um segredo, o Redis guarda o hash
-  dele, e apagar a chave corta o acesso na hora.
+  Para poderem ser **revogados**. O aparelho lembrado dura um mês, e um mês é
+  tempo de mais para não haver forma de dizer "esquece aquele telemóvel": o
+  cookie leva um segredo, o Redis guarda o hash dele, e apagar a chave corta o
+  acesso na hora.
+
+  A sessão já foi só o selo, sem registo — oito horas passam. Deixou de ser
+  (2026-10-11): o Tomás quis poder **terminar a sessão de outro aparelho** a
+  partir da página das Sessões, e um selo que vale sozinho não se termina de
+  fora. Agora o selo leva o `id` da sessão e o do aparelho, a sessão guarda-se
+  em `sessao:<id>` com o mesmo prazo, e o `abrir` só aceita o selo se a chave
+  ainda lá estiver. O registo de cada aparelho, com a sessão que tem aberta,
+  vive em `lib/painel/aparelhos.ts`.
 
   ## Porque é que o token do aparelho não roda
 
@@ -141,18 +149,52 @@ async function abrirComo(
   }
 }
 
-export async function selar(email: string): Promise<string> {
-  return selarComo("sessao", { e: email }, VALIDADE_MS);
+const VALIDADE_S = VALIDADE_MS / 1000;
+
+export function chaveDaSessao(id: string): string {
+  return `sessao:${id}`;
 }
 
-/** Quem está do outro lado, se o selo for nosso e ainda estiver dentro da validade. */
-export async function abrir(valor: string | undefined): Promise<{ email: string } | null> {
+/**
+ * Uma sessão nova, neste aparelho: guarda-a no Redis e devolve o cookie e o
+ * `id` dela. Quem chama regista-a no aparelho (`registarEntrada`).
+ */
+export async function selar(
+  email: string,
+  aparelho: string,
+): Promise<{ cookie: string; id: string }> {
+  const id = randomBytes(16).toString("base64url");
+  await guardar(chaveDaSessao(id), email, VALIDADE_S);
+  return { cookie: await selarComo("sessao", { e: email, s: id, a: aparelho }, VALIDADE_MS), id };
+}
+
+export type SessaoAberta = { email: string; sessao: string; aparelho: string };
+
+/*
+  Quem está do outro lado: o selo é nosso, está dentro da validade, e a sessão
+  ainda existe no Redis — não foi terminada de outro aparelho, nem por sair.
+
+  Um selo de antes do registo (sem `s`) já não abre: quem tinha o aparelho
+  lembrado escreve o email uma vez e entra sem código, e a partir daí a sessão
+  tem registo.
+*/
+export async function abrir(valor: string | undefined): Promise<SessaoAberta | null> {
   const lido = await abrirComo("sessao", valor);
-  return typeof lido?.e === "string" ? { email: lido.e } : null;
+  if (typeof lido?.e !== "string" || typeof lido.s !== "string" || typeof lido.a !== "string") {
+    return null;
+  }
+  if ((await ler(chaveDaSessao(lido.s))) !== lido.e) return null;
+  return { email: lido.e, sessao: lido.s, aparelho: lido.a };
 }
 
-function chaveDoAparelho(segredo: string): string {
-  return `aparelho:${createHash("sha256").update(segredo).digest("hex").slice(0, 32)}`;
+/* O `id` de um aparelho é o hash do segredo do cookie — o mesmo que dá nome
+   à chave dele no Redis, e que o registo dos aparelhos usa como campo. */
+function idDoAparelho(segredo: string): string {
+  return createHash("sha256").update(segredo).digest("hex").slice(0, 32);
+}
+
+export function chaveDoAparelho(id: string): string {
+  return `aparelho:${id}`;
 }
 
 /*
@@ -161,11 +203,12 @@ function chaveDoAparelho(segredo: string): string {
   O segredo original nunca é guardado — se o armazenamento for lido, os cookies
   que já andam por aí não podem ser reconstruídos a partir dele.
 */
-export async function lembrarAparelho(email: string): Promise<string> {
+export async function lembrarAparelho(email: string): Promise<{ cookie: string; id: string }> {
   const segredo = randomBytes(32).toString("base64url");
-  await guardar(chaveDoAparelho(segredo), email, VALIDADE_APARELHO_S);
+  const id = idDoAparelho(segredo);
+  await guardar(chaveDoAparelho(id), email, VALIDADE_APARELHO_S);
 
-  return selarComo("aparelho", { e: email, s: segredo }, VALIDADE_APARELHO_MS);
+  return { cookie: await selarComo("aparelho", { e: email, s: segredo }, VALIDADE_APARELHO_MS), id };
 }
 
 /*
@@ -178,20 +221,27 @@ export async function lembrarAparelho(email: string): Promise<string> {
   A comparação do email não é decorativa: sem ela, um aparelho lembrado para uma
   pessoa deixava outra pessoa da lista entrar sem código.
 */
+/** O `id` deste aparelho, se for conhecido para este email; `null` se não. */
 export async function aparelhoConhecido(
   valor: string | undefined,
   email: string,
-): Promise<boolean> {
+): Promise<string | null> {
   const lido = await abrirComo("aparelho", valor);
-  if (lido?.e !== email || typeof lido.s !== "string") return false;
+  if (lido?.e !== email || typeof lido.s !== "string") return null;
 
-  return (await ler(chaveDoAparelho(lido.s))) === email;
+  const id = idDoAparelho(lido.s);
+  return (await ler(chaveDoAparelho(id))) === email ? id : null;
 }
 
-/** Esquece este aparelho — o cookie continua a existir, mas deixa de valer. */
-export async function esquecerAparelho(valor: string | undefined): Promise<void> {
+/** O `id` do aparelho a que este cookie pertence, sem perguntar se ainda vale. */
+export async function idDoCookieDoAparelho(valor: string | undefined): Promise<string | null> {
   const lido = await abrirComo("aparelho", valor);
-  if (typeof lido?.s === "string") await apagar(chaveDoAparelho(lido.s));
+  return typeof lido?.s === "string" ? idDoAparelho(lido.s) : null;
+}
+
+/** Esquece um aparelho — o cookie dele continua a existir, mas deixa de valer. */
+export async function esquecerAparelho(id: string): Promise<void> {
+  await apagar(chaveDoAparelho(id));
 }
 
 /*

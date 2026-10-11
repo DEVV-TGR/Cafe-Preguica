@@ -31,6 +31,26 @@ export async function lerJson(pedido: Request, teto = TETO_DO_CORPO): Promise<Li
     return { ok: false, estado: 415 };
   }
 
+  const texto = await lerTexto(pedido, teto);
+  if (!texto.ok) return texto;
+
+  try {
+    return { ok: true, valor: JSON.parse(texto.valor) };
+  } catch {
+    return { ok: false, estado: 400 };
+  }
+}
+
+/*
+  O corpo em texto, tal como chegou, com o mesmo teto — para quem precisa dos
+  bytes exatos antes de os interpretar. O webhook do Resend é assim: a
+  assinatura é feita sobre o corpo cru, e um `JSON.parse` seguido de um
+  `JSON.stringify` já não dava os mesmos bytes.
+*/
+export async function lerTexto(
+  pedido: Request,
+  teto = TETO_DO_CORPO,
+): Promise<{ ok: true; valor: string } | { ok: false; estado: 400 | 413 }> {
   /* O `Content-Length` é do cliente e pode mentir, por isso é só o atalho: o
      teto a sério é o dos bytes lidos, logo a seguir. */
   const declarado = Number(pedido.headers.get("content-length") ?? 0);
@@ -43,8 +63,7 @@ export async function lerJson(pedido: Request, teto = TETO_DO_CORPO): Promise<Li
   try {
     /* `fatal`: bytes que não são UTF-8 válido são um pedido partido, e não
        texto com caracteres de substituição lá dentro. */
-    const texto = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-    return { ok: true, valor: JSON.parse(texto) };
+    return { ok: true, valor: new TextDecoder("utf-8", { fatal: true }).decode(bytes) };
   } catch {
     return { ok: false, estado: 400 };
   }

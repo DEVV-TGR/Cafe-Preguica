@@ -16,7 +16,14 @@ import {
   paragrafos,
   type Moldura,
 } from "@/lib/newsletter/corpo";
-import { enviarATodos, enviarTeste, ErroDaNewsletter } from "@/lib/newsletter/resend";
+import {
+  cancelarContacto,
+  enviarATodos,
+  enviarTeste,
+  ErroDaNewsletter,
+} from "@/lib/newsletter/resend";
+import { avisarCancelamento } from "@/lib/newsletter/cancelamento";
+import { EsquemaEmail } from "@/lib/email";
 
 /*
   Enviar um teste, e enviar a toda a gente.
@@ -188,4 +195,39 @@ export async function enviarNewsletter(
 
   console.info(`[newsletter] enviada "${assunto}" — por ${meioEscondido(email)}`);
   return { tipo: "enviado", assunto };
+}
+
+export type EstadoDoCancelamento =
+  | { tipo: "cancelado"; avisado: boolean }
+  | { tipo: "erro"; mensagem: string };
+
+/*
+  Cancelar a inscrição de um contacto, a partir da lista do painel.
+
+  Duas coisas, por esta ordem: cancelar no Resend, e avisar a pessoa por email
+  (`lib/newsletter/cancelamento.ts`). Se o cancelamento passar e o aviso
+  falhar, diz-se isso mesmo — o contacto está cancelado, e é o que importa.
+*/
+export async function cancelarInscricao(email: string): Promise<EstadoDoCancelamento> {
+  await exigirSessaoNaAccao();
+
+  const lido = EsquemaEmail.safeParse(email);
+  if (!lido.success) return { tipo: "erro", mensagem: "Esse endereço não é válido." };
+
+  try {
+    await cancelarContacto(lido.data);
+  } catch (erro) {
+    if (erro instanceof ErroDaNewsletter) return { tipo: "erro", mensagem: erro.paraOEcra };
+    throw erro;
+  }
+  console.info(`[newsletter] cancelado no painel — ${meioEscondido(lido.data)}`);
+
+  try {
+    return { tipo: "cancelado", avisado: await avisarCancelamento(lido.data) };
+  } catch (erro) {
+    if (erro instanceof ErroDaNewsletter || erro instanceof ErroDoRedis) {
+      return { tipo: "cancelado", avisado: false };
+    }
+    throw erro;
+  }
 }

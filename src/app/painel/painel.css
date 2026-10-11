@@ -1752,8 +1752,8 @@ select.pn-entrada {
   color: var(--color-tinta-suave);
 }
 
-/* Com 14 noites as barras ficam estreitas: os dias passam a um em dois. */
-.pn-grafico__area[data-noites="14"] .pn-grafico__noite:nth-child(even) .pn-grafico__dia {
+/* Com muitas barras ficam estreitas: as etiquetas passam a uma em duas. */
+.pn-grafico__area[data-denso] .pn-grafico__noite:nth-child(even) .pn-grafico__dia {
   visibility: hidden;
 }
 
@@ -1857,6 +1857,12 @@ select.pn-entrada {
   white-space: nowrap;
 }
 
+/* O "Como" e o aparelho partem em duas linhas antes de alargarem a tabela. */
+.pn-tabela td:nth-child(4),
+.pn-tabela td:nth-child(5) {
+  white-space: normal;
+}
+
 .pn-tabela th:first-child,
 .pn-tabela td:first-child {
   padding-left: 0;
@@ -1868,9 +1874,12 @@ select.pn-entrada {
   text-align: right;
 }
 
-/* Se alguma coisa ainda não couber, rola a tabela, e não a página. */
+/* Sem `overflow`: o `overflow-x: auto` que aqui esteve punha também o eixo
+   vertical em `auto`, e o anel dos avatares, que sai um nada da caixa, dava
+   uma barra de deslocamento a um cartão que cabia inteiro. A tabela cabe por
+   construção — as colunas largas escondem-se e o texto parte. */
 .pn-tabela__caixa {
-  overflow-x: auto;
+  min-width: 0;
 }
 
 /* No telemóvel não há largura para o aparelho nem para o dia: os dois estão
@@ -1933,7 +1942,8 @@ select.pn-entrada {
 }
 
 .pn-estado[data-como="saiu"]::before,
-.pn-estado[data-como="esqueceu"]::before {
+.pn-estado[data-como="esqueceu"]::before,
+.pn-estado[data-como="terminada"]::before {
   background: var(--color-tinta-suave);
 }
 
@@ -2146,7 +2156,8 @@ select.pn-entrada {
   color: var(--color-tinta);
 }
 
-.pn-abas__uma[aria-selected="true"] {
+.pn-abas__uma[aria-selected="true"],
+.pn-abas__uma[aria-pressed="true"] {
   background: var(--color-ouro);
   color: var(--color-ouro-tinta);
   font-weight: 600;
@@ -2277,4 +2288,286 @@ select.pn-entrada {
     width: auto;
     min-width: 18rem;
   }
+}
+
+/* ------------------------------------------- os aparelhos com acesso
+   Ver `app/painel/(dentro)/sessoes/page.tsx`. Uma linha por aparelho: quem,
+   o quê e desde quando, o estado, e o terminar. */
+
+.pn-aparelhos__um {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pn-aparelhos__quem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.pn-aparelhos__email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pn-aparelhos__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-aparelhos__estado::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-tinta-suave);
+}
+
+.pn-aparelhos__estado[data-ligado]::before {
+  background: #7fbf6a;
+  box-shadow: 0 0 0.5rem #7fbf6a;
+}
+
+/* O botão vai para uma linha sua no telemóvel, por baixo de quem é. */
+.pn-aparelhos__um > :last-child {
+  grid-column: 2 / -1;
+  justify-self: start;
+}
+
+@media (min-width: 48rem) {
+  .pn-aparelhos__um {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+  }
+
+  .pn-aparelhos__um > :last-child {
+    grid-column: auto;
+    justify-self: end;
+  }
+}
+
+.pn-terminar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ------------------------------------------- as secções da carta, fechadas
+   Ver `EditorDeEmenta`. O título é o botão: a mesma letra, com uma seta que
+   roda. Fechada, a secção fica só com o cabeçalho e um resumo. */
+
+.pn-carta__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+
+.pn-carta__barra .pn-nota {
+  flex: 1 1 24rem;
+}
+
+.pn-seccao-carta__alternar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pn-seccao-carta__alternar:hover {
+  color: var(--color-ouro-claro);
+}
+
+/* Um "v" desenhado com duas bordas: aponta para baixo aberta, para o lado
+   fechada. */
+.pn-seccao-carta__seta {
+  flex: none;
+  width: 0.55em;
+  height: 0.55em;
+  margin-top: -0.2em;
+  border-right: 2px solid var(--color-ouro);
+  border-bottom: 2px solid var(--color-ouro);
+  transform: rotate(45deg) scale(0.6);
+  transition: transform 200ms ease;
+}
+
+.pn-seccao-carta[data-fechada] .pn-seccao-carta__seta {
+  transform: rotate(-45deg) scale(0.6);
+}
+
+.pn-seccao-carta__resumo {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-seccao-carta__por-publicar {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--color-ouro);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-ouro-tinta);
+}
+
+/* Fechada, sem a linha por baixo do título nem o espaço que ela pedia. */
+.pn-seccao-carta[data-fechada] .em-seccao__cabeca {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+@media (min-width: 48rem) {
+  .pn-seccao-carta[data-fechada] {
+    padding-block: 1.1rem;
+  }
+}
+
+/* ------------------------------------------------ cancelar um contacto */
+
+.pn-contacto__lado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pn-contacto__cancelar {
+  min-height: 2.1rem;
+  padding: 0 0.75rem;
+  font-size: 0.78rem;
+}
+
+.pn-contacto__confirmar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* ======================================================= AS MESAS, COM FILTRO
+   Ver `components/painel/EstatisticaDasMesas.tsx`. O filtro em cima, e por
+   baixo uma grelha: o mapa das mesas e as horas lado a lado, as noites e a
+   semana lado a lado, e as últimas leituras a toda a largura. */
+
+.pn-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.pn-filtro__data .pn-entrada {
+  min-height: 2.6rem;
+  width: auto;
+}
+
+.pn-filtro__resumo {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.92rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-filtro__limpar {
+  min-height: 2rem;
+}
+
+.pn-mesas {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 64rem) {
+  .pn-mesas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pn-mesas__ultimas {
+    grid-column: 1 / -1;
+  }
+}
+
+/* O mapa: uma grelha de mesas, mais douradas quanto mais lidas (`--forca`,
+   de 0 a 1, calculado no componente). */
+.pn-mapa {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr));
+  gap: 0.5rem;
+}
+
+.pn-mapa__mesa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) calc(15% + var(--forca) * 70%), var(--color-linha));
+  border-radius: 0.8rem;
+  background: color-mix(in oklab, var(--color-ouro) calc(var(--forca) * 65%), var(--color-canvas));
+  color: var(--color-tinta);
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.pn-mapa__mesa:hover {
+  transform: translateY(-1px);
+}
+
+.pn-mapa__mesa[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px var(--color-ouro),
+    0 0 1rem -0.2rem color-mix(in oklab, var(--color-ouro) 70%, transparent);
+}
+
+.pn-mapa__numero {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.pn-mapa__total {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.pn-mesas .pn-lista__lado.pn-ligacao {
+  min-height: 2rem;
+}
+
+/* No telemóvel os quatro períodos partem para outra linha em vez de rolarem
+   de lado — o "Uma noite" ficava cortado e não se via que havia mais. */
+.pn-filtro .pn-abas {
+  flex-wrap: wrap;
+  border-radius: 1.4rem;
 }

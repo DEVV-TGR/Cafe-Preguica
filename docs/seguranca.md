@@ -170,6 +170,10 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
     **terceira tentativa sem acesso a mesma ligação fica trancada 15 minutos**,
     para todos os emails (`contarSemAcesso` em `src/lib/painel/limites.ts`).
     O aparelho lembrado não é afetado.
+- **A sessão tem registo, e termina-se de fora** (2026-10-11). O selo leva o
+  `id` da sessão e do aparelho; a sessão vive em `sessao:<id>` no Upstash, e o
+  selo só abre enquanto ela lá estiver. A página das Sessões termina a sessão
+  de qualquer aparelho — e esquece-o, para não voltar a entrar sem código.
 - **A sessão confere o `PAINEL_EMAILS` a cada pedido.** Tirar alguém da lista
   põe-no fora já, e não quando o cookie caducar.
 - **20 tentativas de código por email em 24 h**, certas ou erradas, contadas

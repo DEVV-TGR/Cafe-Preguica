@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { abrirConvite } from "@/lib/newsletter/convite";
 import { criarContacto, ErroDaNewsletter } from "@/lib/newsletter/resend";
+import { esquecerAviso } from "@/lib/newsletter/aviso-unico";
 import { criarChaveDaCarta } from "@/lib/carta-secreta/chave";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { meioEscondido } from "@/lib/painel/utilizadores";
@@ -46,6 +47,8 @@ export async function POST(pedido: Request) {
     if (convite === "expirado") return Response.json({ erro: "expirado" }, { status: 410 });
 
     await criarContacto(convite.email);
+    /* Voltou a inscrever-se: o próximo cancelamento volta a ser avisado. */
+    await esquecerAviso(convite.email);
     console.info(`[newsletter] inscrição confirmada — ${meioEscondido(convite.email)}`);
     return Response.json({ ok: true, chaveDaCarta: await criarChaveDaCarta(convite.email) });
   } catch (erro) {

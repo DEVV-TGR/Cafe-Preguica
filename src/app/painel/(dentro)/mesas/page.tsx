@@ -1,36 +1,21 @@
 import { exigirSessao } from "@/lib/painel/porta";
 import { ErroDoRedis } from "@/lib/painel/redis";
-import { resumoDasLeituras } from "@/lib/mesas/leituras";
-import { NOITES_A_MOSTRAR, type Resumo } from "@/lib/mesas/contas";
+import { dadosDasMesas } from "@/lib/mesas/leituras";
 import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
+import { EstatisticaDasMesas } from "@/components/painel/EstatisticaDasMesas";
 
 /**
  * As leituras das mesas (QR e NFC juntos) — para saber se as pessoas as usam.
  *
  * Lido do Redis de cada vez que a página abre; ver `lib/mesas/contas.ts` para o
- * que se conta e o que fica de fora.
+ * que se conta e o que fica de fora. Os três números de cima são de sempre;
+ * por baixo, a estatística com filtro (`EstatisticaDasMesas`), que corre no
+ * browser sobre os dados que vão daqui.
  */
-
-/* A noite é uma data sem hora; em UTC para o dia da semana não escorregar. */
-const NOITE = new Intl.DateTimeFormat("pt-PT", {
-  weekday: "short",
-  day: "numeric",
-  month: "short",
-  timeZone: "UTC",
-});
-const nomeDaNoite = (noite: string) => NOITE.format(new Date(`${noite}T00:00:00Z`));
 
 const UMA_CASA = new Intl.NumberFormat("pt-PT", { maximumFractionDigits: 1 });
 const media = (total: number, noites: number) => `${UMA_CASA.format(total / noites)} por noite`;
-
-function Barra({ valor, maximo }: { valor: number; maximo: number }) {
-  return (
-    <span className="pn-barra" aria-hidden="true">
-      <span style={{ width: `${maximo ? (valor / maximo) * 100 : 0}%` }} />
-    </span>
-  );
-}
 
 const INTRODUCAO =
   "Quantas vezes a carta foi aberta pelo QR ou pelo NFC de cada mesa — os dois contam juntos. " +
@@ -40,24 +25,23 @@ const INTRODUCAO =
 export default async function PaginaDasMesas() {
   await exigirSessao();
 
-  let resumo: Resumo;
+  let dados: Awaited<ReturnType<typeof dadosDasMesas>>;
   try {
-    resumo = await resumoDasLeituras();
+    dados = await dadosDasMesas();
   } catch (erro) {
     return (
-      <>
-        <main className="pn-principal">
-          <TituloDaPagina olho="Os QR e os NFC" titulo="Mesas" frase={INTRODUCAO} />
-          <Aviso tom="mau">
-            {erro instanceof ErroDoRedis
-              ? erro.paraOEcra
-              : "Não foi possível ir buscar as leituras das mesas."}
-          </Aviso>
-        </main>
-      </>
+      <main className="pn-principal">
+        <TituloDaPagina olho="Os QR e os NFC" titulo="Mesas" frase={INTRODUCAO} />
+        <Aviso tom="mau">
+          {erro instanceof ErroDoRedis
+            ? erro.paraOEcra
+            : "Não foi possível ir buscar as leituras das mesas."}
+        </Aviso>
+      </main>
     );
   }
 
+  const { resumo } = dados;
   /* A média conta as noites em que a casa está fechada: é para comparar
      semanas entre si, não para dizer quanto rende uma noite aberta. */
   const blocos = [
@@ -65,61 +49,27 @@ export default async function PaginaDasMesas() {
     { titulo: "Últimas 30 noites", total: resumo.mes, nota: media(resumo.mes, 30) },
     { titulo: "Desde o início", total: resumo.sempre, nota: "leituras ao todo" },
   ];
-  const maximoDaNoite = Math.max(...resumo.porNoite.map((n) => n.total));
-  const maximoDaMesa = Math.max(0, ...resumo.porMesa.map((m) => m.total));
 
   return (
-    <>
-      <main className="pn-principal pn-pilha-larga">
-        <TituloDaPagina olho="Os QR e os NFC" titulo="Mesas" frase={INTRODUCAO} />
-        <ul className="pn-numeros">
-          {blocos.map(({ titulo, total, nota }) => (
-            <li key={titulo} className="pn-bloco">
-              <span className="pn-olho">{titulo}</span>
-              <span className="pn-numero">{total}</span>
-              <span className="pn-texto-suave">{nota}</span>
-            </li>
-          ))}
-        </ul>
+    <main className="pn-principal pn-pilha-larga">
+      <TituloDaPagina olho="Os QR e os NFC" titulo="Mesas" frase={INTRODUCAO} />
 
-        <div className="pn-duas-colunas">
-          <section aria-labelledby="noites" className="pn-bloco">
-            <h2 id="noites" className="pn-seccao__titulo">
-              Noite a noite
-            </h2>
-            <p className="pn-nota">As últimas {NOITES_A_MOSTRAR}, da mais recente para trás.</p>
-            <ul className="pn-lista">
-              {resumo.porNoite.map(({ noite, total }) => (
-                <li key={noite} className="pn-lista__linha">
-                  <span className="pn-lista__principal">{nomeDaNoite(noite)}</span>
-                  <Barra valor={total} maximo={maximoDaNoite} />
-                  <strong className="pn-lista__lado pn-forte">{total}</strong>
-                </li>
-              ))}
-            </ul>
-          </section>
+      <ul className="pn-numeros">
+        {blocos.map(({ titulo, total, nota }) => (
+          <li key={titulo} className="pn-bloco">
+            <span className="pn-olho">{titulo}</span>
+            <span className="pn-numero">{total}</span>
+            <span className="pn-texto-suave">{nota}</span>
+          </li>
+        ))}
+      </ul>
 
-          <section aria-labelledby="por-mesa" className="pn-bloco">
-            <h2 id="por-mesa" className="pn-seccao__titulo">
-              Por mesa
-            </h2>
-            <p className="pn-nota">As últimas 30 noites. Uma mesa que não aparece não foi lida.</p>
-            {resumo.porMesa.length === 0 ? (
-              <p className="pn-texto-suave">Ainda não há leituras.</p>
-            ) : (
-              <ul className="pn-lista">
-                {resumo.porMesa.map(({ mesa, total }) => (
-                  <li key={mesa} className="pn-lista__linha">
-                    <span className="pn-lista__principal">Mesa {mesa}</span>
-                    <Barra valor={total} maximo={maximoDaMesa} />
-                    <strong className="pn-lista__lado pn-forte">{total}</strong>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        </div>
-      </main>
-    </>
+      <EstatisticaDasMesas
+        leituras={dados.leituras}
+        horas={dados.horas}
+        ultimas={dados.ultimas}
+        hoje={dados.hoje}
+      />
+    </main>
   );
 }

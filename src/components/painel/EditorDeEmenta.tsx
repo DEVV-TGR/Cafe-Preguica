@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Aviso } from "./Aviso";
 import { Campo, CampoLongo } from "./Campo";
 import { EstadoDaGravacao } from "./EstadoDaGravacao";
@@ -74,6 +74,42 @@ type Lingua = "pt" | "en";
    painel não podem ser confundidas com elas por quem copiar um link. */
 const ancora = (id: string) => `p-${id}`;
 
+/*
+  As secções fechadas, lembradas neste browser — só uma comodidade de quem
+  edita. Lidas como uma "loja" externa (`useSyncExternalStore`): no servidor e
+  no primeiro desenho estão todas abertas, como no HTML que veio de lá, e só
+  depois aparece o que ficou lembrado. Se o browser não deixar guardar, ficam
+  na memória da página, e não se perde nada.
+*/
+const SECCOES_FECHADAS = "preguica:painel:seccoes-fechadas";
+let fechadasEmMemoria = "[]";
+const ouvintes = new Set<() => void>();
+
+function lerFechadas(): string {
+  try {
+    return localStorage.getItem(SECCOES_FECHADAS) ?? fechadasEmMemoria;
+  } catch {
+    return fechadasEmMemoria;
+  }
+}
+
+function guardarFechadas(fechadas: Set<string>) {
+  fechadasEmMemoria = JSON.stringify([...fechadas]);
+  try {
+    localStorage.setItem(SECCOES_FECHADAS, fechadasEmMemoria);
+  } catch {}
+  ouvintes.forEach((avisar) => avisar());
+}
+
+function ouvirFechadas(avisar: () => void) {
+  ouvintes.add(avisar);
+  return () => {
+    ouvintes.delete(avisar);
+  };
+}
+
+const nenhumaFechada = () => "[]";
+
 export function EditorDeEmenta({
   inicial,
   sha,
@@ -104,6 +140,23 @@ export function EditorDeEmenta({
   const [aEditar, setAEditar] = useState<string | null>(null);
   const [aApagar, setAApagar] = useState<string | null>(null);
   const [aCriarEm, setACriarEm] = useState<Categoria | null>(null);
+
+  /*
+    As secções fechadas (comprimidas): só o título, quantos artigos e se há
+    alterações por publicar. Pedido do Tomás, para a carta de 125 artigos se
+    poder percorrer de relance. Fechar só esconde (`hidden`): o que se mudou lá
+    dentro continua a ir no formulário.
+
+    Ver `lerFechadas`, lá em cima, para onde ficam lembradas.
+  */
+  const textoDasFechadas = useSyncExternalStore(ouvirFechadas, lerFechadas, nenhumaFechada);
+  const fechadas = useMemo(() => {
+    try {
+      return new Set(JSON.parse(textoDasFechadas) as string[]);
+    } catch {
+      return new Set<string>();
+    }
+  }, [textoDasFechadas]);
 
   /*
     Os preços em texto, enquanto estão a ser escritos.
@@ -164,6 +217,44 @@ export function EditorDeEmenta({
     () => new Map(grupos.flatMap((g) => g.categorias).map((c) => [c.id, c])),
     [grupos],
   );
+
+  const todasAsCategorias = useMemo(() => grupos.flatMap((g) => g.categorias.map((c) => c.id)), [grupos]);
+  const todasFechadas = todasAsCategorias.every((id) => fechadas.has(id));
+
+  function mudarFechadas(alteracao: (antes: Set<string>) => Set<string>) {
+    guardarFechadas(alteracao(fechadas));
+  }
+
+  function alternarSeccao(id: string) {
+    mudarFechadas((antes) => {
+      const depois = new Set(antes);
+      if (depois.has(id)) depois.delete(id);
+      else depois.add(id);
+      return depois;
+    });
+  }
+
+  /* Saltar pelo índice (ou pelos nomes das secções de um capítulo) para uma
+     secção fechada abre-a: quem carrega quer ver o que lá está. */
+  function abrirODestino(evento: React.MouseEvent) {
+    const ligacao = (evento.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#p-"]');
+    if (!ligacao) return;
+    const destino = ligacao.getAttribute("href")!.slice(1);
+    const grupo = grupos.find((g) => ancora(g.id) === destino);
+    const abrir: string[] = grupo
+      ? grupo.categorias.map((c) => c.id)
+      : todasAsCategorias.filter((id) => ancora(id) === destino);
+    if (abrir.some((id) => fechadas.has(id))) {
+      mudarFechadas((antes) => new Set([...antes].filter((id) => !abrir.includes(id))));
+    }
+  }
+
+  /* Se alguma coisa desta secção mudou desde a última publicação — o ponto
+     do cabeçalho de uma secção fechada. */
+  function mudouNaSeccao(categoria: Categoria): boolean {
+    const de = (lista: Artigo[]) => JSON.stringify(lista.filter((a) => a.categoria === categoria));
+    return de(base.artigos) !== de(artigos);
+  }
 
   function mudar(id: string, alteracao: (artigo: Artigo) => Artigo) {
     setArtigos((anteriores) => anteriores.map((a) => (a.id === id ? alteracao(a) : a)));
@@ -570,6 +661,7 @@ export function EditorDeEmenta({
       onKeyDown={(e) => {
         if (e.key === "Enter" && e.target instanceof HTMLInputElement) e.preventDefault();
       }}
+      onClickCapture={abrirODestino}
     >
       <input type="hidden" name="sha" value={shaAtual} />
       <input type="hidden" name="ementa" value={JSON.stringify({ artigos, secretos, sabores })} />
@@ -592,11 +684,20 @@ export function EditorDeEmenta({
           <EstadoDaGravacao key={estado.commit} commit={estado.commit} endereco={estado.endereco} />
         ) : null}
 
-        <p className="pn-nota">
-          Toca num preço para o mudar. Um preço vazio aparece na carta como “preço por
-          confirmar”. Um artigo escondido sai da ementa, mas fica guardado aqui com a tradução e
-          o lugar na lista.
-        </p>
+        <div className="pn-carta__barra">
+          <p className="pn-nota">
+            Toca num preço para o mudar. Um preço vazio aparece na carta como “preço por
+            confirmar”. Um artigo escondido sai da ementa, mas fica guardado aqui com a tradução
+            e o lugar na lista.
+          </p>
+          <button
+            type="button"
+            className="pn-accao"
+            onClick={() => mudarFechadas(() => (todasFechadas ? new Set() : new Set(todasAsCategorias)))}
+          >
+            {todasFechadas ? "Abrir todas as secções" : "Fechar todas as secções"}
+          </button>
+        </div>
 
         {grupos.map((grupo, i) => (
           <section
@@ -627,23 +728,46 @@ export function EditorDeEmenta({
               const daCategoria = artigos.filter(
                 (a) => a.categoria === categoria.id && !eSecreto.has(a.id),
               );
+              const fechada = fechadas.has(categoria.id);
+              const corpo = `${ancora(categoria.id)}-corpo`;
 
               return (
                 <section
                   key={categoria.id}
                   id={ancora(categoria.id)}
                   className="pn-seccao-carta"
+                  data-fechada={fechada || undefined}
                   aria-labelledby={`${ancora(categoria.id)}-titulo`}
                 >
                   <div className="em-seccao__cabeca">
-                    <h3 id={`${ancora(categoria.id)}-titulo`}>{categoria.nome}</h3>
-                    {categoria.colunas ? (
+                    <h3 id={`${ancora(categoria.id)}-titulo`}>
+                      <button
+                        type="button"
+                        className="pn-seccao-carta__alternar"
+                        aria-expanded={!fechada}
+                        aria-controls={corpo}
+                        onClick={() => alternarSeccao(categoria.id)}
+                      >
+                        <span className="pn-seccao-carta__seta" aria-hidden="true" />
+                        {categoria.nome}
+                      </button>
+                    </h3>
+                    {fechada ? (
+                      <span className="pn-seccao-carta__resumo">
+                        {daCategoria.length} {daCategoria.length === 1 ? "artigo" : "artigos"}
+                        {mudouNaSeccao(categoria.id) ? (
+                          <span className="pn-seccao-carta__por-publicar">por publicar</span>
+                        ) : null}
+                      </span>
+                    ) : categoria.colunas ? (
                       <span className="pn-colunas" aria-hidden="true">
                         <span>{categoria.colunas[0]}</span>
                         <span>{categoria.colunas[1]}</span>
                       </span>
                     ) : null}
                   </div>
+
+                  <div id={corpo} hidden={fechada}>
 
                   {/* Com duas colunas de preço (as tostas), uma coluna de artigos
                       só: os nomes das colunas estão por cima dos preços, à
@@ -682,6 +806,7 @@ export function EditorDeEmenta({
                       + Artigo novo em {categoria.nome}
                     </button>
                   )}
+                  </div>
                 </section>
               );
             })}

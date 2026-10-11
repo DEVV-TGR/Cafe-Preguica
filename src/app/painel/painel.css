@@ -21,13 +21,21 @@
   background: var(--color-canvas);
 }
 
+/* Largo como o quadro, para os separadores caberem numa linha no computador.
+   No telemóvel partem para uma segunda linha, que rola de lado. */
 .pn-topo__dentro {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  max-width: 44rem;
+  gap: 0.6rem 0.75rem;
+  max-width: 80rem;
   margin: 0 auto;
   padding: 0.6rem 1rem;
+}
+
+.pn-topo__casa {
+  display: inline-flex;
+  border-radius: 0.6rem;
 }
 
 .pn-topo__marca {
@@ -37,7 +45,7 @@
 }
 
 .pn-topo__titulo {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -63,6 +71,78 @@
   .pn-topo__quem {
     display: inline;
   }
+}
+
+/* Os separadores: uma pastilha com as secções, a ativa a dourado — o
+   "Dashboard · Reports · …" do modelo. */
+.pn-separadores {
+  order: 10;
+  flex: 1 1 100%;
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  background: var(--color-superficie);
+}
+
+.pn-separadores::-webkit-scrollbar {
+  display: none;
+}
+
+.pn-separadores__um {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  color: var(--color-tinta-suave);
+  white-space: nowrap;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.pn-separadores__um:hover {
+  color: var(--color-tinta);
+}
+
+.pn-separadores__um[aria-current="page"] {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+  font-weight: 600;
+}
+
+@media (min-width: 64rem) {
+  .pn-topo__titulo {
+    flex: 0 1 auto;
+  }
+
+  .pn-separadores {
+    order: 0;
+    flex: 0 1 auto;
+    margin-inline: auto;
+  }
+}
+
+.pn-avatar {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 60%, transparent);
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--color-ouro) 16%, var(--color-superficie));
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-ouro-claro);
 }
 
 /* ============================================================ MOLDURAS === */
@@ -332,41 +412,6 @@ select.pn-entrada {
   margin-top: 0.5rem;
   padding-left: 1.1rem;
   list-style: disc;
-}
-
-/* =============================================================== PORTAS === */
-
-.pn-porta {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: 1.25rem 3rem 1.25rem 1.25rem;
-  border: 1px solid var(--color-linha);
-  border-radius: 1rem;
-  background: var(--color-superficie);
-  transition: border-color 220ms ease;
-}
-
-.pn-porta:hover,
-.pn-porta:focus-visible {
-  border-color: var(--color-ouro);
-}
-
-.pn-porta__titulo {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  line-height: 1.05;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-}
-
-.pn-porta__seta {
-  position: absolute;
-  right: 1.25rem;
-  top: 50%;
-  translate: 0 -50%;
-  color: var(--color-ouro);
-  font-size: 1.3rem;
 }
 
 /* ================================================================ CARTA === */
@@ -1227,4 +1272,740 @@ select.pn-entrada {
   display: inline-block;
   min-width: 3.2em;
   font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================== O QUADRO
+   Ver `app/painel/page.tsx`. A disposição do painel de finanças que o Tomás
+   mostrou (um carril de ícones à esquerda, uma grelha de cartões
+   arredondados, um gráfico de barras ao meio), com as cores da casa: o verde do
+   modelo é o ouro, o branco dos cartões é a superfície castanha. */
+
+.pn-quadro {
+  flex: 1;
+  display: flex;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+}
+
+.pn-quadro__principal {
+  flex: 1;
+  min-width: 0;
+}
+
+/* O carril: só em ecrãs largos. */
+.pn-carril {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .pn-carril {
+    position: sticky;
+    top: 1.25rem;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: min(36rem, calc(100dvh - 8rem));
+    padding: 0.75rem 0.5rem;
+    border: 1px solid var(--color-linha);
+    border-radius: 999px;
+    background: var(--color-superficie);
+  }
+}
+
+.pn-carril__um {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: var(--color-tinta-suave);
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.pn-carril__um:hover {
+  background: color-mix(in oklab, var(--color-ouro) 14%, transparent);
+  color: var(--color-tinta);
+}
+
+.pn-carril__um[aria-current="page"] {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.pn-carril__fio {
+  width: 1.5rem;
+  height: 1px;
+  margin: 0.4rem 0;
+  background: var(--color-linha);
+}
+
+.pn-carril__fim {
+  margin-top: auto;
+}
+
+/* ------------------------------------------------------- boas-vindas */
+
+.pn-boas-vindas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.pn-boas-vindas__frase {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 6vw, 2.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  color: var(--color-tinta-suave);
+}
+
+.pn-boas-vindas__frase strong {
+  font-weight: 600;
+  color: var(--color-tinta);
+}
+
+.pn-boas-vindas__accoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pn-pastilha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.6rem;
+  padding: 0 1rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  background: var(--color-superficie);
+  font-size: 0.88rem;
+  color: var(--color-tinta);
+}
+
+.pn-pastilha--forte {
+  border-color: color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  font-weight: 600;
+  transition: background 160ms ease;
+}
+
+.pn-pastilha--forte:hover {
+  background: color-mix(in oklab, var(--color-ouro) 14%, var(--color-superficie));
+}
+
+/* ------------------------------------------------------------ a grelha
+   Uma coluna no telemóvel, com o que se quer ver ao balcão primeiro (o
+   horário de hoje e as mesas); duas no tablet; três no computador, como no
+   modelo. */
+
+.pn-grelha {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "hoje"
+    "mesas"
+    "carta"
+    "newsletter"
+    "sessoes"
+    "acesso";
+}
+
+.pn-grelha__carta { grid-area: carta; }
+.pn-grelha__mesas { grid-area: mesas; }
+.pn-grelha__newsletter { grid-area: newsletter; }
+.pn-grelha__sessoes { grid-area: sessoes; }
+.pn-grelha__hoje { grid-area: hoje; }
+.pn-grelha__acesso { grid-area: acesso; }
+
+@media (min-width: 44rem) {
+  .pn-grelha {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "mesas mesas"
+      "carta newsletter"
+      "hoje acesso"
+      "sessoes sessoes";
+  }
+}
+
+@media (min-width: 72rem) {
+  .pn-grelha {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr) minmax(0, 1fr);
+    grid-template-areas:
+      "carta mesas newsletter"
+      "sessoes sessoes hoje"
+      "sessoes sessoes acesso";
+  }
+}
+
+/* ------------------------------------------------------------ os cartões */
+
+.pn-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 1.4rem;
+  background: var(--color-superficie);
+}
+
+.pn-bloco__topo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.pn-bloco__nome {
+  flex: 1;
+  min-width: 0;
+}
+
+.pn-bloco__titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-tinta);
+}
+
+.pn-bloco__icone {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.6rem;
+  background: color-mix(in oklab, var(--color-ouro) 14%, transparent);
+  color: var(--color-ouro);
+}
+
+.pn-bloco__sub {
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-bloco__valor {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-tinta);
+}
+
+.pn-bloco__valor--grande {
+  font-size: clamp(1.6rem, 6vw, 2.1rem);
+  letter-spacing: -0.01em;
+}
+
+.pn-bloco__pe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-top: auto;
+}
+
+.pn-bloco__falha {
+  padding: 0.85rem 1rem;
+  border: 1px dashed color-mix(in oklab, var(--color-ouro) 40%, transparent);
+  border-radius: 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-tinta-suave);
+}
+
+/* A seta ↗ de cada cartão: o quadradinho do canto do modelo. */
+.pn-seta {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 0.75rem;
+  color: var(--color-tinta-suave);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.pn-seta:hover {
+  border-color: var(--color-ouro);
+  color: var(--color-ouro);
+}
+
+/* O selo: o "+12.8%" do modelo. */
+.pn-selo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: var(--color-ouro);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-ouro-tinta);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------- o cartão da carta
+   O cartão de crédito do modelo, com a carta lá dentro. */
+
+.pn-cartao-da-carta {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  aspect-ratio: 1.6;
+  min-height: 11rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 1.1rem;
+  background:
+    radial-gradient(circle at 92% 8%, color-mix(in oklab, var(--color-ouro) 38%, transparent) 0 22%, transparent 23%),
+    linear-gradient(140deg, color-mix(in oklab, var(--color-ouro) 55%, #3a2410) 0%, #2a180b 55%, #170d06 100%);
+  box-shadow: 0 1rem 2rem -1rem rgb(0 0 0 / 0.8);
+  color: var(--color-tinta);
+  transition: transform 220ms ease;
+}
+
+.pn-cartao-da-carta:hover {
+  transform: translateY(-2px);
+}
+
+.pn-cartao-da-carta__cima {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: auto;
+}
+
+.pn-cartao-da-carta__marca {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pn-cartao-da-carta__rotulo {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-tinta) 75%, transparent);
+}
+
+.pn-cartao-da-carta__numero {
+  font-size: clamp(1.9rem, 7vw, 2.3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-cartao-da-carta__baixo {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-tinta) 80%, transparent);
+}
+
+/* A preguiça a espreitar do canto — o "chip" do cartão. */
+.pn-cartao-da-carta__preguica {
+  position: absolute;
+  right: -0.6rem;
+  bottom: 1.6rem;
+  width: 5.2rem;
+  height: auto;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------ o gráfico das mesas */
+
+.pn-grelha__mesas .pn-bloco__topo {
+  flex-wrap: wrap;
+}
+
+.pn-grafico {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pn-alternar {
+  align-self: flex-end;
+  display: inline-flex;
+  gap: 0.2rem;
+  margin-top: -0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  background: var(--color-canvas);
+}
+
+.pn-alternar__um {
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: var(--color-tinta-suave);
+  cursor: pointer;
+}
+
+.pn-alternar__um[aria-pressed="true"] {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+  font-weight: 600;
+}
+
+.pn-grafico__area {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.6rem;
+  height: 14rem;
+}
+
+.pn-grafico__eixo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* A mesma altura útil das calhas: tira-se a linha dos dias, em baixo. */
+  padding-bottom: 1.6rem;
+  font-size: 0.68rem;
+  line-height: 1;
+  color: var(--color-tinta-suave);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.pn-grafico__barras {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0.35rem;
+  /* As linhas de fundo do modelo, ao nível de cada marca do eixo. */
+  background: repeating-linear-gradient(
+      to top,
+      var(--color-linha) 0 1px,
+      transparent 1px calc((100% - 1.6rem) / 4)
+    )
+    0 0 / 100% calc(100% - 1.6rem) no-repeat;
+  background-position: 0 0;
+}
+
+.pn-grafico__noite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.pn-grafico__calha {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+/* As barras riscadas: o tracejado diagonal do modelo, a ouro. */
+.pn-grafico__barra {
+  position: relative;
+  width: min(100%, 2.6rem);
+  min-height: 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--color-ouro) 55%, transparent);
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in oklab, var(--color-ouro) 55%, transparent) 0 2px,
+      transparent 2px 7px
+    ),
+    color-mix(in oklab, var(--color-ouro) 16%, var(--color-superficie));
+  transition: height 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pn-grafico__barra[data-vazia] {
+  opacity: 0.45;
+}
+
+.pn-grafico__barra[data-melhor] {
+  border-color: var(--color-ouro);
+  background: linear-gradient(to top, var(--color-ouro), var(--color-ouro-claro));
+  box-shadow: 0 0 1.2rem -0.3rem color-mix(in oklab, var(--color-ouro) 70%, transparent);
+}
+
+/* O número por cima da melhor noite — a etiqueta do "+17.8%". */
+.pn-grafico__selo {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--color-ouro);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-ouro-tinta);
+  white-space: nowrap;
+}
+
+.pn-grafico__dia {
+  height: 1.1rem;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-tinta-suave);
+}
+
+/* Com 14 noites as barras ficam estreitas: os dias passam a um em dois. */
+.pn-grafico__area[data-noites="14"] .pn-grafico__noite:nth-child(even) .pn-grafico__dia {
+  visibility: hidden;
+}
+
+.pn-numeros-curtos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pn-numeros-curtos dt {
+  font-size: 0.72rem;
+  color: var(--color-tinta-suave);
+}
+
+.pn-numeros-curtos dd {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------ a newsletter */
+
+.pn-saldo {
+  text-align: center;
+}
+
+.pn-saldo__numero {
+  font-size: clamp(2.2rem, 8vw, 2.7rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-onda {
+  display: block;
+  width: 100%;
+  height: 6.5rem;
+}
+
+.pn-par-de-botoes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: auto;
+}
+
+.pn-botao-redondo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.9rem;
+  padding: 0 1rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-tinta);
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.pn-botao-redondo:hover {
+  border-color: var(--color-ouro);
+}
+
+.pn-botao-redondo--cheio {
+  border-color: var(--color-ouro);
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+.pn-botao-redondo--cheio:hover {
+  background: var(--color-ouro-claro);
+}
+
+/* -------------------------------------------------------- as sessões */
+
+.pn-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.pn-tabela th {
+  padding: 0 0.5rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: left;
+  color: var(--color-tinta-suave);
+}
+
+.pn-tabela td {
+  padding: 0.6rem 0.5rem;
+  border-top: 1px solid var(--color-linha);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pn-tabela th:first-child,
+.pn-tabela td:first-child {
+  padding-left: 0;
+}
+
+.pn-tabela th:last-child,
+.pn-tabela td:last-child {
+  padding-right: 0;
+  text-align: right;
+}
+
+/* Se alguma coisa ainda não couber, rola a tabela, e não a página. */
+.pn-tabela__caixa {
+  overflow-x: auto;
+}
+
+/* No telemóvel não há largura para o aparelho nem para o dia: os dois estão
+   na página das Sessões, e aqui ficam a hora e o que aconteceu. */
+.pn-tabela__larga,
+.pn-tabela__media {
+  display: none;
+}
+
+@media (min-width: 30rem) {
+  .pn-tabela__media {
+    display: table-cell;
+  }
+}
+
+@media (min-width: 44rem) {
+  .pn-tabela__larga {
+    display: table-cell;
+  }
+}
+
+@media (max-width: 43.99rem) {
+  .pn-tabela th:nth-child(4),
+  .pn-tabela td:nth-child(4) {
+    padding-right: 0;
+    text-align: right;
+    white-space: normal;
+  }
+}
+
+.pn-pessoa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pn-pessoa__nome {
+  font-weight: 600;
+}
+
+.pn-pessoa__tu {
+  font-weight: 400;
+  color: var(--color-tinta-suave);
+}
+
+/* O "• Successful" do modelo: um ponto e o que aconteceu. */
+.pn-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+}
+
+.pn-estado::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-ouro);
+}
+
+.pn-estado[data-como="saiu"]::before,
+.pn-estado[data-como="esqueceu"]::before {
+  background: var(--color-tinta-suave);
+}
+
+/* ------------------------------------------------- quem tem acesso */
+
+.pn-avatares {
+  display: flex;
+  padding-left: 0.5rem;
+}
+
+.pn-avatar--grande {
+  width: 2.9rem;
+  height: 2.9rem;
+  margin-left: -0.5rem;
+  border: 2px solid var(--color-superficie);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-ouro) 50%, transparent);
+  font-size: 0.85rem;
+}
+
+.pn-avatar--grande:nth-child(2n) {
+  background: color-mix(in oklab, var(--color-ouro) 34%, var(--color-superficie));
+  color: var(--color-tinta);
+}
+
+.pn-avatar--mais {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+}
+
+/* ---------------------------------------------------------- o fundo */
+
+.pn-quadro__aviso {
+  margin-top: 1.75rem;
+  max-width: 44rem;
+}
+
+.pn-quadro__esquecer {
+  max-width: 44rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-linha);
+}
+
+.pn-quadro__esquecer .pn-ligacao {
+  gap: 0.4rem;
 }

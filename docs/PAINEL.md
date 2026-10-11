@@ -76,11 +76,11 @@ fotografias da página inicial **continua a aparecer**, porque essas pedem-no pe
 
 ### As mesas
 
-`/painel/mesas` mostra quantas vezes a carta foi aberta pelo QR (`/m/<mesa>`) ou
-pelo NFC (`/m/<mesa>?nfc`) de cada mesa: os totais de 7 e 30 noites e desde o
-início, as últimas 14 noites e as mesas das últimas 30. Conta leituras, não
-pessoas, e não guarda nada sobre quem lê — só um número por noite, mesa e
-origem, no hash `mesas:leituras` do Upstash, sem prazo. A noite muda às 06:00
+`/painel/mesas` mostra quantas vezes a carta foi aberta pelo QR ou pelo NFC de
+cada mesa — os dois levam ao mesmo `/m/<mesa>` e contam juntos: os totais de 7
+e 30 noites e desde o início, as últimas 14 noites e as mesas das últimas 30.
+Conta leituras, não pessoas, e não guarda nada sobre quem lê — só um número por
+noite e mesa, no hash `mesas:leituras` do Upstash, sem prazo. A noite muda às 06:00
 de Lisboa, para o fecho depois da meia-noite contar na noite certa. Os robôs e
 as pré-visualizações de links (WhatsApp e companhia) não contam. As contas
 estão em `src/lib/mesas/contas.ts`, com testes em `testes/mesas.test.mjs`.

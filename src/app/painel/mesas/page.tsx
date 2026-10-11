@@ -1,12 +1,12 @@
 import { exigirSessao } from "@/lib/painel/porta";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { resumoDasLeituras } from "@/lib/mesas/leituras";
-import { NOITES_A_MOSTRAR, type PorOrigem, type Resumo } from "@/lib/mesas/contas";
+import { NOITES_A_MOSTRAR, type Resumo } from "@/lib/mesas/contas";
 import { Cabecalho } from "@/components/painel/Cabecalho";
 import { Aviso } from "@/components/painel/Aviso";
 
 /**
- * As leituras dos QR e dos NFC das mesas — para saber se as pessoas os usam.
+ * As leituras das mesas (QR e NFC juntos) — para saber se as pessoas as usam.
  *
  * Lido do Redis de cada vez que a página abre; ver `lib/mesas/contas.ts` para o
  * que se conta e o que fica de fora.
@@ -21,15 +21,8 @@ const NOITE = new Intl.DateTimeFormat("pt-PT", {
 });
 const nomeDaNoite = (noite: string) => NOITE.format(new Date(`${noite}T00:00:00Z`));
 
-const total = ({ qr, nfc }: PorOrigem) => qr + nfc;
-
-function Divisao({ contas }: { contas: PorOrigem }) {
-  return (
-    <>
-      QR {contas.qr} · NFC {contas.nfc}
-    </>
-  );
-}
+const UMA_CASA = new Intl.NumberFormat("pt-PT", { maximumFractionDigits: 1 });
+const media = (total: number, noites: number) => `${UMA_CASA.format(total / noites)} por noite`;
 
 function Barra({ valor, maximo }: { valor: number; maximo: number }) {
   return (
@@ -60,13 +53,15 @@ export default async function PaginaDasMesas() {
     );
   }
 
+  /* A média conta as noites em que a casa está fechada: é para comparar
+     semanas entre si, não para dizer quanto rende uma noite aberta. */
   const blocos = [
-    { titulo: "Últimas 7 noites", contas: resumo.semana },
-    { titulo: "Últimas 30 noites", contas: resumo.mes },
-    { titulo: "Desde o início", contas: resumo.sempre },
+    { titulo: "Últimas 7 noites", total: resumo.semana, nota: media(resumo.semana, 7) },
+    { titulo: "Últimas 30 noites", total: resumo.mes, nota: media(resumo.mes, 30) },
+    { titulo: "Desde o início", total: resumo.sempre, nota: "leituras ao todo" },
   ];
-  const maximoDaNoite = Math.max(...resumo.porNoite.map(total));
-  const maximoDaMesa = Math.max(0, ...resumo.porMesa.map(total));
+  const maximoDaNoite = Math.max(...resumo.porNoite.map((n) => n.total));
+  const maximoDaMesa = Math.max(0, ...resumo.porMesa.map((m) => m.total));
 
   return (
     <>
@@ -74,19 +69,18 @@ export default async function PaginaDasMesas() {
 
       <main className="pn-principal pn-pilha-larga">
         <p className="pn-texto-suave">
-          Quantas vezes a carta foi aberta pelo QR ou pelo NFC de cada mesa. Conta leituras, não
-          pessoas: quatro amigos na mesma mesa contam quatro, e quem ler duas vezes conta duas. A
-          noite vai das 06:00 às 06:00, para o fecho depois da meia-noite contar na noite certa.
+          Quantas vezes a carta foi aberta pelo QR ou pelo NFC de cada mesa — os dois contam juntos.
+          Conta leituras, não pessoas: quatro amigos na mesma mesa contam quatro, e quem ler duas
+          vezes conta duas. A noite vai das 06:00 às 06:00, para o fecho depois da meia-noite contar
+          na noite certa.
         </p>
 
         <ul className="pn-numeros">
-          {blocos.map(({ titulo, contas }) => (
+          {blocos.map(({ titulo, total, nota }) => (
             <li key={titulo} className="pn-cartao">
               <span className="pn-olho">{titulo}</span>
-              <span className="pn-numero">{total(contas)}</span>
-              <span className="pn-texto-suave">
-                <Divisao contas={contas} />
-              </span>
+              <span className="pn-numero">{total}</span>
+              <span className="pn-texto-suave">{nota}</span>
             </li>
           ))}
         </ul>
@@ -97,13 +91,11 @@ export default async function PaginaDasMesas() {
           </h2>
           <p className="pn-nota">As últimas {NOITES_A_MOSTRAR}, da mais recente para trás.</p>
           <ul className="pn-lista">
-            {resumo.porNoite.map((noite) => (
-              <li key={noite.noite} className="pn-lista__linha">
-                <span className="pn-lista__principal">{nomeDaNoite(noite.noite)}</span>
-                <Barra valor={total(noite)} maximo={maximoDaNoite} />
-                <span className="pn-lista__lado">
-                  <strong className="pn-forte">{total(noite)}</strong> · <Divisao contas={noite} />
-                </span>
+            {resumo.porNoite.map(({ noite, total }) => (
+              <li key={noite} className="pn-lista__linha">
+                <span className="pn-lista__principal">{nomeDaNoite(noite)}</span>
+                <Barra valor={total} maximo={maximoDaNoite} />
+                <strong className="pn-lista__lado pn-forte">{total}</strong>
               </li>
             ))}
           </ul>
@@ -118,23 +110,16 @@ export default async function PaginaDasMesas() {
             <p className="pn-texto-suave">Ainda não há leituras.</p>
           ) : (
             <ul className="pn-lista">
-              {resumo.porMesa.map((mesa) => (
-                <li key={mesa.mesa} className="pn-lista__linha">
-                  <span className="pn-lista__principal">Mesa {mesa.mesa}</span>
-                  <Barra valor={total(mesa)} maximo={maximoDaMesa} />
-                  <span className="pn-lista__lado">
-                    <strong className="pn-forte">{total(mesa)}</strong> · <Divisao contas={mesa} />
-                  </span>
+              {resumo.porMesa.map(({ mesa, total }) => (
+                <li key={mesa} className="pn-lista__linha">
+                  <span className="pn-lista__principal">Mesa {mesa}</span>
+                  <Barra valor={total} maximo={maximoDaMesa} />
+                  <strong className="pn-lista__lado pn-forte">{total}</strong>
                 </li>
               ))}
             </ul>
           )}
         </section>
-
-        <p className="pn-nota pn-separado">
-          O NFC só aparece separado se o autocolante tiver <code>?nfc</code> no fim do endereço
-          (por exemplo <code>cafepreguica.pt/m/7?nfc</code>). Sem isso, conta como QR.
-        </p>
       </main>
     </>
   );

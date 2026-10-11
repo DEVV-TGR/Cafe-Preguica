@@ -4,11 +4,18 @@
 
   ## O que se guarda, e o que não
 
-  Um número por noite, por mesa e por origem, num hash do Redis
-  (`CHAVE_DAS_LEITURAS`), com campos `2026-10-09|qr|7`. **Nada sobre quem lê:**
-  nem IP, nem telemóvel, nem cookie. Não dá para saber se foram quatro pessoas
-  ou a mesma quatro vezes, e é de propósito — para medir a adesão aos QR chega,
-  e um contador que não sabe quem é ninguém não precisa de consentimento.
+  Um número por noite e por mesa, num hash do Redis (`CHAVE_DAS_LEITURAS`), com
+  campos `2026-10-09|7`. **Nada sobre quem lê:** nem IP, nem telemóvel, nem
+  cookie. Não dá para saber se foram quatro pessoas ou a mesma quatro vezes, e
+  é de propósito — para medir a adesão às mesas chega, e um contador que não
+  sabe quem é ninguém não precisa de consentimento.
+
+  ## QR e NFC contam juntos
+
+  O QR e o NFC de cada mesa levam ao mesmo endereço (`/m/<mesa>`), e por isso
+  não há como os separar — nem é isso que se quer saber. Nos primeiros dias os
+  campos tinham a origem no meio (`2026-10-09|qr|7`); continuam a ser lidos, e
+  somam na mesa e na noite deles como os outros.
 
   ## A noite de serviço, e não o dia do calendário
 
@@ -21,9 +28,6 @@
 */
 
 export const CHAVE_DAS_LEITURAS = "mesas:leituras";
-
-export type Origem = "qr" | "nfc";
-export const ORIGENS: readonly Origem[] = ["qr", "nfc"];
 
 const HORA_MS = 60 * 60 * 1000;
 const DIA_MS = 24 * HORA_MS;
@@ -72,72 +76,69 @@ export function pareceRobo(userAgent: string | null): boolean {
   return !userAgent || ROBO.test(userAgent);
 }
 
-export function campoDaLeitura(noite: string, origem: Origem, mesa: number): string {
-  return `${noite}|${origem}|${mesa}`;
+export function campoDaLeitura(noite: string, mesa: number): string {
+  return `${noite}|${mesa}`;
 }
 
-type Leitura = { noite: string; origem: Origem; mesa: number; total: number };
+type Leitura = { noite: string; mesa: number; total: number };
 
 function lerCampos(hash: Record<string, number>): Leitura[] {
   const leituras: Leitura[] = [];
   for (const [campo, total] of Object.entries(hash)) {
-    const [noite, origem, mesa] = campo.split("|");
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(noite) || !ORIGENS.includes(origem as Origem)) continue;
-    if (!Number.isFinite(total) || mesaValida(mesa) === null) continue;
-    leituras.push({ noite, origem: origem as Origem, mesa: Number(mesa), total });
+    const partes = campo.split("|");
+    /* `noite|mesa`, ou o antigo `noite|qr|mesa` / `noite|nfc|mesa`. */
+    const valido =
+      partes.length === 2 || (partes.length === 3 && (partes[1] === "qr" || partes[1] === "nfc"));
+    const noite = partes[0];
+    const mesa = mesaValida(partes[partes.length - 1]);
+    if (!valido || !/^\d{4}-\d{2}-\d{2}$/.test(noite) || mesa === null) continue;
+    if (!Number.isFinite(total)) continue;
+    leituras.push({ noite, mesa, total });
   }
   return leituras;
 }
 
-export type PorOrigem = Record<Origem, number>;
-
 export type Resumo = {
-  semana: PorOrigem;
-  mes: PorOrigem;
-  sempre: PorOrigem;
+  semana: number;
+  mes: number;
+  sempre: number;
   /** As últimas `NOITES_A_MOSTRAR` noites, da mais recente para trás, com as vazias. */
-  porNoite: ({ noite: string } & PorOrigem)[];
+  porNoite: { noite: string; total: number }[];
   /** As mesas lidas nas últimas 30 noites, por número. */
-  porMesa: ({ mesa: number } & PorOrigem)[];
+  porMesa: { mesa: number; total: number }[];
 };
 
 export const NOITES_A_MOSTRAR = 14;
-
-const zero = (): PorOrigem => ({ qr: 0, nfc: 0 });
 
 export function resumir(hash: Record<string, number>, hoje: string): Resumo {
   const inicioSemana = noiteAntes(hoje, 6);
   const inicioMes = noiteAntes(hoje, 29);
 
-  const semana = zero();
-  const mes = zero();
-  const sempre = zero();
-  const noites = new Map<string, PorOrigem>();
-  const mesas = new Map<number, PorOrigem>();
+  let semana = 0;
+  let mes = 0;
+  let sempre = 0;
+  const noites = new Map<string, number>();
+  const mesas = new Map<number, number>();
 
-  for (const { noite, origem, mesa, total } of lerCampos(hash)) {
-    sempre[origem] += total;
+  for (const { noite, mesa, total } of lerCampos(hash)) {
+    sempre += total;
     if (noite > hoje) continue;
-    if (noite >= inicioSemana) semana[origem] += total;
+    if (noite >= inicioSemana) semana += total;
     if (noite >= inicioMes) {
-      mes[origem] += total;
-      const daMesa = mesas.get(mesa) ?? zero();
-      daMesa[origem] += total;
-      mesas.set(mesa, daMesa);
+      mes += total;
+      mesas.set(mesa, (mesas.get(mesa) ?? 0) + total);
     }
-    const daNoite = noites.get(noite) ?? zero();
-    daNoite[origem] += total;
-    noites.set(noite, daNoite);
+    noites.set(noite, (noites.get(noite) ?? 0) + total);
   }
 
   const porNoite = Array.from({ length: NOITES_A_MOSTRAR }, (_, i) => {
     const noite = noiteAntes(hoje, i);
-    return { noite, ...(noites.get(noite) ?? zero()) };
+    return { noite, total: noites.get(noite) ?? 0 };
   });
 
   const porMesa = [...mesas.entries()]
     .sort(([a], [b]) => a - b)
-    .map(([mesa, contas]) => ({ mesa, ...contas }));
+    .map(([mesa, total]) => ({ mesa, total }));
 
   return { semana, mes, sempre, porNoite, porMesa };
 }

@@ -61,28 +61,41 @@ test("pré-visualizações e robôs não contam; um telemóvel conta", () => {
 test("o resumo soma por janela, por noite e por mesa", () => {
   const hoje = "2026-10-09";
   const hash = {
-    [campoDaLeitura("2026-10-09", "qr", 3)]: 4,
-    [campoDaLeitura("2026-10-09", "nfc", 3)]: 1,
-    [campoDaLeitura("2026-10-03", "qr", 12)]: 2, // dentro dos 7 (6 noites antes)
-    [campoDaLeitura("2026-10-02", "qr", 12)]: 5, // fora dos 7, dentro dos 30
-    [campoDaLeitura("2026-08-01", "nfc", 1)]: 9, // só no "sempre"
-    "lixo|qr|3": 100,
+    [campoDaLeitura("2026-10-09", 3)]: 4,
+    [campoDaLeitura("2026-10-03", 12)]: 2, // dentro dos 7 (6 noites antes)
+    [campoDaLeitura("2026-10-02", 12)]: 5, // fora dos 7, dentro dos 30
+    [campoDaLeitura("2026-08-01", 1)]: 9, // só no "sempre"
+    "lixo|3": 100,
+    "2026-10-09|abc": 100,
     "2026-10-09|outra|3": 100,
-    "2026-10-09|qr|abc": 100,
   };
 
   const r = resumir(hash, hoje);
-  assert.deepEqual(r.semana, { qr: 6, nfc: 1 });
-  assert.deepEqual(r.mes, { qr: 11, nfc: 1 });
-  assert.deepEqual(r.sempre, { qr: 11, nfc: 10 });
+  assert.equal(r.semana, 6);
+  assert.equal(r.mes, 11);
+  assert.equal(r.sempre, 20);
 
   assert.equal(r.porNoite.length, 14);
-  assert.deepEqual(r.porNoite[0], { noite: "2026-10-09", qr: 4, nfc: 1 });
-  assert.deepEqual(r.porNoite[1], { noite: "2026-10-08", qr: 0, nfc: 0 });
-  assert.deepEqual(r.porNoite[6], { noite: "2026-10-03", qr: 2, nfc: 0 });
+  assert.deepEqual(r.porNoite[0], { noite: "2026-10-09", total: 4 });
+  assert.deepEqual(r.porNoite[1], { noite: "2026-10-08", total: 0 });
+  assert.deepEqual(r.porNoite[6], { noite: "2026-10-03", total: 2 });
 
   assert.deepEqual(r.porMesa, [
-    { mesa: 3, qr: 4, nfc: 1 },
-    { mesa: 12, qr: 7, nfc: 0 },
+    { mesa: 3, total: 4 },
+    { mesa: 12, total: 7 },
   ]);
+});
+
+test("os campos antigos, com qr ou nfc no meio, somam na mesa e na noite deles", () => {
+  const r = resumir(
+    {
+      "2026-10-09|qr|3": 2,
+      "2026-10-09|nfc|3": 1,
+      [campoDaLeitura("2026-10-09", 3)]: 4,
+    },
+    "2026-10-09",
+  );
+  assert.equal(r.semana, 7);
+  assert.deepEqual(r.porNoite[0], { noite: "2026-10-09", total: 7 });
+  assert.deepEqual(r.porMesa, [{ mesa: 3, total: 7 }]);
 });

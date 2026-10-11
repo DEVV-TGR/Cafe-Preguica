@@ -29,8 +29,8 @@ gravidade:
       carta abre sempre em português (a deteção da língua do telemóvel está
       desligada, ver `src/i18n/routing.ts`), com o botão "English" na barra.
       **Cada leitura conta**, por noite e por mesa, e vê-se no painel em
-      `/painel/mesas` (ver `docs/PAINEL.md`). Os NFC levam o mesmo endereço com
-      `?nfc` no fim (`cafepreguica.pt/m/7?nfc`), para se distinguirem dos QR.
+      `/painel/mesas` (ver `docs/PAINEL.md`). Os NFC levam o mesmo endereço que
+      os QR, e os dois contam juntos.
 - [ ] **Alergénios.** `alergenios: []` nos 128 artigos. Preencher com quem está
       na cozinha, **sem deduzir das descrições**. Até lá o site mostra o aviso de
       que a informação está no balcão, que é o que o Regulamento (UE) 1169/2011

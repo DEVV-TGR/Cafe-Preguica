@@ -25,9 +25,10 @@ import "server-only";
   Tudo o que aqui se guarda tem prazo — contadores de 15 minutos, códigos de 10,
   aparelhos de 30 dias. Num Redis isso é o `EX` de cada chave e mais nada; numa
   base de dados relacional seriam tabelas, migrações, e um cron a apagar linhas
-  velhas que alguém tem de lembrar de montar. A única coisa que se perde é o
-  registo de auditoria, e para uma casa com duas pessoas isso é o `git log` dos
-  commits do painel.
+  velhas que alguém tem de lembrar de montar.
+
+  O registo de quem entra no painel (`lib/painel/entradas.ts`) também cabe aqui:
+  é uma lista com teto, e o teto faz o papel do cron.
 */
 
 type Resposta<T> = { result: T } | { error: string };
@@ -248,4 +249,40 @@ export async function lerHash(chave: string): Promise<Record<string, number>> {
   const hash: Record<string, number> = {};
   for (let i = 0; i + 1 < plana.length; i += 2) hash[plana[i]] = Number(plana[i + 1]);
   return hash;
+}
+
+/*
+  Uma linha nova no princípio de uma lista, que nunca passa de `maximo`.
+
+  O `LTRIM` é o que dispensa o cron: a lista corta-se sozinha a cada escrita, e
+  as linhas mais velhas caem pelo fim. O prazo é para a lista inteira — se
+  ninguém escrever nela durante esse tempo, desaparece.
+*/
+export async function empurrarNaLista(
+  chave: string,
+  valor: string,
+  maximo: number,
+  segundos: number,
+): Promise<void> {
+  if (!ligacao() && emMemoria()) {
+    const lista = JSON.parse(lerDaMemoria(chave) ?? "[]") as string[];
+    memoria.set(chave, {
+      valor: JSON.stringify([valor, ...lista].slice(0, maximo)),
+      expira: Date.now() + segundos * 1000,
+    });
+    return;
+  }
+
+  await comando(["LPUSH", chave, valor]);
+  await comando(["LTRIM", chave, 0, maximo - 1]);
+  await comando(["EXPIRE", chave, segundos]);
+}
+
+/** As primeiras `quantas` linhas de uma lista — as mais recentes, com o `LPUSH`. */
+export async function lerLista(chave: string, quantas: number): Promise<string[]> {
+  if (!ligacao() && emMemoria()) {
+    return (JSON.parse(lerDaMemoria(chave) ?? "[]") as string[]).slice(0, quantas);
+  }
+
+  return (await comando<string[] | null>(["LRANGE", chave, 0, quantas - 1])) ?? [];
 }

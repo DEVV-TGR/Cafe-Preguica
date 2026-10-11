@@ -28,6 +28,7 @@ import { enviarCodigo, ErroAoEnviar } from "@/lib/painel/email";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { podePedirCodigo, anotar, contarSemAcesso, ligacaoTrancada } from "@/lib/painel/limites";
 import { exigirSessaoNaAccao } from "@/lib/painel/porta";
+import { anotarEntrada } from "@/lib/painel/entradas";
 
 /*
   Entrar, confirmar o código, e sair.
@@ -123,6 +124,7 @@ export async function pedirCodigo(
     */
     if (quem && (await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email))) {
       frasco.set(NOME_DO_COOKIE, await selar(quem.email), opcoesDoCookie());
+      await anotarEntrada(quem.email, "aparelho");
       jaConhecido = true;
     } else {
       /* Trancada a ligação, nem se pergunta pelo email: deixar passar os da
@@ -233,6 +235,7 @@ export async function confirmarCodigo(
       opcoesDoCookie(VALIDADE_APARELHO_MS),
     );
     frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
+    await anotarEntrada(veredicto.email, "codigo");
     return { certo: true };
   } catch (erro) {
     /*
@@ -291,7 +294,8 @@ export async function reenviarCodigo(): Promise<EstadoDoCodigo> {
 }
 
 export async function sair(): Promise<void> {
-  await exigirSessaoNaAccao();
+  const { email } = await exigirSessaoNaAccao();
+  await anotarEntrada(email, "saiu");
 
   /*
     O `delete` tem de levar o mesmo caminho com que o cookie foi posto. Sem
@@ -316,8 +320,9 @@ export async function sair(): Promise<void> {
   telemóvel, ou quando se entrou num computador que não é nosso.
 */
 export async function esquecerEsteAparelho(): Promise<void> {
-  await exigirSessaoNaAccao();
+  const { email } = await exigirSessaoNaAccao();
   const frasco = await cookies();
+  await anotarEntrada(email, "esqueceu");
 
   await esquecerAparelho(frasco.get(NOME_DO_APARELHO)?.value);
   frasco.delete({ name: NOME_DO_APARELHO, path: "/painel" });

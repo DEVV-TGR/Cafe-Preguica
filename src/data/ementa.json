@@ -1,6 +1,11 @@
 {
   "confirmada": true,
-  "secretos": [],
+  "secretos": [
+    "manhattan-on-the-rocks",
+    "hugo-spritz",
+    "south-side",
+    "strawberry-daiquiri"
+  ],
   "sabores": [
     {
       "id": "surpresa",
@@ -481,6 +486,70 @@
       "escondido": false
     },
     {
+      "id": "manhattan-on-the-rocks",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Manhattan on the Rocks",
+        "en": "Manhattan on the Rocks"
+      },
+      "descricao": {
+        "pt": "Whiskey, vermute tinto doce e bitters de Angostura, servido sobre gelo. Um clássico de Nova Iorque com raízes no século XIX. Intenso e elegante!",
+        "en": "Whiskey, sweet red vermouth and Angostura bitters, served over ice. A New York classic with 19th-century roots. Bold and elegant!"
+      },
+      "preco": 7,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "hugo-spritz",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Hugo Spritz",
+        "en": "Hugo Spritz"
+      },
+      "descricao": {
+        "pt": "Espumante, licor de flor de sabugueiro, água com gás, hortelã e lima. Criado no norte de Itália em 2005, nasceu como uma alternativa mais delicada ao spritz tradicional. Floral e fresco!",
+        "en": "Sparkling wine, elderflower liqueur, sparkling water, mint and lime. Created in northern Italy in 2005 as a gentler alternative to the traditional spritz. Floral and fresh!"
+      },
+      "preco": 7,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "south-side",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "South Side",
+        "en": "South Side"
+      },
+      "descricao": {
+        "pt": "Gin Tanqueray, sumo de limão, xarope de açúcar e hortelã fresca. Com raízes nos clubes de Long Island, tornou-se um clássico da combinação de gin e hortelã. Cítrico e aromático!",
+        "en": "Tanqueray gin, lemon juice, sugar syrup and fresh mint. With roots in the Long Island clubs, it became a classic pairing of gin and mint. Citrusy and aromatic!"
+      },
+      "preco": 7,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
+      "id": "strawberry-daiquiri",
+      "categoria": "cocktails-classicos",
+      "nome": {
+        "pt": "Strawberry Daiquiri",
+        "en": "Strawberry Daiquiri"
+      },
+      "descricao": {
+        "pt": "Rum branco, morango, sumo de lima e xarope de açúcar. Uma versão frutada do clássico cubano, onde o morango se junta ao rum e à frescura da lima.",
+        "en": "White rum, strawberry, lime juice and sugar syrup. A fruity take on the Cuban classic, where strawberry meets rum and fresh lime."
+      },
+      "preco": 7,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
+    },
+    {
       "id": "mojito-melancia",
       "categoria": "cocktails-special",
       "nome": {
@@ -792,7 +861,7 @@
         "en": "White wine"
       },
       "descricao": {
-        "pt": "Pepino, canela e maçã. Garrafão de 1,75 l, 21,50 €.",
+        "pt": "Pepino, canela e maçã. Jarro de 1,75 l, 21,50 €.",
         "en": "Cucumber, cinnamon and apple. 1.75 l jug, €21.50."
       },
       "preco": 6.2,
@@ -808,7 +877,7 @@
         "en": "Preguiça sparkling wine"
       },
       "descricao": {
-        "pt": "Maracujá e hortelã. Garrafão de 1,75 l, 22,80 €.",
+        "pt": "Maracujá e hortelã. Jarro de 1,75 l, 22,80 €.",
         "en": "Passion fruit and mint. 1.75 l jug, €22.80."
       },
       "preco": 6.6,
@@ -824,7 +893,7 @@
         "en": "Red berry sparkling wine"
       },
       "descricao": {
-        "pt": "Frutos vermelhos e canela. Garrafão de 1,75 l, 22,80 €.",
+        "pt": "Frutos vermelhos e canela. Jarro de 1,75 l, 22,80 €.",
         "en": "Red berries and cinnamon. 1.75 l jug, €22.80."
       },
       "preco": 6.6,
@@ -840,7 +909,7 @@
         "en": "Watermelon sparkling wine"
       },
       "descricao": {
-        "pt": "Hortelã e lima. Garrafão de 1,75 l, 23,80 €.",
+        "pt": "Hortelã e lima. Jarro de 1,75 l, 23,80 €.",
         "en": "Mint and lime. 1.75 l jug, €23.80."
       },
       "preco": 6.8,

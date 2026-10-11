@@ -278,6 +278,11 @@
   transform: scaleX(0);
   pointer-events: none;
   will-change: transform;
+  /* No iPhone a posição de rolagem chega ~10 vezes por segundo quando a página
+     abranda sozinha, e a linha avançava aos saltos. A transição preenche o
+     intervalo — o porquê dos 140 ms e do `linear` está em "Sem saltos no
+     iPhone", no fim do `catalogo.css`. */
+  transition: transform 140ms linear;
 }
 
 /* ======================================================= O CONVITE DA NEWSLETTER

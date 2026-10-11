@@ -1,10 +1,14 @@
+import { CenaDoRamo } from "@/components/Transicao";
+
 /**
- * O que se vê enquanto a secção nova chega: o esqueleto de uma cabeça e de
- * três cartões, a pulsar devagar.
+ * O que se vê se a secção nova demorar mais do que a transição: a mesma cena,
+ * parada no fim — o ramo inteiro e a preguiça a balançar na ponta.
  *
- * A Ementa e a Casa vão buscar os dados ao GitHub, e isso demora o seu
- * bocado. Sem isto, o ecrã ficava parado na secção antiga até a nova estar
- * pronta, e parecia que o toque não tinha pegado.
+ * A Ementa e a Casa vão buscar os dados ao GitHub, e isso pode passar do meio
+ * segundo da transição. Já foi um esqueleto de cartões, e o Tomás não gostou:
+ * eram quadrados que não existiam na secção que ia aparecer. A cena parada no
+ * fim é o último fotograma da transição, e por isso não se nota a passagem de
+ * uma para a outra.
  */
 export default function ACarregar() {
   return (
@@ -12,14 +16,8 @@ export default function ACarregar() {
       <p className="pn-so-leitor" role="status">
         A carregar…
       </p>
-      <div className="pn-esqueleto" aria-hidden="true">
-        <span className="pn-esqueleto__olho" />
-        <span className="pn-esqueleto__titulo" />
-        <div className="pn-esqueleto__grelha">
-          <span className="pn-esqueleto__bloco" />
-          <span className="pn-esqueleto__bloco" />
-          <span className="pn-esqueleto__bloco" />
-        </div>
+      <div className="tr tr--espera" aria-hidden="true">
+        <CenaDoRamo />
       </div>
     </main>
   );

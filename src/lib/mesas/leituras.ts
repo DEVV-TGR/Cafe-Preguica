@@ -5,14 +5,13 @@ import {
   campoDaLeitura,
   noiteDeServico,
   resumir,
-  type Origem,
   type Resumo,
 } from "./contas";
 
 /* Ver `contas.ts` para o que se guarda e porquê. */
 
-export async function contarLeitura(mesa: number, origem: Origem): Promise<void> {
-  await somarNoHash(CHAVE_DAS_LEITURAS, campoDaLeitura(noiteDeServico(new Date()), origem, mesa));
+export async function contarLeitura(mesa: number): Promise<void> {
+  await somarNoHash(CHAVE_DAS_LEITURAS, campoDaLeitura(noiteDeServico(new Date()), mesa));
 }
 
 export async function resumoDasLeituras(): Promise<Resumo> {

@@ -5,8 +5,8 @@ import { contarLeitura } from "@/lib/mesas/leituras";
 /*
   Os QR e os NFC das mesas: `/m/<mesa>` leva à carta, e conta uma leitura.
 
-  Os QR estão impressos com `cafepreguica.pt/m/<mesa>`. Os NFC levam o mesmo
-  endereço com `?nfc` no fim (`/m/7?nfc`), e é isso que os separa no painel.
+  Os QR estão impressos com `cafepreguica.pt/m/<mesa>`, e os NFC levam o mesmo
+  endereço. Contam juntos, por mesa: não há como saber qual dos dois foi lido.
 
   Era um `redirect` do `next.config.ts`, que não deixa contar nada. Continua a
   ser um 307 e pela mesma razão: um 308 fica guardado no telemóvel de quem já
@@ -31,10 +31,9 @@ export async function GET(pedido: Request, { params }: { params: Promise<{ mesa:
   const mesa = mesaValida((await params).mesa);
 
   if (mesa !== null && !pareceRobo(pedido.headers.get("user-agent"))) {
-    const origem = new URL(pedido.url).searchParams.has("nfc") ? "nfc" : "qr";
     after(async () => {
       try {
-        await contarLeitura(mesa, origem);
+        await contarLeitura(mesa);
       } catch (erro) {
         console.warn(`[mesas] leitura da mesa ${mesa} por contar:`, erro);
       }

@@ -1578,15 +1578,18 @@ a.pg-onde__alfinete:focus-visible {
      atualização e pulsava dez vezes por segundo.
    - Com "reduzir movimento", o `globals.css` já as põe a zero.
 
-   O `transition: none` dos cues é do motor (`catalogo-motor.css`); este
-   ficheiro vem depois, com o mesmo seletor, e ganha-lhe. */
+   ⚠️ O `transition: none` dos cues é do motor (`catalogo-motor.css`), com o
+   seletor `.sc-ready [data-sc-cue]`. Aqui leva `:root` à frente para pesar
+   mais: com o mesmo peso, ganhava quem viesse depois, e na build de produção
+   o CSS do motor vem **depois** deste. Esteve assim e os Reels e os
+   Preguiçosos continuaram aos saltos, no iPhone, com os carris já fluidos. */
 
 [data-sc-pan],
 [data-sc-parallax] {
   transition: transform 140ms linear;
 }
 
-.sc-ready [data-sc-cue] {
+:root.sc-ready [data-sc-cue] {
   transition:
     opacity 140ms linear,
     transform 140ms linear;

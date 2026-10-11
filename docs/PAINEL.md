@@ -105,6 +105,11 @@ espera de um código que não vinha, sem forma de o distinguir de um email que
 não chega. O pedido continua a gastar o orçamento de pedidos (ver o comentário
 do `SEM_ACESSO` em `src/app/painel/accoes.ts`).
 
+**À terceira tentativa com um email sem acesso, a ligação fica trancada 15
+minutos** — para todos os emails, incluindo os da lista, senão o tranco não
+parava quem anda a adivinhar. Um aparelho lembrado entra na mesma, porque é
+conferido antes dos limites. Ver `contarSemAcesso` em `src/lib/painel/limites.ts`.
+
 Tirar alguém do `PAINEL_EMAILS` (e fazer redeploy) põe-no fora na hora: a
 sessão confere a lista a cada pedido.
 
@@ -295,6 +300,7 @@ Falha do lado seguro, e diz porquê no ecrã.
 | O código não chega | Logs no Resend: domínio deixou de estar verificado, limite diário, ou spam |
 | *"o domínio do remetente não está verificado"* | `RESEND_REMETENTE` não usa o domínio *Verified*. Ver o passo 2 |
 | *"Este email não tem acesso ao painel"* | O email não está em `PAINEL_EMAILS` (ou está mal escrito). Acrescentá-lo e fazer redeploy |
+| *"…tentativas a mais… Tenta outra vez daqui a 15 minutos"* | Três emails sem acesso a partir da mesma ligação. Espera-se 15 minutos, ou entra-se por um aparelho lembrado |
 | Seguiu para o ecrã do código e o código não chega | O email tem acesso: o problema é o envio. Logs no Resend; numa caixa Hotmail/Outlook pode ter ficado retido pela Microsoft |
 | *"falta configurar o PAINEL_GITHUB_TOKEN"* | Ver o passo 4, e fazer redeploy |
 | *"o token expirou ou perdeu permissões"* | O PAT caducou. Ver o passo 4 |

@@ -17,14 +17,28 @@ import { FormularioDeCodigo } from "@/components/painel/FormularioDeCodigo";
  * uniforme do primeiro ecrã existe para não fazer.
  */
 export default async function Codigo() {
-  if (await sessao()) redirect("/painel");
+  /*
+    Quem já tem sessão **não** é mandado para dentro daqui, ao contrário do
+    primeiro ecrã — e é por causa da animação.
 
-  let email: string | null = null;
-  try {
-    email = await emailDoDesafio((await cookies()).get(NOME_DO_DESAFIO)?.value);
-  } catch (erro) {
-    /* Sem armazenamento não há desafio para ler; o primeiro ecrã explica. */
-    if (!(erro instanceof ErroDoRedis)) throw erro;
+    O `confirmarCodigo` põe os cookies da sessão, e uma acção que mexe em
+    cookies faz o Next desenhar esta página outra vez na mesma resposta. Com o
+    `redirect`, esse segundo desenho saltava para o painel no instante em que o
+    código era aceite, a meio da animação de entrada. Assim a página desenha-se
+    igual, o formulário não é desmontado (o React guarda-lhe o estado), e é ele
+    que abre o painel quando a animação acaba — ou logo, se alguém chegou cá
+    com a sessão já aberta (`jaDentro`).
+  */
+  const dentro = await sessao();
+
+  let email: string | null = dentro?.email ?? null;
+  if (!email) {
+    try {
+      email = await emailDoDesafio((await cookies()).get(NOME_DO_DESAFIO)?.value);
+    } catch (erro) {
+      /* Sem armazenamento não há desafio para ler; o primeiro ecrã explica. */
+      if (!(erro instanceof ErroDoRedis)) throw erro;
+    }
   }
   if (!email) redirect("/painel/entrar");
 
@@ -37,7 +51,7 @@ export default async function Codigo() {
         </header>
 
         <div className="pn-cartao">
-          <FormularioDeCodigo paraOnde={meioEscondido(email)} />
+          <FormularioDeCodigo paraOnde={meioEscondido(email)} jaDentro={Boolean(dentro)} />
         </div>
 
         <p className="pn-nota pn-centro">

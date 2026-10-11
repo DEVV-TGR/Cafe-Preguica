@@ -41,21 +41,24 @@ export type EstadoDaEntrada = { erro?: string };
 type Frasco = Awaited<ReturnType<typeof cookies>>;
 
 /*
-  A resposta é sempre a mesma, e é o ponto mais delicado deste ficheiro.
+  Um email fora da lista ouve que não tem acesso, e fica neste ecrã.
 
-  Um email que tem acesso e um que não tem seguem os dois para o ecrã do
-  código. Se a resposta distinguisse — *"esse email não está autorizado"*, ou
-  simplesmente ficar neste ecrã num caso e saltar para o outro no outro — o
-  formulário passava a ser uma ferramenta para qualquer pessoa descobrir quem
-  entra no painel. Já foi assim: o de dentro saltava, o de fora ficava, e
-  bastava olhar.
+  Já foi ao contrário: os dois seguiam para o ecrã do código, para o formulário
+  não servir para descobrir quem entra no painel. Na prática, quem tinha acesso
+  e se enganava numa letra — ou cujo email ainda não estava no `PAINEL_EMAILS`
+  — ficava à espera de um código que nunca vinha, sem saber porquê, e não havia
+  forma de distinguir isso de um email que não chega (2026-10-11, o Rafael).
 
-  E não é só o ecrã. Um email de fora **consome na mesma** o orçamento de
-  pedidos, para o comportamento a partir do quarto ser igual nos dois casos.
+  O preço é que se fica a saber se um endereço tem acesso. Para uma casa com
+  duas pessoas é pouco: saber que o email entra não abre nada, porque o código
+  vai sempre para a caixa de correio dele. O email de fora continua a
+  **consumir** o orçamento de pedidos, para o formulário não virar um
+  verificador de endereços sem limite.
 */
+const SEM_ACESSO = "Este email não tem acesso ao painel. Confirma se está bem escrito.";
 
 /*
-  Para quem não recebe código — fora da lista, ou com os pedidos esgotados.
+  Para quem tem acesso mas esgotou os pedidos.
 
   Aponta o cookie a um desafio que nenhum código abre (`criarIsco`), para o
   ecrã seguinte ser igual ao de quem recebeu um. Se o cookie já aponta a um
@@ -111,17 +114,17 @@ export async function pedirCodigo(
       frasco.set(NOME_DO_COOKIE, await selar(quem.email), opcoesDoCookie());
       jaConhecido = true;
     } else {
-      /*
-        Conta antes de saber se o email existe — ver o comentário do
-        `lib/painel/limites.ts`. Esgotado o orçamento, responde-se a mesma coisa
-        de sempre: quem está a sondar não fica a saber se parou por causa do
-        limite ou por o email não existir.
-      */
-      if (!(await podePedirCodigo(email))) {
-        await anotar("limite de pedidos esgotado", email);
-        await semCodigo(frasco, email);
-      } else if (!quem) {
+      /* Conta antes de saber se o email existe — ver o comentário do
+         `lib/painel/limites.ts` e o do `SEM_ACESSO`, lá em cima. */
+      const podePedir = await podePedirCodigo(email);
+
+      if (!quem) {
         await anotar("pedido para email fora da lista", email);
+        return { erro: SEM_ACESSO };
+      }
+
+      if (!podePedir) {
+        await anotar("limite de pedidos esgotado", email);
         await semCodigo(frasco, email);
       } else {
         /* Pedir outro código invalida o anterior, para não haver dois válidos. */

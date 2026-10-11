@@ -57,8 +57,9 @@ import "../app/visor.css";
  * ## A preguiça em cima da fotografia
  *
  * Deitada na borda de cima da fotografia, como num ramo: a barriga assente
- * nela e as patas a cair por cima. Chega depois da fotografia — desce devagar, como
- * é dela — e fica a respirar, com uns "z" a subir. Cada fotografia tem a sua, e
+ * nela e as patas a cair por cima. Chega depois da fotografia — desce devagar,
+ * num movimento só e sem ressalto, como é dela — e fica a respirar, com uns
+ * "z" a subir. O desenho é descodificado antes de o visor abrir (`preparar`). Cada fotografia tem a sua, e
  * a da fotografia que se está a ver volta a chegar quando se desliza para ela:
  * é o `data-atual` da `<figure>` que dispara as animações (ver `visor.css`).
  * O desenho é um recorte da preguiça da casa (`public/marca/preguica-deitada.webp`).
@@ -116,14 +117,37 @@ const SIZES_DO_VISOR = "(min-width: 48rem) 60vh, 100vw";
    chegar — mas já na moldura com a forma certa. */
 const ESPERA_MAXIMA_MS = 500;
 
-/** Pede e descodifica a fotografia que o visor vai mostrar, com tecto. */
+/* Uma versão de 480 px do desenho de 720: mostra-se a 8,5rem no máximo, e
+   chega para ecrãs 3×. Feita com `sharp` a partir de `preguica-deitada.webp`. */
+const PREGUICA = "/marca/preguica-deitada-480.webp";
+
+/* Pedida no primeiro toque e não ao montar: quem nunca abre uma fotografia
+   não a descarrega. Se falhar, o toque seguinte volta a pedir. */
+let preguicaPronta: Promise<void> | null = null;
+
+function prepararPreguica(): Promise<void> {
+  if (!preguicaPronta) {
+    const img = new Image();
+    img.src = PREGUICA;
+    preguicaPronta = img.decode().catch(() => {
+      preguicaPronta = null;
+    });
+  }
+  return preguicaPronta;
+}
+
+/**
+ * Pede e descodifica a fotografia que o visor vai mostrar, e a preguiça que se
+ * deita nela, com tecto. Sem a preguiça aqui, na primeira abertura ela descia
+ * invisível e o desenho aparecia de repente no fim da descida.
+ */
 function preparar(foto: FotoDoVisor): Promise<void> {
   const img = new Image();
   img.sizes = SIZES_DO_VISOR;
   img.srcset = foto.srcSet;
   img.src = foto.src;
   return Promise.race([
-    img.decode().catch(() => {}),
+    Promise.all([img.decode().catch(() => {}), prepararPreguica()]).then(() => {}),
     new Promise<void>((resolver) => window.setTimeout(resolver, ESPERA_MAXIMA_MS)),
   ]);
 }
@@ -414,9 +438,9 @@ export function Visor({ textos, children }: { textos: TextosDoVisor; children: R
                     />
                     <span className="visor__preguica" aria-hidden="true">
                       <img
-                        src="/marca/preguica-deitada.webp"
-                        width={720}
-                        height={564}
+                        src={PREGUICA}
+                        width={480}
+                        height={376}
                         alt=""
                         decoding="async"
                       />

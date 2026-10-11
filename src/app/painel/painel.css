@@ -1218,3 +1218,13 @@ select.pn-entrada {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* ============================================================== AS SESSÕES
+   Ver `app/painel/sessoes/page.tsx`. A hora à cabeça de cada linha, com os
+   algarismos todos da mesma largura para as horas ficarem alinhadas. */
+
+.pn-sessao__hora {
+  display: inline-block;
+  min-width: 3.2em;
+  font-variant-numeric: tabular-nums;
+}

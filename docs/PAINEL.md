@@ -90,6 +90,19 @@ da resposta, e uma que falhe fica só no registo da Vercel (`[mesas]`).
 
 ---
 
+### As sessões
+
+`/painel/sessoes` mostra quem entrou, com que email, a que horas (de Lisboa) e
+de que aparelho — com o código ou pelo aparelho lembrado —, e também quem saiu
+e quem esqueceu o aparelho. Em cima, a última entrada de cada pessoa do
+`PAINEL_EMAILS`.
+
+As linhas vivem numa lista do Upstash (`painel:entradas`), cortada às últimas
+300 a cada escrita. O aparelho é o `User-Agent` resumido ("iPhone · Safari");
+**o IP não se guarda**. Uma falha a anotar não impede ninguém de entrar — fica
+só no registo da Vercel. Ver `src/lib/painel/entradas.ts`, com testes em
+`testes/entradas.test.mjs`.
+
 ## Como se entra
 
 Não há password. Escreve-se o email, chega um código de 6 algarismos (no

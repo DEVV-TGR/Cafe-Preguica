@@ -167,6 +167,23 @@ export async function enviarConfirmacao({
   texto: string;
 }): Promise<void> {
   if (paraOTerminal(`confirmação da newsletter para ${para}:`, link)) return;
+  await enviarUmEmail({ para, assunto, html, texto });
+}
+
+/** Um email só, a uma pessoa, do remetente da newsletter — a confirmação e o
+    aviso de que a inscrição foi cancelada. */
+export async function enviarUmEmail({
+  para,
+  assunto,
+  html,
+  texto,
+}: {
+  para: string;
+  assunto: string;
+  html: string;
+  texto: string;
+}): Promise<void> {
+  if (paraOTerminal(`email para ${para}: ${assunto}`)) return;
 
   const { remetente } = configuracao();
   await pedir("/emails", {
@@ -216,6 +233,30 @@ export async function criarContacto(email: string): Promise<void> {
   const alvo = encodeURIComponent(email);
   await pedir(`/contacts/${alvo}`, { metodo: "PATCH", corpo: { unsubscribed: false } });
   await pedir(`/contacts/${alvo}/segments/${encodeURIComponent(segmento)}`, { metodo: "POST" });
+}
+
+/*
+  Cancelar a inscrição de um contacto, a partir do painel.
+
+  A mesma marca que o link de cancelar de cada envio põe (`unsubscribed`), e
+  não apagar o contacto: assim a lista do painel continua a dizer "cancelou", e
+  quem se quiser voltar a inscrever pode — o `criarContacto` trata disso. Para
+  apagar os dados de vez (um pedido ao abrigo do RGPD), é no painel do Resend.
+*/
+export async function cancelarContacto(email: string): Promise<void> {
+  if (paraOTerminal(`${email} cancelado — em produção ficava marcado no Resend.`)) {
+    confirmadosEmDesenvolvimento.delete(email);
+    return;
+  }
+  await pedir(`/contacts/${encodeURIComponent(email)}`, {
+    metodo: "PATCH",
+    corpo: { unsubscribed: true },
+  });
+}
+
+/** O segmento desta newsletter — o webhook só avisa quem cancelou **desta**. */
+export function segmentoDaNewsletter(): string {
+  return configuracao().segmento;
 }
 
 /*

@@ -6,7 +6,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  campoDaHora,
   campoDaLeitura,
+  estatistica,
+  horaEmLisboa,
+  lerCampos,
+  lerHoras,
   mesaValida,
   noiteAntes,
   noiteDeServico,
@@ -98,4 +103,68 @@ test("os campos antigos, com qr ou nfc no meio, somam na mesa e na noite deles",
   assert.equal(r.semana, 7);
   assert.deepEqual(r.porNoite[0], { noite: "2026-10-09", total: 7 });
   assert.deepEqual(r.porMesa, [{ mesa: 3, total: 7 }]);
+});
+
+/* --------------------------------------------- a estatística do painel */
+
+test("a hora é a de Lisboa, com dois algarismos", () => {
+  assert.equal(horaEmLisboa(new Date("2026-10-10T22:41:00Z")), "23"); // verão, UTC+1
+  assert.equal(horaEmLisboa(new Date("2026-10-10T23:05:00Z")), "00");
+  assert.equal(horaEmLisboa(new Date("2026-12-12T21:30:00Z")), "21"); // inverno, UTC+0
+});
+
+function dadosDeEnsaio() {
+  const leituras = lerCampos({
+    [campoDaLeitura("2026-10-10", 4)]: 5,
+    [campoDaLeitura("2026-10-10", 7)]: 2,
+    [campoDaLeitura("2026-10-09", 4)]: 3,
+    [campoDaLeitura("2026-09-01", 4)]: 40, // fora dos 7 e dos 30
+  });
+  const horas = lerHoras({
+    [campoDaHora("2026-10-10", 4, "22")]: 4,
+    [campoDaHora("2026-10-10", 4, "01")]: 1,
+    [campoDaHora("2026-10-10", 7, "22")]: 2,
+    "lixo|4|99": 7,
+  });
+  const ultimas = [
+    { quando: Date.parse("2026-10-10T21:10:00Z"), mesa: 4 },
+    { quando: Date.parse("2026-10-10T21:20:00Z"), mesa: 7 },
+  ];
+  return { leituras, horas, ultimas };
+}
+
+test("todas as mesas, nas últimas 7 noites", () => {
+  const e = estatistica(dadosDeEnsaio(), { mesa: null, periodo: 7 }, "2026-10-10");
+  assert.equal(e.total, 10);
+  assert.equal(e.noites.length, 7);
+  assert.equal(e.noites.at(-1), "2026-10-10", "a noite mais recente fica à direita");
+  assert.deepEqual(e.porNoite.at(-1), { noite: "2026-10-10", total: 7 });
+  assert.equal(e.porMesa.get(4), 8);
+  assert.equal(e.porMesa.get(7), 2);
+  assert.equal(e.ultimas.length, 2);
+  assert.equal(e.horasDesde, "2026-10-10");
+});
+
+test("uma mesa: tudo passa a ser dela, menos o mapa, que continua a mostrar todas", () => {
+  const e = estatistica(dadosDeEnsaio(), { mesa: 4, periodo: 7 }, "2026-10-10");
+  assert.equal(e.total, 8);
+  assert.equal(e.porHora.find((h) => h.hora === 22).total, 4);
+  assert.equal(e.porMesa.get(7), 2, "o mapa ignora o filtro da mesa");
+  assert.deepEqual(e.ultimas.map((u) => u.mesa), [4]);
+});
+
+test("as horas vão pela ordem da noite, com a uma da manhã depois das onze", () => {
+  const e = estatistica(dadosDeEnsaio(), { mesa: null, periodo: { noite: "2026-10-10" } }, "2026-10-10");
+  const horas = e.porHora.map((h) => h.hora);
+  assert.ok(horas.indexOf(22) < horas.indexOf(1));
+  assert.equal(horas[0], 16, "pelo menos das 16h");
+  assert.equal(e.porHora.find((h) => h.hora === 1).total, 1);
+  assert.equal(e.total, 7);
+});
+
+test("a média por dia da semana divide pelas noites desse dia", () => {
+  const e = estatistica(dadosDeEnsaio(), { mesa: null, periodo: 7 }, "2026-10-10");
+  // 2026-10-10 é sábado (5), 2026-10-09 é sexta (4).
+  assert.equal(e.porDiaDaSemana[5].media, 7);
+  assert.equal(e.porDiaDaSemana[4].media, 3);
 });

@@ -93,6 +93,10 @@ por gravar na Ementa, na Casa ou numa newsletter a meio, os separadores
 perguntam antes de sair (`src/lib/painel/por-gravar.ts`). A Casa tem três
 separadores próprios: Horário, Contactos e Redes sociais.
 
+Na Ementa, cada secção fecha e abre pelo título, e há um "Fechar todas as
+secções" em cima; uma secção fechada diz quantos artigos tem e se tem
+alterações por publicar. Fica lembrado no browser de quem edita.
+
 Cada cartão vai buscar os seus dados à parte (`Promise.allSettled`): sem
 Upstash ou sem Resend, o cartão diz o que falta e os outros continuam. As
 contas (escala do gráfico, linha dos inscritos, nomes) estão em
@@ -101,10 +105,17 @@ contas (escala do gráfico, linha dos inscritos, nomes) estão em
 ### As mesas
 
 `/painel/mesas` mostra quantas vezes a carta foi aberta pelo QR ou pelo NFC de
-cada mesa — os dois levam ao mesmo `/m/<mesa>` e contam juntos: os totais de 7
-e 30 noites e desde o início, as últimas 14 noites e as mesas das últimas 30.
-Conta leituras, não pessoas, e não guarda nada sobre quem lê — só um número por
-noite e mesa, no hash `mesas:leituras` do Upstash, sem prazo. A noite muda às 06:00
+cada mesa — os dois levam ao mesmo `/m/<mesa>` e contam juntos. Em cima, os
+totais de 7 e 30 noites e desde o início. Por baixo, a estatística com filtro
+(`src/components/painel/EstatisticaDasMesas.tsx`): escolhe-se o período (esta
+noite, 7, 30, ou uma noite à escolha) e a mesa — tocando no **mapa das mesas**,
+que mostra também quais são as mais lidas —, e tudo o resto segue: a que horas,
+noite a noite, por dia da semana, e as últimas leituras com dia e hora.
+
+Conta leituras, não pessoas, e não guarda nada sobre quem lê: um número por
+noite e mesa (`mesas:leituras`), um por noite, mesa e hora (`mesas:horas`,
+desde 2026-10-12 — as leituras de antes só têm o dia), e as últimas 300 com o
+instante exato (`mesas:ultimas`). A noite muda às 06:00
 de Lisboa, para o fecho depois da meia-noite contar na noite certa. Os robôs e
 as pré-visualizações de links (WhatsApp e companhia) não contam. As contas
 estão em `src/lib/mesas/contas.ts`, com testes em `testes/mesas.test.mjs`.
@@ -120,6 +131,12 @@ da resposta, e uma que falhe fica só no registo da Vercel (`[mesas]`).
 de que aparelho — com o código ou pelo aparelho lembrado —, e também quem saiu
 e quem esqueceu o aparelho. Em cima, a última entrada de cada pessoa do
 `PAINEL_EMAILS`.
+
+E os **aparelhos com acesso**, cada um com **Terminar sessão**: corta a sessão
+desse aparelho na hora e esquece-o, e da próxima vez ele pede o código. Para
+isso a sessão tem registo no Upstash (`sessao:<id>`, 8 horas) e cada aparelho
+uma linha em `painel:aparelhos` — ver `src/lib/painel/aparelhos.ts`, com testes
+em `testes/aparelhos.test.mjs`.
 
 As linhas vivem numa lista do Upstash (`painel:entradas`), cortada às últimas
 300 a cada escrita. O aparelho é o `User-Agent` resumido ("iPhone · Safari");

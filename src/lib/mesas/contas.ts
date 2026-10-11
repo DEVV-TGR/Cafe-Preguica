@@ -29,6 +29,37 @@
 
 export const CHAVE_DAS_LEITURAS = "mesas:leituras";
 
+/*
+  ## A hora, desde 2026-10-12
+
+  O Tomás quis ver a que horas se lê, e cada mesa e cada noite em separado.
+  Desde então cada leitura escreve mais duas coisas, sem nada sobre quem lê:
+
+  - `mesas:horas`, campos `noite|mesa|HH` — a hora de Lisboa da leitura;
+  - `mesas:ultimas`, uma lista com as últimas `ULTIMAS` leituras, com o
+    instante exato e a mesa, para o painel as mostrar com data e hora.
+
+  As leituras de antes só têm a noite: o painel diz desde quando há horas.
+*/
+export const CHAVE_DAS_HORAS = "mesas:horas";
+export const CHAVE_DAS_ULTIMAS = "mesas:ultimas";
+export const ULTIMAS = 300;
+
+const HORA_EM_LISBOA = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/Lisbon",
+  hour: "2-digit",
+  hourCycle: "h23",
+});
+
+/** `"23"`, `"00"`, `"01"` — a hora de Lisboa, sempre com dois algarismos. */
+export function horaEmLisboa(agora: Date): string {
+  return HORA_EM_LISBOA.format(agora).padStart(2, "0");
+}
+
+export function campoDaHora(noite: string, mesa: number, hora: string): string {
+  return `${noite}|${mesa}|${hora}`;
+}
+
 const HORA_MS = 60 * 60 * 1000;
 const DIA_MS = 24 * HORA_MS;
 const VIRAGEM_DA_NOITE_H = 6;
@@ -80,9 +111,9 @@ export function campoDaLeitura(noite: string, mesa: number): string {
   return `${noite}|${mesa}`;
 }
 
-type Leitura = { noite: string; mesa: number; total: number };
+export type Leitura = { noite: string; mesa: number; total: number };
 
-function lerCampos(hash: Record<string, number>): Leitura[] {
+export function lerCampos(hash: Record<string, number>): Leitura[] {
   const leituras: Leitura[] = [];
   for (const [campo, total] of Object.entries(hash)) {
     const partes = campo.split("|");
@@ -141,4 +172,118 @@ export function resumir(hash: Record<string, number>, hoje: string): Resumo {
     .map(([mesa, total]) => ({ mesa, total }));
 
   return { semana, mes, sempre, porNoite, porMesa };
+}
+
+/* ------------------------------------------------- a estatística do painel */
+
+export type LeituraComHora = Leitura & { hora: number };
+export type UltimaLeitura = { quando: number; mesa: number };
+
+/** Os campos `noite|mesa|HH` de `mesas:horas`. Os que não tiverem esta forma ficam de fora. */
+export function lerHoras(hash: Record<string, number>): LeituraComHora[] {
+  const lidas: LeituraComHora[] = [];
+  for (const [campo, total] of Object.entries(hash)) {
+    const [noite, textoDaMesa, textoDaHora, ...resto] = campo.split("|");
+    const mesa = mesaValida(textoDaMesa ?? "");
+    const hora = Number(textoDaHora);
+    if (resto.length || !/^\d{4}-\d{2}-\d{2}$/.test(noite) || mesa === null) continue;
+    if (!/^\d{2}$/.test(textoDaHora ?? "") || hora > 23 || !Number.isFinite(total)) continue;
+    lidas.push({ noite, mesa, hora, total });
+  }
+  return lidas;
+}
+
+/** O que o painel escolhe ver: uma mesa (ou todas) e um período. */
+export type Filtro = { mesa: number | null; periodo: 7 | 30 | { noite: string } };
+
+/*
+  A ordem das horas no gráfico é a da noite de serviço: das 06:00 de um dia às
+  05:59 do seguinte, para o fecho depois da meia-noite ficar à direita, onde
+  acontece, e não à esquerda, antes da abertura.
+*/
+const ORDEM_DAS_HORAS = [...Array.from({ length: 18 }, (_, i) => i + 6), 0, 1, 2, 3, 4, 5];
+
+export type Estatistica = {
+  total: number;
+  /** As noites do período, da mais antiga para a mais recente. */
+  noites: string[];
+  porNoite: { noite: string; total: number }[];
+  /** Só as horas com leituras, alargadas para as 16h–01h quando há poucas. */
+  porHora: { hora: number; total: number }[];
+  /** Todas as mesas do período, **sem** o filtro da mesa — é o mapa que a escolhe. */
+  porMesa: Map<number, number>;
+  /** A média por dia da semana, de segunda (0) a domingo (6). */
+  porDiaDaSemana: { dia: number; media: number }[];
+  ultimas: UltimaLeitura[];
+  /** A primeira noite com horas guardadas, ou `null` se ainda não há nenhuma. */
+  horasDesde: string | null;
+};
+
+export function estatistica(
+  dados: { leituras: Leitura[]; horas: LeituraComHora[]; ultimas: UltimaLeitura[] },
+  filtro: Filtro,
+  hoje: string,
+): Estatistica {
+  const { periodo } = filtro;
+  const noites =
+    typeof periodo === "object"
+      ? [periodo.noite]
+      : Array.from({ length: periodo }, (_, i) => noiteAntes(hoje, periodo - 1 - i));
+  const doPeriodo = new Set(noites);
+  const daMesa = (mesa: number) => filtro.mesa === null || mesa === filtro.mesa;
+
+  const porNoite = new Map(noites.map((n) => [n, 0]));
+  const porMesa = new Map<number, number>();
+  let total = 0;
+  for (const l of dados.leituras) {
+    if (!doPeriodo.has(l.noite)) continue;
+    porMesa.set(l.mesa, (porMesa.get(l.mesa) ?? 0) + l.total);
+    if (!daMesa(l.mesa)) continue;
+    porNoite.set(l.noite, (porNoite.get(l.noite) ?? 0) + l.total);
+    total += l.total;
+  }
+
+  const porHoraMapa = new Map<number, number>();
+  for (const h of dados.horas) {
+    if (!doPeriodo.has(h.noite) || !daMesa(h.mesa)) continue;
+    porHoraMapa.set(h.hora, (porHoraMapa.get(h.hora) ?? 0) + h.total);
+  }
+  const indices = [...porHoraMapa.keys()].map((h) => ORDEM_DAS_HORAS.indexOf(h));
+  const de = Math.min(ORDEM_DAS_HORAS.indexOf(16), ...indices);
+  const ate = Math.max(ORDEM_DAS_HORAS.indexOf(1), ...indices);
+  const porHora = ORDEM_DAS_HORAS.slice(de, ate + 1).map((hora) => ({
+    hora,
+    total: porHoraMapa.get(hora) ?? 0,
+  }));
+
+  /* A média de cada dia da semana nas noites do período: soma das leituras
+     desse dia a dividir pelas noites desse dia que o período tem. */
+  const somas = Array(7).fill(0);
+  const quantas = Array(7).fill(0);
+  for (const noite of noites) {
+    const dia = (new Date(`${noite}T00:00:00Z`).getUTCDay() + 6) % 7;
+    somas[dia] += porNoite.get(noite) ?? 0;
+    quantas[dia] += 1;
+  }
+  const porDiaDaSemana = somas.map((soma, dia) => ({
+    dia,
+    media: quantas[dia] ? soma / quantas[dia] : 0,
+  }));
+
+  const ultimas = dados.ultimas.filter(
+    (u) => daMesa(u.mesa) && doPeriodo.has(noiteDeServico(new Date(u.quando))),
+  );
+
+  const comHoras = dados.horas.map((h) => h.noite).sort();
+
+  return {
+    total,
+    noites,
+    porNoite: noites.map((noite) => ({ noite, total: porNoite.get(noite) ?? 0 })),
+    porHora,
+    porMesa,
+    porDiaDaSemana,
+    ultimas,
+    horasDesde: comHoras[0] ?? null,
+  };
 }

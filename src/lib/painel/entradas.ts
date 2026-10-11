@@ -7,8 +7,8 @@ import { empurrarNaLista, lerLista } from "./redis";
 
   Pedido do Tomás (2026-10-11): ver as sessões como se vê a newsletter ou a
   ementa, numa secção do painel. Escreve-se uma linha a cada entrada — com o
-  código ou pelo aparelho lembrado —, a cada saída e a cada "esquecer este
-  aparelho".
+  código ou pelo aparelho lembrado —, a cada saída, a cada "esquecer este
+  aparelho" e a cada sessão terminada a partir da página das Sessões.
 
   ## O que fica, e o que não fica
 
@@ -35,7 +35,7 @@ const CHAVE = "painel:entradas";
 const MAXIMO = 300;
 const PRAZO_S = 365 * 24 * 60 * 60;
 
-export type Como = "codigo" | "aparelho" | "saiu" | "esqueceu";
+export type Como = "codigo" | "aparelho" | "saiu" | "esqueceu" | "terminada";
 
 export type Entrada = {
   /** Milissegundos desde 1970, em UTC; a página converte para a hora de Lisboa. */
@@ -90,13 +90,15 @@ export function aparelhoDe(agente: string | null | undefined): string {
   return [sistema, browser].filter(Boolean).join(" · ") || "aparelho desconhecido";
 }
 
-export async function anotarEntrada(email: string, como: Como): Promise<void> {
+/* `aparelho` só vem de fora quando a linha é sobre **outro** aparelho — uma
+   sessão terminada a partir deste. Nos outros casos é o deste pedido. */
+export async function anotarEntrada(email: string, como: Como, aparelho?: string): Promise<void> {
   try {
     const entrada: Entrada = {
       quando: Date.now(),
       email,
       como,
-      aparelho: aparelhoDe((await headers()).get("user-agent")),
+      aparelho: aparelho ?? aparelhoDe((await headers()).get("user-agent")),
     };
     await empurrarNaLista(CHAVE, JSON.stringify(entrada), MAXIMO, PRAZO_S);
   } catch (erro) {

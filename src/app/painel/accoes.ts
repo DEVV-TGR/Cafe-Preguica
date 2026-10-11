@@ -8,7 +8,7 @@ import {
   selar,
   lembrarAparelho,
   aparelhoConhecido,
-  esquecerAparelho,
+  idDoCookieDoAparelho,
   opcoesDoCookie,
   NOME_DO_COOKIE,
   NOME_DO_APARELHO,
@@ -29,6 +29,7 @@ import { ErroDoRedis } from "@/lib/painel/redis";
 import { podePedirCodigo, anotar, contarSemAcesso, ligacaoTrancada } from "@/lib/painel/limites";
 import { exigirSessaoNaAccao } from "@/lib/painel/porta";
 import { anotarEntrada } from "@/lib/painel/entradas";
+import { fecharSessao, registarEntrada, terminarAparelho } from "@/lib/painel/aparelhos";
 
 /*
   Entrar, confirmar o código, e sair.
@@ -122,8 +123,13 @@ export async function pedirCodigo(
       por nós e ainda registado para **este** email, o caminho é o de baixo,
       igual para toda a gente.
     */
-    if (quem && (await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email))) {
-      frasco.set(NOME_DO_COOKIE, await selar(quem.email), opcoesDoCookie());
+    const conhecido = quem
+      ? await aparelhoConhecido(frasco.get(NOME_DO_APARELHO)?.value, quem.email)
+      : null;
+    if (quem && conhecido) {
+      const nova = await selar(quem.email, conhecido);
+      frasco.set(NOME_DO_COOKIE, nova.cookie, opcoesDoCookie());
+      await registarEntrada(conhecido, quem.email, nova.id, false);
       await anotarEntrada(quem.email, "aparelho");
       jaConhecido = true;
     } else {
@@ -228,12 +234,11 @@ export async function confirmarCodigo(
       return { erro: "O código expirou ou já não serve. Pede outro." };
     }
 
-    frasco.set(NOME_DO_COOKIE, await selar(veredicto.email), opcoesDoCookie());
-    frasco.set(
-      NOME_DO_APARELHO,
-      await lembrarAparelho(veredicto.email),
-      opcoesDoCookie(VALIDADE_APARELHO_MS),
-    );
+    const aparelho = await lembrarAparelho(veredicto.email);
+    const nova = await selar(veredicto.email, aparelho.id);
+    frasco.set(NOME_DO_COOKIE, nova.cookie, opcoesDoCookie());
+    frasco.set(NOME_DO_APARELHO, aparelho.cookie, opcoesDoCookie(VALIDADE_APARELHO_MS));
+    await registarEntrada(aparelho.id, veredicto.email, nova.id, true);
     frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
     await anotarEntrada(veredicto.email, "codigo");
     return { certo: true };
@@ -294,7 +299,8 @@ export async function reenviarCodigo(): Promise<EstadoDoCodigo> {
 }
 
 export async function sair(): Promise<void> {
-  const { email } = await exigirSessaoNaAccao();
+  const { email, sessao, aparelho } = await exigirSessaoNaAccao();
+  await fecharSessao(aparelho, sessao);
   await anotarEntrada(email, "saiu");
 
   /*
@@ -320,13 +326,43 @@ export async function sair(): Promise<void> {
   telemóvel, ou quando se entrou num computador que não é nosso.
 */
 export async function esquecerEsteAparelho(): Promise<void> {
-  const { email } = await exigirSessaoNaAccao();
+  const { email, aparelho } = await exigirSessaoNaAccao();
   const frasco = await cookies();
   await anotarEntrada(email, "esqueceu");
 
-  await esquecerAparelho(frasco.get(NOME_DO_APARELHO)?.value);
+  /* O da sessão, e o do cookie se for outro — um aparelho lembrado de antes
+     do registo das sessões não tinha o mesmo `id` em lado nenhum. */
+  await terminarAparelho(aparelho);
+  const doCookie = await idDoCookieDoAparelho(frasco.get(NOME_DO_APARELHO)?.value);
+  if (doCookie && doCookie !== aparelho) await terminarAparelho(doCookie);
   frasco.delete({ name: NOME_DO_APARELHO, path: "/painel" });
   frasco.delete({ name: NOME_DO_COOKIE, path: "/painel" });
 
   redirect("/painel/entrar");
+}
+
+/*
+  Terminar a sessão de um aparelho, a partir da página das Sessões.
+
+  Qualquer pessoa da lista pode terminar qualquer aparelho — são duas, e
+  ambas mandam na casa. Terminar fecha a sessão e esquece o aparelho (ver
+  `terminarAparelho` em `lib/painel/aparelhos.ts`): da próxima vez, nesse
+  aparelho, pede-se o código. Terminar o próprio é sair por esta porta.
+*/
+export async function terminarSessaoDoAparelho(dados: FormData): Promise<void> {
+  const { aparelho: este } = await exigirSessaoNaAccao();
+  const id = String(dados.get("aparelho") ?? "");
+  /* O campo vem do browser: só um `id` com a forma dos nossos. */
+  if (!/^[0-9a-f]{32}$/.test(id)) return;
+
+  const terminado = await terminarAparelho(id);
+  if (terminado) await anotarEntrada(terminado.email, "terminada", terminado.aparelho);
+
+  if (id === este) {
+    const frasco = await cookies();
+    frasco.delete({ name: NOME_DO_APARELHO, path: "/painel" });
+    frasco.delete({ name: NOME_DO_COOKIE, path: "/painel" });
+    redirect("/painel/entrar");
+  }
+  redirect("/painel/sessoes");
 }

@@ -2,6 +2,9 @@ import { exigirSessao } from "@/lib/painel/porta";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { todos } from "@/lib/painel/utilizadores";
 import { ultimasEntradas, type Como, type Entrada } from "@/lib/painel/entradas";
+import { aparelhosComAcesso } from "@/lib/painel/aparelhos";
+import { iniciais } from "@/lib/painel/quadro";
+import { TerminarSessao } from "@/components/painel/TerminarSessao";
 import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 
@@ -22,6 +25,7 @@ const DIA = new Intl.DateTimeFormat("pt-PT", {
   month: "long",
   timeZone: FUSO,
 });
+const DATA_CURTA = new Intl.DateTimeFormat("pt-PT", { day: "2-digit", month: "2-digit", timeZone: FUSO });
 /* Só para agrupar: `2026-10-11`, na data de Lisboa. */
 const CHAVE_DO_DIA = new Intl.DateTimeFormat("en-CA", { timeZone: FUSO });
 
@@ -30,6 +34,7 @@ const FRASE: Record<Como, string> = {
   aparelho: "entrou pelo aparelho lembrado",
   saiu: "saiu",
   esqueceu: "esqueceu o aparelho",
+  terminada: "teve a sessão terminada noutro aparelho",
 };
 
 function nomeDoDia(quando: number, agora: number): string {
@@ -54,7 +59,8 @@ function porDia(entradas: Entrada[], agora: number) {
 /* As entradas e a hora a que foram lidas, que é o "agora" do "Hoje" e do
    "Ontem". Fora do componente porque um componente não deve ler o relógio. */
 async function lerSessoes() {
-  return { entradas: await ultimasEntradas(), agora: Date.now() };
+  const [entradas, aparelhos] = await Promise.all([ultimasEntradas(), aparelhosComAcesso()]);
+  return { entradas, aparelhos, agora: Date.now() };
 }
 
 const INTRODUCAO =
@@ -62,7 +68,7 @@ const INTRODUCAO =
   "próprio browser diz que é; se aparecer um que não reconheces, avisa o Tomás.";
 
 export default async function PaginaDasSessoes() {
-  const { email } = await exigirSessao();
+  const { email, aparelho: este } = await exigirSessao();
 
   let lidas: Awaited<ReturnType<typeof lerSessoes>>;
   try {
@@ -80,7 +86,7 @@ export default async function PaginaDasSessoes() {
     );
   }
 
-  const { entradas, agora } = lidas;
+  const { entradas, aparelhos, agora } = lidas;
   /* A última entrada de cada pessoa que hoje está na lista — quem saiu do
      `PAINEL_EMAILS` continua no histórico de baixo, mas não aqui. */
   const pessoas = todos().map((u) => ({
@@ -92,6 +98,49 @@ export default async function PaginaDasSessoes() {
     <>
       <main className="pn-principal pn-pilha-larga">
         <TituloDaPagina olho="Quem entrou" titulo="Sessões" frase={INTRODUCAO} />
+
+        {/* Os aparelhos que entram agora, cada um com o botão de terminar — o
+            que se procura quando se perdeu o telemóvel ou se entrou num
+            computador emprestado. Ver `lib/painel/aparelhos.ts`. */}
+        <section className="pn-bloco">
+          <h2 className="pn-bloco__titulo">Aparelhos com acesso</h2>
+          <p className="pn-bloco__sub">
+            Terminar a sessão de um aparelho põe-no fora já, e da próxima vez ele pede o código.
+          </p>
+          {aparelhos.length === 0 ? (
+            <p className="pn-texto-suave">Nenhum aparelho com acesso.</p>
+          ) : (
+            <ul className="pn-aparelhos">
+              {aparelhos.map((a) => {
+                const ligado = a.sessao !== null && (a.sessaoAte ?? 0) > agora;
+                return (
+                  <li key={a.id} className="pn-aparelhos__um">
+                    <span className="pn-avatar" aria-hidden="true">
+                      {iniciais(a.email)}
+                    </span>
+                    <span className="pn-aparelhos__quem">
+                      <span className="pn-aparelhos__email">
+                        {a.email}
+                        {a.id === este ? <span className="pn-selo pn-aparelhos__este">este aparelho</span> : null}
+                      </span>
+                      <span className="pn-nota">
+                        {a.aparelho} ·{" "}
+                        {ligado
+                          ? `ligado agora, desde ${nomeDoDia(a.ultimaEntrada, agora).toLowerCase()} às ${HORA.format(a.ultimaEntrada)}`
+                          : `lembrado até ${DATA_CURTA.format(a.lembradoAte)} — entra sem código`}
+                      </span>
+                    </span>
+                    <span className="pn-aparelhos__estado" data-ligado={ligado || undefined}>
+                      {ligado ? "Ligado" : "Lembrado"}
+                    </span>
+                    <TerminarSessao aparelho={a.id} este={a.id === este} />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+
         <div className="pn-duas-colunas pn-duas-colunas--estreita">
           <section className="pn-bloco">
             <h2 className="pn-bloco__titulo">Última entrada de cada um</h2>

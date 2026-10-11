@@ -130,6 +130,35 @@ O plano gratuito do Resend deixa ter até 1000 contactos.
   caixa `novidades@`.
 - **Só em português.** O convite e a confirmação seguem a língua do site; o
   convite em inglês avisa que a newsletter é escrita em português.
+- **Cada contacto tem "Cancelar"** na lista do painel. Cancela no Resend (a
+  mesma marca `unsubscribed` do link de cada envio, e não apagar: a lista
+  continua a dizer "cancelou") e manda à pessoa um email a dizê-lo.
+
+### O email de cancelamento
+
+Sempre que alguém deixa de estar inscrito — pelo botão do painel, ou pela
+própria pessoa no link de cancelar de um envio —, recebe um email com a cara da
+newsletter a dizer que foi cancelado, que a carta secreta deixa de abrir, e que
+se pode voltar a inscrever no site (`src/lib/newsletter/cancelamento.ts`).
+
+Sai **uma vez por cancelamento**: o painel avisa, e o Resend, ao ver o
+contacto mudar, chama o webhook a seguir — a marca no Upstash
+(`newsletter:cancelamento-avisado:<hash>`) faz o segundo não mandar nada.
+Quem se volta a inscrever apaga a marca.
+
+O cancelar pela própria pessoa acontece numa página do Resend, e só se sabe dele
+pelo **webhook** (`/api/newsletter/webhook`). Para o montar:
+
+1. Resend (a conta da newsletter) → **Webhooks** → **Add endpoint**:
+   `https://www.cafepreguica.pt/api/newsletter/webhook`, evento
+   **`contact.updated`**.
+2. Copiar o *signing secret* (`whsec_…`) para a Vercel, como
+   `RESEND_NEWSLETTER_WEBHOOK_SECRET`, e fazer redeploy.
+
+Sem isto, o cancelar pelo painel avisa na mesma; só quem cancela pelo link
+fica sem o email. A assinatura do webhook é verificada à mão
+(`src/lib/newsletter/webhook.ts`, com testes em `testes/cancelamento.test.mjs`)
+e um pedido sem ela é recusado com 401.
 
 ---
 

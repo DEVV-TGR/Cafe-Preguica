@@ -73,6 +73,7 @@ const O_QUE: Record<Como, string> = {
   aparelho: "Pelo aparelho",
   saiu: "Saiu",
   esqueceu: "Esqueceu o aparelho",
+  terminada: "Sessão terminada",
 };
 
 /** A cabeça de cada cartão: título, subtítulo e a seta para a secção. */

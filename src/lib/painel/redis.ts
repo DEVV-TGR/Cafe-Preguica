@@ -286,3 +286,42 @@ export async function lerLista(chave: string, quantas: number): Promise<string[]
 
   return (await comando<string[] | null>(["LRANGE", chave, 0, quantas - 1])) ?? [];
 }
+
+/*
+  Um hash de texto — campos com JSON lá dentro, sem prazo por campo.
+
+  É o registo dos aparelhos do painel (`lib/painel/aparelhos.ts`): uma linha por
+  aparelho, que quem lê limpa quando a vê expirada. O `HSET` substitui o campo
+  inteiro, e é o que se quer: cada escrita leva a linha toda.
+*/
+export async function guardarNoHash(chave: string, campo: string, valor: string): Promise<void> {
+  if (!ligacao() && emMemoria()) {
+    const hash = JSON.parse(lerDaMemoria(chave) ?? "{}") as Record<string, string>;
+    hash[campo] = valor;
+    memoria.set(chave, { valor: JSON.stringify(hash), expira: 0 });
+    return;
+  }
+  await comando(["HSET", chave, campo, valor]);
+}
+
+/** O hash inteiro, com os valores em texto, como foram guardados. */
+export async function lerHashDeTexto(chave: string): Promise<Record<string, string>> {
+  if (!ligacao() && emMemoria()) {
+    return JSON.parse(lerDaMemoria(chave) ?? "{}") as Record<string, string>;
+  }
+
+  const plana = (await comando<string[] | null>(["HGETALL", chave])) ?? [];
+  const hash: Record<string, string> = {};
+  for (let i = 0; i + 1 < plana.length; i += 2) hash[plana[i]] = plana[i + 1];
+  return hash;
+}
+
+export async function apagarDoHash(chave: string, campo: string): Promise<void> {
+  if (!ligacao() && emMemoria()) {
+    const hash = JSON.parse(lerDaMemoria(chave) ?? "{}") as Record<string, string>;
+    delete hash[campo];
+    memoria.set(chave, { valor: JSON.stringify(hash), expira: 0 });
+    return;
+  }
+  await comando(["HDEL", chave, campo]);
+}

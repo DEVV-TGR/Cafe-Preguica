@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { escala } from "@/lib/painel/quadro";
+import { Barras } from "./Barras";
 
 /**
  * As leituras das mesas, noite a noite, em barras — o cartão grande do meio do
@@ -37,7 +37,6 @@ export function GraficoDasMesas({ porNoite }: { porNoite: { noite: string; total
      para a direita, com hoje no fim. */
   const barras = porNoite.slice(0, noites).reverse();
   const maior = Math.max(0, ...barras.map((b) => b.total));
-  const { topo, marcas } = escala(maior);
   const melhor = maior > 0 ? barras.findLastIndex((b) => b.total === maior) : -1;
   const total = barras.reduce((soma, b) => soma + b.total, 0);
 
@@ -63,31 +62,15 @@ export function GraficoDasMesas({ porNoite }: { porNoite: { noite: string; total
         {melhor >= 0 ? `; a melhor foi ${DATA.format(comoData(barras[melhor].noite))}, com ${maior}.` : "."}
       </p>
 
-      <div className="pn-grafico__area" aria-hidden="true" data-noites={noites}>
-        <ul className="pn-grafico__eixo">
-          {[...marcas].reverse().map((m) => (
-            <li key={m}>{m}</li>
-          ))}
-        </ul>
-
-        <ol className="pn-grafico__barras">
-          {barras.map((b, i) => (
-            <li key={b.noite} className="pn-grafico__noite" title={`${DATA.format(comoData(b.noite))}: ${b.total}`}>
-              <span className="pn-grafico__calha">
-                <span
-                  className="pn-grafico__barra"
-                  data-melhor={i === melhor || undefined}
-                  data-vazia={b.total === 0 || undefined}
-                  style={{ height: `${(b.total / topo) * 100}%` }}
-                >
-                  {i === melhor ? <span className="pn-grafico__selo">{b.total}</span> : null}
-                </span>
-              </span>
-              <span className="pn-grafico__dia">{diaCurto(b.noite)}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
+      <Barras
+        denso={noites === 14}
+        barras={barras.map((b) => ({
+          chave: b.noite,
+          etiqueta: diaCurto(b.noite),
+          valor: b.total,
+          titulo: `${DATA.format(comoData(b.noite))}: ${b.total}`,
+        }))}
+      />
 
       {total === 0 ? (
         <p className="pn-nota pn-centro">Ainda ninguém abriu a carta por uma mesa nestas noites.</p>

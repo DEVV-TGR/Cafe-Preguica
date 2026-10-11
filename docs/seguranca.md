@@ -158,13 +158,14 @@ Isto não se mantém sozinho. Mantém-se com duas peças:
 
 ## A entrada do painel, e o que foi apertado na auditoria de 2026-09
 
-- **O ecrã de entrada não diz quem tem acesso.** Um email da lista e um de fora
-  seguem os dois para o ecrã do código. O de fora fica com um desafio-isco que
-  nenhum código de seis algarismos abre, e o "reenviar" não lhe manda nada.
-  Até aqui, o de dentro saltava e o de fora ficava — bastava olhar.
-  - O que sobra é o **tempo de resposta**: quem está na lista espera pelo envio
-    do email. É uma diferença de centenas de milissegundos, com os limites por
-    IP e por dia por cima.
+- **O ecrã de entrada diz quando um email não tem acesso** — decisão de
+  2026-10-11, que desfaz a da auditoria. Até aí, um email da lista e um de fora
+  seguiam os dois para o ecrã do código, para o formulário não servir para
+  descobrir quem entra; mas um email mal escrito ou ainda fora do
+  `PAINEL_EMAILS` ficava à espera de um código que não vinha, e não havia como
+  o distinguir de um envio que falhou. Saber que um endereço tem acesso não
+  abre nada — o código vai sempre para a caixa dele — e os pedidos de fora
+  continuam a gastar os limites por email e por IP.
 - **A sessão confere o `PAINEL_EMAILS` a cada pedido.** Tirar alguém da lista
   põe-no fora já, e não quando o cookie caducar.
 - **20 tentativas de código por email em 24 h**, certas ou erradas, contadas

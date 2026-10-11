@@ -98,9 +98,12 @@ durante 30 dias e deixa de pedir o código; o botão "Esquecer este aparelho", n
 fundo do painel, desfaz isso.
 
 **Só entra quem estiver em `PAINEL_EMAILS`.** Um email que lá não esteja não
-recebe nada, e o ecrã responde exatamente o mesmo: segue para o ecrã do código,
-com o endereço mascarado, e nenhum código o abre. Se respondesse outra coisa,
-o formulário servia para descobrir quem tem acesso.
+recebe nada, e o ecrã diz *"Este email não tem acesso ao painel"*. Já foi
+igual ao de quem tem acesso, para o formulário não servir para descobrir quem
+entra — mas assim um email mal escrito, ou ainda fora da lista, ficava à
+espera de um código que não vinha, sem forma de o distinguir de um email que
+não chega. O pedido continua a gastar o orçamento de pedidos (ver o comentário
+do `SEM_ACESSO` em `src/app/painel/accoes.ts`).
 
 Tirar alguém do `PAINEL_EMAILS` (e fazer redeploy) põe-no fora na hora: a
 sessão confere a lista a cada pedido.
@@ -291,7 +294,8 @@ Falha do lado seguro, e diz porquê no ecrã.
 |---|---|
 | O código não chega | Logs no Resend: domínio deixou de estar verificado, limite diário, ou spam |
 | *"o domínio do remetente não está verificado"* | `RESEND_REMETENTE` não usa o domínio *Verified*. Ver o passo 2 |
-| Escreveu o email e não recebeu nada, sem erro | O email não está em `PAINEL_EMAILS`. É de propósito que o ecrã não o diz |
+| *"Este email não tem acesso ao painel"* | O email não está em `PAINEL_EMAILS` (ou está mal escrito). Acrescentá-lo e fazer redeploy |
+| Seguiu para o ecrã do código e o código não chega | O email tem acesso: o problema é o envio. Logs no Resend; numa caixa Hotmail/Outlook pode ter ficado retido pela Microsoft |
 | *"falta configurar o PAINEL_GITHUB_TOKEN"* | Ver o passo 4, e fazer redeploy |
 | *"o token expirou ou perdeu permissões"* | O PAT caducou. Ver o passo 4 |
 | *"não encontrou o ficheiro no repositório"* | O token tem a conta pessoal como Resource owner |

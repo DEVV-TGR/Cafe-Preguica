@@ -2,7 +2,7 @@ import { exigirSessao } from "@/lib/painel/porta";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { todos } from "@/lib/painel/utilizadores";
 import { ultimasEntradas, type Como, type Entrada } from "@/lib/painel/entradas";
-import { Cabecalho } from "@/components/painel/Cabecalho";
+import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 
 /**
@@ -41,12 +41,12 @@ function nomeDoDia(quando: number, agora: number): string {
 }
 
 function porDia(entradas: Entrada[], agora: number) {
-  const grupos: { dia: string; entradas: Entrada[] }[] = [];
+  const grupos: { chave: string; dia: string; entradas: Entrada[] }[] = [];
   for (const e of entradas) {
-    const dia = nomeDoDia(e.quando, agora);
+    const chave = CHAVE_DO_DIA.format(e.quando);
     const ultimo = grupos.at(-1);
-    if (ultimo?.dia === dia) ultimo.entradas.push(e);
-    else grupos.push({ dia, entradas: [e] });
+    if (ultimo?.chave === chave) ultimo.entradas.push(e);
+    else grupos.push({ chave, dia: nomeDoDia(e.quando, agora), entradas: [e] });
   }
   return grupos;
 }
@@ -57,6 +57,10 @@ async function lerSessoes() {
   return { entradas: await ultimasEntradas(), agora: Date.now() };
 }
 
+const INTRODUCAO =
+  "Quem entrou no painel, com que email, a que horas e de que aparelho. O aparelho é o que o " +
+  "próprio browser diz que é; se aparecer um que não reconheces, avisa o Tomás.";
+
 export default async function PaginaDasSessoes() {
   const { email } = await exigirSessao();
 
@@ -66,8 +70,8 @@ export default async function PaginaDasSessoes() {
   } catch (erro) {
     return (
       <>
-        <Cabecalho titulo="Sessões" voltarPara="/painel" quem={email} />
         <main className="pn-principal">
+          <TituloDaPagina olho="Quem entrou" titulo="Sessões" frase={INTRODUCAO} />
           <Aviso tom="mau">
             {erro instanceof ErroDoRedis ? erro.paraOEcra : "Não foi possível ir buscar as sessões."}
           </Aviso>
@@ -86,56 +90,52 @@ export default async function PaginaDasSessoes() {
 
   return (
     <>
-      <Cabecalho titulo="Sessões" voltarPara="/painel" quem={email} />
-
       <main className="pn-principal pn-pilha-larga">
-        <p className="pn-texto-suave">
-          Quem entrou no painel, com que email, a que horas e de que aparelho. O aparelho é o que o
-          próprio browser diz que é; se aparecer um que não reconheces, avisa o Tomás.
-        </p>
+        <TituloDaPagina olho="Quem entrou" titulo="Sessões" frase={INTRODUCAO} />
+        <div className="pn-duas-colunas pn-duas-colunas--estreita">
+          <section className="pn-bloco">
+            <h2 className="pn-bloco__titulo">Última entrada de cada um</h2>
+            <ul className="pn-lista">
+              {pessoas.map(({ email: de, ultima }) => (
+                <li key={de} className="pn-lista__linha">
+                  <span className="pn-lista__principal">
+                    {de}
+                    {de === email ? <span className="pn-texto-suave"> (tu)</span> : null}
+                  </span>
+                  <span className="pn-lista__lado">
+                    {ultima
+                      ? `${nomeDoDia(ultima.quando, agora)}, ${HORA.format(ultima.quando)} · ${ultima.aparelho}`
+                      : "ainda não entrou"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <section className="pn-pilha">
-          <h2 className="pn-seccao__titulo">Última entrada de cada um</h2>
-          <ul className="pn-lista">
-            {pessoas.map(({ email: de, ultima }) => (
-              <li key={de} className="pn-lista__linha">
-                <span className="pn-lista__principal">
-                  {de}
-                  {de === email ? <span className="pn-texto-suave"> (tu)</span> : null}
-                </span>
-                <span className="pn-lista__lado">
-                  {ultima
-                    ? `${nomeDoDia(ultima.quando, agora)}, ${HORA.format(ultima.quando)} · ${ultima.aparelho}`
-                    : "ainda não entrou"}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="pn-pilha">
-          <h2 className="pn-seccao__titulo">Tudo o que aconteceu</h2>
-          {entradas.length === 0 ? (
-            <p className="pn-texto-suave">Ainda não há nada anotado.</p>
-          ) : (
-            porDia(entradas, agora).map(({ dia, entradas: doDia }) => (
-              <div key={dia} className="pn-pilha">
-                <p className="pn-olho">{dia}</p>
-                <ul className="pn-lista">
-                  {doDia.map((e) => (
-                    <li key={`${e.quando}-${e.email}-${e.como}`} className="pn-lista__linha">
-                      <span className="pn-lista__principal">
-                        <strong className="pn-forte pn-sessao__hora">{HORA.format(e.quando)}</strong>{" "}
-                        {e.email} <span className="pn-texto-suave">{FRASE[e.como]}</span>
-                      </span>
-                      <span className="pn-lista__lado">{e.aparelho}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          )}
-        </section>
+          <section className="pn-bloco">
+            <h2 className="pn-bloco__titulo">Tudo o que aconteceu</h2>
+            {entradas.length === 0 ? (
+              <p className="pn-texto-suave">Ainda não há nada anotado.</p>
+            ) : (
+              porDia(entradas, agora).map(({ chave, dia, entradas: doDia }) => (
+                <div key={chave} className="pn-pilha">
+                  <p className="pn-olho">{dia}</p>
+                  <ul className="pn-lista">
+                    {doDia.map((e) => (
+                      <li key={`${e.quando}-${e.email}-${e.como}`} className="pn-lista__linha">
+                        <span className="pn-lista__principal">
+                          <strong className="pn-forte pn-sessao__hora">{HORA.format(e.quando)}</strong>{" "}
+                          {e.email} <span className="pn-texto-suave">{FRASE[e.como]}</span>
+                        </span>
+                        <span className="pn-lista__lado">{e.aparelho}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            )}
+          </section>
+        </div>
       </main>
     </>
   );

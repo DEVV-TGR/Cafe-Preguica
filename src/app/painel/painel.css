@@ -35,7 +35,30 @@
 
 .pn-topo__casa {
   display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   border-radius: 0.6rem;
+}
+
+.pn-topo__nome {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* O sair encosta à direita no telemóvel, com os separadores por baixo. */
+.pn-topo__sair {
+  margin-left: auto;
+}
+
+@media (min-width: 64rem) {
+  .pn-topo__dentro {
+    padding-inline: 2rem;
+  }
+
+  .pn-topo__sair {
+    margin-left: 0;
+  }
 }
 
 .pn-topo__marca {
@@ -119,10 +142,6 @@
 }
 
 @media (min-width: 64rem) {
-  .pn-topo__titulo {
-    flex: 0 1 auto;
-  }
-
   .pn-separadores {
     order: 0;
     flex: 0 1 auto;
@@ -147,12 +166,26 @@
 
 /* ============================================================ MOLDURAS === */
 
+/* A mesma largura do quadro em todas as secções: já foi uma coluna de 44rem,
+   que no computador deixava metade do ecrã vazio e tudo apertado ao meio. */
 .pn-principal {
   flex: 1;
   width: 100%;
-  max-width: 44rem;
+  max-width: 80rem;
   margin: 0 auto;
   padding: 1.5rem 1rem 3rem;
+}
+
+@media (min-width: 64rem) {
+  .pn-principal {
+    padding: 2rem 2rem 4rem;
+  }
+}
+
+/* O `display` dos cartões ganhava ao atributo `hidden`, e um separador
+   escondido continuava à vista. */
+.pn-corpo [hidden] {
+  display: none !important;
 }
 
 .pn-pilha {
@@ -421,15 +454,8 @@ select.pn-entrada {
   padding-bottom: 6rem;
 }
 
-/* O índice dos capítulos é o da `/ementa` (`ementa.css`). Lá fica por baixo da
-   barra do site, a 4rem; aqui a barra do painel não é `sticky`, e o índice cola
-   ao topo do ecrã. Sai das margens da coluna para ocupar a largura toda, como
-   na carta. */
-.pn-editor .em-indice {
-  top: 0;
-  margin-inline: -1rem;
-  margin-top: -1.5rem;
-}
+/* O índice dos capítulos é o da `/ementa` (`ementa.css`), com a forma do
+   painel — ver "a ementa", no fim deste ficheiro. */
 
 .pn-carta {
   display: flex;
@@ -1265,7 +1291,7 @@ select.pn-entrada {
 }
 
 /* ============================================================== AS SESSÕES
-   Ver `app/painel/sessoes/page.tsx`. A hora à cabeça de cada linha, com os
+   Ver `app/painel/(dentro)/sessoes/page.tsx`. A hora à cabeça de cada linha, com os
    algarismos todos da mesma largura para as horas ficarem alinhadas. */
 
 .pn-sessao__hora {
@@ -1275,79 +1301,24 @@ select.pn-entrada {
 }
 
 /* ============================================================== O QUADRO
-   Ver `app/painel/page.tsx`. A disposição do painel de finanças que o Tomás
-   mostrou (um carril de ícones à esquerda, uma grelha de cartões
-   arredondados, um gráfico de barras ao meio), com as cores da casa: o verde do
+   Ver `app/painel/(dentro)/page.tsx`. A disposição do painel de finanças que o Tomás
+   mostrou (uma grelha de cartões arredondados, um gráfico de barras ao meio),
+   sem o carril de ícones da esquerda — dois menus confundiam —, com as cores
+   da casa: o verde do
    modelo é o ouro, o branco dos cartões é a superfície castanha. */
 
 .pn-quadro {
   flex: 1;
-  display: flex;
-  gap: 1.25rem;
   width: 100%;
   max-width: 80rem;
   margin: 0 auto;
-  padding: 1.25rem 1rem 3rem;
-}
-
-.pn-quadro__principal {
-  flex: 1;
-  min-width: 0;
-}
-
-/* O carril: só em ecrãs largos. */
-.pn-carril {
-  display: none;
+  padding: 1.5rem 1rem 3rem;
 }
 
 @media (min-width: 64rem) {
-  .pn-carril {
-    position: sticky;
-    top: 1.25rem;
-    align-self: flex-start;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-    min-height: min(36rem, calc(100dvh - 8rem));
-    padding: 0.75rem 0.5rem;
-    border: 1px solid var(--color-linha);
-    border-radius: 999px;
-    background: var(--color-superficie);
+  .pn-quadro {
+    padding: 2rem 2rem 4rem;
   }
-}
-
-.pn-carril__um {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  color: var(--color-tinta-suave);
-  transition:
-    background 160ms ease,
-    color 160ms ease;
-}
-
-.pn-carril__um:hover {
-  background: color-mix(in oklab, var(--color-ouro) 14%, transparent);
-  color: var(--color-tinta);
-}
-
-.pn-carril__um[aria-current="page"] {
-  background: var(--color-ouro);
-  color: var(--color-ouro-tinta);
-}
-
-.pn-carril__fio {
-  width: 1.5rem;
-  height: 1px;
-  margin: 0.4rem 0;
-  background: var(--color-linha);
-}
-
-.pn-carril__fim {
-  margin-top: auto;
 }
 
 /* ------------------------------------------------------- boas-vindas */
@@ -2008,4 +1979,317 @@ select.pn-entrada {
 
 .pn-quadro__esquecer .pn-ligacao {
   gap: 0.4rem;
+}
+
+/* ====================================================== AS SECÇÕES
+   A cabeça de cada secção (`TituloDaPagina`), a entrada suave quando se muda
+   de secção, o esqueleto enquanto chega, e as grelhas de cartões — a mesma
+   linguagem do quadro em todo o painel. */
+
+.pn-cabeca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.pn-cabeca__voltar {
+  align-self: center;
+}
+
+.pn-cabeca__texto {
+  flex: 1 1 20rem;
+  min-width: 0;
+}
+
+.pn-cabeca__titulo {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.pn-cabeca__frase {
+  max-width: 46rem;
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-tinta-suave);
+}
+
+/* A secção nova entra com um desvanecer curto e sobe um nada. O topo, que
+   está no layout, não se mexe. */
+.pn-entra {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  animation: pn-entra 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes pn-entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.pn-esqueleto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pn-esqueleto > span,
+.pn-esqueleto__bloco {
+  display: block;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-tinta) 7%, var(--color-superficie));
+  animation: pn-pulsa 1.4s ease-in-out infinite;
+}
+
+.pn-esqueleto__olho {
+  width: 6rem;
+  height: 0.7rem;
+}
+
+.pn-esqueleto__titulo {
+  width: min(18rem, 70%);
+  height: 2.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.pn-esqueleto__grelha {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.pn-esqueleto__bloco {
+  height: 14rem;
+  border-radius: 1.4rem;
+}
+
+.pn-esqueleto__bloco:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.pn-esqueleto__bloco:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes pn-pulsa {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Duas colunas de cartões no computador, uma no telemóvel. A `--estreita`
+   põe a coluna curta à esquerda (as Sessões); a `--editor` põe o editor largo
+   à esquerda e as listas ao lado (a Newsletter). */
+.pn-duas-colunas {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .pn-duas-colunas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pn-duas-colunas--estreita {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  }
+
+  .pn-duas-colunas--editor {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+
+.pn-bloco > .pn-seccao__titulo,
+.pn-bloco > .pn-bloco__titulo {
+  margin-bottom: 0;
+}
+
+.pn-bloco .pn-lista {
+  border-top: 0;
+}
+
+/* Os números das Mesas, em cartões como os do quadro. */
+.pn-numeros .pn-bloco {
+  gap: 0.35rem;
+}
+
+/* ------------------------------------------------------------- a casa */
+
+/* Os separadores da casa — a mesma pastilha dos do topo, mais pequena. */
+.pn-abas {
+  display: flex;
+  gap: 0.25rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+  background: var(--color-superficie);
+}
+
+.pn-abas__uma {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.6rem;
+  padding: 0 1.1rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  color: var(--color-tinta-suave);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.pn-abas__uma:hover {
+  color: var(--color-tinta);
+}
+
+.pn-abas__uma[aria-selected="true"] {
+  background: var(--color-ouro);
+  color: var(--color-ouro-tinta);
+  font-weight: 600;
+}
+
+/* Este separador tem alterações por gravar. */
+.pn-abas__ponto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-ouro);
+}
+
+.pn-abas__uma[aria-selected="true"] .pn-abas__ponto {
+  background: var(--color-ouro-tinta);
+}
+
+.pn-seccao {
+  gap: 1.25rem;
+}
+
+@media (min-width: 64rem) {
+  .pn-seccao {
+    padding: 2rem 2.25rem;
+  }
+}
+
+.pn-campos-lado-a-lado {
+  display: grid;
+  gap: 1rem 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  .pn-campos-lado-a-lado {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* O horário, no computador: uma linha por dia, com espaço entre as horas e a
+   cozinha, em vez de tudo encostado à esquerda. */
+@media (min-width: 64rem) {
+  .pn-dia {
+    grid-template-columns: 9rem 10rem minmax(0, 16rem) minmax(0, 1fr);
+    gap: 0.5rem 2rem;
+    padding: 1rem 0;
+  }
+
+  .pn-dia__cozinha {
+    grid-column: auto;
+  }
+}
+
+/* ------------------------------------------------------------ a ementa
+   No computador a carta usa a largura toda: cada secção num cartão, e os
+   artigos em duas colunas — antes eram uma coluna de 44rem, com tudo junto. */
+
+@media (min-width: 48rem) {
+  .pn-carta {
+    gap: 1.5rem;
+  }
+
+  .pn-capitulo {
+    padding-top: 2.5rem;
+  }
+
+  .pn-seccao-carta {
+    margin-top: 1.25rem;
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--color-linha);
+    border-radius: 1.4rem;
+    background: var(--color-superficie);
+  }
+
+  .pn-artigo__textos {
+    background: var(--color-canvas);
+  }
+}
+
+@media (min-width: 64rem) {
+  .pn-artigos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+  }
+
+  .pn-artigo {
+    padding: 1rem 0 0.85rem;
+  }
+
+  .pn-artigos--com-colunas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Aberto para editar, o artigo ocupa a linha toda — os campos da
+     descrição precisam da largura, e meia coluna apertava-os. */
+  .pn-artigo--aberto {
+    grid-column: 1 / -1;
+  }
+}
+
+/* O índice dos capítulos, aqui, é uma pastilha colada ao topo como os
+   separadores — e não a faixa de margem a margem da carta pública. */
+.pn-editor .em-indice {
+  top: 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0.35rem;
+  border: 1px solid var(--color-linha);
+  border-radius: 999px;
+}
+
+/* A barra de publicar acompanha a largura nova; no computador o botão
+   encosta à direita, em vez de atravessar o ecrã todo. */
+.pn-publicar__dentro {
+  max-width: 80rem;
+}
+
+@media (min-width: 64rem) {
+  .pn-publicar__dentro {
+    display: flex;
+    justify-content: flex-end;
+    padding-inline: 2rem;
+  }
+
+  .pn-publicar__dentro .pn-largo {
+    width: auto;
+    min-width: 18rem;
+  }
 }

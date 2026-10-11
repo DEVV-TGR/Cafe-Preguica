@@ -4,7 +4,8 @@ import { useActionState, useEffect, useState } from "react";
 import { Aviso } from "./Aviso";
 import { Campo } from "./Campo";
 import { EstadoDaGravacao } from "./EstadoDaGravacao";
-import { gravarCasa, type DadosDaCasa, type EstadoDaCasa } from "@/app/painel/casa/accoes";
+import { gravarCasa, type DadosDaCasa, type EstadoDaCasa } from "@/app/painel/(dentro)/casa/accoes";
+import { porGravar } from "@/lib/painel/por-gravar";
 
 /**
  * O horário, os contactos e as redes.
@@ -34,6 +35,28 @@ const REDES = [
   ["spotify", "Spotify", "https://open.spotify.com/…"],
 ] as const;
 
+/*
+  As três partes da casa, em separadores — como os capítulos da carta, para se
+  ir direito à que se quer. Só se mostra uma de cada vez, mas as três continuam
+  no formulário (`hidden`, e não desmontadas): o que se escreveu numa não se
+  perde ao passar para outra, e o "Gravar" grava tudo junto, como sempre.
+*/
+const PARTES = [
+  ["horario", "Horário"],
+  ["contactos", "Contactos"],
+  ["redes", "Redes sociais"],
+] as const;
+
+type Parte = (typeof PARTES)[number][0];
+
+/* O que cada separador tem de seu, para o ponto de "por gravar" acender só no
+   que mudou. */
+const DE_CADA_PARTE: Record<Parte, (c: DadosDaCasa) => unknown> = {
+  horario: (c) => c.horarios,
+  contactos: (c) => [c.telefone, c.email],
+  redes: (c) => c.redes,
+};
+
 /* Quando o horário ainda não existe no ficheiro (`null`, "por confirmar"), o
    ecrã começa com a semana toda encerrada — nada aparece no site sem alguém o
    escrever. */
@@ -61,6 +84,7 @@ export function EditorDaCasa({
   const [base, setBase] = useState(inicial);
   const [casa, setCasa] = useState<DadosDaCasa>(inicial);
   const [shas, setShas] = useState({ cafe: shaCafe, marca: shaMarca });
+  const [aberta, setAberta] = useState<Parte>("horario");
 
   const [estado, accao, aGravar] = useActionState<EstadoDaCasa, FormData>(
     async (anterior, dados) => {
@@ -75,12 +99,20 @@ export function EditorDaCasa({
   );
 
   const mudado = JSON.stringify(base) !== JSON.stringify(casa);
+  const mudou = (parte: Parte) =>
+    JSON.stringify(DE_CADA_PARTE[parte](base)) !== JSON.stringify(DE_CADA_PARTE[parte](casa));
 
   useEffect(() => {
     if (!mudado) return;
     const avisar = (evento: BeforeUnloadEvent) => evento.preventDefault();
     window.addEventListener("beforeunload", avisar);
-    return () => window.removeEventListener("beforeunload", avisar);
+    /* E os separadores do topo, que mudam de secção sem fechar a página —
+       ver `lib/painel/por-gravar.ts`. */
+    porGravar.ativo = true;
+    return () => {
+      window.removeEventListener("beforeunload", avisar);
+      porGravar.ativo = false;
+    };
   }, [mudado]);
 
   const horarios = casa.horarios ?? SEMANA_VAZIA;
@@ -98,6 +130,13 @@ export function EditorDaCasa({
       className="pn-editor pn-pilha-larga"
       onKeyDown={(e) => {
         if (e.key === "Enter" && e.target instanceof HTMLInputElement) e.preventDefault();
+      }}
+      /* Um campo inválido num separador escondido (uma hora apagada) travava o
+         "Gravar" sem se ver porquê — o browser não consegue mostrar o aviso num
+         campo que não está à vista. Abre-se o separador dele. */
+      onInvalidCapture={(e) => {
+        const parte = (e.target as HTMLElement).closest<HTMLElement>("[data-parte]")?.dataset.parte;
+        if (parte) setAberta(parte as Parte);
       }}
     >
       <input type="hidden" name="shaCafe" value={shas.cafe} />
@@ -119,9 +158,33 @@ export function EditorDaCasa({
         <EstadoDaGravacao key={estado.commit} commit={estado.commit} endereco={estado.endereco} />
       ) : null}
 
-      <section className="pn-seccao" aria-labelledby="titulo-horario">
-        <p className="pn-olho">A casa</p>
-        <h2 id="titulo-horario" className="pn-seccao__titulo">Horário</h2>
+      <div className="pn-abas" role="tablist" aria-label="Partes da casa">
+        {PARTES.map(([parte, nome]) => (
+          <button
+            key={parte}
+            type="button"
+            role="tab"
+            id={`aba-${parte}`}
+            aria-controls={`parte-${parte}`}
+            aria-selected={aberta === parte}
+            className="pn-abas__uma"
+            onClick={() => setAberta(parte)}
+          >
+            {nome}
+            {mudou(parte) ? <span className="pn-abas__ponto" aria-label="(por gravar)" /> : null}
+          </button>
+        ))}
+      </div>
+
+      <section
+        className="pn-bloco pn-seccao"
+        role="tabpanel"
+        id="parte-horario"
+        aria-labelledby="aba-horario"
+        data-parte="horario"
+        hidden={aberta !== "horario"}
+      >
+        <h2 className="pn-seccao__titulo">Horário</h2>
         {!horarioConfirmado ? (
           <p className="pn-nota">
             No site, o horário aparece com a nota “sujeito a confirmação”. Quando estiver certo,
@@ -202,49 +265,67 @@ export function EditorDaCasa({
         </p>
       </section>
 
-      <section className="pn-seccao pn-pilha" aria-labelledby="titulo-contactos">
-        <h2 id="titulo-contactos" className="pn-seccao__titulo">Contactos</h2>
-        <Campo
-          etiqueta="Telefone"
-          type="tel"
-          inputMode="tel"
-          autoComplete="off"
-          value={casa.telefone}
-          nota="Como se diz ao telefone, com espaços: 229 730 873. Vazio esconde-o do site."
-          onChange={(e) => setCasa({ ...casa, telefone: e.target.value })}
-        />
-        <Campo
-          etiqueta="Email"
-          type="email"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          value={casa.email}
-          nota="Vazio esconde-o do site."
-          onChange={(e) => setCasa({ ...casa, email: e.target.value })}
-        />
+      <section
+        className="pn-bloco pn-seccao"
+        role="tabpanel"
+        id="parte-contactos"
+        aria-labelledby="aba-contactos"
+        data-parte="contactos"
+        hidden={aberta !== "contactos"}
+      >
+        <h2 className="pn-seccao__titulo">Contactos</h2>
+        <div className="pn-campos-lado-a-lado">
+          <Campo
+            etiqueta="Telefone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="off"
+            value={casa.telefone}
+            nota="Como se diz ao telefone, com espaços: 229 730 873. Vazio esconde-o do site."
+            onChange={(e) => setCasa({ ...casa, telefone: e.target.value })}
+          />
+          <Campo
+            etiqueta="Email"
+            type="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            value={casa.email}
+            nota="Vazio esconde-o do site."
+            onChange={(e) => setCasa({ ...casa, email: e.target.value })}
+          />
+        </div>
       </section>
 
-      <section className="pn-seccao pn-pilha" aria-labelledby="titulo-redes">
-        <h2 id="titulo-redes" className="pn-seccao__titulo">Redes sociais</h2>
+      <section
+        className="pn-bloco pn-seccao"
+        role="tabpanel"
+        id="parte-redes"
+        aria-labelledby="aba-redes"
+        data-parte="redes"
+        hidden={aberta !== "redes"}
+      >
+        <h2 className="pn-seccao__titulo">Redes sociais</h2>
         <p className="pn-nota">
           O endereço completo, copiado da barra do browser. Só são aceites endereços da própria
           rede — um link do Instagram tem de ser do instagram.com. Vazio esconde o ícone.
         </p>
-        {REDES.map(([rede, nome, exemplo]) => (
-          <Campo
-            key={rede}
-            etiqueta={nome}
-            type="url"
-            inputMode="url"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            placeholder={exemplo}
-            value={casa.redes[rede]}
-            onChange={(e) => setCasa({ ...casa, redes: { ...casa.redes, [rede]: e.target.value } })}
-          />
-        ))}
+        <div className="pn-campos-lado-a-lado">
+          {REDES.map(([rede, nome, exemplo]) => (
+            <Campo
+              key={rede}
+              etiqueta={nome}
+              type="url"
+              inputMode="url"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              placeholder={exemplo}
+              value={casa.redes[rede]}
+              onChange={(e) => setCasa({ ...casa, redes: { ...casa.redes, [rede]: e.target.value } })}
+            />
+          ))}
+        </div>
       </section>
 
       <div className="pn-publicar">

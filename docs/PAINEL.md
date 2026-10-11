@@ -82,6 +82,15 @@ cartão de crédito), as leituras das mesas noite a noite (o "engagement rate"),
 os inscritos da newsletter, as últimas sessões, o horário de hoje e quem tem
 acesso. Em cima de todos os ecrãs, os separadores das secções.
 
+As secções de dentro vivem no grupo de rotas `src/app/painel/(dentro)/`, que
+não entra no endereço. O layout do grupo tem o topo, e é por isso que mudar
+de secção só troca o conteúdo de baixo: o topo não se desenha outra vez, há
+um esqueleto (`loading.tsx`) enquanto a secção chega — a Ementa e a Casa vêm do
+GitHub — e um desvanecer curto quando entra (`template.tsx`). Com alterações
+por gravar na Ementa, na Casa ou numa newsletter a meio, os separadores
+perguntam antes de sair (`src/lib/painel/por-gravar.ts`). A Casa tem três
+separadores próprios: Horário, Contactos e Redes sociais.
+
 Cada cartão vai buscar os seus dados à parte (`Promise.allSettled`): sem
 Upstash ou sem Resend, o cartão diz o que falta e os outros continuam. As
 contas (escala do gráfico, linha dos inscritos, nomes) estão em

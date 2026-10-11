@@ -2,7 +2,7 @@ import { exigirSessao } from "@/lib/painel/porta";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { resumoDasLeituras } from "@/lib/mesas/leituras";
 import { NOITES_A_MOSTRAR, type Resumo } from "@/lib/mesas/contas";
-import { Cabecalho } from "@/components/painel/Cabecalho";
+import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 
 /**
@@ -32,8 +32,13 @@ function Barra({ valor, maximo }: { valor: number; maximo: number }) {
   );
 }
 
+const INTRODUCAO =
+  "Quantas vezes a carta foi aberta pelo QR ou pelo NFC de cada mesa — os dois contam juntos. " +
+  "Conta leituras, não pessoas: quatro amigos na mesma mesa contam quatro. A noite vai das 06:00 " +
+  "às 06:00, para o fecho depois da meia-noite contar na noite certa.";
+
 export default async function PaginaDasMesas() {
-  const { email } = await exigirSessao();
+  await exigirSessao();
 
   let resumo: Resumo;
   try {
@@ -41,8 +46,8 @@ export default async function PaginaDasMesas() {
   } catch (erro) {
     return (
       <>
-        <Cabecalho titulo="Mesas" voltarPara="/painel" quem={email} />
         <main className="pn-principal">
+          <TituloDaPagina olho="Os QR e os NFC" titulo="Mesas" frase={INTRODUCAO} />
           <Aviso tom="mau">
             {erro instanceof ErroDoRedis
               ? erro.paraOEcra
@@ -65,19 +70,11 @@ export default async function PaginaDasMesas() {
 
   return (
     <>
-      <Cabecalho titulo="Mesas" voltarPara="/painel" quem={email} />
-
       <main className="pn-principal pn-pilha-larga">
-        <p className="pn-texto-suave">
-          Quantas vezes a carta foi aberta pelo QR ou pelo NFC de cada mesa — os dois contam juntos.
-          Conta leituras, não pessoas: quatro amigos na mesma mesa contam quatro, e quem ler duas
-          vezes conta duas. A noite vai das 06:00 às 06:00, para o fecho depois da meia-noite contar
-          na noite certa.
-        </p>
-
+        <TituloDaPagina olho="Os QR e os NFC" titulo="Mesas" frase={INTRODUCAO} />
         <ul className="pn-numeros">
           {blocos.map(({ titulo, total, nota }) => (
-            <li key={titulo} className="pn-cartao">
+            <li key={titulo} className="pn-bloco">
               <span className="pn-olho">{titulo}</span>
               <span className="pn-numero">{total}</span>
               <span className="pn-texto-suave">{nota}</span>
@@ -85,41 +82,43 @@ export default async function PaginaDasMesas() {
           ))}
         </ul>
 
-        <section aria-labelledby="noites">
-          <h2 id="noites" className="pn-seccao__titulo">
-            Noite a noite
-          </h2>
-          <p className="pn-nota">As últimas {NOITES_A_MOSTRAR}, da mais recente para trás.</p>
-          <ul className="pn-lista">
-            {resumo.porNoite.map(({ noite, total }) => (
-              <li key={noite} className="pn-lista__linha">
-                <span className="pn-lista__principal">{nomeDaNoite(noite)}</span>
-                <Barra valor={total} maximo={maximoDaNoite} />
-                <strong className="pn-lista__lado pn-forte">{total}</strong>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section aria-labelledby="por-mesa">
-          <h2 id="por-mesa" className="pn-seccao__titulo">
-            Por mesa
-          </h2>
-          <p className="pn-nota">As últimas 30 noites. Uma mesa que não aparece não foi lida.</p>
-          {resumo.porMesa.length === 0 ? (
-            <p className="pn-texto-suave">Ainda não há leituras.</p>
-          ) : (
+        <div className="pn-duas-colunas">
+          <section aria-labelledby="noites" className="pn-bloco">
+            <h2 id="noites" className="pn-seccao__titulo">
+              Noite a noite
+            </h2>
+            <p className="pn-nota">As últimas {NOITES_A_MOSTRAR}, da mais recente para trás.</p>
             <ul className="pn-lista">
-              {resumo.porMesa.map(({ mesa, total }) => (
-                <li key={mesa} className="pn-lista__linha">
-                  <span className="pn-lista__principal">Mesa {mesa}</span>
-                  <Barra valor={total} maximo={maximoDaMesa} />
+              {resumo.porNoite.map(({ noite, total }) => (
+                <li key={noite} className="pn-lista__linha">
+                  <span className="pn-lista__principal">{nomeDaNoite(noite)}</span>
+                  <Barra valor={total} maximo={maximoDaNoite} />
                   <strong className="pn-lista__lado pn-forte">{total}</strong>
                 </li>
               ))}
             </ul>
-          )}
-        </section>
+          </section>
+
+          <section aria-labelledby="por-mesa" className="pn-bloco">
+            <h2 id="por-mesa" className="pn-seccao__titulo">
+              Por mesa
+            </h2>
+            <p className="pn-nota">As últimas 30 noites. Uma mesa que não aparece não foi lida.</p>
+            {resumo.porMesa.length === 0 ? (
+              <p className="pn-texto-suave">Ainda não há leituras.</p>
+            ) : (
+              <ul className="pn-lista">
+                {resumo.porMesa.map(({ mesa, total }) => (
+                  <li key={mesa} className="pn-lista__linha">
+                    <span className="pn-lista__principal">Mesa {mesa}</span>
+                    <Barra valor={total} maximo={maximoDaMesa} />
+                    <strong className="pn-lista__lado pn-forte">{total}</strong>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
       </main>
     </>
   );

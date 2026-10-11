@@ -6,9 +6,10 @@ import { Campo, CampoLongo } from "./Campo";
 import { EstadoDaGravacao } from "./EstadoDaGravacao";
 import { escreverPreco, identificadorLivre, lerPreco } from "./preco";
 import { IndiceCapitulos } from "@/components/ementa/IndiceCapitulos";
-import { publicarEmenta, type EstadoDaEmenta } from "@/app/painel/ementa/accoes";
+import { publicarEmenta, type EstadoDaEmenta } from "@/app/painel/(dentro)/ementa/accoes";
 import { compararCartas, totalDeAlteracoes, type Carta } from "@/lib/painel/alteracoes";
 import type { Artigo, Categoria, Ementa, Sabor } from "@/data/ementa";
+import { porGravar } from "@/lib/painel/por-gravar";
 
 /**
  * A carta, para editar — **com a forma da carta que os clientes veem.**
@@ -134,7 +135,13 @@ export function EditorDeEmenta({
     if (alteracoes === 0) return;
     const avisar = (evento: BeforeUnloadEvent) => evento.preventDefault();
     window.addEventListener("beforeunload", avisar);
-    return () => window.removeEventListener("beforeunload", avisar);
+    /* E os separadores do topo, que mudam de secção sem fechar a página —
+       ver `lib/painel/por-gravar.ts`. */
+    porGravar.ativo = true;
+    return () => {
+      window.removeEventListener("beforeunload", avisar);
+      porGravar.ativo = false;
+    };
   }, [alteracoes]);
 
   /* O avisos do topo (gravado, problemas) ficam lá em cima, e o botão de
@@ -633,7 +640,10 @@ export function EditorDeEmenta({
                     ) : null}
                   </div>
 
-                  <ol className="pn-artigos">
+                  {/* Com duas colunas de preço (as tostas), uma coluna de artigos
+                      só: os nomes das colunas estão por cima dos preços, à
+                      direita, e numa segunda coluna de artigos ficavam sem eles. */}
+                  <ol className={`pn-artigos${categoria.colunas ? " pn-artigos--com-colunas" : ""}`}>
                     {daCategoria.map((artigo, posicao) =>
                       linha(artigo, categoria, posicao, daCategoria.length, false),
                     )}

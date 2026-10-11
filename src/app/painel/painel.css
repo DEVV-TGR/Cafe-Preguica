@@ -1982,8 +1982,8 @@ select.pn-entrada {
 }
 
 /* ====================================================== AS SECÇÕES
-   A cabeça de cada secção (`TituloDaPagina`), a entrada suave quando se muda
-   de secção, o esqueleto enquanto chega, e as grelhas de cartões — a mesma
+   A cabeça de cada secção (`TituloDaPagina`), a transição quando se muda de
+   secção, o ecrã de espera, e as grelhas de cartões — a mesma
    linguagem do quadro em todo o painel. */
 
 .pn-cabeca {
@@ -2036,54 +2036,39 @@ select.pn-entrada {
   }
 }
 
-.pn-esqueleto {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* A transição do site, curta (`<Transicao curta />` no template de
+   `(dentro)`): o pano por baixo do topo, e não por cima, para o topo e os
+   separadores ficarem quietos. O ramo cresce em 0,6s e o pano sai aos 0,8s —
+   no site são 1,15s e 1,5s, que repetidos a cada secção eram uma espera.
+
+   `.tr.tr--…`, com as duas classes: o `transicao.css` carrega depois deste
+   ficheiro, e o `.tr` de lá (o z-index 100 e o `animation` de 1,5s) ganhava
+   a uma classe só. */
+.pn-topo {
+  position: relative;
+  z-index: 40;
 }
 
-.pn-esqueleto > span,
-.pn-esqueleto__bloco {
-  display: block;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--color-tinta) 7%, var(--color-superficie));
-  animation: pn-pulsa 1.4s ease-in-out infinite;
+.tr.tr--curta {
+  z-index: 30;
+  animation-duration: 0.8s;
 }
 
-.pn-esqueleto__olho {
-  width: 6rem;
-  height: 0.7rem;
+.tr.tr--curta .tr__cena {
+  animation-duration: 0.6s;
+  animation-delay: 0s;
 }
 
-.pn-esqueleto__titulo {
-  width: min(18rem, 70%);
-  height: 2.4rem;
-  margin-bottom: 1.25rem;
+/* O ecrã de espera (`loading.tsx`): a cena parada no último fotograma, com o
+   pano sempre lá, até a secção chegar. A preguiça continua a balançar. */
+.tr.tr--espera {
+  z-index: 29;
+  animation: none;
 }
 
-.pn-esqueleto__grelha {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-}
-
-.pn-esqueleto__bloco {
-  height: 14rem;
-  border-radius: 1.4rem;
-}
-
-.pn-esqueleto__bloco:nth-child(2) {
-  animation-delay: 150ms;
-}
-
-.pn-esqueleto__bloco:nth-child(3) {
-  animation-delay: 300ms;
-}
-
-@keyframes pn-pulsa {
-  50% {
-    opacity: 0.45;
-  }
+.tr.tr--espera .tr__cena {
+  --tr-p: 1;
+  animation: none;
 }
 
 /* Duas colunas de cartões no computador, uma no telemóvel. A `--estreita`

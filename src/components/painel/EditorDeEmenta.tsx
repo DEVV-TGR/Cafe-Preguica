@@ -344,19 +344,23 @@ export function EditorDeEmenta({
           >
             {aberto ? "Fechar" : "Editar"}
           </button>
+          {/* Na carta secreta também se esconde (pedido do Tomás, 2026-10-11):
+              um cocktail que acabou sai da carta secreta sem perder o lugar
+              nela — o "Tirar" mandava-o de volta para a carta normal, onde
+              aparecia a toda a gente. A `artigosDaCartaSecreta` já não mostra
+              os escondidos. */}
+          <button
+            type="button"
+            className="pn-accao"
+            onClick={() => mudar(artigo.id, (a) => ({ ...a, escondido: !a.escondido }))}
+          >
+            {artigo.escondido ? "Mostrar" : "Esconder"}
+          </button>
           {naSecreta ? (
             <button type="button" className="pn-accao" onClick={() => daSecreta(artigo.id)}>
               Tirar da carta secreta
             </button>
-          ) : (
-            <button
-              type="button"
-              className="pn-accao"
-              onClick={() => mudar(artigo.id, (a) => ({ ...a, escondido: !a.escondido }))}
-            >
-              {artigo.escondido ? "Mostrar" : "Esconder"}
-            </button>
-          )}
+          ) : null}
         </div>
 
         {aberto ? (
@@ -479,8 +483,9 @@ export function EditorDeEmenta({
 
         <p className="pn-nota">
           Só a vê quem recebe a newsletter. Um cocktail que venha para aqui sai da carta normal;
-          se o tirares, volta para o sítio onde estava. Sem nenhum cocktail aqui, a carta secreta
-          não aparece na ementa.
+          se o tirares, volta para o sítio onde estava. Um cocktail escondido fica aqui guardado,
+          mas sai da carta secreta até o mostrares outra vez. Sem nenhum cocktail à vista, a carta
+          secreta não aparece na ementa.
         </p>
 
         <section className="pn-seccao-carta" aria-label="Cocktails da carta secreta">

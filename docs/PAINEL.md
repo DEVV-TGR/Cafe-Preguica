@@ -84,9 +84,11 @@ acesso. Em cima de todos os ecrãs, os separadores das secções.
 
 As secções de dentro vivem no grupo de rotas `src/app/painel/(dentro)/`, que
 não entra no endereço. O layout do grupo tem o topo, e é por isso que mudar
-de secção só troca o conteúdo de baixo: o topo não se desenha outra vez, há
-um esqueleto (`loading.tsx`) enquanto a secção chega — a Ementa e a Casa vêm do
-GitHub — e um desvanecer curto quando entra (`template.tsx`). Com alterações
+de secção só troca o conteúdo de baixo: o topo não se desenha outra vez, e
+por baixo dele passa a transição do site em versão curta — o ramo e a
+preguiça em 0,8s (`template.tsx`). Se a secção demorar mais (a Ementa e a
+Casa vêm do GitHub), fica a mesma cena parada no fim até chegar
+(`loading.tsx`). Com alterações
 por gravar na Ementa, na Casa ou numa newsletter a meio, os separadores
 perguntam antes de sair (`src/lib/painel/por-gravar.ts`). A Casa tem três
 separadores próprios: Horário, Contactos e Redes sociais.

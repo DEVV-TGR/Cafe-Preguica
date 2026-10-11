@@ -3,7 +3,7 @@ import { URL_SITE } from "@/lib/site";
 import { MARCA_DO_CANCELAMENTO } from "@/lib/newsletter/corpo";
 import { dataDoResend, ESTADOS_DO_ENVIO } from "@/lib/newsletter/datas";
 import { obterEnvio, oQueFalta, ErroDaNewsletter } from "@/lib/newsletter/resend";
-import { Cabecalho } from "@/components/painel/Cabecalho";
+import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 
 /**
@@ -30,7 +30,7 @@ function paraMostrar(html: string): string {
 }
 
 export default async function EnvioAntigo({ params }: { params: Promise<{ id: string }> }) {
-  const { email } = await exigirSessao();
+  await exigirSessao();
   const { id } = await params;
 
   const titulo = "Newsletter enviada";
@@ -43,8 +43,8 @@ export default async function EnvioAntigo({ params }: { params: Promise<{ id: st
     if (!(erro instanceof ErroDaNewsletter)) throw erro;
     return (
       <>
-        <Cabecalho titulo={titulo} voltarPara="/painel/newsletter" quem={email} />
         <main className="pn-principal">
+          <TituloDaPagina olho="Newsletter" titulo={titulo} voltarPara="/painel/newsletter" />
           <Aviso tom="mau">{erro.paraOEcra}</Aviso>
         </main>
       </>
@@ -56,8 +56,8 @@ export default async function EnvioAntigo({ params }: { params: Promise<{ id: st
   if (!envio) {
     return (
       <>
-        <Cabecalho titulo={titulo} voltarPara="/painel/newsletter" quem={email} />
         <main className="pn-principal">
+          <TituloDaPagina olho="Newsletter" titulo={titulo} voltarPara="/painel/newsletter" />
           <Aviso tom="nota">
             {falta
               ? `A newsletter ainda não está ligada ao serviço de email (${falta})`
@@ -70,8 +70,8 @@ export default async function EnvioAntigo({ params }: { params: Promise<{ id: st
 
   return (
     <>
-      <Cabecalho titulo={titulo} voltarPara="/painel/newsletter" quem={email} />
       <main className="pn-principal pn-pilha">
+        <TituloDaPagina olho="Newsletter" titulo={titulo} voltarPara="/painel/newsletter" />
         <div>
           <p className="pn-olho">
             {ESTADOS_DO_ENVIO[envio.estado] ?? envio.estado} ·{" "}

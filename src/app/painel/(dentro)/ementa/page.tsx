@@ -1,6 +1,6 @@
 import { exigirSessao } from "@/lib/painel/porta";
 import { ler, CAMINHO_EMENTA, ErroDoGithub } from "@/lib/painel/github";
-import { Cabecalho } from "@/components/painel/Cabecalho";
+import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 import { EditorDeEmenta, type GrupoDeCategorias } from "@/components/painel/EditorDeEmenta";
 import {
@@ -14,9 +14,9 @@ import {
   type Capitulo,
   type Ementa,
 } from "@/data/ementa";
-import mensagens from "../../../../messages/pt.json";
+import mensagens from "../../../../../messages/pt.json";
 /* Só o índice e o cabeçalho das secções — os mesmos da carta pública. */
-import "../../ementa.css";
+import "../../../ementa.css";
 
 /**
  * Os capítulos e as categorias, já com os nomes que a carta mostra — os mesmos
@@ -48,7 +48,7 @@ function grupos(): GrupoDeCategorias[] {
  * gravação a seguir precisa como cadeado.
  */
 export default async function PaginaDaEmenta() {
-  const { email } = await exigirSessao();
+  await exigirSessao();
 
   let ficheiro;
   try {
@@ -56,8 +56,8 @@ export default async function PaginaDaEmenta() {
   } catch (erro) {
     return (
       <>
-        <Cabecalho titulo="Ementa" voltarPara="/painel" quem={email} />
         <main className="pn-principal">
+          <TituloDaPagina olho="A carta" titulo="Ementa" frase="Preços, artigos novos, nomes e descrições. Esconde o que acabou, muda a ordem e publica." />
           <Aviso tom="mau">
             {erro instanceof ErroDoGithub
               ? erro.paraOEcra
@@ -70,8 +70,8 @@ export default async function PaginaDaEmenta() {
 
   return (
     <>
-      <Cabecalho titulo="Ementa" voltarPara="/painel" quem={email} />
       <main className="pn-principal">
+        <TituloDaPagina olho="A carta" titulo="Ementa" frase="Preços, artigos novos, nomes e descrições. Esconde o que acabou, muda a ordem e publica." />
         <EditorDeEmenta
           inicial={ficheiro.dados}
           sha={ficheiro.sha}

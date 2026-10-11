@@ -7,8 +7,9 @@ import {
   enviarNewsletter,
   enviarTesteDaNewsletter,
   type EstadoDaNewsletter,
-} from "@/app/painel/newsletter/accoes";
+} from "@/app/painel/(dentro)/newsletter/accoes";
 import { emailEmHtml, type Moldura } from "@/lib/newsletter/corpo";
+import { porGravar } from "@/lib/painel/por-gravar";
 
 /**
  * Escrever a newsletter, ver como fica, mandar um teste, e só depois mandar a
@@ -26,7 +27,7 @@ import { emailEmHtml, type Moldura } from "@/lib/newsletter/corpo";
  *
  * O ecrã é o conforto; a fechadura é a acção, que recusa o envio sem um teste
  * com a mesma impressão, e fora do site oficial (ver
- * `app/painel/newsletter/accoes.ts`). O `envioATodos` só serve para o ecrã de
+ * `app/painel/(dentro)/newsletter/accoes.ts`). O `envioATodos` só serve para o ecrã de
  * uma versão de ensaio dizer isso antes de alguém carregar no botão.
  */
 
@@ -66,7 +67,13 @@ export function EditorDaNewsletter({
     if (!escrito || enviada) return;
     const avisar = (evento: BeforeUnloadEvent) => evento.preventDefault();
     window.addEventListener("beforeunload", avisar);
-    return () => window.removeEventListener("beforeunload", avisar);
+    /* E os separadores do topo, que mudam de secção sem fechar a página —
+       ver `lib/painel/por-gravar.ts`. */
+    porGravar.ativo = true;
+    return () => {
+      window.removeEventListener("beforeunload", avisar);
+      porGravar.ativo = false;
+    };
   }, [escrito, enviada]);
 
   const html = useMemo(

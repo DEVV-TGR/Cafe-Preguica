@@ -1,6 +1,6 @@
 import { exigirSessao } from "@/lib/painel/porta";
 import { ler, CAMINHO_CAFE, CAMINHO_MARCA, ErroDoGithub } from "@/lib/painel/github";
-import { Cabecalho } from "@/components/painel/Cabecalho";
+import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 import { EditorDaCasa } from "@/components/painel/EditorDaCasa";
 import type { Cafe } from "@/data/cafe";
@@ -8,7 +8,7 @@ import type { Marca } from "@/data/marca";
 
 /** O horário, os contactos e as redes — lidos do repositório, pela razão da ementa. */
 export default async function PaginaDaCasa() {
-  const { email } = await exigirSessao();
+  await exigirSessao();
 
   let cafe, marca;
   try {
@@ -16,8 +16,8 @@ export default async function PaginaDaCasa() {
   } catch (erro) {
     return (
       <>
-        <Cabecalho titulo="Horário e contactos" voltarPara="/painel" quem={email} />
         <main className="pn-principal">
+          <TituloDaPagina olho="A casa" titulo="Horário e contactos" frase="A que horas abre cada dia, o telefone, o email e as redes sociais." />
           <Aviso tom="mau">
             {erro instanceof ErroDoGithub
               ? erro.paraOEcra
@@ -30,8 +30,8 @@ export default async function PaginaDaCasa() {
 
   return (
     <>
-      <Cabecalho titulo="Horário e contactos" voltarPara="/painel" quem={email} />
       <main className="pn-principal">
+        <TituloDaPagina olho="A casa" titulo="Horário e contactos" frase="A que horas abre cada dia, o telefone, o email e as redes sociais." />
         <EditorDaCasa
           inicial={{
             telefone: cafe.dados.telefone ?? "",

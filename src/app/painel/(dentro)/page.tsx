@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { exigirSessao } from "@/lib/painel/porta";
-import { esquecerEsteAparelho } from "./accoes";
+import { esquecerEsteAparelho } from "../accoes";
 import { todos } from "@/lib/painel/utilizadores";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { ultimasEntradas, type Como, type Entrada } from "@/lib/painel/entradas";
@@ -18,7 +18,6 @@ import {
 } from "@/lib/painel/quadro";
 import { artigos, artigosDaCartaSecreta, CARTA_CONFIRMADA, contarCocktails, porCapitulo } from "@/data/ementa";
 import { cafe, DIAS } from "@/data/cafe";
-import { Cabecalho } from "@/components/painel/Cabecalho";
 import { Icone, type NomeDoIcone } from "@/components/painel/Icone";
 import { GraficoDasMesas } from "@/components/painel/GraficoDasMesas";
 
@@ -143,38 +142,12 @@ export default async function Painel() {
 
   return (
     <>
-      <Cabecalho titulo="Painel" quem={email} />
-
       <div className="pn-quadro">
-        {/* A barra de atalhos à esquerda, só em ecrãs largos. No telemóvel os
-            separadores do topo chegam, e uma barra lateral comia a largura. */}
-        <nav className="pn-carril" aria-label="Atalhos">
-          <Link href="/painel" className="pn-carril__um" aria-current="page" aria-label="Painel">
-            <Icone nome="painel" />
-          </Link>
-          <Link href="/painel/ementa" className="pn-carril__um" aria-label="Editar a carta">
-            <Icone nome="ementa" />
-          </Link>
-          <Link href="/painel/newsletter#escrever" className="pn-carril__um" aria-label="Escrever uma newsletter">
-            <Icone nome="newsletter" />
-          </Link>
-          <Link href="/painel/mesas" className="pn-carril__um" aria-label="Leituras das mesas">
-            <Icone nome="mesas" />
-          </Link>
-          <span className="pn-carril__fio" />
-          <Link href="/painel/sessoes" className="pn-carril__um" aria-label="Sessões">
-            <Icone nome="sessoes" />
-          </Link>
-          <Link href="/" className="pn-carril__um pn-carril__fim" aria-label="Ver o site">
-            <Icone nome="site" />
-          </Link>
-        </nav>
-
         <main className="pn-quadro__principal">
           <div className="pn-boas-vindas">
-            <p className="pn-boas-vindas__frase">
+            <h1 className="pn-boas-vindas__frase">
               <strong>Bem-vindo de volta,</strong> {nomeDe(email)}
-            </p>
+            </h1>
             <div className="pn-boas-vindas__accoes">
               <span className="pn-pastilha">
                 <Icone nome="calendario" tamanho={16} />

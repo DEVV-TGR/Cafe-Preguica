@@ -104,13 +104,23 @@ export async function anotarEntrada(email: string, como: Como): Promise<void> {
   }
 }
 
-/** As entradas, da mais recente para a mais antiga. Atira se o armazenamento falhar. */
+/**
+ * As entradas, da mais recente para a mais antiga. Atira se o armazenamento
+ * falhar.
+ *
+ * A lista já vem por essa ordem (cada linha nova entra à cabeça), mas ordena-se
+ * pela hora na mesma: duas entradas quase ao mesmo tempo, de dois aparelhos,
+ * podem chegar ao Redis trocadas, e a página das Sessões agrupa por dia
+ * assumindo a ordem certa.
+ */
 export async function ultimasEntradas(): Promise<Entrada[]> {
-  return (await lerLista(CHAVE, MAXIMO)).flatMap((linha) => {
-    try {
-      return [JSON.parse(linha) as Entrada];
-    } catch {
-      return [];
-    }
-  });
+  return (await lerLista(CHAVE, MAXIMO))
+    .flatMap((linha) => {
+      try {
+        return [JSON.parse(linha) as Entrada];
+      } catch {
+        return [];
+      }
+    })
+    .sort((a, b) => b.quando - a.quando);
 }

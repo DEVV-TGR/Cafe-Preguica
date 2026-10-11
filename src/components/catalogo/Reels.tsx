@@ -68,7 +68,6 @@ export function Reels({
       id="reels"
       data-sc-act="pin"
       data-sc-span="2.6"
-      data-sc-drift="#0d0907"
     >
       <div data-sc-stage className="pg-reels">
         {/* O terceiro número a `0` é o "greet": está no ecrã mal o acto entra,

@@ -61,7 +61,6 @@ export function Preguicosos({
       id="preguicosos"
       data-sc-act="pin"
       data-sc-span={citacoes.length > 4 ? "2.6" : "1.2"}
-      data-sc-drift="#100a07"
     >
       <div data-sc-stage className="pg-preguicosos">
         {/* "0 1 0 0": está no ecrã mal o acto entra e **não sai**. */}

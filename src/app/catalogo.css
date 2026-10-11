@@ -550,6 +550,18 @@
   object-fit: cover;
 }
 
+/* ⚠️ O carrossel tem camada própria de propósito. Debaixo do `clip-path` do
+   `data-sc-reveal`, a faixa (que rola de lado e por isso é composta à parte)
+   fazia o browser esmagar tudo o que a página pinta a seguir numa camada só,
+   por "sobreposição": 390×10 861 px no telemóvel — quase a página inteira, a
+   1170×32 583 px reais num ecrã @3x, a rasterizar enquanto se rola. Com a
+   camada aqui, a sobreposição acaba no carrossel e a camada gigante não
+   nasce (medido no `LayerTree`, 2026-10-11). Tirar o `will-change: clip-path`
+   do motor não chegava: é o recorte em si que a provoca. */
+.pg-casa .pg-carrossel {
+  will-change: transform;
+}
+
 @media (min-width: 52rem) {
   .pg-casa {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);

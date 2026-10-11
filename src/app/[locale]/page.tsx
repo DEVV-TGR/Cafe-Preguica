@@ -66,6 +66,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *
  * **Os Preguiçosos** saíram e voltaram com outra ideia: eram uma fotografia com
  * um número, agora são as avaliações — a nota e o que os clientes escrevem.
+ *
+ * **A deriva da cor de fundo (`data-sc-drift`)** saiu dos seis actos que a tinham.
+ * Eram castanhos quase pretos (#0b0806 a #140d08), que não se distinguiam, e o motor
+ * só os usa para escrever `--sc-canvas` no `<html>` a cada quadro — variável
+ * que nesta página só `.sc-world` e `.sc-scrim` leem, e nenhum dos dois cá
+ * está. Uma variável mudada no `<html>` faz recalcular o estilo do documento
+ * inteiro: era 60% desse trabalho durante a rolagem (medido, 2026-10-11), para
+ * nada que se visse. Sem nenhum acto com deriva, o motor não escreve nada.
  */
 export default async function Inicio({ params }: Props) {
   const { locale } = await params;
@@ -192,7 +200,7 @@ export default async function Inicio({ params }: Props) {
 
           {/* 2 · A CASA — texto à esquerda e a fotografia ao lado, em paisagem,
               como a porta do Damira: da altura do texto, não do ecrã. */}
-          <section id="casa" className="pg-casa" data-sc-act="flow" data-sc-drift="#120c08">
+          <section id="casa" className="pg-casa" data-sc-act="flow">
             <div className="pg-casa__texto" data-sc-in data-sc-stagger="80">
               <Rotulo nome={t("casa.nome")} facto={t("casa.facto")} dado={t("casa.dado")} />
               {/* Repete de propósito a linha de "Onde estamos": aqui é o feitio da
@@ -231,7 +239,7 @@ export default async function Inicio({ params }: Props) {
 
           {/* 3 · OS COCKTAILS — o pico. O palco está centrado no ecrã, não colado
               ao topo: ver `.pg-carril` em `catalogo.css`. */}
-          <section id="carril" data-sc-act="pan" data-sc-span="3.6" data-sc-drift="#0e0906">
+          <section id="carril" data-sc-act="pan" data-sc-span="3.6">
             <div data-sc-stage>
               <div className="pg-carril" data-sc-pan="0.06">
                 <div className="pg-carril__abertura">
@@ -321,7 +329,7 @@ export default async function Inicio({ params }: Props) {
           {/* 7 · ONDE ESTAMOS — o fecho. O mapa de fundo é um SVG nosso, desenhado
               do OpenStreetMap por `scripts/desenhar-mapa.mjs`, e não o Google
               Maps: ver o porquê no cabeçalho desse script. */}
-          <section id="onde" className="pg-onde" data-sc-act="flow" data-sc-drift="#0b0806">
+          <section id="onde" className="pg-onde" data-sc-act="flow">
             <div className="pg-onde__mapa">
               <img
                 src="/mapa/ermesinde.svg"

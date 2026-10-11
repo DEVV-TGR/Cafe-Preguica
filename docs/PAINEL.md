@@ -74,6 +74,19 @@ com o nome, a tradução e o lugar na lista, e volta com um toque. Nas legendas 
 fotografias da página inicial **continua a aparecer**, porque essas pedem-no pelo
 `id`. Esconder um cocktail esgotado não deve deixar um buraco no carril.
 
+### O quadro (o ecrã inicial)
+
+`/painel` é um quadro de cartões, desenhado a partir de um painel de finanças
+que o Tomás escolheu (2026-10-11), com as cores da casa: a carta (como um
+cartão de crédito), as leituras das mesas noite a noite (o "engagement rate"),
+os inscritos da newsletter, as últimas sessões, o horário de hoje e quem tem
+acesso. Em cima de todos os ecrãs, os separadores das secções.
+
+Cada cartão vai buscar os seus dados à parte (`Promise.allSettled`): sem
+Upstash ou sem Resend, o cartão diz o que falta e os outros continuam. As
+contas (escala do gráfico, linha dos inscritos, nomes) estão em
+`src/lib/painel/quadro.ts`, com testes em `testes/quadro.test.mjs`.
+
 ### As mesas
 
 `/painel/mesas` mostra quantas vezes a carta foi aberta pelo QR ou pelo NFC de

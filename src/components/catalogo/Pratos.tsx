@@ -177,8 +177,13 @@ export function Pratos({
     <section
       id="partilhar"
       data-sc-act="pan"
-      data-sc-span="2.6"
-      data-sc-drift="#140d08"
+      /* 5 ecrãs e não 2,6: os painéis são à largura do ecrã e o carril tem
+         4688 px num portátil. Com 2,6 andava 2,35 px de lado por cada px de
+         rolagem — um clique da roda atirava-o 235 px, e a rolar depressa as
+         fotografias saltavam aos bocados, que é o que se sentia como "trava".
+         Com 5 fica abaixo de 1 em todos os ecrãs (medido: 0,41 no telemóvel,
+         0,94 no portátil, 0,67 a 1920). Os cocktails andam 0,4–0,7. */
+      data-sc-span="5"
     >
       <div data-sc-stage>
         <div className="pg-pratos-espelho">

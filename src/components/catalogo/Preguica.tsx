@@ -110,13 +110,31 @@ export function Preguica() {
       corpoEl.style.setProperty("--esticao", `${1 + esticao / 100}`);
       fioEl.style.setProperty("--fio", `${atual}px`);
 
+      /* Chegou e está quieta: o ciclo dorme até à próxima rolagem. Corria 60
+         vezes por segundo com a página parada, a ler o `scrollHeight` e a
+         escrever as mesmas quatro variáveis — trabalho e bateria para nada. Os
+         últimos meio píxel e o último resto de balanço não se vêem. */
+      if (Math.abs(falta) < 0.5 && Math.abs(velocidade) < 0.05) {
+        frame = 0;
+        return;
+      }
+      frame = requestAnimationFrame(passo);
+    }
+
+    function acordar() {
+      if (!vivo || frame !== 0) return;
+      anterior = atual;
       frame = requestAnimationFrame(passo);
     }
 
     frame = requestAnimationFrame(passo);
+    window.addEventListener("scroll", acordar, { passive: true });
+    window.addEventListener("resize", acordar);
     return () => {
       vivo = false;
       cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", acordar);
+      window.removeEventListener("resize", acordar);
     };
   }, []);
 

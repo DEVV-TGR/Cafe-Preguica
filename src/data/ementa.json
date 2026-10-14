@@ -499,7 +499,7 @@
       "preco": 7,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "hugo-spritz",
@@ -515,7 +515,7 @@
       "preco": 7,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "south-side",
@@ -531,7 +531,7 @@
       "preco": 7,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "strawberry-daiquiri",
@@ -547,7 +547,7 @@
       "preco": 7,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "mojito-melancia",

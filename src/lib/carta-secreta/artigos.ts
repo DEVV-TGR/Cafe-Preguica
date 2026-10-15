@@ -9,9 +9,10 @@ import { artigosDaCartaSecreta } from "@/data/ementa";
   ## Porque é que isto só corre no servidor
 
   A `/ementa` é estática, e o que ela põe no HTML qualquer pessoa lê no código
-  da página. Estes artigos só saem do servidor pela `/api/carta-secreta`, depois
-  de o Resend confirmar que o email está inscrito. O `server-only` faz o build
-  rebentar se algum componente do browser importar este ficheiro.
+  da página. Estes artigos só saem do servidor pela `/api/carta-secreta`, com uma
+  chave que só a confirmação de um email dá (`lib/carta-secreta/chave.ts`). O
+  `server-only` faz o build rebentar se algum componente do browser importar
+  este ficheiro.
 
   (O repositório é público, e o `ementa.json` também — o segredo é "de bar",
   não de cofre. Ver `docs/NEWSLETTER.md`.)

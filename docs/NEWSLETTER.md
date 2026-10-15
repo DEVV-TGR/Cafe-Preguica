@@ -132,19 +132,54 @@ O plano gratuito do Resend deixa ter até 1000 contactos.
   convite em inglês avisa que a newsletter é escrita em português.
 - **Cada contacto tem "Cancelar"** na lista do painel. Cancela no Resend (a
   mesma marca `unsubscribed` do link de cada envio, e não apagar: a lista
-  continua a dizer "cancelou") e manda à pessoa um email a dizê-lo.
+  continua a dizer "cancelou"), regista a retirada na prova do consentimento e
+  manda à pessoa um email a dizê-lo.
+- **E "Apagar de vez"**, para um pedido de apagamento (RGPD, art. 17.º): tira o
+  contacto do Resend, a prova do consentimento e a marca do aviso, e não manda
+  email nenhum. Não é o mesmo que cancelar.
+- **A data de cada contacto é a da última confirmação**, tirada da prova do
+  consentimento — não o `created_at` do Resend, que é quando o contacto nasceu e
+  não muda com uma reinscrição. O CSV leva as duas, com nomes que dizem o que
+  são (`contacto_criado_em`, `ultima_confirmacao`). Quem se inscreveu antes de a
+  prova existir (2026-10-15) aparece "sem confirmação registada".
+
+### A prova do consentimento
+
+Revisão legal de 2026-10-15 (`src/lib/newsletter/consentimento.ts`, testes em
+`testes/consentimento.test.mjs`). Quem envia marketing tem de conseguir
+demonstrar o consentimento — o momento, o contexto e a informação dada (CNPD,
+Diretriz 1/2022, §§ 79–81). Por cada pessoa, no Upstash
+(`newsletter:consentimento:<sha256 do email>`), uma lista de acontecimentos:
+
+- **consentimento**: quando pediu e quando confirmou, onde (convite ou carta
+  secreta), a língua, **a frase exacta que estava ao lado do botão** e a versão
+  dela (`VERSAO_DO_TEXTO` em `src/lib/newsletter/convite.ts` — muda-se sempre
+  que mudar a frase), e como confirmou (botão depois do email);
+- **retirada**: quando, e por onde (painel ou link do email, este pelo webhook).
+
+Sem IP e sem aparelho. A frase viaja assinada dentro do link de confirmação,
+para ser a que a pessoa viu e não a que estiver no site 48 horas depois.
+
+Sem prazo enquanto a pessoa está inscrita; **três anos depois da retirada** (uma
+proposta, não um prazo legal — ver `docs/decisoes-pendentes.md`); apagada com
+"Apagar de vez". **Sem o webhook configurado, a retirada pelo link do email não
+chega à prova**, e a prova dessa pessoa fica sem prazo até alguém a cancelar ou
+apagar no painel.
 
 ### O email de cancelamento
 
 Sempre que alguém deixa de estar inscrito — pelo botão do painel, ou pela
 própria pessoa no link de cancelar de um envio —, recebe um email com a cara da
-newsletter a dizer que foi cancelado, que a carta secreta deixa de abrir, e que
-se pode voltar a inscrever no site (`src/lib/newsletter/cancelamento.ts`).
+newsletter a dizer que foi cancelado, que a carta secreta continua a abrir, que
+se pode voltar a inscrever no site e como pedir o apagamento
+(`src/lib/newsletter/cancelamento.ts`).
 
 Sai **uma vez por cancelamento**: o painel avisa, e o Resend, ao ver o
 contacto mudar, chama o webhook a seguir — a marca no Upstash
 (`newsletter:cancelamento-avisado:<hash>`) faz o segundo não mandar nada.
-Quem se volta a inscrever apaga a marca.
+Quem se volta a inscrever apaga a marca. A marca dura **7 dias** (já durou para
+sempre): chega para as repetições do webhook, e depois disso quem trava um
+segundo aviso é a retirada registada na prova (`jaRetirou`).
 
 O cancelar pela própria pessoa acontece numa página do Resend, e só se sabe dele
 pelo **webhook** (`/api/newsletter/webhook`). Para o montar:
@@ -195,15 +230,17 @@ As duas páginas foram revistas quando isto entrou:
 - **`/privacidade`** tem uma secção sobre a newsletter (o que se guarda, para
   quê, a base legal, até quando, como cancelar e como pedir para apagar), e a
   Resend aparece nos serviços de terceiros.
-- **`/cookies`** explica as duas notas que o convite deixa no browser: `inscrito`
-  no `localStorage` e `fechado` no `sessionStorage`. Não são cookies, não levam
-  identificador e não saem do aparelho — o CI continua a verificar que nenhuma
-  página devolve `Set-Cookie`.
+- **`/cookies`** lista tudo o que o site escreve no browser, com prazo e
+  porquê: as notas do convite (`inscrito`/`fechado` no `sessionStorage`; "não
+  mostrar mais" no `localStorage`, 6 meses, só a pedido) e a chave da carta
+  (sessão, ou 90 dias com "lembrar neste aparelho"). O CI continua a verificar
+  que nenhuma página devolve `Set-Cookie`.
 
-⚠️ **A Resend é uma empresa dos EUA.** Antes de a newsletter ir para o público, a
-política de privacidade tem de dizer em que base é feita a transferência (o
-acordo de tratamento de dados da Resend, e se ela está no EU-US Data Privacy
-Framework). A página continua marcada como rascunho por isto e pelo resto.
+⚠️ **A Resend guarda os dados nos EUA** (resend.com/security/gdpr, consultado a
+2026-10-15: a região de envio europeia não muda o local de armazenamento). A
+política diz em que se apoia a transferência (cláusulas contratuais-tipo do DPA
+e, havendo certificação, o Data Privacy Framework). **Falta confirmar que o DPA
+está aceite na conta definitiva** — ver `docs/decisoes-pendentes.md`.
 
 ---
 
@@ -222,7 +259,7 @@ Framework). A página continua marcada como rascunho por isto e pelo resto.
 | O que se vê | O que é |
 |---|---|
 | O convite diz "não foi possível enviar agora" | Registo da Vercel, `[newsletter]`: Resend recusou, ou faltam variáveis |
-| O convite nunca aparece | Já se inscreveu neste browser (apagar `preguica:newsletter` do armazenamento), ou está na `/ementa` |
+| O convite nunca aparece | Já se inscreveu ou fechou nesta visita (`preguica:newsletter` no `sessionStorage`), carregou em "não mostrar mais" (`preguica:newsletter:nao-mostrar` no `localStorage`), ou está na `/ementa` |
 | O painel diz que não encontra a lista | `RESEND_NEWSLETTER_SEGMENTO` errado, ou o segmento foi apagado |
 | O painel diz que o remetente foi recusado | O domínio de `RESEND_NEWSLETTER_REMETENTE` não está *Verified* nessa conta, à letra |
 | Enviada, mas não aparece em "Enviadas" | O Resend ainda a está a processar; recarregar daqui a um minuto |
@@ -231,45 +268,56 @@ Framework). A página continua marcada como rascunho por isto e pelo resto.
 
 ## A carta secreta
 
-O isco da newsletter: uma secção no fim da `/ementa`, a seguir aos chás, que só
-abre a quem está inscrito. Há três sinais que levam lá:
+Uma secção no fim da `/ementa`, a seguir aos chás, que se abre a quem confirmar
+um email — **com ou sem as novidades da casa**. Há três sinais que levam lá:
 - um aviso no topo da ementa;
 - um item "Carta secreta" no índice;
 - a linha "Há mais cocktails na carta secreta" no fim do capítulo dos cocktails.
 
+### Já foi o isco da newsletter, e deixou de ser
+
+Até à revisão legal de 2026-10-15, a carta só abria a quem estivesse inscrito, e
+quem cancelava perdia-a. Isso fazia do acesso o preço do consentimento para
+marketing, que a CNPD critica (Diretriz 1/2022, § 70: condicionar conteúdos ao
+consentimento para marketing não é de admitir); o EDPB admite incentivos em
+abstrato, mas exige que retirar o consentimento não traga prejuízo — e perder a
+carta era um. A alteração:
+
+| antes | agora |
+|---|---|
+| escrever um email inscrito abria a carta | escrever um email manda um **link**; a carta abre depois de o confirmar |
+| só abria a inscritos | abre a quem confirmar, queira ou não as novidades |
+| as novidades vinham com a carta | caixa à parte, **desmarcada** — "Quero também receber as novidades (opcional)" |
+| cancelar a newsletter fechava a carta | cancelar não mexe na carta |
+| a chave levava o email (base64url, legível) e durava 180 dias, renovados | a chave **não leva nada pessoal**: 24 h no `sessionStorage`, ou 90 dias no `localStorage` com "lembrar neste aparelho", sem renovar |
+| a rota dizia se um email estava na lista | a rota só aceita uma chave; não revela quem está inscrito |
+
+**Fica uma decisão da casa**: se a carta deve continuar atrás de um email (é o
+que lhe dá o ar de "secreta"), ou abrir sem email nenhum. As duas são
+compatíveis com a escolha livre sobre o marketing. Está em
+`docs/decisoes-pendentes.md`.
+
 **Como abre:**
 
-1. A pessoa escreve o email. `/api/carta-secreta` pergunta ao Resend se está no
-   segmento e ativo (`estaInscrito`).
-2. **Se está,** a rota devolve os artigos e uma **chave** (o email assinado, 180
-   dias), que o telemóvel guarda no `localStorage`. Na visita seguinte a carta
-   abre sozinha, e **o servidor volta a perguntar ao Resend de cada vez**: quem
-   cancelar a newsletter perde a carta.
-3. **Se não está,** o formulário da newsletter aparece ali mesmo. Ao confirmar
-   no email, a página de confirmação guarda a chave e tem o botão "Abrir a carta
-   secreta".
+1. A pessoa escreve o email, marca ou não as novidades, e carrega em "Enviar o
+   link". `/api/newsletter` (com `origem: "carta"`) manda um de três emails —
+   ver o cabeçalho da rota.
+2. A página de confirmação mostra o botão certo ("Abrir a carta secreta" ou
+   "Confirmar e abrir a carta") e a caixa "Lembrar neste aparelho", desmarcada.
+3. `/api/newsletter/confirmar` inscreve (se pediu as novidades, com prova) e
+   devolve a chave. A `/ementa` abre a carta sozinha com ela.
+4. Na carta aberta, "Lembrar neste aparelho durante 90 dias" e "Fechar a carta
+   neste aparelho".
+
+As chaves antigas (`c1`, com email) ainda se aceitam uma vez e são trocadas por
+uma de sessão; o browser apaga a antiga.
 
 **Os artigos nunca estão no HTML** da `/ementa`, que é estática. Só saem da rota
-depois do "sim" do Resend. O repositório é público, por isso o segredo é "de bar",
+com uma chave válida. O repositório é público, por isso o segredo é "de bar",
 não de cofre.
 
-**Limite:** 10 pedidos por hora por ligação. A resposta diz se um email está na
-lista, e sem limite servia para testar listas de endereços.
+**Limite:** 30 pedidos por hora por ligação à rota da carta; os pedidos de link
+contam nos limites da newsletter (`src/lib/newsletter/limites.ts`).
 
-**Em desenvolvimento**, sem chave do Resend, conta como inscrito quem confirmou
-nesta sessão do `npm run dev` (o link de confirmação sai no terminal).
-
-**O que está na carta** escolhe-se no painel, na secção "Carta secreta" do editor
-da ementa (ver `docs/PAINEL.md`). No `ementa.json` é a lista `secretos`, com os
-`id` dos cocktails pela ordem da carta secreta. Só cocktails clássicos ou special,
-e nenhum com fotografia no site (a legenda contava o segredo na inicial).
-
-**Sem nenhum cocktail na lista, a carta secreta não aparece:** nem a secção, nem os
-três sinais, nem o botão "Abrir a carta secreta" na confirmação da newsletter.
-
-⚠️ **O `ementa.json` não pode ir para o browser.** O jogo dos sabores
-(`components/ementa/Sabores.tsx`) importava `SABORES` de `data/ementa.ts`, e isso
-metia a carta inteira, secretos incluídos, no JavaScript da `/ementa`. Os sabores
-vivem agora no `ementa.json` (o painel edita-os) e chegam ao jogo **por props**,
-já traduzidos pela página, que corre no servidor. Um componente `"use client"` que importe um
-valor de `data/ementa.ts` volta a abrir esta porta; `import type` não faz mal.
+**Em desenvolvimento**, sem chave do Resend, o link sai no terminal, como o da
+newsletter.

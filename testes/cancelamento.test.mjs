@@ -84,3 +84,16 @@ test("um aviso que falhou não impede o seguinte", async () => {
   );
   assert.equal(await avisoUnico.umaVezPorCancelamento(email, async () => {}), true);
 });
+
+/* Revisão legal de 2026-10-15: a marca já não fica para sempre. */
+test("a marca do aviso tem prazo, e não passa de sete dias", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  const { createHash } = await import("node:crypto");
+  const email = "prazo-da-marca@exemplo.pt";
+  await avisoUnico.umaVezPorCancelamento(email, async () => {});
+
+  const resumo = createHash("sha256").update(email).digest("hex").slice(0, 32);
+  const prazo = await redis.prazoDe(`newsletter:cancelamento-avisado:${resumo}`);
+  assert.ok(prazo > 0 && prazo <= 7 * 24 * 60 * 60, `prazo de ${prazo} s`);
+  assert.equal(avisoUnico.PRAZO_DA_MARCA_S, 7 * 24 * 60 * 60);
+});

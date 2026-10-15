@@ -2,48 +2,44 @@ import { z } from "zod";
 import { routing } from "@/i18n/routing";
 import { artigosSecretos } from "@/lib/carta-secreta/artigos";
 import { abrirChaveDaCarta, criarChaveDaCarta } from "@/lib/carta-secreta/chave";
-import { estaInscrito, ErroDaNewsletter } from "@/lib/newsletter/resend";
 import { somar, ErroDoRedis } from "@/lib/painel/redis";
 import { rede } from "@/lib/painel/limites";
 import { lerJson } from "@/lib/pedido";
-import { EsquemaEmail } from "@/lib/email";
 
 /*
-  Abrir a carta secreta: está inscrito na newsletter, ou não está?
+  Abrir a carta secreta com a chave que o browser guardou.
 
-  Recebe **um email** (quem o escreve na secção) **ou uma chave** (o telemóvel
-  que já abriu antes — ver `lib/carta-secreta/chave.ts`). Nos dois casos quem
-  responde é o Resend, e os artigos só saem daqui se ele disser que sim: nunca
-  estão no HTML da `/ementa`.
+  A chave nasce na confirmação do email (`/api/newsletter/confirmar`) e diz só
+  que este browser confirmou um email — ver `lib/carta-secreta/chave.ts`. Os
+  artigos só saem daqui com uma chave válida: nunca estão no HTML da `/ementa`.
 
-  | resposta | quando |
+  **Já não recebe um email, e já não pergunta ao Resend.** Até à revisão legal
+  de 2026-10-15, um email inscrito abria a carta sem mais nada, e uma chave só
+  valia enquanto a pessoa recebesse a newsletter. A carta deixou de depender do
+  marketing; e deixar de aceitar um email solto tirou também a forma de alguém
+  descobrir quem está na lista escrevendo endereços aqui.
+
+  | pedido | resposta |
   |---|---|
-  | `{ aberta: true, artigos, chave }` | inscrito — a chave é para o telemóvel guardar |
-  | `{ aberta: false }` | não inscrito, ou chave inventada, caducada, ou de quem cancelou |
-  | 400 | nem email nem chave válidos |
-  | 429 | mais de 10 pedidos numa hora da mesma ligação |
-  | 503 | Redis ou Resend em baixo |
+  | `{ chave }` válida | `{ aberta: true, artigos }` |
+  | `{ chave, lembrar: true }` válida | o mesmo, e `chave`: uma nova, de 90 dias, para o `localStorage` |
+  | `{ chave }` `c1`, válida | o mesmo, e `chave`: uma `c2` de sessão, no lugar da antiga com email |
+  | chave inventada ou caducada | `{ aberta: false }` |
+  | 400 | sem chave |
+  | 429 | mais de 30 pedidos numa hora da mesma ligação |
+  | 503 | Redis em baixo |
 
-  ## O limite, e porquê
-
-  A resposta diz se um email está na lista — é essa a função disto. Sem limite,
-  era também uma forma de alguém testar uma lista de endereços e saber quem
-  recebe a newsletter da casa. Dez por hora chega para uma mesa inteira, cada
-  um com o seu telemóvel, e não chega para mais nada.
+  O limite fica, mais largo: já não protege uma lista de emails, protege só o
+  servidor de quem repita pedidos sem parar.
 */
 
-const Pedido = z.union([
-  z.object({
-    email: EsquemaEmail,
-    lingua: z.enum(routing.locales).catch(routing.defaultLocale),
-  }),
-  z.object({
-    chave: z.string().max(1000),
-    lingua: z.enum(routing.locales).catch(routing.defaultLocale),
-  }),
-]);
+const Pedido = z.object({
+  chave: z.string().max(1000),
+  lembrar: z.boolean().optional(),
+  lingua: z.enum(routing.locales).catch(routing.defaultLocale),
+});
 
-const POR_IP = 10;
+const POR_IP = 30;
 const HORA_S = 60 * 60;
 
 export async function POST(pedido: Request) {
@@ -54,24 +50,33 @@ export async function POST(pedido: Request) {
   }
 
   const lido = Pedido.safeParse(corpo.ok ? corpo.valor : null);
-  if (!lido.success) return Response.json({ erro: "email" }, { status: 400 });
+  if (!lido.success) return Response.json({ erro: "chave" }, { status: 400 });
 
   try {
     if ((await somar(`carta:ip:${await rede()}`, HORA_S)) > POR_IP) {
       return Response.json({ erro: "limite" }, { status: 429 });
     }
 
-    const email = "email" in lido.data ? lido.data.email : await abrirChaveDaCarta(lido.data.chave);
-    if (!email || !(await estaInscrito(email))) return Response.json({ aberta: false });
+    const aberta = await abrirChaveDaCarta(lido.data.chave);
+    if (!aberta) return Response.json({ aberta: false });
+
+    /* Uma chave nova só quando é preciso: a pessoa pediu para lembrar, ou a
+       chave ainda é das antigas, com email. Abrir não renova o prazo. */
+    const nova =
+      lido.data.lembrar === true
+        ? await criarChaveDaCarta(true)
+        : aberta.versao === "c1"
+          ? await criarChaveDaCarta(false)
+          : undefined;
 
     return Response.json({
       aberta: true,
       artigos: artigosSecretos(lido.data.lingua),
-      chave: await criarChaveDaCarta(email),
+      ...(nova ? { chave: nova } : {}),
     });
   } catch (erro) {
-    if (erro instanceof ErroDoRedis || erro instanceof ErroDaNewsletter) {
-      if (erro instanceof ErroDoRedis) console.error(`[carta-secreta] ${erro.message}`);
+    if (erro instanceof ErroDoRedis) {
+      console.error(`[carta-secreta] ${erro.message}`);
       return Response.json({ erro: "servico" }, { status: 503 });
     }
     throw erro;

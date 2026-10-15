@@ -56,10 +56,13 @@ gravidade:
       `docs/decisoes-pendentes.md`.
 - [ ] **Rever a indexação.** O `robots.txt` deixa indexar tudo menos o painel
       e a API — incluindo a demonstração em `cafe-preguica.vercel.app`.
-- [ ] **A política de privacidade.** Está marcada como rascunho à vista de quem
-      a lê, e faltam dados que só o cliente tem: quem é o responsável pelo
-      tratamento (nome e NIF), a data da versão, e a base das transferências para
-      os EUA (Resend, Upstash, Vercel). Ver `docs/AUDITORIA-PUBLICACAO.md`.
+- [ ] **As páginas legais.** Reescritas na revisão legal de 2026-10-15
+      (privacidade, cookies, informação legal, em PT e EN), com os prazos que o
+      código cumpre. Faltam dados que só o cliente tem — quem explora a casa
+      (nome ou firma, NIF, sede), o contacto para pedidos de privacidade, a
+      entidade de litígios e o registo no Livro de Reclamações — e as contas e
+      contratos definitivos dos prestadores. As páginas dizem-no à vista. Ver
+      `docs/decisoes-pendentes.md`, secção 0.
 
 ## Como está organizado
 

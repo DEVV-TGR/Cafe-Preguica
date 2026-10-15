@@ -13,6 +13,8 @@ import {
   type Contacto,
   type Envio,
 } from "@/lib/newsletter/resend";
+import { ultimasConfirmacoes, type Consentimento } from "@/lib/newsletter/consentimento";
+import { ErroDoRedis } from "@/lib/painel/redis";
 import { TituloDaPagina } from "@/components/painel/TituloDaPagina";
 import { Aviso } from "@/components/painel/Aviso";
 import { EditorDaNewsletter } from "@/components/painel/EditorDaNewsletter";
@@ -42,12 +44,34 @@ export default async function PaginaDaNewsletter() {
     }
   }
 
+  /*
+    A data que interessa é a da última confirmação, e essa vem da prova do
+    consentimento, não do Resend: o `created_at` do contacto é quando ele
+    nasceu, e não muda quando alguém cancela e volta. As duas vão para o CSV,
+    com nomes que dizem o que são. Quem se inscreveu antes da prova existir
+    (2026-10-15) não tem confirmação registada, e a lista di-lo.
+  */
+  let confirmacoes: (Consentimento | null)[] = contactos.map(() => null);
+  let semProva = false;
+  try {
+    confirmacoes = await ultimasConfirmacoes(contactos.map((c) => c.email));
+  } catch (e) {
+    if (!(e instanceof ErroDoRedis)) throw e;
+    semProva = true;
+  }
+
   const inscritos = contactos.filter((c) => !c.cancelou).length;
-  const linhas: LinhaDeContacto[] = contactos.map((c) => ({
-    email: c.email,
-    desde: data(c.criadoEm),
-    cancelou: c.cancelou,
-  }));
+  const linhas: LinhaDeContacto[] = contactos.map((c, i) => {
+    const prova = confirmacoes[i];
+    return {
+      email: c.email,
+      criadoEm: data(c.criadoEm),
+      confirmouEm: prova ? data(new Date(prova.quando).toISOString()) : null,
+      origem: prova?.origem ?? null,
+      versao: prova?.versao ?? null,
+      cancelou: c.cancelou,
+    };
+  });
 
   return (
     <>
@@ -60,6 +84,12 @@ export default async function PaginaDaNewsletter() {
           </Aviso>
         ) : null}
         {erro ? <Aviso tom="mau">{erro}</Aviso> : null}
+        {semProva ? (
+          <Aviso tom="nota">
+            Não foi possível ler as datas de confirmação agora. A lista está completa; as datas
+            voltam quando o armazenamento responder.
+          </Aviso>
+        ) : null}
 
         <div className="pn-duas-colunas pn-duas-colunas--editor">
           <section aria-labelledby="escrever" className="pn-bloco">

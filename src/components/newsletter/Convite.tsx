@@ -16,22 +16,30 @@ import type { Locale } from "@/i18n/routing";
  *   carta a meio de alguém escolher o que pedir estraga a noite em vez de ganhar
  *   um subscritor. Se os 8 segundos acabarem lá, espera pela página seguinte.
  * - **Nunca na página de confirmação**, que é o fim deste mesmo caminho.
- * - **Quem se inscreveu nunca mais o vê**, neste browser.
- * - **Quem o fechou não o volta a ver nesta visita**, e vê-o outra vez, uma vez,
- *   na visita seguinte.
+ * - **Quem se inscreveu ou o fechou não o volta a ver nesta visita**, e vê-o
+ *   outra vez, uma vez, na visita seguinte.
+ * - **Quem carregar em "não mostrar mais neste aparelho" não o vê durante seis
+ *   meses**, neste browser.
  *
  * ## A memória, e porque é que a página de cookies a menciona
  *
- * "Já se inscreveu" fica no `localStorage`; "fechou nesta visita" fica no
- * `sessionStorage`, que o browser apaga ao fechar o separador — é isso que faz
- * a próxima visita ser uma visita nova. Nenhum dos dois é um cookie: não viajam
- * nos pedidos, não têm identificador, e não saem do aparelho. Mesmo assim a
- * página `/cookies` diz que existem, porque o que ela promete é que o site não
- * guarda nada às escondidas.
+ * "Inscreveu-se" e "fechou" ficam no `sessionStorage`, que o browser apaga ao
+ * fechar o separador — é isso que faz a próxima visita ser uma visita nova.
+ * "Não mostrar mais" fica no `localStorage`, com a data em que deixa de valer,
+ * e sai sozinho à primeira leitura depois disso.
  *
- * Os dois vivem dentro de `try`: numa janela privada do Safari, ou com o
- * armazenamento bloqueado, o acesso atira. Nesse caso o convite comporta-se
- * como numa primeira visita, que é o pior que pode acontecer.
+ * Até à revisão legal de 2026-10-15, "inscreveu-se" ficava no `localStorage`
+ * sem prazo — mesmo que a pessoa nunca confirmasse. Guardar no aparelho de
+ * quem visita pede consentimento, a não ser que seja estritamente necessário
+ * para o que a pessoa pediu (Lei 41/2004, art. 5.º): uma nota de sessão para
+ * não repetir o convite cabe nisso; uma nota para sempre, que ninguém pediu,
+ * não. A nota de seis meses existe porque a pessoa a pede ao carregar no botão,
+ * e o botão diz quanto tempo fica. A nota antiga apaga-se à chegada.
+ *
+ * Nenhuma é um cookie: não viajam nos pedidos, não têm identificador, e não
+ * saem do aparelho. Vivem dentro de `try`: numa janela privada do Safari, ou
+ * com o armazenamento bloqueado, o acesso atira. Nesse caso o convite
+ * comporta-se como numa primeira visita, que é o pior que pode acontecer.
  *
  * ## Não é modal, de propósito
  *
@@ -55,6 +63,8 @@ import type { Locale } from "@/i18n/routing";
  */
 
 const MEMORIA = "preguica:newsletter";
+const NAO_MOSTRAR = "preguica:newsletter:nao-mostrar";
+const NAO_MOSTRAR_MS = 183 * 24 * 60 * 60 * 1000;
 const ESPERA_MS = 8000;
 
 export type TextosDoConvite = {
@@ -66,6 +76,7 @@ export type TextosDoConvite = {
   botao: string;
   aEnviar: string;
   fechar: string;
+  naoMostrar: string;
   consentimento: string;
   privacidade: string;
   enviadoTitulo: string;
@@ -100,6 +111,16 @@ function guardar(armazem: () => Storage, valor: string): void {
   }
 }
 
+/* "Não mostrar mais" ainda vale? Se já passou, sai daqui. */
+function naoMostrarAinda(): boolean {
+  try {
+    const ate = Number(localStorage.getItem(NAO_MOSTRAR));
+    if (ate > Date.now()) return true;
+    localStorage.removeItem(NAO_MOSTRAR);
+  } catch {}
+  return false;
+}
+
 function podeAparecerAqui(caminho: string): boolean {
   return !caminho.startsWith("/ementa") && !caminho.startsWith("/newsletter");
 }
@@ -119,8 +140,12 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
   /* O relógio conta uma vez por visita: o layout não volta a montar ao mudar de
      página, portanto este efeito também não. */
   useEffect(() => {
-    if (ler(() => localStorage) === "inscrito") return;
-    if (ler(() => sessionStorage) === "fechado") return;
+    /* A nota antiga, sem prazo, de antes da revisão legal. */
+    try {
+      localStorage.removeItem(MEMORIA);
+    } catch {}
+    if (ler(() => sessionStorage)) return;
+    if (naoMostrarAinda()) return;
 
     const relogio = window.setTimeout(() => setPassouOTempo(true), ESPERA_MS);
     return () => window.clearTimeout(relogio);
@@ -130,9 +155,14 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
      espera e aparece na primeira página seguinte onde possa aparecer. */
   const visivel = passouOTempo && estado.tipo !== "fechado" && podeAparecerAqui(caminho);
 
-  function fechar() {
+  function fechar(paraSempre = false) {
     if (estado.tipo !== "enviado" && estado.tipo !== "ja-inscrito") {
       guardar(() => sessionStorage, "fechado");
+    }
+    if (paraSempre) {
+      try {
+        localStorage.setItem(NAO_MOSTRAR, String(Date.now() + NAO_MOSTRAR_MS));
+      } catch {}
     }
     /* Quem fechou pelo teclado tinha o foco cá dentro, e o cartão vai
        desaparecer com ele: o foco passa para o conteúdo da página, em vez de
@@ -203,10 +233,9 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
     }
 
     if (resposta.ok) {
-      /* A partir daqui a pessoa já disse que quer. Se não confirmar no email, o
-         convite também não volta — insistir com quem já respondeu é spam do
-         nosso lado. */
-      guardar(() => localStorage, "inscrito");
+      /* A partir daqui a pessoa já disse que quer: nesta visita o convite não
+         volta, confirme ou não no email. */
+      guardar(() => sessionStorage, "inscrito");
       const corpo = (await resposta.json().catch(() => ({}))) as { jaInscrito?: boolean };
       setEstado({ tipo: corpo.jaInscrito ? "ja-inscrito" : "enviado" });
       return;
@@ -235,7 +264,7 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
         height={286}
       />
 
-      <button type="button" className="pg-convite__fechar" onClick={fechar} aria-label={textos.fechar}>
+      <button type="button" className="pg-convite__fechar" onClick={() => fechar()} aria-label={textos.fechar}>
         <span aria-hidden="true">×</span>
       </button>
 
@@ -309,6 +338,12 @@ export function Convite({ locale, textos }: { locale: Locale; textos: TextosDoCo
           </p>
         </>
       )}
+
+      {/* O pedido de não voltar a ver o convite, e por quanto tempo — é o que
+          justifica a nota que fica no browser (ver o cabeçalho). */}
+      <button type="button" className="pg-convite__nao-mostrar" onClick={() => fechar(true)}>
+        {textos.naoMostrar}
+      </button>
     </aside>
   );
 }

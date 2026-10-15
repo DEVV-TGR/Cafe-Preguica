@@ -1095,6 +1095,29 @@
   text-underline-offset: 0.2em;
 }
 
+/* A caixa das novidades: à parte do botão, desmarcada, com a frase inteira
+   ao lado — é essa frase que fica na prova do consentimento. */
+.em-secreta__escolha {
+  display: flex;
+  flex-basis: 100%;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  text-align: left;
+  color: var(--color-tinta-suave);
+  cursor: pointer;
+}
+
+.em-secreta__escolha input {
+  flex: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.1rem;
+  accent-color: var(--color-ouro);
+}
+
 .em-secreta__erro {
   flex-basis: 100%;
   font-size: 0.85rem;
@@ -1127,6 +1150,10 @@
 }
 
 .em-secreta__rodape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
   margin-top: 1rem;
   text-align: center;
 }

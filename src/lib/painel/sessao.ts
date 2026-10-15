@@ -239,6 +239,19 @@ export async function idDoCookieDoAparelho(valor: string | undefined): Promise<s
   return typeof lido?.s === "string" ? idDoAparelho(lido.s) : null;
 }
 
+/*
+  Um `id` para o aparelho de quem entrou **sem** pedir para o lembrar.
+
+  A sessão precisa de saber a que aparelho pertence (é por aí que a página das
+  Sessões a termina), mas sem o pedido não há cookie de aparelho nem chave
+  `aparelho:<id>`: este `id` vive só dentro do selo da sessão e no registo dos
+  aparelhos, e morre com eles. A forma é a mesma dos outros (32 hexadecimais),
+  que é o que a acção de terminar aceita.
+*/
+export function idDeAparelhoSoDaSessao(): string {
+  return randomBytes(16).toString("hex");
+}
+
 /** Esquece um aparelho — o cookie dele continua a existir, mas deixa de valer. */
 export async function esquecerAparelho(id: string): Promise<void> {
   await apagar(chaveDoAparelho(id));

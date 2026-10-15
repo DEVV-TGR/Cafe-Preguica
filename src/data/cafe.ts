@@ -127,19 +127,82 @@ export const EsquemaCafe = z.object({
    */
   aceitaAnimais: z.boolean().nullable(),
   /**
-   * A entidade de resolução alternativa de litígios de consumo, indicada em
-   * `/informacao-legal` — é obrigatório (Lei 144/2015, art. 18.º). `null`
-   * esconde a secção; a página fica, com o Livro de Reclamações.
+   * Quem explora a casa — a identificação jurídica que o site tem de dar
+   * (DL 7/2004, art. 10.º) e o responsável pelos dados (RGPD, art. 13.º).
    *
-   * ⚠️ Hoje é o **CICAP**, por ser o centro competente para Valongo (está na
-   * lista de municípios em cicap.pt). **Muda se a casa tiver aderido a outro
-   * centro** — nesse caso é esse que a lei manda indicar. Por confirmar com o
-   * cliente.
+   * ⚠️ **O nome comercial não é isto.** "Café Preguiça" é a marca; quem
+   * responde por ela é uma pessoa ou uma sociedade, com nome, NIF e sede
+   * próprios, que podem não ser os da casa. Não se deduzem — nem da morada, nem
+   * de um agregador, nem do Portal da Justiça: vêm da casa ou do contabilista.
+   *
+   * `null` é **por confirmar**, e não esconde nada em silêncio: a política de
+   * privacidade e a página de informação legal dizem que a identificação está
+   * por publicar, e `pendenciasLegais()` lista-o no build. Revisão legal de
+   * 2026-10-15.
+   *
+   * Os dados de registo e o capital só se pedem a sociedades (Código das
+   * Sociedades Comerciais, art. 171.º): a um empresário em nome individual
+   * não se aplicam, e o esquema não os exige.
+   *
+   * Não é o painel que o escreve — vem do repositório, como o
+   * `horarioConfirmado` (ver `gravarCasa`).
+   */
+  operador: z
+    .object({
+      /** Nome completo (empresário em nome individual) ou firma (sociedade). */
+      nome: z.string().min(1),
+      forma: z.enum([
+        "empresario-em-nome-individual",
+        "sociedade-unipessoal-por-quotas",
+        "sociedade-por-quotas",
+        "sociedade-anonima",
+        "outra",
+      ]),
+      /** NIF ou NIPC, nove algarismos. */
+      nif: z.string().regex(/^\d{9}$/, "nove algarismos"),
+      /** A sede ou o domicílio profissional — pode não ser a morada da casa. */
+      sede: z.string().min(1),
+      /** Conservatória e número de matrícula. Só sociedades. */
+      registo: z.string().min(1).nullable(),
+      /** Capital social, escrito como o contabilista o der ("5 000,00 €"). Só sociedades. */
+      capitalSocial: z.string().min(1).nullable(),
+      /** O email para pedidos sobre dados pessoais. `null` usa o da casa. */
+      emailPrivacidade: z.email().nullable(),
+    })
+    .superRefine((o, ctx) => {
+      const sociedade = o.forma.startsWith("sociedade");
+      if (sociedade && !o.registo) {
+        ctx.addIssue({ code: "custom", path: ["registo"], message: "uma sociedade indica a conservatória e a matrícula" });
+      }
+      if (sociedade && !o.capitalSocial) {
+        ctx.addIssue({ code: "custom", path: ["capitalSocial"], message: "uma sociedade indica o capital social" });
+      }
+    })
+    .nullable(),
+  /**
+   * A entidade de resolução alternativa de litígios de consumo indicada em
+   * `/informacao-legal` (Lei 144/2015, art. 18.º). A obrigação de informar
+   * existe **com ou sem adesão** e com ou sem vendas online: a casa indica a
+   * entidade disponível para os seus clientes.
+   *
+   * Hoje é o **CICAP**, por ser o centro com competência territorial para
+   * Valongo (está na lista de municípios em cicap.pt) — o que não quer dizer
+   * que a casa tenha aderido, nem que o centro aprecie todo e qualquer
+   * conflito (tem limites de valor e de matéria; ver o site dele). **Por
+   * confirmar com o cliente.** Se a casa aderir a um centro, fica `adesao: true`
+   * e a página di-lo; aderir a outro não apaga a competência deste.
+   *
+   * `adesao: null` é **não sabemos**, e a página não diz nada sobre adesão.
+   *
+   * `null` no objeto inteiro é **por confirmar**: a secção fica, com o aviso de
+   * que a entidade está por indicar e o link para a lista oficial — nunca
+   * desaparece, porque é informação obrigatória.
    */
   litigios: z
     .object({
       nome: z.string().min(1),
       url: z.url(),
+      adesao: z.boolean().nullable(),
     })
     .nullable(),
 });
@@ -164,6 +227,27 @@ if (!validado.success) {
 }
 
 export const cafe: Cafe = validado.data;
+
+/**
+ * O que falta confirmar antes de as páginas legais poderem ser dadas como
+ * fechadas. Não parte o build — o site continua a poder ser publicado com a
+ * pendência à vista —, mas aparece no registo do build e nas páginas. Ver
+ * `docs/decisoes-pendentes.md`.
+ */
+export function pendenciasLegais(): string[] {
+  return [
+    ...(cafe.operador
+      ? []
+      : ["cafe.json: operador (nome ou firma, forma jurídica, NIF, sede) por confirmar"]),
+    ...(cafe.operador && !cafe.operador.emailPrivacidade
+      ? ["cafe.json: operador.emailPrivacidade por confirmar (usa-se o email da casa)"]
+      : []),
+    ...(cafe.litigios ? [] : ["cafe.json: litigios (entidade RAL) por confirmar"]),
+    ...(cafe.litigios && cafe.litigios.adesao === null
+      ? ["cafe.json: litigios.adesao por confirmar (a página não fala de adesão)"]
+      : []),
+  ];
+}
 
 /**
  * A morada numa linha, com o que existir. Devolve `null` se não houver morada

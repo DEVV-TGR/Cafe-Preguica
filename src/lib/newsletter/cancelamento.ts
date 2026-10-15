@@ -39,8 +39,8 @@ const ASSUNTO = "Cancelámos a sua inscrição na newsletter do Café Preguiça"
    só em português. */
 const TEXTO = [
   "Olá,",
-  "A sua inscrição na newsletter do Café Preguiça foi cancelada. A partir de agora deixa de receber as novidades da casa, e a carta secreta deixa de abrir com este endereço.",
-  "Se foi engano, pode voltar a inscrever-se quando quiser, no site.",
+  "A sua inscrição na newsletter do Café Preguiça foi cancelada. A partir de agora deixa de receber as novidades da casa. A carta secreta continua a abrir-se como antes: não depende da newsletter.",
+  "Se foi engano, pode voltar a inscrever-se quando quiser, no site. Se quiser que apaguemos também o seu endereço e o registo da inscrição, peça-o pelos contactos indicados na política de privacidade do site.",
 ].join("\n\n");
 
 export function emailDoCancelamento(): { assunto: string; html: string; texto: string } {

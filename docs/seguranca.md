@@ -197,16 +197,25 @@ proteger; esses registos são da plataforma e não são usados por nós.
 **Quem usa o convite da newsletter ou a carta secreta** deixa um email. Até
 confirmar, o endereço não entra na lista: vai dentro do link assinado, fica o
 registo do envio na Resend e, no Upstash, um contador com o email em hash (24 h)
-e outro com a ligação (1 h). Depois de confirmar, o contacto vive no Resend.
+e outro com a ligação (1 h). Depois de confirmar com as novidades, o contacto
+vive no Resend e a prova do consentimento no Upstash
+(`src/lib/newsletter/consentimento.ts`). Quem confirma só para a carta secreta
+não fica em lista nenhuma.
 Quando um limite é excedido, o registo da Vercel guarda o IP e o email
 mascarado. Está tudo dito em `/privacidade`.
 
 O painel usa os emails da equipa autorizada, e só esses. Servem para enviar o
-código (Resend), e no Upstash ficam em hash, com prazo de 30 dias no máximo. Nos
-registos da Vercel aparecem mascarados (`m•••a@…`), e nos commits do repositório,
-que é público, também: o autor de cada commit do painel é fixo e nunca é o email
-de quem gravou. As páginas `/cookies` e `/privacidade` dizem-no numa secção
-própria.
+código (Resend). **No Upstash não ficam só em hash** — esta secção dizia-o, e
+não era verdade (revisão legal de 2026-10-15). Ficam por inteiro: no desafio do
+código (10 minutos), na sessão (8 horas), no aparelho lembrado (30 dias, só se
+quem entra o pedir), no registo do aparelho (até ao fim da sessão ou do
+aparelho lembrado) e no registo de entradas (30 dias por linha). Em hash ficam
+só os contadores dos limites. Todos estes prazos são absolutos e é o Redis que
+apaga — ver `src/lib/painel/entradas.ts` e `aparelhos.ts`, com testes. Nos
+registos da Vercel aparecem mascarados (`m•••a@…`), e nos commits do
+repositório, que é público, também: o autor de cada commit do painel é fixo, e
+a mensagem leva o email mascarado de quem gravou. As páginas `/cookies` e
+`/privacidade` dizem-no.
 
 ⚠️ Isto muda no dia em que houver formulário. Ver `docs/decisoes-pendentes.md`.
 

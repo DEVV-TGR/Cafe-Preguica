@@ -68,15 +68,15 @@
     },
     "privacidade": {
       "titulo": "Privacy",
-      "descricao": "What data this site collects, what for, and for how long."
+      "descricao": "What data this site processes, why, on what basis, for how long, and how to exercise your rights."
     },
     "cookies": {
       "titulo": "Cookies",
-      "descricao": "This site sets no cookies for its visitors. This page explains why."
+      "descricao": "What this site stores in your browser, why, and for how long."
     },
     "informacaoLegal": {
-      "titulo": "Dispute resolution",
-      "descricao": "What to do if something goes wrong: the consumer arbitration centre and the Complaints Book."
+      "titulo": "Legal information",
+      "descricao": "Who runs Café Preguiça, where to turn in a consumer dispute, and the Complaints Book."
     },
     "newsletter": {
       "titulo": "Newsletter",
@@ -300,26 +300,27 @@
       "sinal": "There's a menu that isn't here.",
       "sinalLigacao": "See the secret menu ↓",
       "maisCocktails": "More cocktails in the secret menu ↓",
-      "olho": "Only for those on the list",
+      "olho": "For those who ask",
       "titulo": "The secret menu",
-      "texto": "The cocktails that aren't on paper. To see them, enter the email address you get our news at.",
+      "texto": "The cocktails that aren't on paper. Enter your email and we'll send you a link to open it.",
       "etiqueta": "Your email",
       "marcador": "you@email.com",
-      "abrir": "Open",
-      "aAbrir": "Opening…",
-      "naoInscritoTitulo": "This email isn't on the list yet.",
-      "naoInscritoTexto": "Sign {email} up for our news. Confirm through the email we'll send you, and the menu will open by itself.",
-      "inscrever": "Sign up and open",
+      "enviarLink": "Send the link",
       "aEnviar": "Sending…",
-      "consentimento": "By signing up, you agree to receive our news by email. You can unsubscribe at any time.",
+      "consentimento": "I'd also like to receive the café's news by email (optional). I can unsubscribe at any time.",
+      "nota": "You don't need the news to open the menu: with the box unticked, your email is only used to send you the link.",
       "privacidade": "How we handle your email",
       "erroLimite": "Too many requests in the last few minutes. Please try again shortly.",
-      "erroServico": "We couldn't send it right now. Please try again shortly.",
-      "enviadoTitulo": "One more step",
-      "enviadoTexto": "We've sent you an email. Click the link in it — you'll come back here with the menu open.",
+      "erroServico": "That didn't work right now. Please try again shortly.",
+      "enviadoTitulo": "Check your email",
+      "enviadoTexto": "We've sent a link to {email}. Open it and the menu opens.",
       "outroEmail": "Use another email",
-      "abertaTexto": "You're on the list, so this is for you. Just ask for them at the bar by name.",
-      "fechar": "Not your email? Close the menu"
+      "abertaTexto": "This is for you. Just ask for them at the bar by name.",
+      "lembrar": "Remember on this device for 90 days",
+      "lembrarNota": "Stores a key in your browser, without your email, so the menu opens by itself on your next visits.",
+      "aLembrar": "Saving…",
+      "lembrada": "Remembered on this device for 90 days.",
+      "fechar": "Close the menu on this device"
     }
   },
   "contactos": {
@@ -333,39 +334,104 @@
   },
   "privacidade": {
     "titulo": "Privacy",
-    "atualizado": "Last updated: draft, to be reviewed before publishing.",
-    "recolha": {
-      "titulo": "What data we collect",
-      "texto": "From people who just visit, none: the site has no accounts or analytics tools, and keeps nothing about the people who open it. When the menu is opened through a table's QR code or NFC tag, the server adds one to a counter for that table and that night, so we know whether the codes are used; it keeps nothing about the phone or the person who scanned it. The only exception is the newsletter, and only for those who sign up — it is explained in the next section."
+    "olho": "This site and your data",
+    "versao": "Version of 15 October 2026. Some details about the business are still being confirmed; they are marked on this page.",
+    "pendente": "Identification to be published: the name or company name, legal form, tax number (NIF) and registered address of whoever runs Café Preguiça are being confirmed with the business and will appear here as soon as they are. Until then, you can reach us through the contacts below.",
+    "ficha": {
+      "formularios": "Forms",
+      "pedidoDeEmail": "Email request",
+      "cookies": "Cookies",
+      "soEquipa": "Only in the staff area",
+      "prestadores": "Service providers",
+      "quais": "Hosting, email and storage"
+    },
+    "formas": {
+      "empresario-em-nome-individual": "sole trader",
+      "sociedade-unipessoal-por-quotas": "single-member private limited company",
+      "sociedade-por-quotas": "private limited company",
+      "sociedade-anonima": "public limited company",
+      "outra": "other legal form"
+    },
+    "responsavel": {
+      "titulo": "Who is responsible",
+      "identificacao": "The controller of the data described on this page is {nome} ({forma}), tax number (NIF) {nif}, registered at {sede}, which runs Café Preguiça.",
+      "contacto": "For any question about your data — including the requests in “Your rights” — write to <email>{endereco}</email>. The other contacts are on the <contactos>Contact</contactos> page.",
+      "semEmail": "For any question about your data, use the contacts on the <contactos>Contact</contactos> page."
+    },
+    "visitas": {
+      "titulo": "When you visit the site",
+      "paragrafos": {
+        "a": "The site has no accounts, no analytics tools, and sets no cookies for visitors. But, as with any website, each visit goes through a server: the hosting service (Vercel) logs the requests it receives — the network address (IP), the page requested, the date and time, and the browser identification — to deliver the pages and protect the site from abuse. We don't use these logs to find out who is who.",
+        "b": "The legal basis is our legitimate interest in keeping the site running and secure (GDPR, Art. 6(1)(f)). These logs are kept for the retention period of the hosting plan.",
+        "c": "When you open the menu through a table's QR code or NFC tag, the server records the table number and the time: it adds the scan to that table's counts, per night and per hour, and keeps the last 300 scans with their exact time, so we know whether the codes are used. It does not store the network address, cookies or any identifier of the phone; the browser type is read only to leave out bots, and is not stored. The counts have no time limit, being just numbers; the list of recent scans is deleted if a year goes by without any."
+      }
+    },
+    "pedidos": {
+      "titulo": "When you give us an email",
+      "paragrafos": {
+        "a": "The newsletter invitation and the secret menu ask for an email address. When you enter it, we send you an email with a link to confirm. To do so, the address goes to the email delivery service (Resend), which keeps a record of the sending — recipient, subject and delivery status — for the account's retention period. If you don't confirm, the address is not added to any list.",
+        "b": "To prevent abuse of these forms, the server counts requests in Upstash: per network address, for one hour, and per email, for 24 hours. The email is stored as a cryptographic digest (SHA-256): it isn't written down, but someone who already knows the address can match it — so we treat it as personal data, not as anonymous. If someone exceeds the limits, the server log keeps the network address and the partially hidden email, so the abuse can be understood.",
+        "c": "The legal basis is your request (GDPR, Art. 6(1)(b)) and, for abuse control, our legitimate interest in protecting the service and other people's inboxes (Art. 6(1)(f)). Giving your email is optional; without it we can't send you the link."
+      }
     },
     "newsletter": {
       "titulo": "The newsletter",
-      "texto": "If you sign up, we keep your email address and the date you confirmed, and use them only to send you our news, in Portuguese. The legal basis is your consent, given in two steps: you type your email on the site and confirm it through the link we send you. Without that confirmation, the address does not join the list; the only trace is the record of the confirmation email kept by the service that sends it (Resend). Every email includes a link to unsubscribe, which takes effect immediately: you stop receiving emails, and the address stays on the list marked as unsubscribed, so that it isn't emailed again by mistake. You can ask us at any time what data we hold about you, or ask us to delete it for good, using our contact details. The same email opens the secret menu: when you type it there, we only check whether it is on the list."
+      "paragrafos": {
+        "a": "If you ask for our news — in the site's invitation or by ticking the box in the secret menu — and confirm through the link, your email joins the mailing list (at Resend) and is used only to send you news from Café Preguiça, in Portuguese. The legal basis is your consent (GDPR, Art. 6(1)(a), and Portuguese Law 41/2004, Art. 13-A).",
+        "b": "So that we can demonstrate that consent, we keep a record of each sign-up: when you asked and when you confirmed, where (invitation or secret menu), in which language, the sentence shown next to the request and the version of that text — and, if you unsubscribe, when and how. We don't store your network address or device for this. The record is kept in Upstash, identified by a digest of your email.",
+        "c": "You can withdraw your consent at any time, free of charge: every newsletter has a link to unsubscribe, effective immediately, and you can also ask us through the contacts above. Unsubscribing does not close the secret menu. Withdrawing consent does not make earlier emails unlawful.",
+        "d": "Unsubscribing and erasure are different things. If you unsubscribe, you stop receiving emails and the address stays on the list marked as unsubscribed — that mark is what stops you receiving them again — until you ask us to erase it. The record of the sign-up and of the unsubscription is kept for three years after you unsubscribe, so we can answer a complaint about emails sent while you were subscribed, and is then deleted automatically. If you ask for erasure, we remove the address from the list and delete that record."
+      }
     },
-    "terceiros": {
-      "titulo": "Third-party services",
-      "texto": "None that load code in your browser: fonts and images are served from this domain, and there are no embedded maps or social media buttons. Links to Google Maps and to social media are plain links, which only open if you click them. Newsletter emails are sent through Resend, which keeps the contact list on our behalf. To prevent abuse of the newsletter and secret menu forms, the server counts requests in Upstash: the network address they come from, for one hour, and the email, in a form that cannot be turned back into it, for 24 hours. In neither case does your browser talk to these services — the site's server does."
-    },
-    "alojamento": {
-      "titulo": "Hosting",
-      "texto": "The site is hosted by Vercel, which logs requests to its servers in order to deliver and protect the site. Those logs belong to the platform, and we do not use them to identify anyone. When someone exceeds the form limits, the server log keeps the network address and the partly hidden email, so that abuse can be spotted."
+    "carta": {
+      "titulo": "The secret menu",
+      "paragrafos": {
+        "a": "The secret menu opens for anyone who confirms an email through the link we send. You don't need to receive our news: the news box is optional and comes unticked. Without it, the email is used only to send the link, and is not added to any list.",
+        "b": "Once you confirm, your browser stores a key that opens the menu — without your email inside it. By default it lasts until you close the tab; if you choose “remember on this device”, it lasts 90 days. The details are on the <cookies>cookies</cookies> page."
+      }
     },
     "equipa": {
       "titulo": "The staff area",
-      "texto": "Staff sign in to a private area with a code sent to their email. To do this, we use each staff member's email address to send them the code (through Resend), and we keep the sign-in record for up to 30 days (at Upstash) to limit attempts and recognise the device. None of this concerns visitors to the site."
+      "paragrafos": {
+        "a": "People who work at the café sign in to a reserved area with a code sent to them by email. We use each staff member's email to send them the code (through Resend) and keep, in Upstash: the pending code, as a digest, with the email, for 10 minutes; the session, for 8 hours; if the person asks us to remember the device, that device's token, for 30 days; and a log of each sign-in and sign-out — email, date and time, and the type of device and browser (e.g. “iPhone · Safari”) — for at most 30 days each. The network address is not kept in that log.",
+        "b": "To limit attempts, the server counts code requests per email (as a digest) and per network address, over periods from 15 minutes to a day; failed attempts are kept in the server log with the network address and the partially hidden email. Changes published through the staff area are kept in the site's version history (on GitHub), with the partially hidden email of whoever made them.",
+        "c": "The legal basis is the business's legitimate interest in protecting access to the reserved area and knowing who made each change (GDPR, Art. 6(1)(f)). None of this concerns people who only visit the site."
+      }
     },
-    "contacto": {
-      "titulo": "Questions",
-      "texto": "Reach us through the details on the contact page. If you believe your data has not been handled properly, you also have the right to lodge a complaint with the Portuguese data protection authority (CNPD)."
+    "destinatarios": {
+      "titulo": "Who else has access",
+      "paragrafos": {
+        "a": "We use service providers that process data on our behalf: Vercel (site hosting), Resend (sending emails and the newsletter list), Upstash (counters, staff-area logs and the consent record) and GitHub (where the site's code and content live, including the history of changes made in the staff area). DevPlus, which builds and maintains the site, has access to these services to manage them. We don't sell data or share it for advertising.",
+        "b": "None of these services runs in your browser: fonts and images come from this domain, there are no embedded maps or social media buttons, and the links to Google Maps and social networks are plain links that only open if you click them."
+      }
     },
-    "olho": "This site and your data",
-    "ficha": {
-      "formularios": "Forms",
-      "cookies": "Cookies",
-      "terceiros": "Third-party services",
-      "nenhum": "None",
-      "newsletter": "The newsletter",
-      "soEmail": "Email delivery and request limits"
+    "transferencias": {
+      "titulo": "Data outside the European Union",
+      "paragrafos": {
+        "a": "Resend stores contacts and sending records in the United States. Vercel, Upstash and GitHub are companies based in the United States and may process data there. In those cases, the transfer relies on the standard contractual clauses approved by the European Commission, which are part of these providers' data processing agreements, and, where the provider is certified, on the EU-US Data Privacy Framework. You can ask us for information about these safeguards through the contacts above."
+      }
+    },
+    "conservacao": {
+      "titulo": "For how long",
+      "intro": "There is no single legal retention period for this data: each item is kept for as long as its purpose requires.",
+      "itens": {
+        "visitas": "Hosting logs: the retention period of the hosting plan.",
+        "limites": "Form request counters: 1 hour (network address) and 24 hours (email, as a digest).",
+        "envios": "Record of emails sent, at Resend: the retention period of the sending account.",
+        "lista": "Newsletter list: while you are subscribed; after you unsubscribe, marked as unsubscribed until you ask us to erase it.",
+        "prova": "Consent record: while you are subscribed, and for three years after you unsubscribe.",
+        "aviso": "Note that we have already confirmed an unsubscription to you: 7 days.",
+        "equipa": "Staff area: code, 10 minutes; session, 8 hours; remembered device, 30 days; sign-in log, 30 days per entry.",
+        "mesas": "Table counts: no time limit, being just numbers; recent scans: up to a year without new scans.",
+        "copias": "Backups and the providers' internal logs follow each service's own periods: what we delete may take that long to disappear from them."
+      }
+    },
+    "direitos": {
+      "titulo": "Your rights",
+      "paragrafos": {
+        "a": "You can ask us for access to your data, rectification, erasure or restriction of processing, and object to processing based on our legitimate interest. For data you gave us based on your consent or your request, you can also ask for a copy in a commonly used format (portability). We reply within one month. We don't make automated decisions or create profiles.",
+        "b": "If you believe your data has not been handled properly, you can lodge a complaint with the Portuguese data protection authority (<cnpd>CNPD</cnpd>)."
+      }
     }
   },
   "cookies": {
@@ -373,42 +439,64 @@
     "olho": "What stays in your browser",
     "ficha": {
       "proprios": "Cookies from this site",
+      "soEquipa": "Only in the staff area",
       "terceiros": "Third-party cookies",
-      "banner": "Consent banner",
       "zero": "0",
-      "naoPreciso": "Not needed"
+      "banner": "Consent banner",
+      "noSitio": "No: choices are asked where they're used"
     },
     "uso": {
       "titulo": "What we use",
-      "texto": "This site sets no cookies for its visitors. There are no analytics, advertising or session cookies, and therefore no consent banner — there would be nothing to consent to."
+      "texto": "Visitors don't get cookies: there are no analytics, advertising or third-party cookies. The site keeps a few small notes in your browser, explained below — only the ones needed for what you asked for, or the ones you choose to keep. That's why there is no general banner: when a choice is yours, you're asked for it where it is used."
     },
     "lingua": {
       "titulo": "What about the language you chose?",
-      "texto": "It lives in the address, not in a cookie: the English version is under /en, and it stays that way as you browse. If you type the address again without /en, the site opens in Portuguese."
+      "texto": "It lives in the address, not in a cookie: the English version is at /en. It stays while you browse the site. If you type the address again without /en, the site opens in Portuguese."
     },
     "memoria": {
-      "titulo": "What about the newsletter invitation?",
-      "texto": "When you ask to join the newsletter, the site leaves a note in your browser's storage that just says \"signed up\", so as not to show the invitation again. Closing the invitation leaves another note, which the browser deletes by itself when you close the tab. Neither of them identifies anyone, and neither leaves your device. Opening the secret menu also stores a key with your email, signed by us and valid for 180 days: when you come back to the menu, the site sends it to the server to check that you are still signed up and to open the menu without asking for your email again. The \"Close the menu\" button deletes it. None of these is a cookie, and if you delete them, the worst that can happen is the invitation showing up again or the menu asking for your email again."
+      "titulo": "What stays in the browser's storage",
+      "intro": "None of these notes is a cookie: they aren't sent with requests to the server (the menu key is only sent when the menu opens) and don't leave your device in any other way.",
+      "itens": {
+        "convite": "preguica:newsletter, in session storage: “inscrito” (signed up) or “fechado” (closed), so the newsletter invitation doesn't show up again during the same visit. The browser deletes it when you close the tab. It identifies no one.",
+        "naoMostrar": "preguica:newsletter:nao-mostrar, in local storage: only if you click “Don't show again on this device” in the invitation. It stores the date until which the invitation won't appear — six months — and is deleted afterwards.",
+        "carta": "preguica:carta-secreta, in session storage: the key that opens the secret menu after you confirm an email. Signed by us, without your email inside it, valid for 24 hours and deleted when you close the tab.",
+        "cartaLembrada": "preguica:carta-secreta, in local storage: the same key, only if you choose “remember on this device”. Valid for 90 days from your choice, without renewing, and the site deletes it afterwards; “Close the menu on this device” deletes it at once.",
+        "painel": "preguica:painel:seccoes-fechadas, in session storage and only in the staff area: which menu sections are collapsed in the editor."
+      }
     },
     "equipa": {
       "titulo": "The staff area",
-      "texto": "There is an area reserved for the people who work here, to update the menu and the opening hours. Anyone who uses its sign-in screen receives up to three strictly necessary cookies — one for a sign-in code in progress (it lasts ten minutes), one to keep the session open and one so that the same device isn't asked for a code every time — and only in that area: they are never sent to the other pages. People who just visit the site never receive them."
+      "texto": "In the area reserved for people who work at the café — and only there: these cookies don't travel to other pages — there are up to three cookies. preguica_desafio holds the sign-in code in progress (10 minutes); preguica_sessao keeps the session open (8 hours); and preguica_aparelho, only if the person signing in ticks “Remember this device”, avoids asking for the code for 30 days. The first two are strictly necessary to sign in; the third is a choice, and “Forget this device” deletes it."
+    },
+    "base": {
+      "titulo": "Why we don't ask permission for everything",
+      "texto": "Portuguese law requires consent to store information on your device, except where it is strictly necessary for a service you asked for (Law 41/2004, Art. 5). The session notes and the two sign-in cookies fall into that case: they serve to open the menu you asked for, not to repeat an invitation you already answered, or to sign in to the staff area. The ones that last longer are only saved when you click the button or tick the box that says what is kept and for how long — and they are undone with those same buttons, or by clearing the site's data in your browser."
     },
     "verificar": {
       "titulo": "How to check",
-      "texto": "You don't have to take our word for it: open your browser's developer tools, go to the Application tab, and you will see that the cookie list for this domain is empty."
+      "texto": "You don't have to take our word for it: in your browser's developer tools, under the Application (or Storage) tab, you can see this domain's cookies, local storage and session storage. If you've never signed in to the staff area, you have no cookies from this site."
     }
   },
   "informacaoLegal": {
     "olho": "Legal information",
-    "titulo": "Dispute resolution",
+    "titulo": "Legal information",
+    "pendente": "To be published: the name or company name, legal form, tax number (NIF) and registered address of whoever runs Café Preguiça are being confirmed with the business and will appear here as soon as they are.",
+    "identificacao": {
+      "titulo": "Who runs the café",
+      "texto": "Café Preguiça is run by {nome} ({forma}), tax number (NIF) {nif}, registered at {sede}.",
+      "registo": "Registration: {registo}. Share capital: {capital}.",
+      "contactos": "Contacts: <contactos>contact page</contactos>."
+    },
     "litigios": {
       "titulo": "If you have a problem with us",
-      "texto": "In the event of a consumer dispute, you may turn to an alternative dispute resolution body: <entidade>{nome}</entidade>. More information on the <portal>Portal do Consumidor</portal> (Portuguese consumer portal)."
+      "texto": "In a consumer dispute, you can turn to an alternative dispute resolution body. The one with jurisdiction over the area where the café is located is <entidade>{nome}</entidade>. Each centre has limits on what it handles — by value or by subject matter — and its website explains them. The list of bodies is on the <portal>Consumer Portal</portal> (in Portuguese).",
+      "adesao": "The café has joined this centre.",
+      "reduzidoValor": "In consumer disputes worth up to €5,000, if the consumer chooses to take the case to an authorised consumer arbitration centre, the café is bound by that arbitration or mediation (Portuguese Law 24/96, Art. 14).",
+      "pendente": "The alternative dispute resolution body to be listed here is being confirmed with the business. Meanwhile, the official list of bodies is on the <portal>Consumer Portal</portal> (in Portuguese)."
     },
     "reclamacoes": {
       "titulo": "Complaints Book",
-      "texto": "You can also file a complaint in the <livro>electronic Complaints Book</livro> (Livro de Reclamações)."
+      "texto": "You can also file a complaint in the <livro>electronic Complaints Book</livro> (Livro de Reclamações Eletrónico)."
     }
   },
   "rodape": {
@@ -418,7 +506,7 @@
     "cookies": "Cookies",
     "legal": "Legal information",
     "livroReclamacoes": "Complaints Book",
-    "resolucaoLitigios": "Dispute resolution"
+    "resolucaoLitigios": "Legal information"
   },
   "naoEncontrada": {
     "titulo": "Page not found",
@@ -440,6 +528,7 @@
       "botao": "Sign up",
       "aEnviar": "Sending…",
       "fechar": "Close",
+      "naoMostrar": "Don't show again on this device (6 months)",
       "consentimento": "By signing up, you agree to receive our news by email. You can unsubscribe at any time.",
       "privacidade": "How we handle your email",
       "enviadoTitulo": "One more step",
@@ -451,8 +540,8 @@
       "erroServico": "We couldn't send it right now. Please try again shortly."
     },
     "confirmar": {
-      "olho": "Newsletter",
-      "titulo": "Confirm your sign-up",
+      "olho": "Newsletter and secret menu",
+      "titulo": "Confirm your email",
       "texto": "One last step: press the button to start receiving news from Café Preguiça at this address.",
       "botao": "Confirm sign-up",
       "aConfirmar": "Confirming…",
@@ -462,19 +551,40 @@
       "invalido": "This link is incomplete or no longer valid. Open it again from the email, or sign up again on the site.",
       "expirado": "This link was only valid for 48 hours and has expired. Sign up again on the site to get a new one.",
       "erro": "We couldn't confirm right now. Please try again shortly — the link is still valid.",
-      "abrirCarta": "Open the secret menu"
+      "abrirCarta": "See the secret menu",
+      "textoCarta": "Press the button to open the secret menu in this browser. You won't be added to any list.",
+      "botaoCarta": "Open the secret menu",
+      "textoCartaENovidades": "Press the button to confirm you want to receive the café's news at this address and to open the secret menu.",
+      "botaoCartaENovidades": "Confirm and open the menu",
+      "lembrar": "Remember the secret menu on this device for 90 days (stores a key in your browser, without your email).",
+      "feitoCartaTitulo": "The menu is open",
+      "feitoCartaTexto": "You can see it on the menu page now."
     },
     "email": {
       "assunto": "Confirm your subscription to the Café Preguiça newsletter",
       "titulo": "Just one more step",
       "texto": "Hello,\n\nYou asked to receive news from Café Preguiça. All that's left is to confirm this address is yours.",
       "botao": "Confirm subscription",
-      "nota": "The link is valid for 48 hours. If you didn't make this request, just ignore this email: without confirmation, the address is neither subscribed nor stored.",
+      "nota": "The link is valid for 48 hours. If you didn't make this request, just ignore this email: without confirmation, the address isn't added to any list.",
       "assinatura": {
         "antes": "Site made",
         "enfase": "without a lazy bone",
         "depois": "by"
       }
+    },
+    "emailCarta": {
+      "assunto": "Your link to open the Café Preguiça secret menu",
+      "titulo": "The secret menu",
+      "texto": "Hello,\n\nYou asked to open the Café Preguiça secret menu. Press the button to open it.",
+      "botao": "Open the secret menu",
+      "nota": "The link is valid for 48 hours. If you didn't make this request, just ignore this email: the address isn't added to any list."
+    },
+    "emailCartaENovidades": {
+      "assunto": "Open the secret menu and confirm news from Café Preguiça",
+      "titulo": "Just one more step",
+      "texto": "Hello,\n\nYou asked to open the secret menu and to receive news from Café Preguiça by email. Press the button to confirm this address is yours.",
+      "botao": "Confirm and open the menu",
+      "nota": "The link is valid for 48 hours. If you didn't make this request, just ignore this email: without confirmation, the address isn't added to any list."
     }
   }
 }

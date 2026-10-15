@@ -127,11 +127,13 @@ export default async function PaginaDasSessoes() {
                         {a.aparelho} ·{" "}
                         {ligado
                           ? `ligado agora, desde ${nomeDoDia(a.ultimaEntrada, agora).toLowerCase()} às ${HORA.format(a.ultimaEntrada)}`
-                          : `lembrado até ${DATA_CURTA.format(a.lembradoAte)} — entra sem código`}
+                          : a.lembrado === false
+                            ? "sessão fechada"
+                            : `lembrado até ${DATA_CURTA.format(a.lembradoAte)} — entra sem código`}
                       </span>
                     </span>
                     <span className="pn-aparelhos__estado" data-ligado={ligado || undefined}>
-                      {ligado ? "Ligado" : "Lembrado"}
+                      {ligado ? "Ligado" : a.lembrado === false ? "Fechado" : "Lembrado"}
                     </span>
                     <TerminarSessao aparelho={a.id} este={a.id === este} />
                   </li>

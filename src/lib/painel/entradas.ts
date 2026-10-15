@@ -1,6 +1,6 @@
 import "server-only";
 import { headers } from "next/headers";
-import { empurrarNaLista, lerLista } from "./redis";
+import { apagar, empurrarAte, lerListas } from "./redis";
 
 /*
   Quem entrou no painel, com que email, a que horas e de que aparelho.
@@ -18,11 +18,26 @@ import { empurrarNaLista, lerLista } from "./redis";
   estranhar um que não se conhece. **O IP não fica.** Diria de onde se entrou,
   o que é mais do que esta lista precisa de saber sobre duas pessoas da casa.
 
-  ## Quanto tempo
+  ## Quanto tempo: 30 dias, contados por linha
 
-  As últimas `MAXIMO` linhas, numa lista do Redis que se corta sozinha
-  (`empurrarNaLista`). Para duas pessoas, que com o aparelho lembrado entram
-  sem código durante 30 dias, são meses de histórico.
+  A página de privacidade promete que cada registo de entrada dura 30 dias, no
+  máximo — e é o código que o tem de cumprir, não um `EXPIRE` simpático.
+
+  Já foi uma lista só, com as últimas 300 linhas e um prazo de 365 dias **para
+  a lista**, renovado a cada escrita (revisão legal de 2026-10-15). Isso não
+  garantia nem os 30 dias nem um ano: enquanto alguém entrasse, a lista nunca
+  expirava, e a linha mais velha ficava lá até ser empurrada pelo fim.
+
+  Agora há uma lista por dia (UTC), `painel:entradas:<AAAA-MM-DD>`, e cada uma
+  leva uma hora de morte absoluta (`PEXPIREAT`): o início desse dia mais 30
+  dias. Uma linha escrita às 00:00:01 vive 30 dias menos um segundo; uma escrita
+  às 23:59 vive 29 dias e um minuto. Nenhuma passa dos 30, e é o Redis que as
+  apaga, quer alguém abra a página das Sessões quer não. Escrever outra vez no
+  mesmo dia não mexe na hora.
+
+  O teto de `MAXIMO` linhas continua, por dia e na leitura: é o que a página
+  mostra, e um dia anormal (alguém a carregar em "sair" num ciclo) não enche o
+  armazenamento.
 
   ## Anotar nunca impede ninguém de entrar
 
@@ -31,9 +46,27 @@ import { empurrarNaLista, lerLista } from "./redis";
   da Vercel.
 */
 
-const CHAVE = "painel:entradas";
+const PREFIXO = "painel:entradas:";
+/** A lista única de antes — apaga-se à primeira escrita ou leitura deste código. */
+const CHAVE_ANTIGA = "painel:entradas";
 const MAXIMO = 300;
-const PRAZO_S = 365 * 24 * 60 * 60;
+const DIA_MS = 24 * 60 * 60 * 1000;
+export const PRAZO_DAS_ENTRADAS_MS = 30 * DIA_MS;
+
+/** O início (UTC) do dia de `quando`. */
+function inicioDoDia(quando: number): number {
+  return Math.floor(quando / DIA_MS) * DIA_MS;
+}
+
+function chaveDoDia(inicio: number): string {
+  return `${PREFIXO}${new Date(inicio).toISOString().slice(0, 10)}`;
+}
+
+/* Um `DEL` a uma chave que já não existe não custa nada, e assim não há
+   instância nenhuma que se esqueça de o fazer. */
+async function apagarAntiga(): Promise<void> {
+  await apagar(CHAVE_ANTIGA);
+}
 
 export type Como = "codigo" | "aparelho" | "saiu" | "esqueceu" | "terminada";
 
@@ -100,7 +133,9 @@ export async function anotarEntrada(email: string, como: Como, aparelho?: string
       como,
       aparelho: aparelho ?? aparelhoDe((await headers()).get("user-agent")),
     };
-    await empurrarNaLista(CHAVE, JSON.stringify(entrada), MAXIMO, PRAZO_S);
+    const inicio = inicioDoDia(entrada.quando);
+    await apagarAntiga();
+    await empurrarAte(chaveDoDia(inicio), JSON.stringify(entrada), MAXIMO, inicio + PRAZO_DAS_ENTRADAS_MS);
   } catch (erro) {
     console.error(`[painel] não foi possível anotar a entrada (${como}):`, erro);
   }
@@ -116,7 +151,14 @@ export async function anotarEntrada(email: string, como: Como, aparelho?: string
  * assumindo a ordem certa.
  */
 export async function ultimasEntradas(): Promise<Entrada[]> {
-  return (await lerLista(CHAVE, MAXIMO))
+  await apagarAntiga();
+  const agora = Date.now();
+  const hoje = inicioDoDia(agora);
+  /* Os 31 dias que ainda podem ter listas vivas: hoje e os 30 de trás (o de
+     há 30 dias só se já tiver morrido, mas perguntar não custa). */
+  const dias = Array.from({ length: 31 }, (_, i) => chaveDoDia(hoje - i * DIA_MS));
+  return (await lerListas(dias, MAXIMO))
+    .flat()
     .flatMap((linha) => {
       try {
         return [JSON.parse(linha) as Entrada];
@@ -124,5 +166,9 @@ export async function ultimasEntradas(): Promise<Entrada[]> {
         return [];
       }
     })
-    .sort((a, b) => b.quando - a.quando);
+    /* O Redis já as apagou a horas; o filtro é para a página nunca mostrar uma
+       que ainda não tenha sido varrida no segundo exacto. */
+    .filter((e) => e.quando > agora - PRAZO_DAS_ENTRADAS_MS)
+    .sort((a, b) => b.quando - a.quando)
+    .slice(0, MAXIMO);
 }

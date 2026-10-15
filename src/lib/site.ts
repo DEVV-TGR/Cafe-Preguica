@@ -38,10 +38,19 @@ export const URL_ESTUDIO = "https://devplus.pt";
 
 /**
  * O Livro de Reclamações Eletrónico. Não é opcional: quem vende a
- * consumidores e tem site tem de lhe pôr o acesso à vista (DL 156/2005, na
- * redação do DL 74/2017). Está no rodapé, que aparece em todas as páginas.
+ * consumidores e tem site tem de lhe pôr o acesso à vista (DL 156/2005, art.
+ * 5.º-B). Está no rodapé, que aparece em todas as páginas, e na página de
+ * informação legal.
+ *
+ * O endereço é o geral da plataforma, e isso não é um defeito: a lei pede o
+ * acesso, não um endereço por operador. O que o link **não prova** é que a casa
+ * esteja registada na plataforma e se encontre lá pelo nome ou pelo NIF — isso
+ * confirma-se com a casa (`docs/decisoes-pendentes.md`).
  */
 export const URL_LIVRO_RECLAMACOES = "https://www.livroreclamacoes.pt/Inicio/";
+
+/** A Comissão Nacional de Proteção de Dados, a quem se pode apresentar reclamação (RGPD, art. 77.º). */
+export const URL_CNPD = "https://www.cnpd.pt/";
 
 /** O portal oficial da Direção-Geral do Consumidor, citado na linha dos litígios. */
 export const URL_PORTAL_CONSUMIDOR = "https://www.consumidor.gov.pt/";

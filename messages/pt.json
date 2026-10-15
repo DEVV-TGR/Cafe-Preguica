@@ -68,15 +68,15 @@
     },
     "privacidade": {
       "titulo": "Privacidade",
-      "descricao": "Que dados este site recolhe, para quê e por quanto tempo."
+      "descricao": "Que dados este site trata, para quê, com que base, por quanto tempo e como exercer os seus direitos."
     },
     "cookies": {
       "titulo": "Cookies",
-      "descricao": "Este site não põe cookies a quem o visita. Esta página explica porquê."
+      "descricao": "O que este site guarda no seu navegador, para quê e por quanto tempo."
     },
     "informacaoLegal": {
-      "titulo": "Resolução de litígios",
-      "descricao": "O que fazer se alguma coisa correr mal: o centro de arbitragem de consumo e o Livro de Reclamações."
+      "titulo": "Informação legal",
+      "descricao": "Quem explora o Café Preguiça, a quem recorrer em caso de litígio de consumo e o Livro de Reclamações."
     },
     "newsletter": {
       "titulo": "Newsletter",
@@ -300,26 +300,27 @@
       "sinal": "Há uma carta que não está aqui.",
       "sinalLigacao": "Ver a carta secreta ↓",
       "maisCocktails": "Há mais cocktails na carta secreta ↓",
-      "olho": "Só para quem está na lista",
+      "olho": "Para quem a pede",
       "titulo": "A carta secreta",
-      "texto": "Os cocktails que não estão no papel. Para os ver, escreva o email em que recebe as novidades da casa.",
+      "texto": "Os cocktails que não estão no papel. Escreva o seu email e enviamos-lhe um link para a abrir.",
       "etiqueta": "O seu email",
       "marcador": "o-seu@email.pt",
-      "abrir": "Abrir",
-      "aAbrir": "A abrir…",
-      "naoInscritoTitulo": "Este email ainda não está na lista.",
-      "naoInscritoTexto": "Inscreva {email} nas novidades da casa. Confirme no email que lhe vamos enviar e a carta abre-se sozinha.",
-      "inscrever": "Inscrever e abrir",
+      "enviarLink": "Enviar o link",
       "aEnviar": "A enviar…",
-      "consentimento": "Ao inscrever-se, aceita receber as novidades da casa por email. Pode cancelar quando quiser.",
+      "consentimento": "Quero também receber as novidades da casa por email (opcional). Posso cancelar quando quiser.",
+      "nota": "Não precisa das novidades para abrir a carta: sem a caixa marcada, o email serve só para lhe enviar o link.",
       "privacidade": "Como tratamos o seu email",
       "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente novamente daqui a pouco.",
-      "erroServico": "Não foi possível enviar agora. Tente novamente daqui a pouco.",
-      "enviadoTitulo": "Falta um passo",
-      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está e volta aqui com a carta já aberta.",
+      "erroServico": "Não foi possível agora. Tente novamente daqui a pouco.",
+      "enviadoTitulo": "Veja o seu email",
+      "enviadoTexto": "Enviámos um link para {email}. Abra-o e a carta abre-se.",
       "outroEmail": "Escrever outro email",
-      "abertaTexto": "Está na lista, por isso isto é para si. Peça-os ao balcão pelo nome.",
-      "fechar": "Não é o seu email? Fechar a carta"
+      "abertaTexto": "Isto é para si. Peça-os ao balcão pelo nome.",
+      "lembrar": "Lembrar neste aparelho durante 90 dias",
+      "lembrarNota": "Guarda no navegador uma chave sem o seu email, para a carta abrir sozinha nas próximas visitas.",
+      "aLembrar": "A guardar…",
+      "lembrada": "Fica lembrada neste aparelho durante 90 dias.",
+      "fechar": "Fechar a carta neste aparelho"
     }
   },
   "contactos": {
@@ -333,39 +334,104 @@
   },
   "privacidade": {
     "titulo": "Privacidade",
-    "atualizado": "Última atualização: rascunho, por rever antes de publicar.",
-    "recolha": {
-      "titulo": "Que dados recolhemos",
-      "texto": "Sobre quem só visita, nenhuns: o site não tem contas nem ferramentas de estatística, e não guarda nada sobre quem o abre. Quando a carta é aberta pelo código QR ou pelo NFC de uma mesa, o servidor soma um a um contador dessa mesa e dessa noite, para sabermos se os códigos são usados; não guarda nada sobre o telemóvel nem sobre quem o leu. A única exceção é a newsletter, e só para quem se inscreve — está explicada na secção seguinte."
+    "olho": "O site e os seus dados",
+    "versao": "Versão de 15 de outubro de 2026. Há dados da casa ainda por confirmar; estão assinalados nesta página.",
+    "pendente": "Identificação por publicar: o nome ou a firma, a forma jurídica, o NIF e a sede de quem explora o Café Preguiça estão a ser confirmados com a casa e aparecem aqui logo que o sejam. Até lá, pode falar connosco pelos contactos abaixo.",
+    "ficha": {
+      "formularios": "Formulários",
+      "pedidoDeEmail": "Pedido de email",
+      "cookies": "Cookies",
+      "soEquipa": "Só na área da equipa",
+      "prestadores": "Prestadores",
+      "quais": "Alojamento, email e armazenamento"
+    },
+    "formas": {
+      "empresario-em-nome-individual": "empresário em nome individual",
+      "sociedade-unipessoal-por-quotas": "sociedade unipessoal por quotas",
+      "sociedade-por-quotas": "sociedade por quotas",
+      "sociedade-anonima": "sociedade anónima",
+      "outra": "outra forma jurídica"
+    },
+    "responsavel": {
+      "titulo": "Quem é responsável",
+      "identificacao": "O responsável pelo tratamento dos dados descritos nesta página é {nome} ({forma}), NIF {nif}, com sede em {sede}, que explora o Café Preguiça.",
+      "contacto": "Para qualquer questão sobre os seus dados — incluindo os pedidos da secção «Os seus direitos» —, escreva para <email>{endereco}</email>. Os outros contactos da casa estão na página <contactos>Contactos</contactos>.",
+      "semEmail": "Para qualquer questão sobre os seus dados, use os contactos da página <contactos>Contactos</contactos>."
+    },
+    "visitas": {
+      "titulo": "Quando visita o site",
+      "paragrafos": {
+        "a": "O site não tem contas, não tem ferramentas de estatística e não põe cookies a quem o visita. Mas, como em qualquer site, cada visita passa por um servidor: o serviço de alojamento (Vercel) regista os pedidos que lhe chegam — o endereço de rede (IP), a página pedida, a data e a hora e a identificação do navegador — para entregar as páginas e proteger o site contra abusos. Não usamos estes registos para saber quem é quem.",
+        "b": "A base é o nosso interesse legítimo em manter o site a funcionar e seguro (RGPD, art. 6.º, n.º 1, al. f)). Estes registos ficam guardados pelo prazo de retenção do plano de alojamento.",
+        "c": "Quando abre a carta pelo código QR ou pelo NFC de uma mesa, o servidor regista o número da mesa e a hora: soma a leitura às contagens dessa mesa, por noite e por hora, e guarda as últimas 300 leituras com a hora exata, para sabermos se os códigos são usados. Não guarda o endereço de rede, cookies nem nenhum identificador do telemóvel; o tipo de navegador é lido só para não contar robôs, e não fica guardado. As contagens não têm prazo, por serem só números; a lista das últimas leituras apaga-se se passar um ano sem nenhuma."
+      }
+    },
+    "pedidos": {
+      "titulo": "Quando nos dá um email",
+      "paragrafos": {
+        "a": "O convite da newsletter e a carta secreta pedem um endereço de email. Quando o escreve, enviamos-lhe um email com um link para confirmar. Para isso, o endereço segue para o serviço de envio de email (Resend), que guarda o registo do envio — destinatário, assunto e estado da entrega — pelo prazo de retenção da conta. Se não confirmar, o endereço não entra em nenhuma lista.",
+        "b": "Para impedir abusos destes formulários, o servidor conta os pedidos no Upstash: por endereço de rede, durante uma hora, e por email, durante 24 horas. O email fica guardado como um resumo criptográfico (SHA-256): não fica escrito, mas quem já conhecer o endereço consegue fazer a correspondência — por isso tratamo-lo como dado pessoal, e não como anónimo. Se alguém ultrapassar os limites, o registo do servidor guarda o endereço de rede e o email parcialmente oculto, para se perceber o abuso.",
+        "c": "A base é o seu pedido (RGPD, art. 6.º, n.º 1, al. b)) e, no controlo de abusos, o nosso interesse legítimo em proteger o serviço e as caixas de correio de outras pessoas (al. f)). Dar o email é facultativo; sem ele não lhe conseguimos enviar o link."
+      }
     },
     "newsletter": {
       "titulo": "A newsletter",
-      "texto": "Se se inscrever, guardamos o seu endereço de email e a data em que confirmou a inscrição, e usamo-los apenas para lhe enviar as novidades da casa, em português. A base legal é o seu consentimento, dado em dois passos: escreve o email no site e confirma-o através do link que lhe enviamos. Sem essa confirmação, o endereço não entra na lista; fica apenas o registo do envio do email de confirmação no serviço que o envia (a Resend). Cada email traz um link para cancelar a inscrição, que tem efeito imediato: deixa de receber, e o endereço fica na lista marcado como cancelado, para não voltar a receber por engano. A qualquer momento pode perguntar-nos que dados temos sobre si ou pedir que os apaguemos de vez, pelos contactos da casa. O mesmo email serve para abrir a carta secreta da ementa: quando o escreve lá, apenas verificamos se está inscrito na lista."
+      "paragrafos": {
+        "a": "Se pedir as novidades da casa — no convite do site ou marcando a caixa da carta secreta — e confirmar pelo link, o seu email entra na lista de envio (na Resend) e é usado só para lhe mandar as novidades do Café Preguiça, em português. A base é o seu consentimento (RGPD, art. 6.º, n.º 1, al. a), e Lei 41/2004, art. 13.º-A).",
+        "b": "Para podermos demonstrar esse consentimento, guardamos um registo de cada inscrição: quando pediu e quando confirmou, onde (convite ou carta secreta), em que língua, a frase que estava junto ao pedido e a versão desse texto — e, se cancelar, quando e por onde. Não guardamos o endereço de rede nem o aparelho para isso. O registo fica no Upstash, identificado por um resumo do seu email.",
+        "c": "Pode retirar o consentimento quando quiser, sem custo: cada newsletter traz um link para cancelar, com efeito imediato, e também pode pedi-lo pelos contactos acima. Cancelar não fecha a carta secreta. Retirar o consentimento não torna ilícitos os envios feitos antes.",
+        "d": "Cancelar e apagar são coisas diferentes. Se cancelar, deixa de receber, e o endereço fica na lista marcado como cancelado — é essa marca que impede que volte a receber — até nos pedir que o apaguemos. O registo da inscrição e do cancelamento fica três anos depois do cancelamento, para podermos responder a uma reclamação sobre envios feitos enquanto estava inscrito, e é então apagado automaticamente. Se pedir o apagamento, retiramos o endereço da lista e apagamos esse registo."
+      }
     },
-    "terceiros": {
-      "titulo": "Serviços de terceiros",
-      "texto": "Nenhum que carregue código no seu navegador: as fontes e as imagens são servidas por este domínio, e não há mapas incorporados nem botões de redes sociais. As ligações para o Google Maps e para as redes sociais são links normais, que só abrem se carregar neles. Os emails da newsletter são enviados pela Resend, que guarda a lista de contactos em nosso nome. Para impedir abusos dos formulários da newsletter e da carta secreta, o servidor conta os pedidos na Upstash: o endereço de rede de onde vêm, durante uma hora, e o email, numa forma que não permite recuperá-lo, durante 24 horas. Em nenhum dos casos o seu navegador comunica com estes serviços — quem o faz é o servidor do site."
-    },
-    "alojamento": {
-      "titulo": "Alojamento",
-      "texto": "O site está alojado na Vercel, que regista os pedidos feitos ao servidor para poder disponibilizar e proteger o site. Esses registos pertencem à plataforma e não os usamos para identificar ninguém. Quando alguém excede os limites dos formulários, o registo do servidor guarda o endereço de rede e o email parcialmente oculto, para se poder perceber um abuso."
+    "carta": {
+      "titulo": "A carta secreta",
+      "paragrafos": {
+        "a": "A carta secreta abre-se a quem confirmar um email pelo link que lhe enviamos. Não é preciso receber as novidades: a caixa das novidades é opcional e vem desmarcada. Sem ela, o email serve só para enviar o link, e não fica em lista nenhuma.",
+        "b": "Depois de confirmar, o navegador guarda uma chave que abre a carta — sem o seu email lá dentro. Por defeito dura até fechar o separador; se escolher «lembrar neste aparelho», fica 90 dias. Os pormenores estão na página de <cookies>cookies</cookies>."
+      }
     },
     "equipa": {
       "titulo": "A área da equipa",
-      "texto": "Quem trabalha na casa entra numa área reservada com um código que recebe por email. Para isso, usamos o endereço de email de cada pessoa da equipa para lhe enviar o código (através da Resend) e guardamos o registo de entrada durante 30 dias, no máximo (na Upstash), para limitar tentativas e reconhecer o aparelho. Nada disto diz respeito a quem visita o site."
+      "paragrafos": {
+        "a": "Quem trabalha na casa entra numa área reservada com um código que recebe por email. Usamos o email de cada pessoa da equipa para lhe enviar o código (pela Resend) e guardamos, no Upstash: o código pendente, em resumo, com o email, durante 10 minutos; a sessão, durante 8 horas; se a pessoa pedir para lembrar o aparelho, a marca desse aparelho, durante 30 dias; e o registo de cada entrada e saída — email, data e hora, e o tipo de aparelho e de navegador (por exemplo, «iPhone · Safari») —, durante 30 dias, no máximo, cada um. O endereço de rede não fica nesse registo.",
+        "b": "Para limitar tentativas, o servidor conta os pedidos de código por email (em resumo) e por endereço de rede, em períodos de 15 minutos a um dia; as tentativas falhadas ficam no registo do servidor com o endereço de rede e o email parcialmente oculto. As alterações publicadas pelo painel ficam no histórico de versões do site (no GitHub), com o email parcialmente oculto de quem as fez.",
+        "c": "A base é o interesse legítimo da casa em proteger o acesso à área reservada e em saber quem fez cada alteração (RGPD, art. 6.º, n.º 1, al. f)). Nada disto diz respeito a quem só visita o site."
+      }
     },
-    "contacto": {
-      "titulo": "Dúvidas",
-      "texto": "Fale connosco pelos contactos da casa. Se entender que os seus dados não foram bem tratados, tem também o direito de apresentar reclamação à Comissão Nacional de Proteção de Dados (CNPD)."
+    "destinatarios": {
+      "titulo": "Quem mais tem acesso",
+      "paragrafos": {
+        "a": "Usamos prestadores de serviços que tratam dados por nossa conta: a Vercel (alojamento do site), a Resend (envio de emails e lista da newsletter), a Upstash (contadores, registos da área da equipa e registo do consentimento) e o GitHub (onde vivem o código e o conteúdo do site, incluindo o histórico de alterações do painel). A DevPlus, que faz e mantém o site, tem acesso a estes serviços para os gerir. Não vendemos dados nem os cedemos para publicidade.",
+        "b": "Nenhum destes serviços corre no seu navegador: as fontes e as imagens vêm deste domínio, não há mapas incorporados nem botões de redes sociais, e as ligações para o Google Maps e para as redes sociais são links normais, que só abrem se carregar neles."
+      }
     },
-    "olho": "O site e os seus dados",
-    "ficha": {
-      "formularios": "Formulários",
-      "cookies": "Cookies",
-      "terceiros": "Serviços de terceiros",
-      "nenhum": "Nenhum",
-      "newsletter": "A newsletter",
-      "soEmail": "Envio de email e limites de pedidos"
+    "transferencias": {
+      "titulo": "Dados fora da União Europeia",
+      "paragrafos": {
+        "a": "A Resend guarda os contactos e os registos de envio nos Estados Unidos. A Vercel, a Upstash e o GitHub são empresas com sede nos Estados Unidos e podem tratar dados lá. Nesses casos, a transferência apoia-se nas cláusulas contratuais-tipo aprovadas pela Comissão Europeia, que fazem parte dos acordos de tratamento de dados destes prestadores, e, quando o prestador está certificado, no Quadro de Privacidade de Dados UE-EUA. Pode pedir-nos informação sobre estas garantias pelos contactos acima."
+      }
+    },
+    "conservacao": {
+      "titulo": "Por quanto tempo",
+      "intro": "Não há um prazo legal único para estes dados: cada um fica o tempo que a sua finalidade pede.",
+      "itens": {
+        "visitas": "Registos do alojamento: o prazo do plano de alojamento.",
+        "limites": "Contadores de pedidos dos formulários: 1 hora (endereço de rede) e 24 horas (email, em resumo).",
+        "envios": "Registo dos emails enviados, na Resend: o prazo de retenção da conta de envio.",
+        "lista": "Lista da newsletter: enquanto estiver inscrito; depois de cancelar, marcado como cancelado até pedir que o apaguemos.",
+        "prova": "Registo do consentimento: enquanto estiver inscrito, e três anos depois de cancelar.",
+        "aviso": "Marca de que já lhe confirmámos um cancelamento: 7 dias.",
+        "equipa": "Área da equipa: código, 10 minutos; sessão, 8 horas; aparelho lembrado, 30 dias; registo de entradas, 30 dias por entrada.",
+        "mesas": "Contagens das mesas: sem prazo, por serem só números; últimas leituras: até um ano sem leituras novas.",
+        "copias": "Cópias de segurança e registos internos dos prestadores seguem os prazos de cada serviço: o que apagamos pode demorar esse tempo a desaparecer deles."
+      }
+    },
+    "direitos": {
+      "titulo": "Os seus direitos",
+      "paragrafos": {
+        "a": "Pode pedir-nos acesso aos seus dados, a correção, o apagamento ou a limitação do tratamento, e opor-se aos tratamentos baseados no nosso interesse legítimo. Nos dados que nos deu com base no seu consentimento ou num pedido seu, pode também pedir uma cópia num formato de uso corrente (portabilidade). Respondemos no prazo de um mês. Não tomamos decisões automatizadas nem fazemos perfis.",
+        "b": "Se entender que os seus dados não foram bem tratados, pode apresentar reclamação à Comissão Nacional de Proteção de Dados (<cnpd>CNPD</cnpd>)."
+      }
     }
   },
   "cookies": {
@@ -373,38 +439,60 @@
     "olho": "O que fica no seu navegador",
     "ficha": {
       "proprios": "Cookies deste site",
+      "soEquipa": "Só na área da equipa",
       "terceiros": "Cookies de terceiros",
-      "banner": "Banner de consentimento",
       "zero": "0",
-      "naoPreciso": "Não é preciso"
+      "banner": "Banner de consentimento",
+      "noSitio": "Não: as escolhas pedem-se onde se usam"
     },
     "uso": {
       "titulo": "O que usamos",
-      "texto": "Este site não põe cookies a quem o visita. Não há cookies de análise, de publicidade nem de sessão, e por isso não há banner de consentimento — não haveria nada para consentir."
+      "texto": "Quem visita o site não recebe cookies: não há cookies de análise, de publicidade nem de terceiros. O site guarda no navegador algumas notas pequenas, explicadas abaixo — só as que são precisas para aquilo que pediu, ou as que escolher guardar. Por isso não há um banner geral: quando uma escolha é sua, é-lhe pedida no sítio onde se usa."
     },
     "lingua": {
       "titulo": "E a língua que escolheu?",
       "texto": "Fica no endereço, e não num cookie: a versão inglesa está em /en. Enquanto navegar pelo site, mantém-se. Se voltar a escrever o endereço sem /en, o site abre em português."
     },
     "memoria": {
-      "titulo": "E o convite da newsletter?",
-      "texto": "Quando pede a inscrição na newsletter, o site deixa no armazenamento do navegador uma nota que diz apenas \"inscrito\", para não voltar a mostrar o convite. Se fechar o convite, fica outra nota, que o navegador apaga sozinho quando fechar o separador. Nenhuma das duas identifica ninguém, e nenhuma sai do seu aparelho. Se abrir a carta secreta, fica também guardada uma chave com o seu email, assinada por nós e válida por 180 dias: quando volta à ementa, o site envia-a ao servidor para confirmar que continua inscrito e abrir a carta sem lhe pedir o email outra vez. O botão \"Fechar a carta\" apaga-a. Nenhuma destas notas é um cookie e, se as apagar, o pior que pode acontecer é o convite voltar a aparecer ou a carta voltar a pedir o email."
+      "titulo": "O que fica no armazenamento do navegador",
+      "intro": "Nenhuma destas notas é um cookie: não viajam nos pedidos ao servidor (a chave da carta só é enviada quando a carta se abre) e não saem do seu aparelho de outra forma.",
+      "itens": {
+        "convite": "preguica:newsletter, no armazenamento de sessão: «inscrito» ou «fechado», para o convite da newsletter não voltar a aparecer na mesma visita. O navegador apaga-a ao fechar o separador. Não identifica ninguém.",
+        "naoMostrar": "preguica:newsletter:nao-mostrar, no armazenamento local: só se carregar em «Não mostrar mais neste aparelho» no convite. Guarda a data até à qual o convite não aparece — seis meses — e apaga-se a seguir.",
+        "carta": "preguica:carta-secreta, no armazenamento de sessão: a chave que abre a carta secreta depois de confirmar um email. Assinada por nós, sem o seu email lá dentro, válida 24 horas e apagada ao fechar o separador.",
+        "cartaLembrada": "preguica:carta-secreta, no armazenamento local: a mesma chave, só se escolher «lembrar neste aparelho». Vale 90 dias desde a escolha, sem se renovar, e o site apaga-a depois disso; «Fechar a carta neste aparelho» apaga-a logo.",
+        "painel": "preguica:painel:seccoes-fechadas, no armazenamento de sessão e só na área da equipa: que secções da carta estão fechadas no editor."
+      }
     },
     "equipa": {
       "titulo": "A área da equipa",
-      "texto": "Há uma área reservada a quem trabalha na casa, para atualizar a carta e o horário. Quem usa o ecrã de entrada dessa área recebe até três cookies estritamente necessários — um para o código de entrada que está a meio (dura dez minutos), um para manter a sessão aberta e outro para não ter de pedir o código sempre que volta ao mesmo aparelho — e só nessa área: não viajam para as outras páginas. Quem só visita o site nunca os recebe."
+      "texto": "Na área reservada a quem trabalha na casa — e só aí: estes cookies não viajam para as outras páginas — há até três cookies. preguica_desafio guarda o código de entrada que está a meio (10 minutos); preguica_sessao mantém a sessão aberta (8 horas); e preguica_aparelho, só se quem entra marcar «Lembrar este aparelho», evita pedir o código durante 30 dias. Os dois primeiros são estritamente necessários para entrar; o terceiro é uma escolha, e «Esquecer este aparelho» apaga-o."
+    },
+    "base": {
+      "titulo": "Porque não pedimos autorização para tudo",
+      "texto": "A lei pede consentimento para guardar informação no seu aparelho, exceto quando é estritamente necessário para um serviço que pediu (Lei 41/2004, art. 5.º). As notas de sessão e os dois cookies de entrada estão nesse caso: servem para abrir a carta que pediu, não repetir o convite que já respondeu, ou entrar na área da equipa. As que ficam mais tempo só se gravam quando carrega no botão ou marca a caixa que diz o que fica e por quanto tempo — e desfazem-se nesses mesmos botões, ou apagando os dados do site no navegador."
     },
     "verificar": {
       "titulo": "Como confirmar",
-      "texto": "Não precisa de acreditar em nós: abra as ferramentas para programadores do navegador, vá ao separador Aplicação e verá que a lista de cookies deste domínio está vazia."
+      "texto": "Não precisa de acreditar em nós: nas ferramentas para programadores do navegador, no separador Aplicação (ou Armazenamento), vê os cookies e o armazenamento local e de sessão deste domínio. Quem nunca entrou na área da equipa não tem cookies deste site."
     }
   },
   "informacaoLegal": {
     "olho": "Informação legal",
-    "titulo": "Resolução de litígios",
+    "titulo": "Informação legal",
+    "pendente": "Por publicar: o nome ou a firma, a forma jurídica, o NIF e a sede de quem explora o Café Preguiça estão a ser confirmados com a casa e aparecem aqui logo que o sejam.",
+    "identificacao": {
+      "titulo": "Quem explora a casa",
+      "texto": "O Café Preguiça é explorado por {nome} ({forma}), NIF {nif}, com sede em {sede}.",
+      "registo": "Registo: {registo}. Capital social: {capital}.",
+      "contactos": "Contactos: <contactos>página de contactos</contactos>."
+    },
     "litigios": {
       "titulo": "Se tiver um problema connosco",
-      "texto": "Em caso de litígio de consumo, pode recorrer a uma entidade de resolução alternativa de litígios: <entidade>{nome}</entidade>. Mais informação no <portal>Portal do Consumidor</portal>."
+      "texto": "Em caso de litígio de consumo, pode recorrer a uma entidade de resolução alternativa de litígios. A competente para a zona onde fica a casa é o <entidade>{nome}</entidade>. Cada centro tem limites ao que aprecia — de valor ou de matéria —, e o site dele explica-os. A lista das entidades está no <portal>Portal do Consumidor</portal>.",
+      "adesao": "A casa aderiu a este centro.",
+      "reduzidoValor": "Nos conflitos de consumo de valor até 5 000 €, se o consumidor optar por levar o caso a um centro de arbitragem de conflitos de consumo autorizado, a casa fica sujeita a essa arbitragem ou mediação (Lei 24/96, art. 14.º).",
+      "pendente": "A entidade de resolução alternativa de litígios a indicar está a ser confirmada com a casa. Entretanto, a lista oficial das entidades está no <portal>Portal do Consumidor</portal>."
     },
     "reclamacoes": {
       "titulo": "Livro de Reclamações",
@@ -417,8 +505,8 @@
     "privacidade": "Privacidade",
     "cookies": "Cookies",
     "legal": "Informação legal",
-    "livroReclamacoes": "Livro de Reclamações",
-    "resolucaoLitigios": "Resolução de litígios"
+    "livroReclamacoes": "Livro de Reclamações Eletrónico",
+    "resolucaoLitigios": "Informação legal"
   },
   "naoEncontrada": {
     "titulo": "Página não encontrada",
@@ -440,6 +528,7 @@
       "botao": "Inscrever",
       "aEnviar": "A enviar…",
       "fechar": "Fechar",
+      "naoMostrar": "Não mostrar mais neste aparelho (6 meses)",
       "consentimento": "Ao inscreveres-te, aceitas receber as novidades da casa por email. Podes cancelar quando quiseres.",
       "privacidade": "Como tratamos o teu email",
       "enviadoTitulo": "Falta um passo",
@@ -451,8 +540,8 @@
       "erroServico": "Não foi possível enviar agora. Tenta novamente daqui a pouco."
     },
     "confirmar": {
-      "olho": "Newsletter",
-      "titulo": "Confirmar a inscrição",
+      "olho": "Newsletter e carta secreta",
+      "titulo": "Confirmar o seu email",
       "texto": "Falta só isto: carregue no botão para começar a receber as novidades do Café Preguiça neste email.",
       "botao": "Confirmar inscrição",
       "aConfirmar": "A confirmar…",
@@ -462,19 +551,40 @@
       "invalido": "Este link não está completo ou já não serve. Abra-o outra vez a partir do email, ou inscreva-se de novo no site.",
       "expirado": "Este link só era válido durante 48 horas e já expirou. Inscreva-se outra vez no site para receber um novo.",
       "erro": "Não foi possível confirmar agora. Tente novamente daqui a pouco — o link continua válido.",
-      "abrirCarta": "Abrir a carta secreta"
+      "abrirCarta": "Ver a carta secreta",
+      "textoCarta": "Carregue no botão para abrir a carta secreta neste navegador. Não fica inscrito em lista nenhuma.",
+      "botaoCarta": "Abrir a carta secreta",
+      "textoCartaENovidades": "Carregue no botão para confirmar que quer receber as novidades da casa neste email e para abrir a carta secreta.",
+      "botaoCartaENovidades": "Confirmar e abrir a carta",
+      "lembrar": "Lembrar a carta secreta neste aparelho durante 90 dias (guarda no navegador uma chave, sem o seu email).",
+      "feitoCartaTitulo": "A carta está aberta",
+      "feitoCartaTexto": "Já a pode ver na ementa."
     },
     "email": {
       "assunto": "Confirme a sua inscrição na newsletter do Café Preguiça",
       "titulo": "Falta só um passo",
       "texto": "Olá,\n\nPediu para receber as novidades do Café Preguiça. Falta só confirmar que este endereço é seu.",
       "botao": "Confirmar inscrição",
-      "nota": "O link é válido durante 48 horas. Se não fez este pedido, ignore este email: sem confirmação, o endereço não fica inscrito nem guardado.",
+      "nota": "O link é válido durante 48 horas. Se não fez este pedido, ignore este email: sem confirmação, o endereço não entra em lista nenhuma.",
       "assinatura": {
         "antes": "Site feito",
         "enfase": "sem preguiça nenhuma",
         "depois": "pela"
       }
+    },
+    "emailCarta": {
+      "assunto": "O link para abrir a carta secreta do Café Preguiça",
+      "titulo": "A carta secreta",
+      "texto": "Olá,\n\nPediu para abrir a carta secreta do Café Preguiça. Carregue no botão para a abrir.",
+      "botao": "Abrir a carta secreta",
+      "nota": "O link é válido durante 48 horas. Se não fez este pedido, ignore este email: o endereço não entra em lista nenhuma."
+    },
+    "emailCartaENovidades": {
+      "assunto": "Abra a carta secreta e confirme as novidades do Café Preguiça",
+      "titulo": "Falta só um passo",
+      "texto": "Olá,\n\nPediu para abrir a carta secreta e para receber as novidades do Café Preguiça por email. Carregue no botão para confirmar que este endereço é seu.",
+      "botao": "Confirmar e abrir a carta",
+      "nota": "O link é válido durante 48 horas. Se não fez este pedido, ignore este email: sem confirmação, o endereço não entra em lista nenhuma."
     }
   }
 }

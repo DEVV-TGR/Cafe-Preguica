@@ -8,7 +8,19 @@ import { apagar, guardarSeNovo } from "@/lib/painel/redis";
 
   À parte do email para os testes de `testes/` o poderem carregar: o email
   puxa o rodapé da casa, que vem de um JSON que o `node --test` não importa.
+
+  ## A marca tem prazo
+
+  Já não tinha (revisão legal de 2026-10-15): um resumo do email de quem
+  cancelou ficava no Redis até essa pessoa se voltar a inscrever, ou seja, em
+  regra, para sempre. A marca só serve para o painel e o webhook não mandarem
+  dois avisos pelo mesmo cancelamento, e para as repetições do webhook do
+  Resend não mandarem outro — coisa de minutos, no máximo dias. Sete dias
+  chegam. Depois disso, quem impede um segundo aviso é a prova do consentimento,
+  que já tem a retirada registada (ver `jaRetirou` no webhook).
 */
+
+export const PRAZO_DA_MARCA_S = 7 * 24 * 60 * 60;
 
 function chaveDoAviso(email: string): string {
   const resumo = createHash("sha256").update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
@@ -21,7 +33,7 @@ export async function umaVezPorCancelamento(
   mandar: () => Promise<void>,
 ): Promise<boolean> {
   const chave = chaveDoAviso(email);
-  if (!(await guardarSeNovo(chave, String(Date.now())))) return false;
+  if (!(await guardarSeNovo(chave, String(Date.now()), PRAZO_DA_MARCA_S))) return false;
 
   try {
     await mandar();

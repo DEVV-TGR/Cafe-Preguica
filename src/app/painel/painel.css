@@ -831,6 +831,19 @@ select.pn-entrada {
   accent-color: var(--color-ouro);
 }
 
+/* A caixa de "lembrar este aparelho": uma frase longa, por isso o visto fica
+   em cima, à esquerda da primeira linha, e o texto parte em várias. */
+.pn-escolha {
+  align-items: flex-start;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.pn-escolha input {
+  flex: none;
+  margin-top: 0.1rem;
+}
+
 .pn-accao--sozinha {
   align-self: flex-start;
 }

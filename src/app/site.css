@@ -439,6 +439,24 @@
   color: var(--color-ouro-claro);
 }
 
+/* "Não mostrar mais neste aparelho": discreto, no fim do cartão, com a área
+   de toque mínima. */
+.pg-convite__nao-mostrar {
+  display: block;
+  min-height: 2.75rem;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-tinta-suave);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.pg-convite__nao-mostrar:hover,
+.pg-convite__nao-mostrar:focus-visible {
+  color: var(--color-ouro-claro);
+}
+
 .pg-convite__nota {
   margin-top: 0.6rem;
   font-size: 0.75rem;

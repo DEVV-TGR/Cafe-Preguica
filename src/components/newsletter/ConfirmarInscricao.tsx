@@ -10,12 +10,12 @@ import { guardarChave } from "@/lib/carta-secreta/no-browser";
  * O convite vem no fragmento (`#…`) — ver `app/api/newsletter/route.ts`. O
  * fragmento só existe no browser, e por isso é lido aqui e não na página.
  *
- * ## Três versões do mesmo ecrã
+ * ## Duas versões do mesmo ecrã
  *
- * O convite diz de onde veio o pedido e se a pessoa quis as novidades (ver
- * `lib/newsletter/convite.ts`), e o ecrã diz o que o botão vai fazer: inscrever,
- * abrir a carta, ou as duas coisas. Lê-se o que vem dentro sem verificar a
- * assinatura — é só para escolher a frase; quem decide é a rota.
+ * O convite diz de onde veio o pedido (ver `lib/newsletter/convite.ts`): do
+ * convite da newsletter, ou da carta secreta — e aí o botão diz que também abre
+ * a carta. Lê-se o que vem dentro sem verificar a assinatura — é só para
+ * escolher a frase; quem decide é a rota.
  *
  * ## "Lembrar neste aparelho"
  *
@@ -29,14 +29,10 @@ export type TextosDaConfirmacao = {
   botao: string;
   textoCarta: string;
   botaoCarta: string;
-  textoCartaENovidades: string;
-  botaoCartaENovidades: string;
   lembrar: string;
   aConfirmar: string;
   feitoTitulo: string;
   feitoTexto: string;
-  feitoCartaTitulo: string;
-  feitoCartaTexto: string;
   semConvite: string;
   invalido: string;
   expirado: string;
@@ -64,21 +60,15 @@ const lerFragmento = () => {
 };
 const semFragmento = () => null;
 
-type Pedido = "novidades" | "carta" | "carta-e-novidades";
-
-/* O que o convite diz que foi pedido — ver o cabeçalho deste ficheiro. Um
-   convite que não se lê fica com a frase das novidades, e a rota diz o resto. */
-function pedidoDe(convite: string): Pedido {
+/* Se o pedido veio da carta secreta — ver o cabeçalho deste ficheiro. Um
+   convite que não se lê fica com a frase da newsletter, e a rota diz o resto. */
+function veioDaCarta(convite: string): boolean {
   try {
     const corpo = convite.split(".")[1] ?? "";
-    const lido = JSON.parse(atob(corpo.replace(/-/g, "+").replace(/_/g, "/"))) as {
-      o?: unknown;
-      m?: unknown;
-    };
-    if (lido.o !== "carta") return "novidades";
-    return lido.m === true ? "carta-e-novidades" : "carta";
+    const lido = JSON.parse(atob(corpo.replace(/-/g, "+").replace(/_/g, "/"))) as { o?: unknown };
+    return lido.o === "carta";
   } catch {
-    return "novidades";
+    return false;
   }
 }
 const naoMuda = () => () => {};
@@ -87,8 +77,7 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
   const convite = useSyncExternalStore(naoMuda, lerFragmento, semFragmento);
   const [estado, setEstado] = useState<Estado>("pronto");
   const [lembrar, setLembrar] = useState(false);
-  const [inscreveu, setInscreveu] = useState(false);
-  const pedido = convite ? pedidoDe(convite) : "novidades";
+  const daCarta = convite ? veioDaCarta(convite) : false;
 
   async function confirmar() {
     setEstado("a-confirmar");
@@ -100,21 +89,17 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
       });
 
       if (resposta.ok) {
-        const { chaveDaCarta, novidades } = (await resposta.json().catch(() => ({}))) as {
+        const { chaveDaCarta } = (await resposta.json().catch(() => ({}))) as {
           chaveDaCarta?: string;
-          novidades?: boolean;
         };
-        /* A chave da carta secreta, que a `/ementa` usa para a abrir sozinha;
-           e, se se inscreveu, o mesmo sinal que o pop-up deixa — nesta visita
-           não volta a ser convidado. Os dois no `sessionStorage`, a não ser
-           que tenha pedido para lembrar a carta. */
+        /* A chave da carta secreta, que a `/ementa` usa para a abrir sozinha,
+           e o mesmo sinal que o pop-up deixa — nesta visita não volta a ser
+           convidado. Os dois no `sessionStorage`, a não ser que tenha pedido
+           para lembrar a carta. */
         if (chaveDaCarta) guardarChave(chaveDaCarta);
-        if (novidades) {
-          try {
-            sessionStorage.setItem("preguica:newsletter", "inscrito");
-          } catch {}
-        }
-        setInscreveu(novidades === true);
+        try {
+          sessionStorage.setItem("preguica:newsletter", "inscrito");
+        } catch {}
         /* Tira o convite do endereço: não há razão para ficar no histórico. */
         history.replaceState(null, "", window.location.pathname);
         setEstado("feito");
@@ -132,11 +117,9 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
   if (estado === "feito") {
     return (
       <section className="lt-seccao" role="status">
-        <h2 className="lt-seccao__titulo">
-          {inscreveu ? textos.feitoTitulo : textos.feitoCartaTitulo}
-        </h2>
+        <h2 className="lt-seccao__titulo">{textos.feitoTitulo}</h2>
         <div className="lt-seccao__texto">
-          <p>{inscreveu ? textos.feitoTexto : textos.feitoCartaTexto}</p>
+          <p>{textos.feitoTexto}</p>
         </div>
         {/* O prémio de ter confirmado — é o caminho que a carta secreta da
             ementa promete. */}
@@ -172,12 +155,9 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
           ? textos.erro
           : null;
 
-  const [texto, botao] =
-    pedido === "carta"
-      ? [textos.textoCarta, textos.botaoCarta]
-      : pedido === "carta-e-novidades"
-        ? [textos.textoCartaENovidades, textos.botaoCartaENovidades]
-        : [textos.texto, textos.botao];
+  const [texto, botao] = daCarta
+    ? [textos.textoCarta, textos.botaoCarta]
+    : [textos.texto, textos.botao];
 
   return (
     <section className="lt-seccao">

@@ -477,16 +477,20 @@ export default async function Ementa({ params }: Props) {
                 texto: t("secreta.texto"),
                 etiqueta: t("secreta.etiqueta"),
                 marcador: t("secreta.marcador"),
-                enviarLink: t("secreta.enviarLink"),
+                abrir: t("secreta.abrir"),
+                aAbrir: t("secreta.aAbrir"),
+                naoInscritoTitulo: t("secreta.naoInscritoTitulo"),
+                naoInscritoTexto: t("secreta.naoInscritoTexto", { email: "{email}" }),
+                inscrever: t("secreta.inscrever"),
                 aEnviar: t("secreta.aEnviar"),
                 /* Os da carta, e não os do convite: o convite trata por "tu"
                    (o texto é do cliente) e a carta, como o resto do site, por
                    "você". O `erroEmail` não trata por nada e fica partilhado. */
                 consentimento: t("secreta.consentimento"),
-                nota: t("secreta.nota"),
                 privacidade: t("secreta.privacidade"),
+                balcao: t("secreta.balcao"),
                 enviadoTitulo: t("secreta.enviadoTitulo"),
-                enviadoTexto: t("secreta.enviadoTexto", { email: "{email}" }),
+                enviadoTexto: t("secreta.enviadoTexto"),
                 outroEmail: t("secreta.outroEmail"),
                 abertaTexto: t("secreta.abertaTexto"),
                 lembrar: t("secreta.lembrar"),

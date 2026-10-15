@@ -578,8 +578,7 @@ export function EditorDeEmenta({
         </header>
 
         <p className="pn-nota">
-          Abre-se a quem confirmar um email pelo link que o site lhe manda — com ou sem as
-          novidades da casa. Um cocktail que venha para aqui sai da carta normal;
+          Só a vê quem recebe a newsletter (ou quem a pedir ao balcão). Um cocktail que venha para aqui sai da carta normal;
           se o tirares, volta para o sítio onde estava. Um cocktail escondido fica aqui guardado,
           mas sai da carta secreta até o mostrares outra vez. Sem nenhum cocktail à vista, a carta
           secreta não aparece na ementa.

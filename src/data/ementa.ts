@@ -231,9 +231,8 @@ export const EM_DESTAQUE: readonly string[] = [
 ];
 
 /**
- * As categorias de onde podem sair os cocktails da **carta secreta** — a que
- * abre a quem confirma um email, com ou sem as novidades da casa
- * (`components/ementa/CartaSecreta.tsx`).
+ * As categorias de onde podem sair os cocktails da **carta secreta** — a que só
+ * abre a quem recebe a newsletter (`components/ementa/CartaSecreta.tsx`).
  *
  * Só cocktails, por decisão do Tomás. O Cocktail Preguiça fica de fora: é o da
  * casa, tem o jogo dos sabores e fotografia na inicial.

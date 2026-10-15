@@ -300,20 +300,24 @@
       "sinal": "There's a menu that isn't here.",
       "sinalLigacao": "See the secret menu ↓",
       "maisCocktails": "More cocktails in the secret menu ↓",
-      "olho": "For those who ask",
+      "olho": "Only for those on the list",
       "titulo": "The secret menu",
-      "texto": "The cocktails that aren't on paper. Enter your email and we'll send you a link to open it.",
+      "texto": "The cocktails that aren't on paper. To see them, enter the email address you get our news at.",
       "etiqueta": "Your email",
       "marcador": "you@email.com",
-      "enviarLink": "Send the link",
+      "abrir": "Open",
+      "aAbrir": "Opening…",
+      "naoInscritoTitulo": "This email isn't on the list yet.",
+      "naoInscritoTexto": "Sign {email} up for our news. Confirm through the email we'll send you, and the menu will open by itself.",
+      "inscrever": "Sign up and open",
       "aEnviar": "Sending…",
-      "consentimento": "I'd also like to receive the café's news by email (optional). I can unsubscribe at any time.",
-      "nota": "You don't need the news to open the menu: with the box unticked, your email is only used to send you the link.",
+      "consentimento": "By signing up, you agree to receive our news by email. You can unsubscribe at any time.",
       "privacidade": "How we handle your email",
+      "balcao": "Rather not leave your email? Ask for the secret menu at the bar.",
       "erroLimite": "Too many requests in the last few minutes. Please try again shortly.",
       "erroServico": "That didn't work right now. Please try again shortly.",
-      "enviadoTitulo": "Check your email",
-      "enviadoTexto": "We've sent a link to {email}. Open it and the menu opens.",
+      "enviadoTitulo": "One more step",
+      "enviadoTexto": "We've sent you an email. Click the link in it — you'll come back here with the menu open.",
       "outroEmail": "Use another email",
       "abertaTexto": "This is for you. Just ask for them at the bar by name.",
       "lembrar": "Remember on this device for 90 days",
@@ -369,7 +373,7 @@
     "pedidos": {
       "titulo": "When you give us an email",
       "paragrafos": {
-        "a": "The newsletter invitation and the secret menu ask for an email address. When you enter it, we send you an email with a link to confirm. To do so, the address goes to the email delivery service (Resend), which keeps a record of the sending — recipient, subject and delivery status — for the account's retention period. If you don't confirm, the address is not added to any list.",
+        "a": "The newsletter invitation and the secret menu ask for an email address. When you ask to sign up, we send you an email with a link to confirm. To do so, the address goes to the email delivery service (Resend), which keeps a record of the sending — recipient, subject and delivery status — for the account's retention period. If you don't confirm, the address is not added to any list.",
         "b": "To prevent abuse of these forms, the server counts requests in Upstash: per network address, for one hour, and per email, for 24 hours. The email is stored as a cryptographic digest (SHA-256): it isn't written down, but someone who already knows the address can match it — so we treat it as personal data, not as anonymous. If someone exceeds the limits, the server log keeps the network address and the partially hidden email, so the abuse can be understood.",
         "c": "The legal basis is your request (GDPR, Art. 6(1)(b)) and, for abuse control, our legitimate interest in protecting the service and other people's inboxes (Art. 6(1)(f)). Giving your email is optional; without it we can't send you the link."
       }
@@ -377,17 +381,17 @@
     "newsletter": {
       "titulo": "The newsletter",
       "paragrafos": {
-        "a": "If you ask for our news — in the site's invitation or by ticking the box in the secret menu — and confirm through the link, your email joins the mailing list (at Resend) and is used only to send you news from Café Preguiça, in Portuguese. The legal basis is your consent (GDPR, Art. 6(1)(a), and Portuguese Law 41/2004, Art. 13-A).",
+        "a": "If you ask for our news — in the site's invitation or in the secret menu — and confirm through the link, your email joins the mailing list (at Resend) and is used only to send you news from Café Preguiça, in Portuguese. The legal basis is your consent (GDPR, Art. 6(1)(a), and Portuguese Law 41/2004, Art. 13-A).",
         "b": "So that we can demonstrate that consent, we keep a record of each sign-up: when you asked and when you confirmed, where (invitation or secret menu), in which language, the sentence shown next to the request and the version of that text — and, if you unsubscribe, when and how. We don't store your network address or device for this. The record is kept in Upstash, identified by a digest of your email.",
-        "c": "You can withdraw your consent at any time, free of charge: every newsletter has a link to unsubscribe, effective immediately, and you can also ask us through the contacts above. Unsubscribing does not close the secret menu. Withdrawing consent does not make earlier emails unlawful.",
+        "c": "You can withdraw your consent at any time, free of charge: every newsletter has a link to unsubscribe, effective immediately, and you can also ask us through the contacts above. If you have already opened the secret menu on a device, unsubscribing does not close it there. Withdrawing consent does not make earlier emails unlawful.",
         "d": "Unsubscribing and erasure are different things. If you unsubscribe, you stop receiving emails and the address stays on the list marked as unsubscribed — that mark is what stops you receiving them again — until you ask us to erase it. The record of the sign-up and of the unsubscription is kept for three years after you unsubscribe, so we can answer a complaint about emails sent while you were subscribed, and is then deleted automatically. If you ask for erasure, we remove the address from the list and delete that record."
       }
     },
     "carta": {
       "titulo": "The secret menu",
       "paragrafos": {
-        "a": "The secret menu opens for anyone who confirms an email through the link we send. You don't need to receive our news: the news box is optional and comes unticked. Without it, the email is used only to send the link, and is not added to any list.",
-        "b": "Once you confirm, your browser stores a key that opens the menu — without your email inside it. By default it lasts until you close the tab; if you choose “remember on this device”, it lasts 90 days. The details are on the <cookies>cookies</cookies> page."
+        "a": "The secret menu is an extra for people who receive the café's news: you enter your email, and if it's on the list the menu opens; if not, you can sign up right there. To do this we ask Resend whether the address is subscribed, without storing it; to stop anyone guessing addresses, the server counts requests per network address for one hour. If you'd rather not leave your email, ask for the secret menu at the bar.",
+        "b": "Once opened, your browser stores a key that opens it again — without your email inside it. By default it lasts until you close the tab; if you choose “remember on this device”, it lasts 90 days. The key doesn't depend on staying subscribed. The details are on the <cookies>cookies</cookies> page."
       }
     },
     "equipa": {
@@ -459,7 +463,7 @@
       "itens": {
         "convite": "preguica:newsletter, in session storage: “inscrito” (signed up) or “fechado” (closed), so the newsletter invitation doesn't show up again during the same visit. The browser deletes it when you close the tab. It identifies no one.",
         "naoMostrar": "preguica:newsletter:nao-mostrar, in local storage: only if you click “Don't show again on this device” in the invitation. It stores the date until which the invitation won't appear — six months — and is deleted afterwards.",
-        "carta": "preguica:carta-secreta, in session storage: the key that opens the secret menu after you confirm an email. Signed by us, without your email inside it, valid for 24 hours and deleted when you close the tab.",
+        "carta": "preguica:carta-secreta, in session storage: the key that opens the secret menu after you've opened it once. Signed by us, without your email inside it, valid for 24 hours and deleted when you close the tab.",
         "cartaLembrada": "preguica:carta-secreta, in local storage: the same key, only if you choose “remember on this device”. Valid for 90 days from your choice, without renewing, and the site deletes it afterwards; “Close the menu on this device” deletes it at once.",
         "painel": "preguica:painel:seccoes-fechadas, in session storage and only in the staff area: which menu sections are collapsed in the editor."
       }
@@ -552,13 +556,9 @@
       "expirado": "This link was only valid for 48 hours and has expired. Sign up again on the site to get a new one.",
       "erro": "We couldn't confirm right now. Please try again shortly — the link is still valid.",
       "abrirCarta": "See the secret menu",
-      "textoCarta": "Press the button to open the secret menu in this browser. You won't be added to any list.",
-      "botaoCarta": "Open the secret menu",
-      "textoCartaENovidades": "Press the button to confirm you want to receive the café's news at this address and to open the secret menu.",
-      "botaoCartaENovidades": "Confirm and open the menu",
-      "lembrar": "Remember the secret menu on this device for 90 days (stores a key in your browser, without your email).",
-      "feitoCartaTitulo": "The menu is open",
-      "feitoCartaTexto": "You can see it on the menu page now."
+      "textoCarta": "Press the button to confirm you want to receive the café's news at this address. The secret menu opens right after.",
+      "botaoCarta": "Confirm and open the menu",
+      "lembrar": "Remember the secret menu on this device for 90 days (stores a key in your browser, without your email)."
     },
     "email": {
       "assunto": "Confirm your subscription to the Café Preguiça newsletter",
@@ -573,13 +573,6 @@
       }
     },
     "emailCarta": {
-      "assunto": "Your link to open the Café Preguiça secret menu",
-      "titulo": "The secret menu",
-      "texto": "Hello,\n\nYou asked to open the Café Preguiça secret menu. Press the button to open it.",
-      "botao": "Open the secret menu",
-      "nota": "The link is valid for 48 hours. If you didn't make this request, just ignore this email: the address isn't added to any list."
-    },
-    "emailCartaENovidades": {
       "assunto": "Open the secret menu and confirm news from Café Preguiça",
       "titulo": "Just one more step",
       "texto": "Hello,\n\nYou asked to open the secret menu and to receive news from Café Preguiça by email. Press the button to confirm this address is yours.",

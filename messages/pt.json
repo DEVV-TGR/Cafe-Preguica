@@ -300,20 +300,24 @@
       "sinal": "Há uma carta que não está aqui.",
       "sinalLigacao": "Ver a carta secreta ↓",
       "maisCocktails": "Há mais cocktails na carta secreta ↓",
-      "olho": "Para quem a pede",
+      "olho": "Só para quem está na lista",
       "titulo": "A carta secreta",
-      "texto": "Os cocktails que não estão no papel. Escreva o seu email e enviamos-lhe um link para a abrir.",
+      "texto": "Os cocktails que não estão no papel. Para os ver, escreva o email em que recebe as novidades da casa.",
       "etiqueta": "O seu email",
       "marcador": "o-seu@email.pt",
-      "enviarLink": "Enviar o link",
+      "abrir": "Abrir",
+      "aAbrir": "A abrir…",
+      "naoInscritoTitulo": "Este email ainda não está na lista.",
+      "naoInscritoTexto": "Inscreva {email} nas novidades da casa. Confirme no email que lhe vamos enviar e a carta abre-se sozinha.",
+      "inscrever": "Inscrever e abrir",
       "aEnviar": "A enviar…",
-      "consentimento": "Quero também receber as novidades da casa por email (opcional). Posso cancelar quando quiser.",
-      "nota": "Não precisa das novidades para abrir a carta: sem a caixa marcada, o email serve só para lhe enviar o link.",
+      "consentimento": "Ao inscrever-se, aceita receber as novidades da casa por email. Pode cancelar quando quiser.",
       "privacidade": "Como tratamos o seu email",
+      "balcao": "Prefere não deixar o email? Peça a carta secreta ao balcão.",
       "erroLimite": "Houve pedidos a mais nos últimos minutos. Tente novamente daqui a pouco.",
       "erroServico": "Não foi possível agora. Tente novamente daqui a pouco.",
-      "enviadoTitulo": "Veja o seu email",
-      "enviadoTexto": "Enviámos um link para {email}. Abra-o e a carta abre-se.",
+      "enviadoTitulo": "Falta um passo",
+      "enviadoTexto": "Enviámos-lhe um email. Carregue no link que lá está e volta aqui com a carta já aberta.",
       "outroEmail": "Escrever outro email",
       "abertaTexto": "Isto é para si. Peça-os ao balcão pelo nome.",
       "lembrar": "Lembrar neste aparelho durante 90 dias",
@@ -369,7 +373,7 @@
     "pedidos": {
       "titulo": "Quando nos dá um email",
       "paragrafos": {
-        "a": "O convite da newsletter e a carta secreta pedem um endereço de email. Quando o escreve, enviamos-lhe um email com um link para confirmar. Para isso, o endereço segue para o serviço de envio de email (Resend), que guarda o registo do envio — destinatário, assunto e estado da entrega — pelo prazo de retenção da conta. Se não confirmar, o endereço não entra em nenhuma lista.",
+        "a": "O convite da newsletter e a carta secreta pedem um endereço de email. Quando pede a inscrição, enviamos-lhe um email com um link para confirmar. Para isso, o endereço segue para o serviço de envio de email (Resend), que guarda o registo do envio — destinatário, assunto e estado da entrega — pelo prazo de retenção da conta. Se não confirmar, o endereço não entra em nenhuma lista.",
         "b": "Para impedir abusos destes formulários, o servidor conta os pedidos no Upstash: por endereço de rede, durante uma hora, e por email, durante 24 horas. O email fica guardado como um resumo criptográfico (SHA-256): não fica escrito, mas quem já conhecer o endereço consegue fazer a correspondência — por isso tratamo-lo como dado pessoal, e não como anónimo. Se alguém ultrapassar os limites, o registo do servidor guarda o endereço de rede e o email parcialmente oculto, para se perceber o abuso.",
         "c": "A base é o seu pedido (RGPD, art. 6.º, n.º 1, al. b)) e, no controlo de abusos, o nosso interesse legítimo em proteger o serviço e as caixas de correio de outras pessoas (al. f)). Dar o email é facultativo; sem ele não lhe conseguimos enviar o link."
       }
@@ -377,17 +381,17 @@
     "newsletter": {
       "titulo": "A newsletter",
       "paragrafos": {
-        "a": "Se pedir as novidades da casa — no convite do site ou marcando a caixa da carta secreta — e confirmar pelo link, o seu email entra na lista de envio (na Resend) e é usado só para lhe mandar as novidades do Café Preguiça, em português. A base é o seu consentimento (RGPD, art. 6.º, n.º 1, al. a), e Lei 41/2004, art. 13.º-A).",
+        "a": "Se pedir as novidades da casa — no convite do site ou na carta secreta — e confirmar pelo link, o seu email entra na lista de envio (na Resend) e é usado só para lhe mandar as novidades do Café Preguiça, em português. A base é o seu consentimento (RGPD, art. 6.º, n.º 1, al. a), e Lei 41/2004, art. 13.º-A).",
         "b": "Para podermos demonstrar esse consentimento, guardamos um registo de cada inscrição: quando pediu e quando confirmou, onde (convite ou carta secreta), em que língua, a frase que estava junto ao pedido e a versão desse texto — e, se cancelar, quando e por onde. Não guardamos o endereço de rede nem o aparelho para isso. O registo fica no Upstash, identificado por um resumo do seu email.",
-        "c": "Pode retirar o consentimento quando quiser, sem custo: cada newsletter traz um link para cancelar, com efeito imediato, e também pode pedi-lo pelos contactos acima. Cancelar não fecha a carta secreta. Retirar o consentimento não torna ilícitos os envios feitos antes.",
+        "c": "Pode retirar o consentimento quando quiser, sem custo: cada newsletter traz um link para cancelar, com efeito imediato, e também pode pedi-lo pelos contactos acima. Se já abriu a carta secreta num aparelho, cancelar não a fecha aí. Retirar o consentimento não torna ilícitos os envios feitos antes.",
         "d": "Cancelar e apagar são coisas diferentes. Se cancelar, deixa de receber, e o endereço fica na lista marcado como cancelado — é essa marca que impede que volte a receber — até nos pedir que o apaguemos. O registo da inscrição e do cancelamento fica três anos depois do cancelamento, para podermos responder a uma reclamação sobre envios feitos enquanto estava inscrito, e é então apagado automaticamente. Se pedir o apagamento, retiramos o endereço da lista e apagamos esse registo."
       }
     },
     "carta": {
       "titulo": "A carta secreta",
       "paragrafos": {
-        "a": "A carta secreta abre-se a quem confirmar um email pelo link que lhe enviamos. Não é preciso receber as novidades: a caixa das novidades é opcional e vem desmarcada. Sem ela, o email serve só para enviar o link, e não fica em lista nenhuma.",
-        "b": "Depois de confirmar, o navegador guarda uma chave que abre a carta — sem o seu email lá dentro. Por defeito dura até fechar o separador; se escolher «lembrar neste aparelho», fica 90 dias. Os pormenores estão na página de <cookies>cookies</cookies>."
+        "a": "A carta secreta é um extra para quem recebe as novidades da casa: escreve o email, e se estiver na lista a carta abre; se não estiver, pode inscrever-se ali mesmo. Para isso perguntamos à Resend se o endereço está inscrito, sem o guardar; para travar quem tente adivinhar endereços, o servidor conta os pedidos por endereço de rede durante uma hora. Se preferir não deixar o email, peça a carta secreta ao balcão.",
+        "b": "Depois de a abrir, o navegador guarda uma chave que a volta a abrir — sem o seu email lá dentro. Por defeito dura até fechar o separador; se escolher «lembrar neste aparelho», fica 90 dias. A chave não depende de continuar inscrito. Os pormenores estão na página de <cookies>cookies</cookies>."
       }
     },
     "equipa": {
@@ -459,7 +463,7 @@
       "itens": {
         "convite": "preguica:newsletter, no armazenamento de sessão: «inscrito» ou «fechado», para o convite da newsletter não voltar a aparecer na mesma visita. O navegador apaga-a ao fechar o separador. Não identifica ninguém.",
         "naoMostrar": "preguica:newsletter:nao-mostrar, no armazenamento local: só se carregar em «Não mostrar mais neste aparelho» no convite. Guarda a data até à qual o convite não aparece — seis meses — e apaga-se a seguir.",
-        "carta": "preguica:carta-secreta, no armazenamento de sessão: a chave que abre a carta secreta depois de confirmar um email. Assinada por nós, sem o seu email lá dentro, válida 24 horas e apagada ao fechar o separador.",
+        "carta": "preguica:carta-secreta, no armazenamento de sessão: a chave que abre a carta secreta depois de a abrir uma vez. Assinada por nós, sem o seu email lá dentro, válida 24 horas e apagada ao fechar o separador.",
         "cartaLembrada": "preguica:carta-secreta, no armazenamento local: a mesma chave, só se escolher «lembrar neste aparelho». Vale 90 dias desde a escolha, sem se renovar, e o site apaga-a depois disso; «Fechar a carta neste aparelho» apaga-a logo.",
         "painel": "preguica:painel:seccoes-fechadas, no armazenamento de sessão e só na área da equipa: que secções da carta estão fechadas no editor."
       }
@@ -552,13 +556,9 @@
       "expirado": "Este link só era válido durante 48 horas e já expirou. Inscreva-se outra vez no site para receber um novo.",
       "erro": "Não foi possível confirmar agora. Tente novamente daqui a pouco — o link continua válido.",
       "abrirCarta": "Ver a carta secreta",
-      "textoCarta": "Carregue no botão para abrir a carta secreta neste navegador. Não fica inscrito em lista nenhuma.",
-      "botaoCarta": "Abrir a carta secreta",
-      "textoCartaENovidades": "Carregue no botão para confirmar que quer receber as novidades da casa neste email e para abrir a carta secreta.",
-      "botaoCartaENovidades": "Confirmar e abrir a carta",
-      "lembrar": "Lembrar a carta secreta neste aparelho durante 90 dias (guarda no navegador uma chave, sem o seu email).",
-      "feitoCartaTitulo": "A carta está aberta",
-      "feitoCartaTexto": "Já a pode ver na ementa."
+      "textoCarta": "Carregue no botão para confirmar que quer receber as novidades da casa neste email. A carta secreta abre-se a seguir.",
+      "botaoCarta": "Confirmar e abrir a carta",
+      "lembrar": "Lembrar a carta secreta neste aparelho durante 90 dias (guarda no navegador uma chave, sem o seu email)."
     },
     "email": {
       "assunto": "Confirme a sua inscrição na newsletter do Café Preguiça",
@@ -573,13 +573,6 @@
       }
     },
     "emailCarta": {
-      "assunto": "O link para abrir a carta secreta do Café Preguiça",
-      "titulo": "A carta secreta",
-      "texto": "Olá,\n\nPediu para abrir a carta secreta do Café Preguiça. Carregue no botão para a abrir.",
-      "botao": "Abrir a carta secreta",
-      "nota": "O link é válido durante 48 horas. Se não fez este pedido, ignore este email: o endereço não entra em lista nenhuma."
-    },
-    "emailCartaENovidades": {
       "assunto": "Abra a carta secreta e confirme as novidades do Café Preguiça",
       "titulo": "Falta só um passo",
       "texto": "Olá,\n\nPediu para abrir a carta secreta e para receber as novidades do Café Preguiça por email. Carregue no botão para confirmar que este endereço é seu.",

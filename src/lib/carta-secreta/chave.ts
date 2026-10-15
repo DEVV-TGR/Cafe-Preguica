@@ -5,19 +5,17 @@ import { chave } from "@/lib/painel/chaves";
 /*
   A chave da carta secreta que fica no browser.
 
-  ## Não leva email, e não depende da newsletter
+  ## Não leva email, e cancelar a newsletter não a apaga
 
   Revisão legal de 2026-10-15. A chave de antes (`c1`) levava o email, em
   base64url — que se lê, não é cifra nenhuma — e cada abertura perguntava ao
   Resend se a pessoa continuava inscrita: quem cancelava a newsletter perdia a
-  carta. Isso fazia da carta o preço de aceitar marketing, que é o que a CNPD
-  critica (Diretriz 1/2022, § 70): o consentimento tem de ser livre, e retirá-lo
-  não pode custar nada.
+  carta. Retirar o consentimento não pode custar nada (RGPD, art. 7.º, n.º 3).
 
-  Agora a carta abre-se a quem confirmar um email pelo link que lhe mandamos,
-  queira ou não as novidades. A chave diz apenas "este browser já confirmou um
-  email, e vale até X" — assinada, para ninguém a fabricar, e sem nada de
-  pessoal lá dentro. Cancelar a newsletter não mexe nela.
+  A carta continua a abrir-se a quem recebe as novidades (ver
+  `app/api/carta-secreta/route.ts`), mas a chave diz apenas "este browser já
+  abriu a carta, e vale até X" — assinada, para ninguém a fabricar, e sem nada
+  de pessoal lá dentro. Quem cancela a newsletter guarda-a até ela caducar.
 
   ## Dois prazos, e quem escolhe é a pessoa
 
@@ -27,7 +25,7 @@ import { chave } from "@/lib/painel/chaves";
   | "lembrar neste aparelho" | `VALIDADE_LEMBRADA_MS` (90 dias) | `localStorage` |
 
   O prazo não se renova ao abrir: 90 dias depois de escolher, a escolha
-  acaba, e a pessoa pede outro link (ou volta a escolher). Os 90 dias são uma
+  acaba, e a pessoa volta a escrever o email (ou a escolher). Os 90 dias são uma
   proposta — uma estação de visitas à casa —, não uma regra; ver
   `docs/decisoes-pendentes.md`.
 
@@ -35,8 +33,8 @@ import { chave } from "@/lib/painel/chaves";
 
   Ainda há browsers com uma chave `c1` (com email) no `localStorage`. A rota
   aceita-a uma última vez, se for nossa e estiver no prazo, e devolve uma `c2`
-  de sessão no lugar; o browser apaga a `c1`. Não se pergunta ao Resend: a
-  carta já não depende de estar inscrito.
+  de sessão no lugar; o browser apaga a `c1`. Não se pergunta ao Resend, pela
+  mesma razão de cima.
 */
 
 const VERSAO = "c2";

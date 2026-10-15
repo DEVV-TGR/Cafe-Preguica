@@ -268,56 +268,51 @@ está aceite na conta definitiva** — ver `docs/decisoes-pendentes.md`.
 
 ## A carta secreta
 
-Uma secção no fim da `/ementa`, a seguir aos chás, que se abre a quem confirmar
-um email — **com ou sem as novidades da casa**. Há três sinais que levam lá:
+O isco da newsletter: uma secção no fim da `/ementa`, a seguir aos chás, que
+abre a quem está inscrito. Há três sinais que levam lá:
 - um aviso no topo da ementa;
 - um item "Carta secreta" no índice;
 - a linha "Há mais cocktails na carta secreta" no fim do capítulo dos cocktails.
 
-### Já foi o isco da newsletter, e deixou de ser
+**Como abre:**
 
-Até à revisão legal de 2026-10-15, a carta só abria a quem estivesse inscrito, e
-quem cancelava perdia-a. Isso fazia do acesso o preço do consentimento para
-marketing, que a CNPD critica (Diretriz 1/2022, § 70: condicionar conteúdos ao
-consentimento para marketing não é de admitir); o EDPB admite incentivos em
-abstrato, mas exige que retirar o consentimento não traga prejuízo — e perder a
-carta era um. A alteração:
+1. A pessoa escreve o email. `/api/carta-secreta` pergunta ao Resend se está no
+   segmento e ativo (`estaInscrito`).
+2. **Se está,** a rota devolve os artigos e uma **chave**, que o browser guarda
+   (ver abaixo). Na visita seguinte a carta abre sozinha.
+3. **Se não está,** o formulário da newsletter aparece ali mesmo
+   (`/api/newsletter` com `origem: "carta"`). Ao confirmar no email, a página
+   de confirmação guarda a chave e tem o botão "Ver a carta secreta".
+4. Sempre à vista: **"Prefere não deixar o email? Peça a carta secreta ao
+   balcão."**
+
+### O que mudou na revisão legal de 2026-10-15
+
+Primeiro a carta foi separada do marketing (commit `2e3b1cd`); depois o Tomás
+decidiu manter a carta como extra de quem está na lista, por ser o que a torna
+apelativa, com estes cuidados:
 
 | antes | agora |
 |---|---|
-| escrever um email inscrito abria a carta | escrever um email manda um **link**; a carta abre depois de o confirmar |
-| só abria a inscritos | abre a quem confirmar, queira ou não as novidades |
-| as novidades vinham com a carta | caixa à parte, **desmarcada** — "Quero também receber as novidades (opcional)" |
-| cancelar a newsletter fechava a carta | cancelar não mexe na carta |
-| a chave levava o email (base64url, legível) e durava 180 dias, renovados | a chave **não leva nada pessoal**: 24 h no `sessionStorage`, ou 90 dias no `localStorage` com "lembrar neste aparelho", sem renovar |
-| a rota dizia se um email estava na lista | a rota só aceita uma chave; não revela quem está inscrito |
+| a chave levava o email (base64url, legível) e durava 180 dias, renovados, gravada sem perguntar | a chave **não leva nada pessoal**: 24 h no `sessionStorage`, ou 90 dias no `localStorage` com "lembrar neste aparelho", sem renovar |
+| cada abertura com a chave perguntava ao Resend, e quem cancelava perdia a carta | a chave vale até caducar: **cancelar não fecha a carta** no browser onde já abriu (RGPD, art. 7.º, n.º 3) |
+| sem alternativa ao email | "peça a carta secreta ao balcão" |
+| sem prova do consentimento | a inscrição pela carta fica na prova, com a frase da carta |
 
-**Fica uma decisão da casa**: se a carta deve continuar atrás de um email (é o
-que lhe dá o ar de "secreta"), ou abrir sem email nenhum. As duas são
-compatíveis com a escolha livre sobre o marketing. Está em
-`docs/decisoes-pendentes.md`.
-
-**Como abre:**
-
-1. A pessoa escreve o email, marca ou não as novidades, e carrega em "Enviar o
-   link". `/api/newsletter` (com `origem: "carta"`) manda um de três emails —
-   ver o cabeçalho da rota.
-2. A página de confirmação mostra o botão certo ("Abrir a carta secreta" ou
-   "Confirmar e abrir a carta") e a caixa "Lembrar neste aparelho", desmarcada.
-3. `/api/newsletter/confirmar` inscreve (se pediu as novidades, com prova) e
-   devolve a chave. A `/ementa` abre a carta sozinha com ela.
-4. Na carta aberta, "Lembrar neste aparelho durante 90 dias" e "Fechar a carta
-   neste aparelho".
+**O risco que fica**, assumido pela casa: a CNPD critica condicionar conteúdos
+ao consentimento para marketing (Diretriz 1/2022, § 70). Está em
+`docs/decisoes-pendentes.md`, com o que falta confirmar (que o balcão mostra
+mesmo a carta a quem a pede).
 
 As chaves antigas (`c1`, com email) ainda se aceitam uma vez e são trocadas por
 uma de sessão; o browser apaga a antiga.
 
 **Os artigos nunca estão no HTML** da `/ementa`, que é estática. Só saem da rota
-com uma chave válida. O repositório é público, por isso o segredo é "de bar",
-não de cofre.
+depois do "sim" do Resend, ou com uma chave válida. O repositório é público,
+por isso o segredo é "de bar", não de cofre.
 
-**Limite:** 30 pedidos por hora por ligação à rota da carta; os pedidos de link
-contam nos limites da newsletter (`src/lib/newsletter/limites.ts`).
+**Limite:** 10 pedidos por hora por ligação. A resposta diz se um email está na
+lista, e sem limite servia para testar listas de endereços.
 
-**Em desenvolvimento**, sem chave do Resend, o link sai no terminal, como o da
-newsletter.
+**Em desenvolvimento**, sem chave do Resend, conta como inscrito quem confirmou
+nesta sessão do `npm run dev` (o link de confirmação sai no terminal).

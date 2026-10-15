@@ -10,8 +10,8 @@ import { lerJson } from "@/lib/pedido";
 
 /*
   O segundo passo: o link do email chegou à página de confirmação, e a pessoa
-  carregou no botão. É aqui que o contacto nasce no Resend — se ela pediu as
-  novidades — e que a carta secreta se abre.
+  carregou no botão. É aqui que o contacto nasce no Resend, e que a carta
+  secreta se abre.
 
   ## Porque é que o link do email não confirma sozinho
 
@@ -39,9 +39,15 @@ import { lerJson } from "@/lib/pedido";
 
   ## Devolve também a chave da carta secreta
 
-  A todos os que confirmam, com novidades ou sem elas: a carta já não depende
-  do marketing (`lib/carta-secreta/chave.ts`). `lembrar` é a caixa "lembrar
-  neste aparelho" da página de confirmação; sem ela, a chave é de sessão.
+  Quem acabou de confirmar está inscrito, e a carta secreta é o extra: a
+  página de confirmação guarda a chave e a `/ementa` abre-a sozinha. A chave
+  não depende de continuar inscrito (`lib/carta-secreta/chave.ts`). `lembrar` é
+  a caixa "lembrar neste aparelho" da página de confirmação; sem ela, a chave é
+  de sessão.
+
+  O convite ainda sabe dizer "sem novidades" (`m: false`), mas nenhum ecrã o
+  pede hoje: a carta e o convite inscrevem os dois. Fica para o dia em que a
+  casa quiser a carta sem newsletter — ver `docs/decisoes-pendentes.md`.
 */
 
 const Pedido = z.object({

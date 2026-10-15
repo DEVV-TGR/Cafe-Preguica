@@ -8,7 +8,7 @@ se toma aqui evita a conversa de a desfazer daí a dois meses.
 ## 0. Revisão legal de 2026-10-15 — o que falta para fechar as páginas legais
 
 A revisão corrigiu o que dependia só do código (prazos que não se cumpriam,
-prova do consentimento, a carta secreta presa ao marketing, o que fica no
+prova do consentimento, a carta secreta que se perdia ao cancelar, o que fica no
 browser) e reescreveu `/privacidade`, `/cookies` e `/informacao-legal` em PT e
 EN. **Não é um parecer jurídico e não declara conformidade.** O que está abaixo
 falta, e as páginas dizem-no onde o leitor o vê. O build lista os campos em
@@ -45,7 +45,7 @@ Justiça (regra do `AGENTS.md`).
 |---|---|---|
 | Prova do consentimento depois de cancelar | 3 anos (`PRAZO_DA_PROVA_S`), apagada pelo Redis | tempo para responder a uma reclamação ou à CNPD sobre envios feitos enquanto a inscrição existia; **não é um prazo legal** |
 | Contactos cancelados no Resend | ficam marcados "cancelado" até a pessoa pedir o apagamento ("Apagar de vez") | a marca é o que impede um reenvio; **alternativa a considerar**: apagar o contacto logo no cancelamento e ficar só a prova, porque ninguém volta à lista sem um link novo |
-| Carta secreta | abre a quem confirmar um email, com ou sem novidades | separa a carta do marketing (CNPD, Diretriz 1/2022, § 70); **a casa pode preferir** abri-la sem email nenhum — também é compatível |
+| Carta secreta | **decidido pelo Tomás (2026-10-15)**: continua a ser o extra de quem recebe as novidades; quem cancela não a perde no browser onde a abriu; a chave não leva o email; a secção diz "peça a carta secreta ao balcão" | **risco assumido**: a CNPD critica condicionar conteúdos ao consentimento para marketing (Diretriz 1/2022, § 70); o EDPB admite incentivos se a escolha for livre (Diretrizes 05/2020) — a alternativa do balcão é o que sustenta essa escolha. Convém validar com jurista. **Confirmar com a casa que o balcão mostra a carta a quem a pedir**, senão a frase promete o que não acontece. As alternativas mais seguras (carta sem email, ou novidades numa caixa à parte) ficam no histórico do commit `2e3b1cd` |
 | "Lembrar a carta neste aparelho" | 90 dias, sem renovar | uma estação de visitas; era 180 dias, renovados e sem escolha |
 | "Não mostrar mais" o convite | 6 meses | pedido explícito; antes "inscrito" ficava para sempre, mesmo sem confirmar |
 | Contagens das mesas | sem prazo (só números); últimas 300 leituras com hora exacta, apagadas após um ano sem leituras | não há dado de pessoa nas estruturas; **considerar** guardar só a hora (sem minutos) nas últimas leituras, ou dar-lhes prazo |

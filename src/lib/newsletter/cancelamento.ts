@@ -39,7 +39,7 @@ const ASSUNTO = "Cancelámos a sua inscrição na newsletter do Café Preguiça"
    só em português. */
 const TEXTO = [
   "Olá,",
-  "A sua inscrição na newsletter do Café Preguiça foi cancelada. A partir de agora deixa de receber as novidades da casa. A carta secreta continua a abrir-se como antes: não depende da newsletter.",
+  "A sua inscrição na newsletter do Café Preguiça foi cancelada. A partir de agora deixa de receber as novidades da casa. Se já abriu a carta secreta num aparelho, ela continua a abrir-se aí.",
   "Se foi engano, pode voltar a inscrever-se quando quiser, no site. Se quiser que apaguemos também o seu endereço e o registo da inscrição, peça-o pelos contactos indicados na política de privacidade do site.",
 ].join("\n\n");
 

@@ -22,22 +22,15 @@ import { EsquemaEmail } from "@/lib/email";
   O pop-up e a carta secreta escrevem aqui: pedem o email de confirmação, e
   mais nada.
 
-  ## Duas origens, e as novidades são uma escolha à parte
+  ## Duas origens
 
-  | `origem` | `novidades` | o email diz | ao confirmar |
-  |---|---|---|---|
-  | `convite` (o pop-up) | sempre sim — é para isso que ele existe | "confirme a inscrição" | inscreve, e guarda a prova do consentimento |
-  | `carta` | a caixa da carta, desmarcada por defeito | "abra a carta" | abre a carta |
-  | `carta` | marcada | "abra a carta e confirme as novidades" | as duas coisas |
+  | `origem` | o email diz | ao confirmar |
+  |---|---|---|
+  | `convite` (o pop-up) | "confirme a inscrição" | inscreve, com prova do consentimento |
+  | `carta` | "confirme as novidades e abra a carta" | inscreve, com prova, e abre a carta |
 
-  A carta secreta já foi só para quem recebesse a newsletter. Deixou de ser na
-  revisão legal de 2026-10-15 — ver `lib/carta-secreta/chave.ts`.
-
-  Uma rota e não uma server action porque as páginas públicas são estáticas e o
-  pop-up vive no layout de todas elas — uma action obrigava cada página a saber
-  dela. Fica debaixo de `/api`, que o `proxy.ts` deixa passar sem o negociador de
-  idioma, e com a CSP pública do `next.config.ts` (o `connect-src 'self'` chega:
-  o browser só fala com o próprio site).
+  A origem fica na prova do consentimento, com o texto que estava ao lado do
+  botão em cada sítio.
 
   ## O que fica de um pedido que ninguém confirma
 
@@ -62,8 +55,6 @@ const Pedido = z.object({
   email: EsquemaEmail,
   lingua: z.enum(routing.locales).catch(routing.defaultLocale),
   origem: z.enum(["convite", "carta"]).catch("convite"),
-  /* Só conta na carta. No convite é sempre sim. */
-  novidades: z.boolean().catch(false),
   /* O isco: um campo escondido que uma pessoa nunca vê nem preenche, e que um
      robô de formulários preenche quase sempre. */
   sitio: z.string().optional(),
@@ -113,7 +104,6 @@ export async function POST(pedido: Request) {
   if (!lido.success) return Response.json({ erro: "email" }, { status: 400 });
 
   const { email, lingua, sitio, origem } = lido.data;
-  const novidades = origem === "convite" || lido.data.novidades;
 
   /* Responde como se tivesse corrido bem: um robô que recebe um erro aprende a
      não preencher o isco. */
@@ -135,23 +125,18 @@ export async function POST(pedido: Request) {
       (5 por hora por ligação), que contam antes desta pergunta.
     */
     /*
-      Na carta não se pergunta: quem lá pede quer o link para a abrir, esteja
-      ou não inscrito, e a resposta não deve dizer quem está na lista.
+      Na carta não se pergunta: a secção só oferece a inscrição depois de a
+      `/api/carta-secreta` ter dito que o email não está na lista.
     */
     if (origem === "convite" && (await estaInscrito(email))) {
       return Response.json({ ok: true, jaInscrito: true });
     }
 
-    /* O email tem três versões — ver a tabela lá em cima. A assinatura é
+    /* O email tem duas versões — ver a tabela lá em cima. A assinatura é
        sempre a mesma, e vive com a primeira. */
     const t = await getTranslations({
       locale: lingua,
-      namespace:
-        origem === "convite"
-          ? "newsletter.email"
-          : novidades
-            ? "newsletter.emailCartaENovidades"
-            : "newsletter.emailCarta",
+      namespace: origem === "convite" ? "newsletter.email" : "newsletter.emailCarta",
     });
     const assinatura = await getTranslations({ locale: lingua, namespace: "newsletter.email.assinatura" });
 
@@ -160,21 +145,18 @@ export async function POST(pedido: Request) {
       aqui, das mesmas mensagens que o browser mostrou, e levado assinado no
       link: ver `lib/newsletter/convite.ts`.
     */
-    const textoDoConsentimento = novidades
-      ? (await getTranslations({ locale: lingua }))(
-          origem === "convite" ? "newsletter.convite.consentimento" : "ementa.secreta.consentimento",
-        )
-      : null;
+    const textoDoConsentimento = (await getTranslations({ locale: lingua }))(
+      origem === "convite" ? "newsletter.convite.consentimento" : "ementa.secreta.consentimento",
+    );
 
     const link = linkDeConfirmacao(
       pedido,
       lingua,
-      await criarConvite({ email, lingua, origem, novidades, texto: textoDoConsentimento }),
+      await criarConvite({ email, lingua, origem, novidades: true, texto: textoDoConsentimento }),
     );
 
     /* A mesma moldura da newsletter, sem a linha de cancelar: quem recebe isto
-       ainda não está inscrito (e na carta sem novidades nunca vai estar). As
-       imagens vêm do site em produção, como lá. */
+       ainda não está inscrito. As imagens vêm do site em produção, como lá. */
     const moldura: Moldura = {
       logo: `${URL_SITE}${CAMINHO_DO_LOGO}`,
       estudio: `${URL_SITE}${CAMINHO_DO_ESTUDIO}`,

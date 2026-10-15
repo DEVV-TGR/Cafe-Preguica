@@ -10,33 +10,37 @@ import { Ramos } from "./Ramos";
 /**
  * # A carta secreta
  *
- * O fim da `/ementa`, a seguir aos chás e antes do "Dúvidas?". Fechada à
- * chegada, aberta a quem confirmar um email — com ou sem as novidades da casa.
+ * O fim da `/ementa`, a seguir aos chás e antes do "Dúvidas?". Fechada para
+ * quem não recebe a newsletter, aberta para quem recebe — é o isco da
+ * newsletter, e por isso tem de se ver e de dar vontade.
  *
  * ## O percurso
  *
  * 1. **Fechada:** uma lista desfocada por trás (barras, não nomes — os nomes
- *    nem cá estão), a preguiça e o cadeado por cima, o campo do email e, à
- *    parte, a caixa das novidades — **desmarcada**.
- * 2. O email vai à `/api/newsletter` com `origem: "carta"`, que manda um link.
- * 3. A página de confirmação abre a carta (e inscreve nas novidades, se a
- *    caixa estava marcada), guarda a chave e traz a pessoa de volta, já aberta.
- * 4. **Aberta:** os artigos entram um a um. Por baixo, "lembrar neste
- *    aparelho" e "fechar a carta".
+ *    nem cá estão), a preguiça e o cadeado por cima, e o campo do email.
+ * 2. O email vai à `/api/carta-secreta`, que pergunta ao Resend.
+ * 3. **Inscrito:** a lista dissolve-se e os artigos entram um a um. A chave que
+ *    vem na resposta fica no browser (ver abaixo), e a carta abre sozinha.
+ * 4. **Não inscrito:** o formulário da newsletter aparece ali mesmo — o mesmo
+ *    `/api/newsletter` do convite, com `origem: "carta"`. Ao confirmar no
+ *    email, a página de confirmação guarda a chave e traz a pessoa de volta.
+ * 5. **Aberta:** por baixo, "lembrar neste aparelho" e "fechar a carta".
  *
- * ## Porque é que já não é "só para quem está na lista"
+ * ## O que mudou na revisão legal de 2026-10-15
  *
- * Revisão legal de 2026-10-15. A carta era o prémio de receber a newsletter, e
- * quem cancelava perdia-a — o que fazia do acesso o preço do consentimento para
- * marketing, contra o que a CNPD escreve (Diretriz 1/2022, § 70). Agora o
- * marketing é uma escolha à parte, e cancelá-lo não fecha a carta. Se a casa
- * quiser outra coisa (abrir a carta sem email nenhum, por exemplo), é decisão
- * dela — está em `docs/decisoes-pendentes.md`.
+ * A carta continua a ser o benefício de quem recebe as novidades — decisão do
+ * Tomás, porque é o que a torna apelativa. O que mudou à volta:
  *
- * ## A chave no browser
- *
- * No `sessionStorage` por defeito; no `localStorage` só com "lembrar neste
- * aparelho" (90 dias, sem renovar). Ver `lib/carta-secreta/no-browser.ts`.
+ * - **Cancelar a newsletter não fecha a carta** no browser onde já foi aberta:
+ *   a chave não volta a perguntar ao Resend (RGPD, art. 7.º, n.º 3 — retirar o
+ *   consentimento não pode custar nada).
+ * - **A chave não leva o email**, fica no `sessionStorage` por defeito, e só
+ *   vai para o `localStorage` (90 dias) com "lembrar neste aparelho". Ver
+ *   `lib/carta-secreta/no-browser.ts`.
+ * - **Há uma alternativa sem email**: a linha "peça-a ao balcão". É o que deixa
+ *   a escolha de dar o email ser livre — sem ela, a carta era o preço do
+ *   consentimento para marketing, que a CNPD critica (Diretriz 1/2022, § 70).
+ *   O risco que sobra está em `docs/decisoes-pendentes.md`.
  *
  * ## O chamativo
  *
@@ -52,12 +56,17 @@ export type TextosDaCartaSecreta = {
   texto: string;
   etiqueta: string;
   marcador: string;
-  enviarLink: string;
+  abrir: string;
+  aAbrir: string;
+  naoInscritoTitulo: string;
+  naoInscritoTexto: string;
+  inscrever: string;
   aEnviar: string;
-  /** A frase da caixa das novidades — vai, tal e qual, para a prova do consentimento. */
+  /** A frase ao lado do "Inscrever e abrir" — vai, tal e qual, para a prova do consentimento. */
   consentimento: string;
-  nota: string;
   privacidade: string;
+  /** A alternativa sem email. */
+  balcao: string;
   enviadoTitulo: string;
   enviadoTexto: string;
   outroEmail: string;
@@ -77,8 +86,9 @@ export type TextosDaCartaSecreta = {
 type ArtigoSecreto = { id: string; nome: string; descricao: string; preco: number | null };
 
 type Estado =
-  | { tipo: "fechada"; erro?: string; aEnviar?: boolean }
-  | { tipo: "enviado"; email: string }
+  | { tipo: "fechada"; erro?: string }
+  | { tipo: "a-abrir" }
+  | { tipo: "nao-inscrito"; email: string; aEnviar?: boolean; enviado?: boolean; erro?: string }
   | { tipo: "aberta"; artigos: ArtigoSecreto[]; lembrada: boolean; aLembrar?: boolean; erro?: string };
 
 type Resposta = { aberta: true; artigos: ArtigoSecreto[]; chave?: string } | { aberta: false };
@@ -92,10 +102,14 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
   const [estado, setEstado] = useState<Estado>({ tipo: "fechada" });
   const [aVista, setAVista] = useState(false);
   const seccao = useRef<HTMLElement>(null);
-  /* Controlados: o React 19 repõe os campos de um `<form action>` quando a
+  /* Controlado: o React 19 repõe os campos de um `<form action>` quando a
      acção acaba, e o email desaparecia por baixo da mensagem de erro. */
   const [email, setEmail] = useState("");
-  const [novidades, setNovidades] = useState(false);
+  /* O número do último pedido. A abertura sozinha (com a chave) e a do botão
+     (com o email) podem estar em voo ao mesmo tempo, e a resposta que chegasse
+     em último decidia o ecrã — uma chave caducada fechava a carta por cima de
+     um "não está inscrito" acabado de mostrar. Só conta a do último pedido. */
+  const ultimoPedido = useRef(0);
   /* Depois de um pedido feito por quem está a ver, o foco vai para o resultado:
      o formulário onde estava desaparece, e sem isto o foco caía no `<body>` e o
      leitor de ecrã não dizia o que mudou. */
@@ -104,35 +118,59 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
   const erroDoPedido = (status: number) =>
     status === 400 ? textos.erroEmail : status === 429 ? textos.erroLimite : textos.erroServico;
 
-  async function abrirCom(chave: string, lembrar = false): Promise<Resposta | null> {
+  /* Um pedido à `/api/carta-secreta`; `null` se falhar, com o estado HTTP. */
+  async function perguntar(
+    corpo: { email: string } | { chave: string; lembrar?: boolean },
+  ): Promise<{ r: Resposta | null; status: number }> {
     try {
       const resposta = await fetch("/api/carta-secreta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chave, lingua: locale, ...(lembrar ? { lembrar: true } : {}) }),
+        body: JSON.stringify({ ...corpo, lingua: locale }),
       });
-      if (!resposta.ok) return null;
+      if (!resposta.ok) return { r: null, status: resposta.status };
       /* Um 200 que não é JSON (uma página de erro de um proxy pelo meio) conta
          como falha, e não como carta fechada. */
-      return (await resposta.json().catch(() => null)) as Resposta | null;
+      return { r: (await resposta.json().catch(() => null)) as Resposta | null, status: resposta.status };
     } catch {
-      return null;
+      return { r: null, status: 503 };
+    }
+  }
+
+  /* Abrir com o email escrito na secção. */
+  async function abrirComEmail() {
+    const numero = ++ultimoPedido.current;
+    setEstado({ tipo: "a-abrir" });
+    const { r, status } = await perguntar({ email });
+    if (numero !== ultimoPedido.current) return;
+    if (!r) {
+      setEstado({ tipo: "fechada", erro: erroDoPedido(status) });
+      return;
+    }
+    focarResultado.current = true;
+    if (r.aberta) {
+      if (r.chave) guardarChave(r.chave);
+      setEstado({ tipo: "aberta", artigos: r.artigos, lembrada: false });
+    } else {
+      setEstado({ tipo: "nao-inscrito", email });
     }
   }
 
   useEffect(() => {
     if (!focarResultado.current) return;
-    if (estado.tipo !== "aberta" && estado.tipo !== "enviado") return;
+    if (estado.tipo !== "aberta" && estado.tipo !== "nao-inscrito") return;
     focarResultado.current = false;
     seccao.current?.querySelector<HTMLElement>("[data-resultado]")?.focus();
   }, [estado]);
 
-  /* Um browser que já confirmou um email abre a carta sozinho. */
+  /* Um browser que já abriu a carta abre-a sozinho, sem o "A abrir…" no botão
+     — a pessoa ainda nem chegou lá abaixo. */
   useEffect(() => {
     const guardada = lerChaveGuardada();
     if (!guardada) return;
-    void abrirCom(guardada.valor).then((r) => {
-      if (!r) return;
+    const numero = ++ultimoPedido.current;
+    void perguntar({ chave: guardada.valor }).then(({ r }) => {
+      if (!r || numero !== ultimoPedido.current) return;
       if (!r.aberta) {
         /* Caducou ou não é nossa: esquece-a, sem dizer nada — não é um erro de
            quem está a ver. */
@@ -143,7 +181,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       if (r.chave) guardarChave(r.chave);
       setEstado({ tipo: "aberta", artigos: r.artigos, lembrada: !r.chave && guardada.lembrada });
     });
-    // Só à chegada: `abrirCom` muda a cada render, e correr isto outra vez era
+    // Só à chegada: `perguntar` muda a cada render, e correr isto outra vez era
     // voltar a pedir o que já está no ecrã.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -165,40 +203,40 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
     return () => observador.disconnect();
   }, []);
 
-  async function pedirLink(dados: FormData) {
-    setEstado({ tipo: "fechada", aEnviar: true });
+  async function inscrever(dados: FormData) {
+    if (estado.tipo !== "nao-inscrito") return;
+    const email = estado.email;
+    setEstado({ tipo: "nao-inscrito", email, aEnviar: true });
 
     let resposta: Response;
     try {
       resposta = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          novidades,
-          origem: "carta",
-          sitio: dados.get("sitio"),
-          lingua: locale,
-        }),
+        body: JSON.stringify({ email, origem: "carta", sitio: dados.get("sitio"), lingua: locale }),
       });
     } catch {
-      setEstado({ tipo: "fechada", erro: textos.erroServico });
+      setEstado({ tipo: "nao-inscrito", email, erro: textos.erroServico });
       return;
     }
 
     if (!resposta.ok) {
-      setEstado({ tipo: "fechada", erro: erroDoPedido(resposta.status) });
+      setEstado({ tipo: "nao-inscrito", email, erro: erroDoPedido(resposta.status) });
       return;
     }
     focarResultado.current = true;
-    setEstado({ tipo: "enviado", email });
+    /* Nesta visita o convite da newsletter já não aparece. */
+    try {
+      sessionStorage.setItem("preguica:newsletter", "inscrito");
+    } catch {}
+    setEstado({ tipo: "nao-inscrito", email, enviado: true });
   }
 
   async function lembrar() {
     if (estado.tipo !== "aberta") return;
     const guardada = lerChaveGuardada();
     setEstado({ ...estado, aLembrar: true, erro: undefined });
-    const r = guardada ? await abrirCom(guardada.valor, true) : null;
+    const { r } = guardada ? await perguntar({ chave: guardada.valor, lembrar: true }) : { r: null };
     if (r?.aberta && r.chave) {
       guardarChave(r.chave);
       setEstado({ tipo: "aberta", artigos: r.artigos, lembrada: true });
@@ -208,6 +246,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
   }
 
   const aberta = estado.tipo === "aberta";
+  const balcao = <p className="em-secreta__nota">{textos.balcao}</p>;
 
   return (
     <section
@@ -307,22 +346,65 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
             </ul>
 
             <div className="em-secreta__porta">
-              {estado.tipo === "enviado" ? (
-                <div className="em-secreta__form" role="status" tabIndex={-1} data-resultado>
-                  <p className="em-secreta__estado">{textos.enviadoTitulo}</p>
-                  <p className="em-secreta__nota">
-                    {textos.enviadoTexto.replace("{email}", estado.email)}
-                  </p>
-                  <button
-                    type="button"
-                    className="em-secreta__ligacao"
-                    onClick={() => setEstado({ tipo: "fechada" })}
-                  >
-                    {textos.outroEmail}
-                  </button>
-                </div>
+              {estado.tipo === "nao-inscrito" ? (
+                estado.enviado ? (
+                  <div className="em-secreta__form" role="status" tabIndex={-1} data-resultado>
+                    <p className="em-secreta__estado">{textos.enviadoTitulo}</p>
+                    <p className="em-secreta__nota">{textos.enviadoTexto}</p>
+                    <button
+                      type="button"
+                      className="em-secreta__ligacao"
+                      onClick={() => setEstado({ tipo: "fechada" })}
+                    >
+                      {textos.outroEmail}
+                    </button>
+                  </div>
+                ) : (
+                  <form action={inscrever} className="em-secreta__form">
+                    <p className="em-secreta__estado" role="status" tabIndex={-1} data-resultado>
+                      {textos.naoInscritoTitulo}
+                    </p>
+                    <p className="em-secreta__nota">
+                      {textos.naoInscritoTexto.replace("{email}", estado.email)}
+                    </p>
+                    {/* O isco para robôs — ver `app/api/newsletter/route.ts`. */}
+                    <input
+                      type="text"
+                      name="sitio"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="pg-convite__isco"
+                    />
+                    <button
+                      type="submit"
+                      className="pg-botao pg-botao--cheio"
+                      disabled={estado.aEnviar}
+                    >
+                      {estado.aEnviar ? textos.aEnviar : textos.inscrever}
+                    </button>
+                    {estado.erro ? (
+                      <p className="em-secreta__erro" role="alert">
+                        {estado.erro}
+                      </p>
+                    ) : null}
+                    {/* O que a pessoa aceita, antes de carregar — e a frase que
+                        fica na prova do consentimento. */}
+                    <p className="em-secreta__nota">
+                      {textos.consentimento} <Link href="/privacidade">{textos.privacidade}</Link>
+                    </p>
+                    {balcao}
+                    <button
+                      type="button"
+                      className="em-secreta__ligacao"
+                      onClick={() => setEstado({ tipo: "fechada" })}
+                    >
+                      {textos.outroEmail}
+                    </button>
+                  </form>
+                )
               ) : (
-                <form className="em-secreta__form" action={pedirLink}>
+                <form className="em-secreta__form" action={abrirComEmail}>
                   <label className="em-secreta__campo">
                     <span className="sr-only">{textos.etiqueta}</span>
                     <input
@@ -335,43 +417,22 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pg-convite__entrada"
-                      aria-invalid={estado.erro ? true : undefined}
+                      aria-invalid={estado.tipo === "fechada" && estado.erro ? true : undefined}
                     />
-                  </label>
-                  {/* O isco para robôs — ver `app/api/newsletter/route.ts`. */}
-                  <input
-                    type="text"
-                    name="sitio"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                    className="pg-convite__isco"
-                  />
-                  {/* As novidades à parte, desmarcadas: a carta abre-se na
-                      mesma. A frase é a que vai para a prova do consentimento. */}
-                  <label className="em-secreta__escolha">
-                    <input
-                      type="checkbox"
-                      checked={novidades}
-                      onChange={(e) => setNovidades(e.target.checked)}
-                    />
-                    <span>{textos.consentimento}</span>
                   </label>
                   <button
                     type="submit"
                     className="pg-botao pg-botao--cheio"
-                    disabled={estado.aEnviar}
+                    disabled={estado.tipo === "a-abrir"}
                   >
-                    {estado.aEnviar ? textos.aEnviar : textos.enviarLink}
+                    {estado.tipo === "a-abrir" ? textos.aAbrir : textos.abrir}
                   </button>
-                  {estado.erro ? (
+                  {estado.tipo === "fechada" && estado.erro ? (
                     <p className="em-secreta__erro" role="alert">
                       {estado.erro}
                     </p>
                   ) : null}
-                  <p className="em-secreta__nota">
-                    {textos.nota} <Link href="/privacidade">{textos.privacidade}</Link>
-                  </p>
+                  {balcao}
                 </form>
               )}
             </div>

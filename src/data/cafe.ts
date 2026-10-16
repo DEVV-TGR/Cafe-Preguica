@@ -178,7 +178,12 @@ export const EsquemaCafe = z.object({
         ctx.addIssue({ code: "custom", path: ["capitalSocial"], message: "uma sociedade indica o capital social" });
       }
     })
-    .nullable(),
+    /* O `default` é para o painel que ainda estiver no ar com o esquema
+       antigo: esse esquema não conhece o campo, deita-o fora ao gravar, e sem
+       isto o build seguinte partia. Sem o campo é o mesmo que `null` — por
+       confirmar —, e a página diz isso. */
+    .nullable()
+    .default(null),
   /**
    * A entidade de resolução alternativa de litígios de consumo indicada em
    * `/informacao-legal` (Lei 144/2015, art. 18.º). A obrigação de informar
@@ -202,7 +207,8 @@ export const EsquemaCafe = z.object({
     .object({
       nome: z.string().min(1),
       url: z.url(),
-      adesao: z.boolean().nullable(),
+      /* O `default`, pela mesma razão do `operador`. */
+      adesao: z.boolean().nullable().default(null),
     })
     .nullable(),
 });

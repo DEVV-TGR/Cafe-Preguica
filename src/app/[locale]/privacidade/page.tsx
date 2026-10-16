@@ -93,7 +93,7 @@ export default async function Privacidade({ params }: Props) {
   let numero = 0;
 
   return (
-    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>
+    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")} larga>
       {/* A ficha tem de dizer o mesmo que as secções. Se entrar um formulário
           ou um serviço de terceiros, mudam as duas — ver o aviso acima. */}
       <Ficha

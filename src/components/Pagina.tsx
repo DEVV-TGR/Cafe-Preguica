@@ -26,6 +26,7 @@ export function Pagina({
   olho,
   titulo,
   intro,
+  larga = false,
   children,
 }: {
   locale: Locale;
@@ -33,6 +34,9 @@ export function Pagina({
   olho: string;
   titulo: string;
   intro?: string;
+  /** Coluna mais larga no computador — para as páginas legais, que são longas
+      e têm listas; ver `.lt-pagina--larga` em `leitura.css`. */
+  larga?: boolean;
   children?: React.ReactNode;
 }) {
   const t = useTranslations("leitura");
@@ -40,7 +44,7 @@ export function Pagina({
   return (
     <>
       <BarraSite locale={locale} />
-      <main id="conteudo" className="lt-pagina">
+      <main id="conteudo" className={larga ? "lt-pagina lt-pagina--larga" : "lt-pagina"}>
         <header className="lt-topo">
           <p className="lt-olho">{olho}</p>
           <h1 className="lt-titulo">{titulo}</h1>

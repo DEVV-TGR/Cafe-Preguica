@@ -16,6 +16,25 @@
   padding: clamp(2.5rem, 9vh, 5.5rem) var(--lt-margem) 0;
 }
 
+/*
+  As páginas legais (privacidade, cookies, informação legal) são longas, têm
+  listas e secções com vários parágrafos, e numa coluna de 44rem ficavam um
+  fio no meio de um ecrã de computador (pedido do Tomás, 2026-10-16). Aqui a
+  coluna alarga, e o texto também — até ~78 caracteres, ainda dentro do que se
+  lê bem. No telemóvel não muda nada: a largura que manda é a do ecrã.
+*/
+.lt-pagina--larga {
+  max-width: calc(62rem + 2 * var(--lt-margem));
+}
+
+.lt-pagina--larga .lt-intro {
+  max-width: 56ch;
+}
+
+.lt-pagina--larga .lt-seccao__texto {
+  max-width: 78ch;
+}
+
 /* ---------------------------------------------------------------- o topo */
 
 .lt-topo {

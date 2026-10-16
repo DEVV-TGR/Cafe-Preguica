@@ -82,7 +82,7 @@ export default async function Cookies({ params }: Props) {
   );
 
   return (
-    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>
+    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")} larga>
       <Ficha
         itens={[
           { rotulo: t("ficha.proprios"), valor: t("ficha.soEquipa") },

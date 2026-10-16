@@ -82,7 +82,7 @@ export default async function InformacaoLegal({ params }: Props) {
   const litigios = cafe.litigios;
 
   return (
-    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")}>
+    <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")} larga>
       <Seccao numero={1} titulo={t("identificacao.titulo")}>
         {operador ? (
           <>

@@ -496,10 +496,10 @@
         "pt": "Whiskey, vermute tinto doce e bitters de Angostura, servido sobre gelo. Um clássico de Nova Iorque com raízes no século XIX. Intenso e elegante!",
         "en": "Whiskey, sweet red vermouth and Angostura bitters, served over ice. A New York classic with 19th-century roots. Bold and elegant!"
       },
-      "preco": 7,
+      "preco": 6.2,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "hugo-spritz",
@@ -512,10 +512,10 @@
         "pt": "Espumante, licor de flor de sabugueiro, água com gás, hortelã e lima. Criado no norte de Itália em 2005, nasceu como uma alternativa mais delicada ao spritz tradicional. Floral e fresco!",
         "en": "Sparkling wine, elderflower liqueur, sparkling water, mint and lime. Created in northern Italy in 2005 as a gentler alternative to the traditional spritz. Floral and fresh!"
       },
-      "preco": 7,
+      "preco": 7.5,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "south-side",
@@ -528,10 +528,10 @@
         "pt": "Gin Tanqueray, sumo de limão, xarope de açúcar e hortelã fresca. Com raízes nos clubes de Long Island, tornou-se um clássico da combinação de gin e hortelã. Cítrico e aromático!",
         "en": "Tanqueray gin, lemon juice, sugar syrup and fresh mint. With roots in the Long Island clubs, it became a classic pairing of gin and mint. Citrusy and aromatic!"
       },
-      "preco": 7,
+      "preco": 5.6,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "strawberry-daiquiri",
@@ -544,10 +544,10 @@
         "pt": "Rum branco, morango, sumo de lima e xarope de açúcar. Uma versão frutada do clássico cubano, onde o morango se junta ao rum e à frescura da lima.",
         "en": "White rum, strawberry, lime juice and sugar syrup. A fruity take on the Cuban classic, where strawberry meets rum and fresh lime."
       },
-      "preco": 7,
+      "preco": 6.8,
       "precoSecundario": null,
       "alergenios": [],
-      "escondido": true
+      "escondido": false
     },
     {
       "id": "mojito-melancia",

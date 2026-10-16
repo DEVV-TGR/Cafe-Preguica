@@ -53,8 +53,10 @@ Justiça (regra do `AGENTS.md`).
      geral da plataforma, e isso não é defeito;
    - quem responde às reclamações eletrónicas (15 dias úteis) é da operação da
      casa.
-6. **Serviços à distância**: há encomendas, reservas com pagamento, *takeaway*
-   contratado por telefone ou email? Mudam a análise de contratação à distância.
+6. ✅ **Serviços à distância**: **não há** — nem encomendas, nem reservas com
+   pagamento, nem *takeaway* contratado por telefone, email ou online (o Tomás,
+   2026-10-16). O site não precisa de informação de contratação à distância;
+   rever se isto mudar.
 
 ### B. Decisões do responsável — o código tem uma proposta, a casa confirma
 

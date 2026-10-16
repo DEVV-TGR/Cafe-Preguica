@@ -2,6 +2,7 @@ import { z } from "zod";
 import { lerTexto } from "@/lib/pedido";
 import { assinaturaValida } from "@/lib/newsletter/webhook";
 import { avisarCancelamento } from "@/lib/newsletter/cancelamento";
+import { jaRetirou, registarRetirada } from "@/lib/newsletter/consentimento";
 import { ErroDaNewsletter, segmentoDaNewsletter } from "@/lib/newsletter/resend";
 import { ErroDoRedis } from "@/lib/painel/redis";
 import { meioEscondido } from "@/lib/painel/utilizadores";
@@ -19,7 +20,18 @@ import { meioEscondido } from "@/lib/painel/utilizadores";
   Vercel como `RESEND_NEWSLETTER_WEBHOOK_SECRET`. Ver `docs/NEWSLETTER.md`.
 
   Sem o segredo, responde 503 e não faz nada — cancelar pelo painel avisa na
-  mesma, porque não passa por aqui.
+  mesma, porque não passa por aqui. **Mas sem webhook a retirada feita pelo
+  link do email não fica na prova do consentimento** (o Resend deixa de enviar
+  na mesma, e o painel mostra "cancelou"): configurá-lo é uma pendência de
+  lançamento, em `docs/decisoes-pendentes.md`.
+
+  ## A retirada fica na prova
+
+  Revisão legal de 2026-10-15. Um cancelamento pelo link do email regista-se
+  em `lib/newsletter/consentimento.ts` — é a partir daí que a prova passa a ter
+  prazo. Se a prova já tiver a retirada (o cancelamento veio do painel, que a
+  regista antes de avisar, ou é uma repetição do mesmo evento), não se faz
+  nada: o aviso já saiu ou está a sair.
 
   ## As respostas
 
@@ -78,9 +90,13 @@ export async function POST(pedido: Request) {
     if (segmentos && !segmentos.includes(segmentoDaNewsletter())) {
       return new Response(null, { status: 200 });
     }
+    if (await jaRetirou(email)) return new Response(null, { status: 200 });
+    /* Avisar primeiro e registar depois: se o aviso falhar, o Resend repete, e
+       a repetição só passa a primeira linha se a retirada ainda não estiver lá. */
     if (await avisarCancelamento(email)) {
       console.info(`[newsletter] cancelou, e foi avisado — ${meioEscondido(email)}`);
     }
+    await registarRetirada(email, "link-no-email");
     return new Response(null, { status: 200 });
   } catch (erro) {
     if (erro instanceof ErroDaNewsletter || erro instanceof ErroDoRedis) {

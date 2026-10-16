@@ -158,6 +158,17 @@ export function FormularioDeCodigo({
           </span>
         </label>
 
+        {/* Desmarcada por defeito: o cookie de 30 dias é uma comodidade, e só
+            se grava se quem entra o pedir — ver `confirmarCodigo`. A frase diz
+            o que fica e quanto tempo, que é o que torna a escolha informada. */}
+        <label className="pn-interruptor pn-escolha">
+          <input type="checkbox" name="lembrar" value="sim" disabled={ocupado} />
+          <span>
+            Lembrar este aparelho durante 30 dias — guarda um cookie neste browser para não pedir o
+            código. Não marques num aparelho partilhado.
+          </span>
+        </label>
+
         {/* Para quem não vê a animação: o que ela está a dizer. */}
         <p className="pn-so-leitor" role="status">
           {fase === "a-confirmar" ? "A confirmar o código…" : fase === "certo" ? "Código certo. A abrir o painel." : ""}

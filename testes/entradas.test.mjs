@@ -59,3 +59,46 @@ test("as entradas saem da mais recente para a mais antiga, e com teto", async ()
   for (let i = 0; i < 400; i++) await entradas.anotarEntrada("c@exemplo.pt", "aparelho");
   assert.equal((await entradas.ultimasEntradas()).length, 300);
 });
+
+/*
+  Revisão legal de 2026-10-15: a página de privacidade promete 30 dias, no
+  máximo, por registo de entrada. O que se prova é que o prazo é por linha e
+  absoluto — escrever outra vez não o adia — e que uma linha de há mais de 30
+  dias já não existe, sem ninguém a ter de apagar.
+*/
+test("cada entrada morre aos 30 dias, e escrever outra vez não adia", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  const hoje = `painel:entradas:${new Date().toISOString().slice(0, 10)}`;
+
+  await entradas.anotarEntrada("prazo@exemplo.pt", "codigo");
+  const primeiro = await redis.prazoDe(hoje);
+  assert.ok(primeiro > 0 && primeiro <= 30 * 24 * 60 * 60, `prazo de ${primeiro} s`);
+
+  await entradas.anotarEntrada("prazo@exemplo.pt", "saiu");
+  const segundo = await redis.prazoDe(hoje);
+  assert.ok(segundo <= primeiro, "a segunda escrita não renovou o prazo");
+});
+
+test("uma entrada de há 31 dias já não aparece nem está guardada", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  const real = Date.now;
+  const ha31dias = real() - 31 * 24 * 60 * 60 * 1000;
+  const dia = `painel:entradas:${new Date(ha31dias).toISOString().slice(0, 10)}`;
+
+  Date.now = () => ha31dias;
+  try {
+    await entradas.anotarEntrada("velho@exemplo.pt", "codigo");
+  } finally {
+    Date.now = real;
+  }
+
+  assert.equal(await redis.prazoDe(dia), -2, "a lista desse dia já não existe");
+  assert.ok(!(await entradas.ultimasEntradas()).some((e) => e.email === "velho@exemplo.pt"));
+});
+
+test("a lista antiga, com prazo renovável, é apagada à leitura", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  await redis.guardar("painel:entradas", "[]");
+  await entradas.ultimasEntradas();
+  assert.equal(await redis.ler("painel:entradas"), null);
+});

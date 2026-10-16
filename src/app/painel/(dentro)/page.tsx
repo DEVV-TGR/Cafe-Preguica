@@ -361,16 +361,18 @@ export default async function Painel() {
             site, e isso costuma demorar <strong className="pn-forte">1 a 2 minutos</strong>.
           </p>
 
-          {/* Este aparelho está lembrado 30 dias e por isso não pede o código. Quem
-              emprestou o telemóvel precisa de uma forma de desfazer isso — aqui, e
-              não escondida numa página de definições que o painel não tem. */}
+          {/* Se quem entrou pediu para lembrar este aparelho, ele não pede o código
+              durante 30 dias. Quem emprestou o telemóvel precisa de uma forma de
+              desfazer isso — aqui, e não escondida numa página de definições que o
+              painel não tem. Sem aparelho lembrado, o botão apaga só a sessão. */}
           <form action={esquecerEsteAparelho} className="pn-quadro__esquecer">
             <button type="submit" className="pn-ligacao">
               <Icone nome="aparelho" tamanho={16} /> Esquecer este aparelho
             </button>
             <p className="pn-nota">
-              Este telemóvel ou computador não volta a pedir o código durante 30 dias. Se não for teu,
-              ou se o emprestaste, carrega aqui — sais, e da próxima vez o código é pedido outra vez.
+              Se pediste para lembrar este telemóvel ou computador, ele não volta a pedir o código
+              durante 30 dias. Se não for teu, ou se o emprestaste, carrega aqui — sais, o cookie do
+              aparelho é apagado, e da próxima vez o código é pedido outra vez.
             </p>
           </form>
         </main>

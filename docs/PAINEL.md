@@ -135,11 +135,15 @@ e quem esqueceu o aparelho. Em cima, a última entrada de cada pessoa do
 E os **aparelhos com acesso**, cada um com **Terminar sessão**: corta a sessão
 desse aparelho na hora e esquece-o, e da próxima vez ele pede o código. Para
 isso a sessão tem registo no Upstash (`sessao:<id>`, 8 horas) e cada aparelho
-uma linha em `painel:aparelhos` — ver `src/lib/painel/aparelhos.ts`, com testes
-em `testes/aparelhos.test.mjs`.
+uma chave `painel:aparelhos:<id>` que morre sozinha no fim do aparelho lembrado
+(30 dias) ou, sem ele, no fim da sessão — ver `src/lib/painel/aparelhos.ts`,
+com testes em `testes/aparelhos.test.mjs`.
 
-As linhas vivem numa lista do Upstash (`painel:entradas`), cortada às últimas
-300 a cada escrita. O aparelho é o `User-Agent` resumido ("iPhone · Safari");
+As linhas vivem em listas do Upstash, uma por dia (`painel:entradas:<data>`),
+cada uma apagada pelo Redis 30 dias depois do início desse dia: **nenhuma linha
+passa dos 30 dias**, que é o que a página de privacidade promete (revisão legal
+de 2026-10-15; antes era uma lista só, com um prazo de um ano renovado a cada
+escrita). O aparelho é o `User-Agent` resumido ("iPhone · Safari");
 **o IP não se guarda**. Uma falha a anotar não impede ninguém de entrar — fica
 só no registo da Vercel. Ver `src/lib/painel/entradas.ts`, com testes em
 `testes/entradas.test.mjs`.
@@ -147,9 +151,13 @@ só no registo da Vercel. Ver `src/lib/painel/entradas.ts`, com testes em
 ## Como se entra
 
 Não há password. Escreve-se o email, chega um código de 6 algarismos (no
-**assunto**, para se ler na notificação), e entra-se. O aparelho fica lembrado
-durante 30 dias e deixa de pedir o código; o botão "Esquecer este aparelho", no
-fundo do painel, desfaz isso.
+**assunto**, para se ler na notificação), e entra-se. Com a caixa **"Lembrar
+este aparelho durante 30 dias"** marcada (vem desmarcada), o aparelho deixa de
+pedir o código durante esse tempo; o botão "Esquecer este aparelho", no fundo
+do painel, desfaz isso. Sem a caixa, não há cookie de aparelho: entra-se só com
+o da sessão (8 horas). É uma escolha porque o cookie de 30 dias é comodidade e
+não necessidade — ver `/cookies` e a revisão legal em
+`docs/decisoes-pendentes.md`.
 
 **Só entra quem estiver em `PAINEL_EMAILS`.** Um email que lá não esteja não
 recebe nada, e o ecrã diz *"Este email não tem acesso ao painel"*. Já foi

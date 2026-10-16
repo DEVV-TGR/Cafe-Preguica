@@ -2,17 +2,34 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { Link } from "@/i18n/navigation";
+import { guardarChave } from "@/lib/carta-secreta/no-browser";
 
 /**
- * O botão "Confirmar inscrição" da página a que o email de confirmação leva.
+ * O botão da página a que o email de confirmação leva.
  *
  * O convite vem no fragmento (`#…`) — ver `app/api/newsletter/route.ts`. O
  * fragmento só existe no browser, e por isso é lido aqui e não na página.
+ *
+ * ## Duas versões do mesmo ecrã
+ *
+ * O convite diz de onde veio o pedido (ver `lib/newsletter/convite.ts`): do
+ * convite da newsletter, ou da carta secreta — e aí o botão diz que também abre
+ * a carta. Lê-se o que vem dentro sem verificar a assinatura — é só para
+ * escolher a frase; quem decide é a rota.
+ *
+ * ## "Lembrar neste aparelho"
+ *
+ * Desmarcada. Sem ela, a chave da carta fica no `sessionStorage` e morre com o
+ * separador; com ela, fica 90 dias no `localStorage`. Ver
+ * `lib/carta-secreta/no-browser.ts`.
  */
 
 export type TextosDaConfirmacao = {
   texto: string;
   botao: string;
+  textoCarta: string;
+  botaoCarta: string;
+  lembrar: string;
   aConfirmar: string;
   feitoTitulo: string;
   feitoTexto: string;
@@ -42,11 +59,25 @@ const lerFragmento = () => {
   }
 };
 const semFragmento = () => null;
+
+/* Se o pedido veio da carta secreta — ver o cabeçalho deste ficheiro. Um
+   convite que não se lê fica com a frase da newsletter, e a rota diz o resto. */
+function veioDaCarta(convite: string): boolean {
+  try {
+    const corpo = convite.split(".")[1] ?? "";
+    const lido = JSON.parse(atob(corpo.replace(/-/g, "+").replace(/_/g, "/"))) as { o?: unknown };
+    return lido.o === "carta";
+  } catch {
+    return false;
+  }
+}
 const naoMuda = () => () => {};
 
 export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) {
   const convite = useSyncExternalStore(naoMuda, lerFragmento, semFragmento);
   const [estado, setEstado] = useState<Estado>("pronto");
+  const [lembrar, setLembrar] = useState(false);
+  const daCarta = convite ? veioDaCarta(convite) : false;
 
   async function confirmar() {
     setEstado("a-confirmar");
@@ -54,19 +85,20 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
       const resposta = await fetch("/api/newsletter/confirmar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ convite }),
+        body: JSON.stringify({ convite, lembrar }),
       });
 
       if (resposta.ok) {
         const { chaveDaCarta } = (await resposta.json().catch(() => ({}))) as {
           chaveDaCarta?: string;
         };
-        /* O mesmo sinal que o pop-up deixa — quem confirmou não volta a ser
-           convidado — e a chave da carta secreta, que a `/ementa` usa para a
-           abrir sozinha neste telemóvel. */
+        /* A chave da carta secreta, que a `/ementa` usa para a abrir sozinha,
+           e o mesmo sinal que o pop-up deixa — nesta visita não volta a ser
+           convidado. Os dois no `sessionStorage`, a não ser que tenha pedido
+           para lembrar a carta. */
+        if (chaveDaCarta) guardarChave(chaveDaCarta);
         try {
-          localStorage.setItem("preguica:newsletter", "inscrito");
-          if (chaveDaCarta) localStorage.setItem("preguica:carta-secreta", chaveDaCarta);
+          sessionStorage.setItem("preguica:newsletter", "inscrito");
         } catch {}
         /* Tira o convite do endereço: não há razão para ficar no histórico. */
         history.replaceState(null, "", window.location.pathname);
@@ -123,11 +155,26 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
           ? textos.erro
           : null;
 
+  const [texto, botao] = daCarta
+    ? [textos.textoCarta, textos.botaoCarta]
+    : [textos.texto, textos.botao];
+
   return (
     <section className="lt-seccao">
       <div className="lt-seccao__texto">
-        <p>{textos.texto}</p>
+        <p>{texto}</p>
       </div>
+      {textos.abrirCarta ? (
+        <label className="lt-escolha">
+          <input
+            type="checkbox"
+            checked={lembrar}
+            onChange={(e) => setLembrar(e.target.checked)}
+            disabled={estado === "a-confirmar"}
+          />
+          <span>{textos.lembrar}</span>
+        </label>
+      ) : null}
       <p className="lt-accao">
         <button
           type="button"
@@ -135,7 +182,7 @@ export function ConfirmarInscricao({ textos }: { textos: TextosDaConfirmacao }) 
           onClick={confirmar}
           disabled={estado === "a-confirmar" || estado === "invalido" || estado === "expirado"}
         >
-          {estado === "a-confirmar" ? textos.aConfirmar : textos.botao}
+          {estado === "a-confirmar" ? textos.aConfirmar : botao}
         </button>
       </p>
       {erro ? (

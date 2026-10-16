@@ -23,7 +23,8 @@ import { semEnderecos } from "@/lib/painel/email";
 
   ## Não há base de dados nossa
 
-  A lista é a do Resend. O painel pergunta-lha de cada vez que abre, e quem
+  A lista é a do Resend. (A prova do consentimento vive à parte, no Upstash —
+  ver `lib/newsletter/consentimento.ts`.) O painel pergunta-lha de cada vez que abre, e quem
   cancela a inscrição (pelo link que o Resend põe em cada envio) deixa de receber
   sem nós fazermos nada. É também por isso que os emails de quem se inscreve
   nunca passam pelo repositório, que é público.
@@ -241,7 +242,8 @@ export async function criarContacto(email: string): Promise<void> {
   A mesma marca que o link de cancelar de cada envio põe (`unsubscribed`), e
   não apagar o contacto: assim a lista do painel continua a dizer "cancelou", e
   quem se quiser voltar a inscrever pode — o `criarContacto` trata disso. Para
-  apagar os dados de vez (um pedido ao abrigo do RGPD), é no painel do Resend.
+  apagar os dados de vez (um pedido ao abrigo do RGPD), é o `apagarContacto`,
+  pelo botão "Apagar de vez" do painel.
 */
 export async function cancelarContacto(email: string): Promise<void> {
   if (paraOTerminal(`${email} cancelado — em produção ficava marcado no Resend.`)) {
@@ -252,6 +254,35 @@ export async function cancelarContacto(email: string): Promise<void> {
     metodo: "PATCH",
     corpo: { unsubscribed: true },
   });
+}
+
+/*
+  Apagar um contacto de vez — um pedido de apagamento (RGPD, art. 17.º), e não
+  um cancelamento.
+
+  Cancelar deixa o contacto no Resend marcado como cancelado, que é o que
+  impede que volte a receber se, por engano, o mesmo endereço fosse metido
+  outra vez na lista. Aqui não há esse risco: ninguém entra na lista sem
+  confirmar um link novo, e quem confirma de novo está a consentir de novo. Por
+  isso apagar não deixa nenhuma "lista de supressão" para trás — ver a
+  revisão legal em `docs/decisoes-pendentes.md`.
+
+  O que fica fora do alcance disto: o registo dos emails já enviados a esta
+  pessoa no Resend (e as cópias de segurança dos prestadores), que seguem os
+  prazos de cada conta.
+*/
+export async function apagarContacto(email: string): Promise<void> {
+  if (paraOTerminal(`${email} apagado — em produção saía do Resend.`)) {
+    confirmadosEmDesenvolvimento.delete(email);
+    return;
+  }
+  try {
+    await pedir(`/contacts/${encodeURIComponent(email)}`, { metodo: "DELETE", esperados: [404] });
+  } catch (erro) {
+    /* Já não existia: o que se pediu está feito. */
+    if (erro instanceof ErroDaNewsletter && erro.estado === 404) return;
+    throw erro;
+  }
 }
 
 /** O segmento desta newsletter — o webhook só avisa quem cancelou **desta**. */

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { formatarPreco } from "@/lib/preco";
+import { esquecerChave, guardarChave, lerChaveGuardada } from "@/lib/carta-secreta/no-browser";
 import { Ramos } from "./Ramos";
 
 /**
@@ -19,11 +20,27 @@ import { Ramos } from "./Ramos";
  *    nem cá estão), a preguiça e o cadeado por cima, e o campo do email.
  * 2. O email vai à `/api/carta-secreta`, que pergunta ao Resend.
  * 3. **Inscrito:** a lista dissolve-se e os artigos entram um a um. A chave que
- *    vem na resposta fica no `localStorage`, e na próxima visita a carta abre
- *    sozinha.
+ *    vem na resposta fica no browser (ver abaixo), e a carta abre sozinha.
  * 4. **Não inscrito:** o formulário da newsletter aparece ali mesmo — o mesmo
- *    `/api/newsletter` do convite, sem pop-up. Ao confirmar no email, a página
- *    de confirmação guarda a chave e traz a pessoa de volta, já aberta.
+ *    `/api/newsletter` do convite, com `origem: "carta"`. Ao confirmar no
+ *    email, a página de confirmação guarda a chave e traz a pessoa de volta.
+ * 5. **Aberta:** por baixo, "lembrar neste aparelho" e "fechar a carta".
+ *
+ * ## O que mudou na revisão legal de 2026-10-15
+ *
+ * A carta continua a ser o benefício de quem recebe as novidades — decisão do
+ * Tomás, porque é o que a torna apelativa. O que mudou à volta:
+ *
+ * - **Cancelar a newsletter não fecha a carta** no browser onde já foi aberta:
+ *   a chave não volta a perguntar ao Resend (RGPD, art. 7.º, n.º 3 — retirar o
+ *   consentimento não pode custar nada).
+ * - **A chave não leva o email**, fica no `sessionStorage` por defeito, e só
+ *   vai para o `localStorage` (90 dias) com "lembrar neste aparelho". Ver
+ *   `lib/carta-secreta/no-browser.ts`.
+ * - **Há uma alternativa sem email**: a linha "peça-a ao balcão". É o que deixa
+ *   a escolha de dar o email ser livre — sem ela, a carta era o preço do
+ *   consentimento para marketing, que a CNPD critica (Diretriz 1/2022, § 70).
+ *   O risco que sobra está em `docs/decisoes-pendentes.md`.
  *
  * ## O chamativo
  *
@@ -32,8 +49,6 @@ import { Ramos } from "./Ramos";
  * Quando a secção entra no ecrã pela primeira vez, o cadeado dá dois saltos
  * (`data-a-vista`, CSS). Com "reduzir movimento", nada disto mexe sozinho.
  */
-
-const CHAVE = "preguica:carta-secreta";
 
 export type TextosDaCartaSecreta = {
   olho: string;
@@ -47,12 +62,19 @@ export type TextosDaCartaSecreta = {
   naoInscritoTexto: string;
   inscrever: string;
   aEnviar: string;
+  /** A frase ao lado do "Inscrever e abrir" — vai, tal e qual, para a prova do consentimento. */
   consentimento: string;
   privacidade: string;
+  /** A alternativa sem email. */
+  balcao: string;
   enviadoTitulo: string;
   enviadoTexto: string;
   outroEmail: string;
   abertaTexto: string;
+  lembrar: string;
+  lembrarNota: string;
+  aLembrar: string;
+  lembrada: string;
   fechar: string;
   erroEmail: string;
   erroLimite: string;
@@ -67,24 +89,9 @@ type Estado =
   | { tipo: "fechada"; erro?: string }
   | { tipo: "a-abrir" }
   | { tipo: "nao-inscrito"; email: string; aEnviar?: boolean; enviado?: boolean; erro?: string }
-  | { tipo: "aberta"; artigos: ArtigoSecreto[] };
+  | { tipo: "aberta"; artigos: ArtigoSecreto[]; lembrada: boolean; aLembrar?: boolean; erro?: string };
 
-function lerChave(): string | null {
-  try {
-    return localStorage.getItem(CHAVE);
-  } catch {
-    return null;
-  }
-}
-
-function guardarChave(valor: string | null) {
-  try {
-    if (valor) localStorage.setItem(CHAVE, valor);
-    else localStorage.removeItem(CHAVE);
-  } catch {
-    /* Sem armazenamento, a carta abre na mesma — só não se lembra. */
-  }
-}
+type Resposta = { aberta: true; artigos: ArtigoSecreto[]; chave?: string } | { aberta: false };
 
 /* As larguras das barras da lista desfocada: fixas, para o servidor e o browser
    desenharem o mesmo, e variadas, para parecer uma carta e não um código de
@@ -111,57 +118,41 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
   const erroDoPedido = (status: number) =>
     status === 400 ? textos.erroEmail : status === 429 ? textos.erroLimite : textos.erroServico;
 
-  /* `discreto` é a abertura sozinha, à chegada: sem o "A abrir…" no botão — a
-     pessoa ainda nem chegou lá abaixo. */
-  async function pedir(
-    corpo: { email: string } | { chave: string },
-    discreto = false,
-  ): Promise<void> {
-    const numero = ++ultimoPedido.current;
-    const atual = () => numero === ultimoPedido.current;
-    if (!discreto) setEstado({ tipo: "a-abrir" });
-    let resposta: Response;
+  /* Um pedido à `/api/carta-secreta`; `null` se falhar, com o estado HTTP. */
+  async function perguntar(
+    corpo: { email: string } | { chave: string; lembrar?: boolean },
+  ): Promise<{ r: Resposta | null; status: number }> {
     try {
-      resposta = await fetch("/api/carta-secreta", {
+      const resposta = await fetch("/api/carta-secreta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...corpo, lingua: locale }),
       });
+      if (!resposta.ok) return { r: null, status: resposta.status };
+      /* Um 200 que não é JSON (uma página de erro de um proxy pelo meio) conta
+         como falha, e não como carta fechada. */
+      return { r: (await resposta.json().catch(() => null)) as Resposta | null, status: resposta.status };
     } catch {
-      if (atual()) setEstado({ tipo: "fechada", erro: discreto ? undefined : textos.erroServico });
-      return;
+      return { r: null, status: 503 };
     }
+  }
 
-    if (!resposta.ok) {
-      if (atual()) {
-        setEstado({ tipo: "fechada", erro: discreto ? undefined : erroDoPedido(resposta.status) });
-      }
-      return;
-    }
-
-    /* Um 200 que não é JSON (uma página de erro de um proxy pelo meio) deixava
-       o ecrã preso em "A abrir…", com o botão desligado para sempre. */
-    const r = (await resposta.json().catch(() => null)) as
-      | { aberta: true; artigos: ArtigoSecreto[]; chave: string }
-      | { aberta: false }
-      | null;
-    if (!atual()) return;
+  /* Abrir com o email escrito na secção. */
+  async function abrirComEmail() {
+    const numero = ++ultimoPedido.current;
+    setEstado({ tipo: "a-abrir" });
+    const { r, status } = await perguntar({ email });
+    if (numero !== ultimoPedido.current) return;
     if (!r) {
-      setEstado({ tipo: "fechada", erro: discreto ? undefined : textos.erroServico });
+      setEstado({ tipo: "fechada", erro: erroDoPedido(status) });
       return;
     }
-    if (!discreto) focarResultado.current = true;
-
+    focarResultado.current = true;
     if (r.aberta) {
-      guardarChave(r.chave);
-      setEstado({ tipo: "aberta", artigos: r.artigos });
-    } else if ("email" in corpo) {
-      setEstado({ tipo: "nao-inscrito", email: corpo.email });
+      if (r.chave) guardarChave(r.chave);
+      setEstado({ tipo: "aberta", artigos: r.artigos, lembrada: false });
     } else {
-      /* A chave já não serve (cancelou, ou caducou): esquece-a e volta ao
-         campo do email, sem dizer nada — não é um erro de quem está a ver. */
-      guardarChave(null);
-      setEstado({ tipo: "fechada" });
+      setEstado({ tipo: "nao-inscrito", email });
     }
   }
 
@@ -172,13 +163,25 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
     seccao.current?.querySelector<HTMLElement>("[data-resultado]")?.focus();
   }, [estado]);
 
-  /* Um telemóvel que já abriu a carta abre-a sozinho. */
+  /* Um browser que já abriu a carta abre-a sozinho, sem o "A abrir…" no botão
+     — a pessoa ainda nem chegou lá abaixo. */
   useEffect(() => {
-    const chave = lerChave();
-    /* Numa microtarefa, e não no corpo do efeito: o estado só muda quando a
-       resposta chegar. */
-    if (chave) void Promise.resolve().then(() => pedir({ chave }, true));
-    // Só à chegada: `pedir` muda a cada render, e correr isto outra vez era
+    const guardada = lerChaveGuardada();
+    if (!guardada) return;
+    const numero = ++ultimoPedido.current;
+    void perguntar({ chave: guardada.valor }).then(({ r }) => {
+      if (!r || numero !== ultimoPedido.current) return;
+      if (!r.aberta) {
+        /* Caducou ou não é nossa: esquece-a, sem dizer nada — não é um erro de
+           quem está a ver. */
+        esquecerChave();
+        return;
+      }
+      /* Uma chave antiga (com email) volta trocada por uma de sessão. */
+      if (r.chave) guardarChave(r.chave);
+      setEstado({ tipo: "aberta", artigos: r.artigos, lembrada: !r.chave && guardada.lembrada });
+    });
+    // Só à chegada: `perguntar` muda a cada render, e correr isto outra vez era
     // voltar a pedir o que já está no ecrã.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -210,7 +213,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       resposta = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, sitio: dados.get("sitio"), lingua: locale }),
+        body: JSON.stringify({ email, origem: "carta", sitio: dados.get("sitio"), lingua: locale }),
       });
     } catch {
       setEstado({ tipo: "nao-inscrito", email, erro: textos.erroServico });
@@ -222,21 +225,28 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
       return;
     }
     focarResultado.current = true;
-
+    /* Nesta visita o convite da newsletter já não aparece. */
     try {
-      localStorage.setItem("preguica:newsletter", "inscrito");
+      sessionStorage.setItem("preguica:newsletter", "inscrito");
     } catch {}
-
-    const r = (await resposta.json().catch(() => ({}))) as { jaInscrito?: boolean };
-    /* Inscreveu-se entretanto (noutro separador, ou confirmou já): abre. */
-    if (r.jaInscrito) {
-      void pedir({ email });
-      return;
-    }
     setEstado({ tipo: "nao-inscrito", email, enviado: true });
   }
 
+  async function lembrar() {
+    if (estado.tipo !== "aberta") return;
+    const guardada = lerChaveGuardada();
+    setEstado({ ...estado, aLembrar: true, erro: undefined });
+    const { r } = guardada ? await perguntar({ chave: guardada.valor, lembrar: true }) : { r: null };
+    if (r?.aberta && r.chave) {
+      guardarChave(r.chave);
+      setEstado({ tipo: "aberta", artigos: r.artigos, lembrada: true });
+    } else {
+      setEstado({ ...estado, aLembrar: false, erro: textos.erroServico });
+    }
+  }
+
   const aberta = estado.tipo === "aberta";
+  const balcao = <p className="em-secreta__nota">{textos.balcao}</p>;
 
   return (
     <section
@@ -263,7 +273,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
           <p className="em-secreta__texto">{aberta ? textos.abertaTexto : textos.texto}</p>
         </header>
 
-        {aberta ? (
+        {estado.tipo === "aberta" ? (
           <>
             <ul className="em-lista em-secreta__lista">
               {estado.artigos.map((a, i) => (
@@ -285,18 +295,42 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                 </li>
               ))}
             </ul>
-            <p className="em-secreta__rodape">
+            <div className="em-secreta__rodape">
+              {estado.lembrada ? (
+                <p className="em-secreta__nota" role="status">
+                  {textos.lembrada}
+                </p>
+              ) : (
+                <>
+                  {/* A escolha de guardar no aparelho, com o que guarda e por
+                      quanto tempo — ver `lib/carta-secreta/no-browser.ts`. */}
+                  <button
+                    type="button"
+                    className="em-secreta__ligacao"
+                    disabled={estado.aLembrar}
+                    onClick={lembrar}
+                  >
+                    {estado.aLembrar ? textos.aLembrar : textos.lembrar}
+                  </button>
+                  <p className="em-secreta__nota">{textos.lembrarNota}</p>
+                </>
+              )}
+              {estado.erro ? (
+                <p className="em-secreta__erro" role="alert">
+                  {estado.erro}
+                </p>
+              ) : null}
               <button
                 type="button"
                 className="em-secreta__ligacao"
                 onClick={() => {
-                  guardarChave(null);
+                  esquecerChave();
                   setEstado({ tipo: "fechada" });
                 }}
               >
                 {textos.fechar}
               </button>
-            </p>
+            </div>
           </>
         ) : (
           <div className="em-secreta__fechada">
@@ -354,9 +388,12 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                         {estado.erro}
                       </p>
                     ) : null}
+                    {/* O que a pessoa aceita, antes de carregar — e a frase que
+                        fica na prova do consentimento. */}
                     <p className="em-secreta__nota">
                       {textos.consentimento} <Link href="/privacidade">{textos.privacidade}</Link>
                     </p>
+                    {balcao}
                     <button
                       type="button"
                       className="em-secreta__ligacao"
@@ -367,10 +404,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                   </form>
                 )
               ) : (
-                <form
-                  className="em-secreta__form"
-                  action={() => pedir({ email })}
-                >
+                <form className="em-secreta__form" action={abrirComEmail}>
                   <label className="em-secreta__campo">
                     <span className="sr-only">{textos.etiqueta}</span>
                     <input
@@ -398,6 +432,7 @@ export function CartaSecreta({ locale, textos }: { locale: Locale; textos: Texto
                       {estado.erro}
                     </p>
                   ) : null}
+                  {balcao}
                 </form>
               )}
             </div>

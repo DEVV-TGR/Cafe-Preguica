@@ -73,3 +73,59 @@ test("um cookie que não é nosso não abre", async () => {
   assert.equal(await sessao.abrir("s2.e30.nada"), null);
   assert.equal(await sessao.abrir(undefined), null);
 });
+
+/*
+  Revisão legal de 2026-10-15: cada aparelho é um registo com hora de morte
+  própria, e lembrar o aparelho é uma escolha. Sem ela, o registo dura o mesmo
+  que a sessão, não há chave `aparelho:<id>`, e sair apaga-o.
+*/
+test("o registo de um aparelho lembrado morre no fim dos 30 dias", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  const { aparelho } = await entrar("prazo-aparelho@exemplo.pt");
+  const prazo = await redis.prazoDe(`painel:aparelhos:${aparelho.id}`);
+  assert.ok(prazo > 29 * 24 * 60 * 60 && prazo <= 30 * 24 * 60 * 60, `prazo de ${prazo} s`);
+});
+
+test("sem pedir para lembrar, o registo dura a sessão e sair apaga-o", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  const email = "sem-lembrar@exemplo.pt";
+  const id = sessao.idDeAparelhoSoDaSessao();
+  assert.match(id, /^[0-9a-f]{32}$/);
+
+  const nova = await sessao.selar(email, id);
+  await aparelhos.registarEntrada(id, email, nova.id, true, false);
+
+  const prazo = await redis.prazoDe(`painel:aparelhos:${id}`);
+  assert.ok(prazo > 0 && prazo <= 8 * 60 * 60, `prazo de ${prazo} s`);
+  assert.equal(await redis.ler(`aparelho:${id}`), null, "não há aparelho lembrado");
+  assert.equal((await sessao.abrir(nova.cookie))?.email, email, "mas a sessão abre");
+
+  await aparelhos.fecharSessao(id, nova.id);
+  assert.equal(await redis.prazoDe(`painel:aparelhos:${id}`), -2);
+  assert.ok(!(await aparelhos.aparelhosComAcesso()).some((a) => a.id === id));
+});
+
+test("o hash antigo, sem prazo, passa para registos com prazo e desaparece", async () => {
+  const redis = await import("../src/lib/painel/redis.ts");
+  const agora = Date.now();
+  const vivo = {
+    id: "a".repeat(32),
+    email: "antigo@exemplo.pt",
+    aparelho: "Mac · Safari",
+    desde: agora,
+    ultimaEntrada: agora,
+    sessao: null,
+    sessaoAte: null,
+    lembradoAte: agora + 24 * 60 * 60 * 1000,
+  };
+  const vencido = { ...vivo, id: "b".repeat(32), email: "vencido@exemplo.pt", lembradoAte: agora - 1000 };
+  await redis.guardarNoHash("painel:aparelhos", vivo.id, JSON.stringify(vivo));
+  await redis.guardarNoHash("painel:aparelhos", vencido.id, JSON.stringify(vencido));
+
+  const lidos = await aparelhos.aparelhosComAcesso();
+  assert.ok(lidos.some((a) => a.id === vivo.id && a.lembrado === true));
+  assert.ok(!lidos.some((a) => a.id === vencido.id));
+  assert.deepEqual(await redis.lerHashDeTexto("painel:aparelhos"), {}, "o hash desapareceu");
+  const prazo = await redis.prazoDe(`painel:aparelhos:${vivo.id}`);
+  assert.ok(prazo > 0 && prazo <= 24 * 60 * 60, "e o registo migrado tem o prazo que lhe restava");
+});

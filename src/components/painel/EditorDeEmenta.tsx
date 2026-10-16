@@ -75,8 +75,11 @@ type Lingua = "pt" | "en";
 const ancora = (id: string) => `p-${id}`;
 
 /*
-  As secções fechadas, lembradas neste browser — só uma comodidade de quem
-  edita. Lidas como uma "loja" externa (`useSyncExternalStore`): no servidor e
+  As secções fechadas, lembradas neste separador — só uma comodidade de quem
+  edita. No `sessionStorage`, que o browser apaga ao fechar o separador: já
+  esteve no `localStorage`, sem prazo, e uma preferência de ecrã que fica para
+  sempre no aparelho é mais do que a comodidade pede (revisão legal de
+  2026-10-15, ver a página de cookies). Lidas como uma "loja" externa (`useSyncExternalStore`): no servidor e
   no primeiro desenho estão todas abertas, como no HTML que veio de lá, e só
   depois aparece o que ficou lembrado. Se o browser não deixar guardar, ficam
   na memória da página, e não se perde nada.
@@ -87,7 +90,7 @@ const ouvintes = new Set<() => void>();
 
 function lerFechadas(): string {
   try {
-    return localStorage.getItem(SECCOES_FECHADAS) ?? fechadasEmMemoria;
+    return sessionStorage.getItem(SECCOES_FECHADAS) ?? fechadasEmMemoria;
   } catch {
     return fechadasEmMemoria;
   }
@@ -96,7 +99,9 @@ function lerFechadas(): string {
 function guardarFechadas(fechadas: Set<string>) {
   fechadasEmMemoria = JSON.stringify([...fechadas]);
   try {
-    localStorage.setItem(SECCOES_FECHADAS, fechadasEmMemoria);
+    sessionStorage.setItem(SECCOES_FECHADAS, fechadasEmMemoria);
+    /* A cópia antiga, de quando isto vivia no `localStorage`. */
+    localStorage.removeItem(SECCOES_FECHADAS);
   } catch {}
   ouvintes.forEach((avisar) => avisar());
 }
@@ -573,7 +578,7 @@ export function EditorDeEmenta({
         </header>
 
         <p className="pn-nota">
-          Só a vê quem recebe a newsletter. Um cocktail que venha para aqui sai da carta normal;
+          Só a vê quem recebe a newsletter (ou quem a pedir ao balcão). Um cocktail que venha para aqui sai da carta normal;
           se o tirares, volta para o sítio onde estava. Um cocktail escondido fica aqui guardado,
           mas sai da carta secreta até o mostrares outra vez. Sem nenhum cocktail à vista, a carta
           secreta não aparece na ementa.

@@ -28,7 +28,8 @@ import "server-only";
   velhas que alguém tem de lembrar de montar.
 
   O registo de quem entra no painel (`lib/painel/entradas.ts`) também cabe aqui:
-  é uma lista com teto, e o teto faz o papel do cron.
+  uma lista por dia, com hora de morte absoluta, e o Redis faz o papel do cron
+  (ver `empurrarAte`, lá em baixo).
 */
 
 type Resposta<T> = { result: T } | { error: string };
@@ -145,6 +146,36 @@ async function comando<T>(partes: (string | number)[]): Promise<T> {
   return corpo.result;
 }
 
+/*
+  Vários comandos num pedido só, pelo `/pipeline` do Upstash.
+
+  Existe para ler de uma vez as listas de um mês inteiro de entradas, ou os
+  registos de todos os aparelhos: trinta pedidos HTTP em série eram trinta
+  esperas, para uma página que duas pessoas abrem. Cada comando tem a sua
+  resposta, e um erro em qualquer um atira — meia leitura não é leitura.
+*/
+async function emLote<T>(comandos: (string | number)[][]): Promise<T[]> {
+  const ligado = ligacao();
+  if (!ligado) throw new ErroDoRedis("sem ligação");
+  if (comandos.length === 0) return [];
+
+  const resposta = await fetch(`${ligado.url}/pipeline`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${ligado.token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(comandos.map((c) => c.map(String))),
+    cache: "no-store",
+  });
+  if (!resposta.ok) {
+    throw new ErroDoRedis(`${resposta.status} ${await resposta.text()}`);
+  }
+
+  const corpo = (await resposta.json()) as Resposta<T>[];
+  return corpo.map((r) => {
+    if ("error" in r) throw new ErroDoRedis(r.error);
+    return r.result;
+  });
+}
+
 export async function ler(chave: string): Promise<string | null> {
   if (!ligacao() && emMemoria()) return lerDaMemoria(chave);
   return comando<string | null>(["GET", chave]);
@@ -176,14 +207,19 @@ export async function guardar(
   `GET` seguido de um `SET` não daria essa garantia; o `NX` é atómico do lado do
   Redis.
 */
-export async function guardarSeNovo(chave: string, valor: string): Promise<boolean> {
+export async function guardarSeNovo(
+  chave: string,
+  valor: string,
+  segundos?: number,
+): Promise<boolean> {
   if (!ligacao() && emMemoria()) {
     if (lerDaMemoria(chave) !== null) return false;
-    memoria.set(chave, { valor, expira: 0 });
+    memoria.set(chave, { valor, expira: segundos ? Date.now() + segundos * 1000 : 0 });
     return true;
   }
 
-  return (await comando<string | null>(["SET", chave, valor, "NX"])) === "OK";
+  const partes = segundos ? ["SET", chave, valor, "NX", "EX", segundos] : ["SET", chave, valor, "NX"];
+  return (await comando<string | null>(partes)) === "OK";
 }
 
 export async function apagar(chave: string): Promise<void> {
@@ -290,9 +326,10 @@ export async function lerLista(chave: string, quantas: number): Promise<string[]
 /*
   Um hash de texto — campos com JSON lá dentro, sem prazo por campo.
 
-  É o registo dos aparelhos do painel (`lib/painel/aparelhos.ts`): uma linha por
-  aparelho, que quem lê limpa quando a vê expirada. O `HSET` substitui o campo
-  inteiro, e é o que se quer: cada escrita leva a linha toda.
+  Foi o registo dos aparelhos do painel, até se perceber que um hash sem prazo
+  não cumpre prazo nenhum (revisão legal de 2026-10-15). Fica para ler e migrar
+  o que lá estava — ver `migrarHashAntigo` em `lib/painel/aparelhos.ts`. Para
+  dados de pessoas, usar chaves com prazo (`guardarAte`).
 */
 export async function guardarNoHash(chave: string, campo: string, valor: string): Promise<void> {
   if (!ligacao() && emMemoria()) {
@@ -324,4 +361,121 @@ export async function apagarDoHash(chave: string, campo: string): Promise<void> 
     return;
   }
   await comando(["HDEL", chave, campo]);
+}
+
+/* ---------------------------------------------- prazos que não se renovam -- */
+
+/*
+  O que vem daqui para baixo existe porque "o prazo da lista" não é "o prazo de
+  cada linha" (revisão legal de 2026-10-15). Uma lista com `EXPIRE` renovado a
+  cada escrita nunca expira enquanto alguém escrever nela, e a linha mais velha
+  fica lá dentro o tempo que for. Quando a página de privacidade promete um
+  prazo por registo, é a hora absoluta (`PXAT`/`PEXPIREAT`) que o cumpre: o Redis
+  apaga a chave sozinho nessa hora, quer alguém volte a ler quer não.
+*/
+
+/** Guarda até `ateMs` (milissegundos desde 1970). Uma hora já passada apaga. */
+export async function guardarAte(chave: string, valor: string, ateMs: number): Promise<void> {
+  if (ateMs <= Date.now()) return apagar(chave);
+  if (!ligacao() && emMemoria()) {
+    memoria.set(chave, { valor, expira: ateMs });
+    return;
+  }
+  await comando(["SET", chave, valor, "PXAT", Math.floor(ateMs)]);
+}
+
+/** Várias chaves de uma vez, pela ordem pedida; `null` nas que não existem. */
+export async function lerVarias(chaves: string[]): Promise<(string | null)[]> {
+  if (chaves.length === 0) return [];
+  if (!ligacao() && emMemoria()) return chaves.map(lerDaMemoria);
+  const [valores] = await emLote<(string | null)[]>([["MGET", ...chaves]]);
+  return valores;
+}
+
+/*
+  Uma linha nova no princípio de uma lista que morre a `ateMs`, aconteça o que
+  acontecer. Ao contrário do `empurrarNaLista`, escrever outra vez não adia
+  nada: a hora é a mesma para todas as linhas daquela lista.
+*/
+export async function empurrarAte(
+  chave: string,
+  valor: string,
+  maximo: number,
+  ateMs: number,
+): Promise<void> {
+  if (ateMs <= Date.now()) return;
+  if (!ligacao() && emMemoria()) {
+    const lista = JSON.parse(lerDaMemoria(chave) ?? "[]") as string[];
+    memoria.set(chave, { valor: JSON.stringify([valor, ...lista].slice(0, maximo)), expira: ateMs });
+    return;
+  }
+  await emLote([
+    ["LPUSH", chave, valor],
+    ["LTRIM", chave, 0, maximo - 1],
+    ["PEXPIREAT", chave, Math.floor(ateMs)],
+  ]);
+}
+
+/** As primeiras `quantas` linhas de cada lista, num pedido só. */
+export async function lerListas(chaves: string[], quantas: number): Promise<string[][]> {
+  if (!ligacao() && emMemoria()) {
+    return chaves.map((c) => (JSON.parse(lerDaMemoria(c) ?? "[]") as string[]).slice(0, quantas));
+  }
+  const listas = await emLote<string[] | null>(chaves.map((c) => ["LRANGE", c, 0, quantas - 1]));
+  return listas.map((l) => l ?? []);
+}
+
+/*
+  Um conjunto de nomes, para saber que chaves ler. Guarda identificadores e
+  mais nada: o que diz respeito a pessoas vive nas chaves com prazo próprio, e
+  quem lê tira do conjunto as que o Redis já apagou.
+*/
+export async function juntarAoConjunto(chave: string, membro: string, segundos: number): Promise<void> {
+  if (!ligacao() && emMemoria()) {
+    const conjunto = new Set(JSON.parse(lerDaMemoria(chave) ?? "[]") as string[]);
+    conjunto.add(membro);
+    memoria.set(chave, { valor: JSON.stringify([...conjunto]), expira: Date.now() + segundos * 1000 });
+    return;
+  }
+  await emLote([
+    ["SADD", chave, membro],
+    ["EXPIRE", chave, segundos],
+  ]);
+}
+
+export async function tirarDoConjunto(chave: string, membros: string[]): Promise<void> {
+  if (membros.length === 0) return;
+  if (!ligacao() && emMemoria()) {
+    const registo = memoria.get(chave);
+    const conjunto = new Set(JSON.parse(lerDaMemoria(chave) ?? "[]") as string[]);
+    for (const m of membros) conjunto.delete(m);
+    memoria.set(chave, { valor: JSON.stringify([...conjunto]), expira: registo?.expira ?? 0 });
+    return;
+  }
+  await comando(["SREM", chave, ...membros]);
+}
+
+export async function lerConjunto(chave: string): Promise<string[]> {
+  if (!ligacao() && emMemoria()) return JSON.parse(lerDaMemoria(chave) ?? "[]") as string[];
+  return (await comando<string[] | null>(["SMEMBERS", chave])) ?? [];
+}
+
+/** Põe prazo a uma chave que já existe (`segundos`), ou tira-lho (`null`). */
+export async function mudarPrazo(chave: string, segundos: number | null): Promise<void> {
+  if (!ligacao() && emMemoria()) {
+    const registo = memoria.get(chave);
+    if (registo) registo.expira = segundos === null ? 0 : Date.now() + segundos * 1000;
+    return;
+  }
+  await comando(segundos === null ? ["PERSIST", chave] : ["EXPIRE", chave, segundos]);
+}
+
+/** Quanto falta para a chave expirar, em segundos: `-1` sem prazo, `-2` se não existe. */
+export async function prazoDe(chave: string): Promise<number> {
+  if (!ligacao() && emMemoria()) {
+    const registo = memoria.get(chave);
+    if (!registo || lerDaMemoria(chave) === null) return -2;
+    return registo.expira === 0 ? -1 : Math.ceil((registo.expira - Date.now()) / 1000);
+  }
+  return comando<number>(["TTL", chave]);
 }

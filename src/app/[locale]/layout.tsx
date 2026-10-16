@@ -63,6 +63,7 @@ export default async function LayoutIdioma({
     botao: convite("botao"),
     aEnviar: convite("aEnviar"),
     fechar: convite("fechar"),
+    naoMostrar: convite("naoMostrar"),
     consentimento: convite("consentimento"),
     privacidade: convite("privacidade"),
     enviadoTitulo: convite("enviadoTitulo"),

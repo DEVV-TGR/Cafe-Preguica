@@ -1127,6 +1127,10 @@
 }
 
 .em-secreta__rodape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
   margin-top: 1rem;
   text-align: center;
 }

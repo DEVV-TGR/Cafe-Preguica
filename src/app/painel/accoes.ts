@@ -9,6 +9,7 @@ import {
   lembrarAparelho,
   aparelhoConhecido,
   idDoCookieDoAparelho,
+  idDeAparelhoSoDaSessao,
   opcoesDoCookie,
   NOME_DO_COOKIE,
   NOME_DO_APARELHO,
@@ -35,7 +36,8 @@ import { fecharSessao, registarEntrada, terminarAparelho } from "@/lib/painel/ap
   Entrar, confirmar o código, e sair.
 
   A entrada é passwordless: escreve-se o email, chega um código, entra-se. Um
-  aparelho que já tenha passado pelo código salta-o durante 30 dias.
+  aparelho que já tenha passado pelo código, e cuja pessoa pediu para o
+  lembrar, salta-o durante 30 dias.
 */
 
 export type EstadoDaEntrada = { erro?: string };
@@ -234,11 +236,29 @@ export async function confirmarCodigo(
       return { erro: "O código expirou ou já não serve. Pede outro." };
     }
 
-    const aparelho = await lembrarAparelho(veredicto.email);
-    const nova = await selar(veredicto.email, aparelho.id);
+    /*
+      Lembrar o aparelho é uma escolha de quem entra, e não a regra (revisão
+      legal de 2026-10-15). O cookie de 30 dias não é preciso para a sessão
+      funcionar — é uma comodidade —, e por isso só se grava com a caixa
+      marcada, que diz o que guarda e quanto tempo. Sem ela, entra-se na mesma,
+      só com o cookie da sessão; e um aparelho que estava lembrado neste browser
+      deixa de o estar, porque quem desmarcou disse que não o queria.
+    */
+    const lembrar = dados.get("lembrar") === "sim";
+    let idDoAparelho: string;
+    if (lembrar) {
+      const aparelho = await lembrarAparelho(veredicto.email);
+      frasco.set(NOME_DO_APARELHO, aparelho.cookie, opcoesDoCookie(VALIDADE_APARELHO_MS));
+      idDoAparelho = aparelho.id;
+    } else {
+      const antigo = await idDoCookieDoAparelho(frasco.get(NOME_DO_APARELHO)?.value);
+      if (antigo) await terminarAparelho(antigo);
+      frasco.delete({ name: NOME_DO_APARELHO, path: "/painel" });
+      idDoAparelho = idDeAparelhoSoDaSessao();
+    }
+    const nova = await selar(veredicto.email, idDoAparelho);
     frasco.set(NOME_DO_COOKIE, nova.cookie, opcoesDoCookie());
-    frasco.set(NOME_DO_APARELHO, aparelho.cookie, opcoesDoCookie(VALIDADE_APARELHO_MS));
-    await registarEntrada(aparelho.id, veredicto.email, nova.id, true);
+    await registarEntrada(idDoAparelho, veredicto.email, nova.id, true, lembrar);
     frasco.delete({ name: NOME_DO_DESAFIO, path: "/painel" });
     await anotarEntrada(veredicto.email, "codigo");
     return { certo: true };

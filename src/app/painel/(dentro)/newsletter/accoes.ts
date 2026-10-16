@@ -17,12 +17,15 @@ import {
   type Moldura,
 } from "@/lib/newsletter/corpo";
 import {
+  apagarContacto,
   cancelarContacto,
   enviarATodos,
   enviarTeste,
   ErroDaNewsletter,
 } from "@/lib/newsletter/resend";
 import { avisarCancelamento } from "@/lib/newsletter/cancelamento";
+import { esquecerAviso } from "@/lib/newsletter/aviso-unico";
+import { apagarProva, registarRetirada } from "@/lib/newsletter/consentimento";
 import { EsquemaEmail } from "@/lib/email";
 
 /*
@@ -222,6 +225,25 @@ export async function cancelarInscricao(email: string): Promise<EstadoDoCancelam
   }
   console.info(`[newsletter] cancelado no painel — ${meioEscondido(lido.data)}`);
 
+  /*
+    A retirada fica na prova do consentimento antes do aviso: é ela que diz ao
+    webhook, quando o Resend o chamar por causa deste mesmo cancelamento, que
+    não há nada a fazer. Se o armazenamento falhar, o contacto está cancelado
+    na mesma, e diz-se isso.
+  */
+  try {
+    await registarRetirada(lido.data, "painel");
+  } catch (erro) {
+    if (erro instanceof ErroDoRedis) {
+      return {
+        tipo: "erro",
+        mensagem:
+          "A inscrição foi cancelada, mas o registo do cancelamento não ficou guardado e o aviso não saiu. Tenta outra vez daqui a um minuto.",
+      };
+    }
+    throw erro;
+  }
+
   try {
     return { tipo: "cancelado", avisado: await avisarCancelamento(lido.data) };
   } catch (erro) {
@@ -230,4 +252,38 @@ export async function cancelarInscricao(email: string): Promise<EstadoDoCancelam
     }
     throw erro;
   }
+}
+
+export type EstadoDoApagamento = { tipo: "apagado" } | { tipo: "erro"; mensagem: string };
+
+/*
+  Apagar de vez, a pedido da pessoa (RGPD, art. 17.º).
+
+  Não é o mesmo que cancelar: cancelar deixa de enviar e guarda o endereço
+  marcado como cancelado; apagar tira o contacto do Resend, a prova do
+  consentimento e a marca do aviso de cancelamento. Não manda email nenhum — a
+  pessoa pediu para deixarmos de ter o endereço, e a resposta ao pedido é da
+  casa, pelo canal por onde ele chegou.
+
+  Fica de fora o que não está ao alcance do painel: o registo dos envios já
+  feitos no Resend e as cópias de segurança dos prestadores, com os prazos de
+  cada conta. Está escrito na política de privacidade.
+*/
+export async function apagarContactoDeVez(email: string): Promise<EstadoDoApagamento> {
+  await exigirSessaoNaAccao();
+
+  const lido = EsquemaEmail.safeParse(email);
+  if (!lido.success) return { tipo: "erro", mensagem: "Esse endereço não é válido." };
+
+  try {
+    await apagarContacto(lido.data);
+    await apagarProva(lido.data);
+    await esquecerAviso(lido.data);
+  } catch (erro) {
+    if (erro instanceof ErroDaNewsletter) return { tipo: "erro", mensagem: erro.paraOEcra };
+    if (erro instanceof ErroDoRedis) return { tipo: "erro", mensagem: erro.paraOEcra };
+    throw erro;
+  }
+  console.info(`[newsletter] apagado de vez no painel — ${meioEscondido(lido.data)}`);
+  return { tipo: "apagado" };
 }

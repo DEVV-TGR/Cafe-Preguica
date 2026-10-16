@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * Onde o link do email de confirmação vai dar.
  *
  * **Estática**, como as outras: o convite vem no fragmento do endereço
- * (`#n1.…`), que nunca chega ao servidor, e é o componente de cliente que o lê e
+ * (`#n2.…`), que nunca chega ao servidor, e é o componente de cliente que o lê e
  * o manda para `/api/newsletter/confirmar` quando se carrega no botão. A razão de
  * haver botão, em vez de confirmar ao abrir, está escrita nessa rota.
  */
@@ -37,6 +37,9 @@ export default async function ConfirmarNewsletter({ params }: Props) {
   const textos: TextosDaConfirmacao = {
     texto: t("texto"),
     botao: t("botao"),
+    textoCarta: t("textoCarta"),
+    botaoCarta: t("botaoCarta"),
+    lembrar: t("lembrar"),
     aConfirmar: t("aConfirmar"),
     feitoTitulo: t("feitoTitulo"),
     feitoTexto: t("feitoTexto"),

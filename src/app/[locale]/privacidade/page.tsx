@@ -25,9 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *
  * ## O que esta página não pode dizer sozinha
  *
- * - **Quem é o responsável.** Vem de `cafe.operador`; com `null`, a página diz
- *   que a identificação está por publicar, em vez de dar o nome comercial como
- *   se fosse uma pessoa jurídica. Ver `pendenciasLegais()` em `data/cafe.ts`.
+ * - **Quem é o responsável.** Vem de `cafe.operador`, campo a campo; sem NIF,
+ *   a página diz que a identificação está por publicar, em vez de dar o nome
+ *   comercial como se fosse uma pessoa jurídica. A ficha completa está em
+ *   `/informacao-legal`. Ver `pendenciasLegais()` em `data/cafe.ts`.
  * - **Os prazos dos prestadores** (registos do alojamento, registo dos envios
  *   na Resend, cópias de segurança): dependem dos planos das contas
  *   definitivas, e a página remete para eles em vez de inventar um número.
@@ -67,6 +68,7 @@ export default async function Privacidade({ params }: Props) {
     ),
     cookies: (texto: React.ReactNode) => <Link href="/cookies">{texto}</Link>,
     contactos: (texto: React.ReactNode) => <Link href="/contactos">{texto}</Link>,
+    legal: (texto: React.ReactNode) => <Link href="/informacao-legal">{texto}</Link>,
     email: (texto: React.ReactNode) => <a href={`mailto:${email}`}>{texto}</a>,
   };
 
@@ -106,13 +108,21 @@ export default async function Privacidade({ params }: Props) {
       <Aviso>{t("versao")}</Aviso>
 
       <Seccao numero={++numero} titulo={t("responsavel.titulo")}>
-        {operador ? (
+        {/* Com o que já se sabe — os campos chegam aos bocados (ver
+            `cafe.operador`). Sem NIF não há identificação que sirva, e aí
+            fica o aviso. A ficha completa, campo a campo, está na página de
+            informação legal. */}
+        {operador?.nif ? (
           <p>
-            {t("responsavel.identificacao", {
-              nome: operador.nome,
-              forma: t(`formas.${operador.forma}`),
-              nif: operador.nif,
-              sede: operador.sede,
+            {t.rich("responsavel.identificacao", {
+              ...etiquetas,
+              quem: [
+                operador.nome,
+                operador.forma ? t(`formas.${operador.forma}`) : null,
+                `NIF ${operador.nif}`,
+              ]
+                .filter(Boolean)
+                .join(", "),
             })}
           </p>
         ) : (

@@ -358,7 +358,7 @@
     },
     "responsavel": {
       "titulo": "Quem é responsável",
-      "identificacao": "O responsável pelo tratamento dos dados descritos nesta página é {nome} ({forma}), NIF {nif}, com sede em {sede}, que explora o Café Preguiça.",
+      "identificacao": "O responsável pelo tratamento dos dados descritos nesta página é quem explora o Café Preguiça: {quem}. A identificação completa está em <legal>Informação legal</legal>.",
       "contacto": "Para qualquer questão sobre os seus dados — incluindo os pedidos da secção «Os seus direitos» —, escreva para <email>{endereco}</email>. Os outros contactos da casa estão na página <contactos>Contactos</contactos>.",
       "semEmail": "Para qualquer questão sobre os seus dados, use os contactos da página <contactos>Contactos</contactos>."
     },
@@ -487,8 +487,15 @@
     "pendente": "Por publicar: o nome ou a firma, a forma jurídica, o NIF e a sede de quem explora o Café Preguiça estão a ser confirmados com a casa e aparecem aqui logo que o sejam.",
     "identificacao": {
       "titulo": "Quem explora a casa",
-      "texto": "O Café Preguiça é explorado por {nome} ({forma}), NIF {nif}, com sede em {sede}.",
-      "registo": "Registo: {registo}. Capital social: {capital}.",
+      "intro": "O Café Preguiça é explorado por:",
+      "firma": "Firma",
+      "forma": "Forma jurídica",
+      "nif": "NIF/NIPC",
+      "sede": "Sede",
+      "registo": "Registo comercial",
+      "capital": "Capital social",
+      "porConfirmar": "por confirmar",
+      "parcial": "Os dados marcados «por confirmar» estão a ser confirmados com a casa e aparecem aqui logo que o sejam.",
       "contactos": "Contactos: <contactos>página de contactos</contactos>."
     },
     "litigios": {
@@ -500,7 +507,9 @@
     },
     "reclamacoes": {
       "titulo": "Livro de Reclamações",
-      "texto": "Também pode apresentar uma reclamação no <livro>Livro de Reclamações Eletrónico</livro>."
+      "texto": "Também pode apresentar uma reclamação no <livro>Livro de Reclamações Eletrónico</livro>.",
+      "fisico": "Na casa há ainda livro de reclamações em papel, que pode pedir a qualquer momento.",
+      "entidade": "A entidade competente é a <entidade>{nome}</entidade>."
     }
   },
   "rodape": {

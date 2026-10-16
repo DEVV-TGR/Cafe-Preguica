@@ -58,10 +58,11 @@ gravidade:
       e a API — incluindo a demonstração em `cafe-preguica.vercel.app`.
 - [ ] **As páginas legais.** Reescritas na revisão legal de 2026-10-15
       (privacidade, cookies, informação legal, em PT e EN), com os prazos que o
-      código cumpre. Faltam dados que só o cliente tem — quem explora a casa
-      (nome ou firma, NIF, sede), o contacto para pedidos de privacidade, a
-      entidade de litígios e o registo no Livro de Reclamações — e as contas e
-      contratos definitivos dos prestadores. As páginas dizem-no à vista. Ver
+      código cumpre. Já têm o NIF, a forma, o capital e o email de privacidade
+      (2026-10-16); faltam a firma exacta, a sede e o registo (certidão
+      permanente), a adesão a um centro de arbitragem, o registo no Livro de
+      Reclamações Eletrónico, e as contas e contratos definitivos dos
+      prestadores. As páginas dizem-no à vista. Ver
       `docs/decisoes-pendentes.md`, secção 0.
 
 ## Como está organizado

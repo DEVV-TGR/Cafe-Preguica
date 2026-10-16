@@ -358,7 +358,7 @@
     },
     "responsavel": {
       "titulo": "Who is responsible",
-      "identificacao": "The controller of the data described on this page is {nome} ({forma}), tax number (NIF) {nif}, registered at {sede}, which runs Café Preguiça.",
+      "identificacao": "The controller of the data described on this page is the business that runs Café Preguiça: {quem}. Full identification is on the <legal>Legal information</legal> page.",
       "contacto": "For any question about your data — including the requests in “Your rights” — write to <email>{endereco}</email>. The other contacts are on the <contactos>Contact</contactos> page.",
       "semEmail": "For any question about your data, use the contacts on the <contactos>Contact</contactos> page."
     },
@@ -487,8 +487,15 @@
     "pendente": "To be published: the name or company name, legal form, tax number (NIF) and registered address of whoever runs Café Preguiça are being confirmed with the business and will appear here as soon as they are.",
     "identificacao": {
       "titulo": "Who runs the café",
-      "texto": "Café Preguiça is run by {nome} ({forma}), tax number (NIF) {nif}, registered at {sede}.",
-      "registo": "Registration: {registo}. Share capital: {capital}.",
+      "intro": "Café Preguiça is run by:",
+      "firma": "Company name",
+      "forma": "Legal form",
+      "nif": "Tax number (NIF/NIPC)",
+      "sede": "Registered office",
+      "registo": "Commercial registry",
+      "capital": "Share capital",
+      "porConfirmar": "to be confirmed",
+      "parcial": "Details marked “to be confirmed” are being confirmed with the business and will appear here as soon as they are.",
       "contactos": "Contacts: <contactos>contact page</contactos>."
     },
     "litigios": {
@@ -500,7 +507,9 @@
     },
     "reclamacoes": {
       "titulo": "Complaints Book",
-      "texto": "You can also file a complaint in the <livro>electronic Complaints Book</livro> (Livro de Reclamações Eletrónico)."
+      "texto": "You can also file a complaint in the <livro>electronic Complaints Book</livro> (Livro de Reclamações Eletrónico).",
+      "fisico": "The café keeps a paper complaints book as well, which you can ask for at any time.",
+      "entidade": "The competent authority is <entidade>{nome}</entidade>."
     }
   },
   "rodape": {

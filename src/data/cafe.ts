@@ -62,6 +62,18 @@ const Horario = z
   /** `null` num dia é **encerrado**, e o site escreve-o com todas as letras. */
   .nullable();
 
+/*
+  O dígito de controlo do NIF/NIPC (módulo 11, pesos 9 a 2). Apanha um
+  algarismo trocado ao passar o número de uma fatura para aqui — o erro mais
+  provável, e o que punha a casa a ser procurada pelo número de outra pessoa.
+*/
+function nifValido(nif: string): boolean {
+  if (!/^\d{9}$/.test(nif)) return false;
+  const soma = [...nif.slice(0, 8)].reduce((total, d, i) => total + Number(d) * (9 - i), 0);
+  const resto = soma % 11;
+  return Number(nif[8]) === (resto < 2 ? 0 : 11 - resto);
+}
+
 /**
  * Exportado para o painel (`/painel/casa`) validar com as mesmas regras do
  * `build` antes de gravar.
@@ -133,50 +145,49 @@ export const EsquemaCafe = z.object({
    * ⚠️ **O nome comercial não é isto.** "Café Preguiça" é a marca; quem
    * responde por ela é uma pessoa ou uma sociedade, com nome, NIF e sede
    * próprios, que podem não ser os da casa. Não se deduzem — nem da morada, nem
-   * de um agregador, nem do Portal da Justiça: vêm da casa ou do contabilista.
+   * de um agregador, nem do Portal da Justiça: vêm da casa, de um documento
+   * dela, ou do contabilista.
    *
-   * `null` é **por confirmar**, e não esconde nada em silêncio: a política de
-   * privacidade e a página de informação legal dizem que a identificação está
-   * por publicar, e `pendenciasLegais()` lista-o no build. Revisão legal de
-   * 2026-10-15.
+   * **Cada campo pode estar `null` — por confirmar — sem os outros.** Os dados
+   * chegam aos bocados (2026-10-16: o NIF, a forma e o capital vieram de uma
+   * fatura da casa; a firma exacta, a sede e o registo vêm da certidão
+   * permanente), e o que já se sabe deve aparecer. As páginas escrevem "por
+   * confirmar" no que falta, e `pendenciasLegais()` lista-o no build.
    *
    * Os dados de registo e o capital só se pedem a sociedades (Código das
    * Sociedades Comerciais, art. 171.º): a um empresário em nome individual
-   * não se aplicam, e o esquema não os exige.
+   * não se aplicam, e `pendenciasLegais()` não os pede.
    *
    * Não é o painel que o escreve — vem do repositório, como o
    * `horarioConfirmado` (ver `gravarCasa`).
    */
   operador: z
     .object({
-      /** Nome completo (empresário em nome individual) ou firma (sociedade). */
-      nome: z.string().min(1),
-      forma: z.enum([
-        "empresario-em-nome-individual",
-        "sociedade-unipessoal-por-quotas",
-        "sociedade-por-quotas",
-        "sociedade-anonima",
-        "outra",
-      ]),
-      /** NIF ou NIPC, nove algarismos. */
-      nif: z.string().regex(/^\d{9}$/, "nove algarismos"),
+      /** Nome completo (empresário em nome individual) ou firma exacta, como
+          está na certidão (sociedade). */
+      nome: z.string().min(1).nullable(),
+      forma: z
+        .enum([
+          "empresario-em-nome-individual",
+          "sociedade-unipessoal-por-quotas",
+          "sociedade-por-quotas",
+          "sociedade-anonima",
+          "outra",
+        ])
+        .nullable(),
+      /** NIF ou NIPC: nove algarismos, com o de controlo certo. */
+      nif: z
+        .string()
+        .refine(nifValido, "nove algarismos, com o dígito de controlo certo")
+        .nullable(),
       /** A sede ou o domicílio profissional — pode não ser a morada da casa. */
-      sede: z.string().min(1),
+      sede: z.string().min(1).nullable(),
       /** Conservatória e número de matrícula. Só sociedades. */
       registo: z.string().min(1).nullable(),
-      /** Capital social, escrito como o contabilista o der ("5 000,00 €"). Só sociedades. */
+      /** Capital social, escrito como deve aparecer ("5 000 €"). Só sociedades. */
       capitalSocial: z.string().min(1).nullable(),
       /** O email para pedidos sobre dados pessoais. `null` usa o da casa. */
       emailPrivacidade: z.email().nullable(),
-    })
-    .superRefine((o, ctx) => {
-      const sociedade = o.forma.startsWith("sociedade");
-      if (sociedade && !o.registo) {
-        ctx.addIssue({ code: "custom", path: ["registo"], message: "uma sociedade indica a conservatória e a matrícula" });
-      }
-      if (sociedade && !o.capitalSocial) {
-        ctx.addIssue({ code: "custom", path: ["capitalSocial"], message: "uma sociedade indica o capital social" });
-      }
     })
     /* O `default` é para o painel que ainda estiver no ar com o esquema
        antigo: esse esquema não conhece o campo, deita-o fora ao gravar, e sem
@@ -184,6 +195,26 @@ export const EsquemaCafe = z.object({
        confirmar —, e a página diz isso. */
     .nullable()
     .default(null),
+  /**
+   * O livro de reclamações da casa. O link para o Livro de Reclamações
+   * Eletrónico está sempre na página e no rodapé (é o geral da plataforma);
+   * isto é o que se sabe da casa em concreto.
+   *
+   * - `livroFisico`: há livro em papel no estabelecimento. `true` desde
+   *   2026-10-16 (fotografia do autocolante, enviada pela casa).
+   * - `entidade`: a entidade competente que o autocolante indica.
+   * - `registoEletronico`: a casa está registada no Livro de Reclamações
+   *   Eletrónico. O livro em papel **não prova** isto. `null` = por confirmar.
+   *
+   * `default` pela mesma razão do `operador`.
+   */
+  reclamacoes: z
+    .object({
+      livroFisico: z.boolean().nullable(),
+      entidade: z.object({ nome: z.string().min(1), url: z.url() }).nullable(),
+      registoEletronico: z.boolean().nullable(),
+    })
+    .default({ livroFisico: null, entidade: null, registoEletronico: null }),
   /**
    * A entidade de resolução alternativa de litígios de consumo indicada em
    * `/informacao-legal` (Lei 144/2015, art. 18.º). A obrigação de informar
@@ -241,16 +272,26 @@ export const cafe: Cafe = validado.data;
  * `docs/decisoes-pendentes.md`.
  */
 export function pendenciasLegais(): string[] {
+  const o = cafe.operador;
+  const sociedade = !!o?.forma?.startsWith("sociedade");
+  const falta = (campo: string, porque: string) => `cafe.json: ${campo} por confirmar (${porque})`;
   return [
-    ...(cafe.operador
-      ? []
-      : ["cafe.json: operador (nome ou firma, forma jurídica, NIF, sede) por confirmar"]),
-    ...(cafe.operador && !cafe.operador.emailPrivacidade
-      ? ["cafe.json: operador.emailPrivacidade por confirmar (usa-se o email da casa)"]
+    ...(!o ? [falta("operador", "nome ou firma, forma jurídica, NIF, sede")] : []),
+    ...(o && !o.nome ? [falta("operador.nome", "firma exacta — certidão permanente")] : []),
+    ...(o && !o.forma ? [falta("operador.forma", "forma jurídica")] : []),
+    ...(o && !o.nif ? [falta("operador.nif", "NIF/NIPC")] : []),
+    ...(o && !o.sede ? [falta("operador.sede", "sede — certidão permanente")] : []),
+    ...(sociedade && !o?.registo
+      ? [falta("operador.registo", "conservatória e matrícula — certidão permanente")]
       : []),
-    ...(cafe.litigios ? [] : ["cafe.json: litigios (entidade RAL) por confirmar"]),
+    ...(sociedade && !o?.capitalSocial ? [falta("operador.capitalSocial", "capital social")] : []),
+    ...(o && !o.emailPrivacidade ? [falta("operador.emailPrivacidade", "usa-se o email da casa")] : []),
+    ...(cafe.litigios ? [] : [falta("litigios", "entidade RAL")]),
     ...(cafe.litigios && cafe.litigios.adesao === null
-      ? ["cafe.json: litigios.adesao por confirmar (a página não fala de adesão)"]
+      ? [falta("litigios.adesao", "a página não fala de adesão")]
+      : []),
+    ...(cafe.reclamacoes.registoEletronico === null
+      ? [falta("reclamacoes.registoEletronico", "registo no Livro de Reclamações Eletrónico")]
       : []),
   ];
 }

@@ -41,8 +41,9 @@ function avisarPendencias() {
  *
  * O DL 7/2004 (art. 10.º) pede a quem tem um site de uma atividade económica
  * o nome ou a firma, o endereço, o NIF e os registos públicos — com ou sem
- * vendas online. Vem de `cafe.operador`, e com `null` a página diz que está
- * por publicar (revisão legal de 2026-10-15). **O nome comercial não serve no
+ * vendas online. Vem de `cafe.operador`, campo a campo: o que falta aparece
+ * "por confirmar", e com `null` no objeto inteiro a página diz que está por
+ * publicar (revisão legal de 2026-10-15). **O nome comercial não serve no
  * lugar disto.**
  *
  * ## A resolução de litígios
@@ -80,28 +81,42 @@ export default async function InformacaoLegal({ params }: Props) {
   const contactos = (texto: React.ReactNode) => <Link href="/contactos">{texto}</Link>;
   const operador = cafe.operador;
   const litigios = cafe.litigios;
+  const reclamacoes = cafe.reclamacoes;
+
+  /* A ficha do operador, campo a campo, com "por confirmar" no que falta. O
+     registo e o capital só existem para sociedades (CSC, art. 171.º): a um
+     empresário em nome individual não se mostram, nem como "por confirmar". */
+  const sociedade = !!operador?.forma?.startsWith("sociedade");
+  const linhas: { rotulo: string; valor: string | null }[] = operador
+    ? [
+        { rotulo: "firma", valor: operador.nome },
+        { rotulo: "forma", valor: operador.forma ? formas(operador.forma) : null },
+        { rotulo: "nif", valor: operador.nif },
+        { rotulo: "sede", valor: operador.sede },
+        ...(sociedade
+          ? [
+              { rotulo: "registo", valor: operador.registo },
+              { rotulo: "capital", valor: operador.capitalSocial },
+            ]
+          : []),
+      ]
+    : [];
 
   return (
     <Pagina locale={locale} olho={t("olho")} titulo={t("titulo")} intro={meta("descricao")} larga>
       <Seccao numero={1} titulo={t("identificacao.titulo")}>
         {operador ? (
           <>
-            <p>
-              {t("identificacao.texto", {
-                nome: operador.nome,
-                forma: formas(operador.forma),
-                nif: operador.nif,
-                sede: operador.sede,
-              })}
-            </p>
-            {operador.registo && operador.capitalSocial ? (
-              <p>
-                {t("identificacao.registo", {
-                  registo: operador.registo,
-                  capital: operador.capitalSocial,
-                })}
-              </p>
-            ) : null}
+            <p>{t("identificacao.intro")}</p>
+            <ul>
+              {linhas.map(({ rotulo, valor }) => (
+                <li key={rotulo}>
+                  {t(`identificacao.${rotulo}`)}:{" "}
+                  {valor ?? <em>{t("identificacao.porConfirmar")}</em>}
+                </li>
+              ))}
+            </ul>
+            {linhas.some((l) => l.valor === null) ? <Aviso>{t("identificacao.parcial")}</Aviso> : null}
           </>
         ) : (
           <Aviso>{t("pendente")}</Aviso>
@@ -129,6 +144,20 @@ export default async function InformacaoLegal({ params }: Props) {
 
       <Seccao numero={3} titulo={t("reclamacoes.titulo")}>
         <p>{t.rich("reclamacoes.texto", { livro: externo(URL_LIVRO_RECLAMACOES) })}</p>
+        {reclamacoes.livroFisico ? (
+          <p>
+            {t("reclamacoes.fisico")}
+            {reclamacoes.entidade ? (
+              <>
+                {" "}
+                {t.rich("reclamacoes.entidade", {
+                  nome: reclamacoes.entidade.nome,
+                  entidade: externo(reclamacoes.entidade.url),
+                })}
+              </>
+            ) : null}
+          </p>
+        ) : null}
       </Seccao>
     </Pagina>
   );

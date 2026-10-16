@@ -19,25 +19,44 @@ falta (`pendenciasLegais()` em `src/data/cafe.ts`).
 Não se preenchem por pesquisa: nem Google, nem agregadores, nem Portal da
 Justiça (regra do `AGENTS.md`).
 
-1. **Quem explora a casa** (`cafe.operador`): nome completo ou firma, forma
-   jurídica, NIF/NIPC, sede ou domicílio profissional. Se for sociedade, também
-   a conservatória e a matrícula e o capital social (CSC, art. 171.º) — a um
-   empresário em nome individual não se pedem. Hoje a página diz "por publicar".
-2. **O email para pedidos sobre dados pessoais** (`operador.emailPrivacidade`).
-   Até lá, a política usa o email geral da casa (`cafepreguica@sapo.pt`), que
-   está confirmado como contacto, mas não como o escolhido para isto.
+1. **Quem explora a casa** (`cafe.operador`) — **em parte confirmado
+   (2026-10-16)**, a partir de uma fatura da casa (documento fiscal emitido por
+   ela) enviada pelo Rafael:
+   - ✅ NIF/NIPC **514180730** (dígito de controlo certo; o esquema verifica-o);
+   - ✅ forma **sociedade unipessoal por quotas** — a fatura diz "Unipessoal", e
+     com 5 000 € de capital não pode ser anónima unipessoal (mínimo de 50 000 €);
+   - ✅ capital social **5 000 €**;
+   - ⏳ **firma exacta** — a fatura imprime "CONVERSAS EFEMERAS - UNIPESSOAL",
+     mas as impressoras de faturas tiram os acentos e podem cortar o "Lda.", por
+     isso não se copia daí;
+   - ⏳ **sede** — pode não ser a morada da casa;
+   - ⏳ **conservatória e matrícula**.
+
+   Os três ⏳ vêm todos da **certidão permanente**, que o Rafael ofereceu: com o
+   código, a certidão consulta-se online. Até lá a página de informação legal
+   mostra-os "por confirmar".
+2. ✅ **O email para pedidos sobre dados pessoais**: `cafepreguica@sapo.pt`
+   (o Rafael, 2026-10-16), em `operador.emailPrivacidade`.
 3. **Encarregado de proteção de dados**: a política não fala de nenhum. Em regra
    um café não é obrigado a designar; se a casa tiver designado, entra o contacto.
 4. **Resolução de litígios**: confirmar que o CICAP é a entidade a indicar para
    esta operação (competente para Valongo; tem limites de valor e de matéria) e
    se a casa aderiu a algum centro (`litigios.adesao`, hoje `null`: a página não
    fala de adesão). Pedir prova se houver adesão.
-5. **Livro de Reclamações Eletrónico**: confirmar que a casa está registada na
-   plataforma e se encontra pelo nome ou pelo NIF. O link do site é o geral da
-   plataforma, e isso não é defeito — mas não prova o registo. O livro em papel
-   e quem responde às reclamações (15 dias úteis) são da operação da casa.
-6. **Serviços à distância**: há encomendas, reservas com pagamento, *takeaway*
-   contratado por telefone ou email? Mudam a análise de contratação à distância.
+5. **Livro de Reclamações** (`cafe.reclamacoes`):
+   - ✅ há **livro em papel** na casa, e a entidade competente é a **ASAE**
+     (fotografia do autocolante, 2026-10-16). A página de informação legal
+     di-lo;
+   - ⏳ **registo no Livro de Reclamações Eletrónico**: o livro em papel não o
+     prova. Confirmar que a casa está registada na plataforma e se encontra pelo
+     nome ou pelo NIF (`registoEletronico`, hoje `null`). O link do site é o
+     geral da plataforma, e isso não é defeito;
+   - quem responde às reclamações eletrónicas (15 dias úteis) é da operação da
+     casa.
+6. ✅ **Serviços à distância**: **não há** — nem encomendas, nem reservas com
+   pagamento, nem *takeaway* contratado por telefone, email ou online (o Tomás,
+   2026-10-16). O site não precisa de informação de contratação à distância;
+   rever se isto mudar.
 
 ### B. Decisões do responsável — o código tem uma proposta, a casa confirma
 

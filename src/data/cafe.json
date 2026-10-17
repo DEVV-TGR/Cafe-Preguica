@@ -30,12 +30,12 @@
     "sexta": {
       "abre": "16:00",
       "fecha": "01:30",
-      "cozinhaFecha": "01:00"
+      "cozinhaFecha": "00:30"
     },
     "sabado": {
       "abre": "16:00",
       "fecha": "01:30",
-      "cozinhaFecha": "01:00"
+      "cozinhaFecha": "00:30"
     },
     "domingo": null
   },

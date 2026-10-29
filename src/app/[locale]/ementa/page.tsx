@@ -162,7 +162,7 @@ const ABERTURAS: Record<Capitulo, { foto: string; artigos: string[] }[]> = {
  * Rafael ficaram de fora os hurricane e os copos balão: a família vê-se, a
  * variante não, e pô-los ao lado de um nome era afirmar o que não se sabe. (Os
  * Mules, o Mongolia e o Espresso Martini entraram quando o Tomás os
- * confirmou.) A lista do que falta está em `fotos/Fotografias/
+ * confirmou; o Hurricane da IMG_8667, quando o Rafael o confirmou.) A lista do que falta está em `fotos/Fotografias/
  * IDENTIFICACAO.md`.
  */
 const FOTOS_ARTIGO: Record<string, string[]> = {
@@ -202,6 +202,8 @@ const FOTOS_ARTIGO: Record<string, string[]> = {
   "espresso-martini": ["espresso-martini"],
   "mexican-mule": ["mexican-mule"],
   "moscow-mule": ["moscow-mule"],
+  /* Confirmada pelo Rafael a 2026-10-29. */
+  hurricane: ["hurricane"],
 };
 
 /* Um `id` que deixou de existir na carta partia a legenda em silêncio. Assim

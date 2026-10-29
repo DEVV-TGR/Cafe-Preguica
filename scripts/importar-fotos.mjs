@@ -71,7 +71,7 @@ const NOMES = {
  * A sessão do Rafael. ⚠️ **Só entra aqui uma fotografia cuja bebida ou prato se
  * identifica ao certo**: o nome com que sai é o que a ementa põe ao lado de um
  * artigo, e uma fotografia ao lado do artigo errado promete ao cliente outra
- * bebida. As que têm dúvida (os Mules, os copos balão, os hurricane) ficam de
+ * bebida. As que têm dúvida (os copos balão, os outros hurricane) ficam de
  * fora até o Rafael as confirmar.
  *
  * As fotografias da sala e da rua para o carrossel de "A casa" não saem daqui:
@@ -122,6 +122,9 @@ const NOMES_SESSAO = {
   IMG_6037: "espresso-martini",
   IMG_8964: "mexican-mule",
   IMG_8699: "moscow-mule",
+  /* Confirmada pelo Rafael (2026-10-29): estava entre Hurricane e Tequila
+     Sunrise. */
+  IMG_8667: "hurricane",
 };
 
 /**

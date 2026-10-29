@@ -224,6 +224,8 @@ export const EM_DESTAQUE: readonly string[] = [
   "espresso-martini",
   "mexican-mule",
   "moscow-mule",
+  /* Confirmada pelo Rafael (2026-10-29). */
+  "hurricane",
   /* A lista das tostas, em "Para partilhar" na inicial (o cliente, 2026-10-08). */
   "presunto-queijo",
   /* As fotografias que abrem as águas (o cliente, 2026-10-08). */

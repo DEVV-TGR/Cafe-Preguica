@@ -4,7 +4,8 @@
     "manhattan-on-the-rocks",
     "hugo-spritz",
     "south-side",
-    "strawberry-daiquiri"
+    "strawberry-daiquiri",
+    "mojito-roma"
   ],
   "sabores": [
     {
@@ -724,6 +725,22 @@
       "precoSecundario": null,
       "alergenios": [],
       "escondido": true
+    },
+    {
+      "id": "mojito-roma",
+      "categoria": "cocktails-special",
+      "nome": {
+        "pt": "Mojito Romã",
+        "en": "Pomegranate Mojito"
+      },
+      "descricao": {
+        "pt": "Rum, sumo de limão, xarope de romã, hortelã e água com gás",
+        "en": "Rum, sumo de limão, xarope de romã, hortelã e água com gás"
+      },
+      "preco": 6.8,
+      "precoSecundario": null,
+      "alergenios": [],
+      "escondido": false
     },
     {
       "id": "cocktail-preguica",
